@@ -1,0 +1,3 @@
+[submodule "web/themes/hugo-theme-den"]
+	path = web/themes/hugo-theme-den
+	url = git@github.com:shaform/hugo-theme-den.git
