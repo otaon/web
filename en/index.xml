@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:webfeeds="http://webfeeds.org/rss/1.0">
   <channel>
     <title>Lazy Lambda</title>
-    <link>https://otaon.github.io/en/</link>
+    <link>https://otaon.github.io/web/en/</link>
     <description>Recent content on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Sun, 20 Aug 2017 21:38:52 +0800</lastBuildDate>
     
-        <atom:link href="https://otaon.github.io/en/index.xml" rel="self" type="application/rss+xml" />
+        <atom:link href="https://otaon.github.io/web/en/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>About</title>
-      <link>https://otaon.github.io/en/about/</link>
+      <link>https://otaon.github.io/web/en/about/</link>
       <pubDate>Sun, 20 Aug 2017 21:38:52 +0800</pubDate>
       
-      <guid>https://otaon.github.io/en/about/</guid>
+      <guid>https://otaon.github.io/web/en/about/</guid>
       
         <description>&lt;p&gt;This web site is written to memoize for my knowlegde.&lt;/p&gt;
 </description>
@@ -25,10 +25,10 @@
     
     <item>
       <title>Demo template</title>
-      <link>https://otaon.github.io/en/2019/03/03/demo-template/</link>
+      <link>https://otaon.github.io/web/en/2019/03/03/demo-template/</link>
       <pubDate>Sun, 03 Mar 2019 16:01:23 +0900</pubDate>
       
-      <guid>https://otaon.github.io/en/2019/03/03/demo-template/</guid>
+      <guid>https://otaon.github.io/web/en/2019/03/03/demo-template/</guid>
       
         <description>&lt;p&gt;This is a simple preview.&lt;/p&gt;
 </description>
@@ -37,10 +37,10 @@
     
     <item>
       <title>Template</title>
-      <link>https://otaon.github.io/en/2019/03/03/template/</link>
+      <link>https://otaon.github.io/web/en/2019/03/03/template/</link>
       <pubDate>Sun, 03 Mar 2019 16:00:00 +0900</pubDate>
       
-      <guid>https://otaon.github.io/en/2019/03/03/template/</guid>
+      <guid>https://otaon.github.io/web/en/2019/03/03/template/</guid>
       
         <description>&lt;p&gt;This is a simple preview for styles in Den.&lt;/p&gt;
 
@@ -235,7 +235,7 @@ text code blocks
 &lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:300px;&#34;&gt;
   &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
     &lt;div class=&#34;img&#34;&gt;
-      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;https://otaon.github.io/images/globe.svg&#34; alt=&#34;Globe&#34; /&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;https://otaon.github.io/web/images/globe.svg&#34; alt=&#34;Globe&#34; /&gt;
     &lt;/div&gt;
     
       &lt;figcaption&gt;

@@ -2,20 +2,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Lazy Lambda</title>
-    <link>https://otaon.github.io/en/tags/</link>
+    <link>https://otaon.github.io/web/en/tags/</link>
     <description>Recent content in Tags on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-	<atom:link href="https://otaon.github.io/en/tags/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://otaon.github.io/web/en/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Template</title>
-      <link>https://otaon.github.io/en/tag/template/</link>
+      <link>https://otaon.github.io/web/en/tag/template/</link>
       <pubDate>Sun, 03 Mar 2019 16:01:23 +0900</pubDate>
       
-      <guid>https://otaon.github.io/en/tag/template/</guid>
+      <guid>https://otaon.github.io/web/en/tag/template/</guid>
       <description></description>
     </item>
     

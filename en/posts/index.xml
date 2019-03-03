@@ -2,30 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Lazy Lambda</title>
-    <link>https://otaon.github.io/en/posts/</link>
+    <link>https://otaon.github.io/web/en/posts/</link>
     <description>Recent content in Posts on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Sun, 03 Mar 2019 16:01:23 +0900</lastBuildDate>
     
-	<atom:link href="https://otaon.github.io/en/posts/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://otaon.github.io/web/en/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Demo template</title>
-      <link>https://otaon.github.io/en/2019/03/03/demo-template/</link>
+      <link>https://otaon.github.io/web/en/2019/03/03/demo-template/</link>
       <pubDate>Sun, 03 Mar 2019 16:01:23 +0900</pubDate>
       
-      <guid>https://otaon.github.io/en/2019/03/03/demo-template/</guid>
+      <guid>https://otaon.github.io/web/en/2019/03/03/demo-template/</guid>
       <description>This is a simple preview.</description>
     </item>
     
     <item>
       <title>Template</title>
-      <link>https://otaon.github.io/en/2019/03/03/template/</link>
+      <link>https://otaon.github.io/web/en/2019/03/03/template/</link>
       <pubDate>Sun, 03 Mar 2019 16:00:00 +0900</pubDate>
       
-      <guid>https://otaon.github.io/en/2019/03/03/template/</guid>
+      <guid>https://otaon.github.io/web/en/2019/03/03/template/</guid>
       <description>&lt;p&gt;This is a simple preview for styles in Den.&lt;/p&gt;
 
 &lt;p&gt;&lt;/p&gt;</description>
