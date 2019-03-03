@@ -18,6 +18,7 @@ before_script:
 
 # ビルドを実行
 script:
+  - cd web
   - hugo -v
 
 # デプロイの設定

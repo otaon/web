@@ -1,7 +1,7 @@
 # ------------------------------------- #
 # ---- General Settings --------------- #
 # ------------------------------------- #
-baseURL = "https://otaon.github.io"
+baseURL = "https://otaon.github.io/web"
 title = "Lazy Lambda"
 theme = "hugo-theme-den"
 #enableRobotsTXT = true       # generate robots.txt
