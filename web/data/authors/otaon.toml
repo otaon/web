@@ -1,0 +1,13 @@
+url = "https://github.com/otaon"
+
+[name]
+display = "otaon"
+
+[image]
+url = "images/otaon.png"
+
+[ja-jp]
+description = "こんにちは"
+
+[en]
+description = "hello"

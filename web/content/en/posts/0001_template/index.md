@@ -1,15 +1,16 @@
 ---
-title: "Den Theme Preview"
-date: 2018-03-06T16:01:23+08:00
-lastmod: 2018-03-07T16:01:23+08:00
+title: "Template"
+date:    2019-03-03T16:00:00+09:00
+lastmod: 2019-03-03T16:00:00+09:00
 draft: false
-tags: ["preview", "shortcodes", "tutorial"]
+tags: ["template"]
 categories: ["Notes"]
+resources:
+- name: header
+  src: 'header.jpg'
 authors:
-- "Shaform"
-- "Jan Doe"
+- otaon
 ---
-
 This is a simple preview for styles in Den.
 
 <!--more-->
@@ -117,3 +118,28 @@ This is [an example](http://example.com/"Title") inline link.
 
 
 ![Globe](https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Octicons-globe.svg/240px-Octicons-globe.svg.png)
+
+
+## Twiiter
+
+{{< tweet 877500564405444608 >}}
+
+
+## Google Map
+
+{{< googlemaps id="17_6iCOL6LkRjIFGPKmXBxjsvbBc" height="400">}}
+
+
+## Figure
+
+{{<figure src="/images/globe.svg" alt="Globe" align="aligncenter" width="300" caption="**Globe**">}}
+
+
+## Highlight for Shells
+
+{{< shhighlight bash "hl_lines=2 4" >}}
+# test
+echo test
+# just a test
+echo hello world
+{{< /shhighlight >}}
