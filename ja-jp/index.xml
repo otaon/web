@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:webfeeds="http://webfeeds.org/rss/1.0">
+  <channel>
+    <title>Lazy Lambda</title>
+    <link>https://otaon.github.io/ja-jp/</link>
+    <description>Recent content on Lazy Lambda</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Sun, 20 Aug 2017 21:38:52 +0800</lastBuildDate>
+    
+        <atom:link href="https://otaon.github.io/ja-jp/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>このサイトについて</title>
+      <link>https://otaon.github.io/ja-jp/about/</link>
+      <pubDate>Sun, 20 Aug 2017 21:38:52 +0800</pubDate>
+      
+      <guid>https://otaon.github.io/ja-jp/about/</guid>
+      
+        <description>&lt;p&gt;気になったことや身につけたことについて残します。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>デモテンプレート</title>
+      <link>https://otaon.github.io/ja-jp/2019/03/03/%E3%83%87%E3%83%A2%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88/</link>
+      <pubDate>Sun, 03 Mar 2019 16:01:23 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/ja-jp/2019/03/03/%E3%83%87%E3%83%A2%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88/</guid>
+      
+        <description>&lt;p&gt;This is a simple preview.&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>テンプレート</title>
+      <link>https://otaon.github.io/ja-jp/2019/03/01/%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88/</link>
+      <pubDate>Fri, 01 Mar 2019 16:01:23 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/ja-jp/2019/03/01/%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88/</guid>
+      
+        <description>&lt;p&gt;記事作成用テンプレート。&lt;/p&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;ヘッダ1&#34;&gt;ヘッダ1&lt;/h1&gt;
+
+&lt;h2 id=&#34;ヘッダ1-1&#34;&gt;ヘッダ1-1&lt;/h2&gt;
+
+&lt;p&gt;段落1&lt;/p&gt;
+
+&lt;p&gt;段落2&lt;br /&gt;
+非常に長い文章は、禁則事項を考慮しつつ折り返される。&lt;br /&gt;
+テスト。テスト。テスト。テスト。テスト。テスト。テスト。テスト。テスト。テスト。テスト。テスト。テスト。テスト。&lt;/p&gt;
+
+&lt;h3 id=&#34;ヘッダ1-1-1&#34;&gt;ヘッダ1-1-1&lt;/h3&gt;
+
+&lt;h4 id=&#34;ヘッダ1-1-1-1&#34;&gt;ヘッダ1-1-1-1&lt;/h4&gt;
+
+&lt;h5 id=&#34;ヘッダ1-1-1-1-1&#34;&gt;ヘッダ1-1-1-1-1&lt;/h5&gt;
+
+&lt;h6 id=&#34;ヘッダ1-1-1-1-1-1&#34;&gt;ヘッダ1-1-1-1-1-1&lt;/h6&gt;
+
+&lt;p&gt;####### ヘッダは6段階まで&lt;/p&gt;
+
+&lt;h2 id=&#34;コードブロック&#34;&gt;コードブロック&lt;/h2&gt;
+
+&lt;p&gt;先頭にスペースを4個入れることでコードブロックを表現できる。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;text code blocks
+text code blocks
+text code blocks
+text code blocks
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;ハイライト付きコードブロック&#34;&gt;ハイライト付きコードブロック&lt;/h2&gt;
+
+&lt;p&gt;```language name&lt;br /&gt;
+code&lt;br /&gt;
+```&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;k&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;hello world&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;```common lisp
+(defun foo (m n)
+  (if (eq m n)
+      (prin1 &amp;ldquo;Hello world&amp;rdquo;)
+      (prin1 &amp;ldquo;Hello universe&amp;rdquo;))
+  (prin1 &amp;ldquo;Hello world&amp;rdquo;))&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;
+```go
+package main
+
+import &amp;quot;fmt&amp;quot;
+
+func main() {
+    fmt.Printf(&amp;quot;Hello World\n&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;シェル用ハイライト&#34;&gt;シェル用ハイライト&lt;/h2&gt;
+
+&lt;p&gt;{{&amp;lt; shhighlight bash &amp;ldquo;hl_lines=2 4&amp;rdquo; &amp;gt;}}&lt;br /&gt;
+# test&lt;br /&gt;
+echo test&lt;br /&gt;
+# just a test&lt;br /&gt;
+echo hello world&lt;br /&gt;
+{{&amp;lt; /shhighlight &amp;gt;}}&lt;/p&gt;
+
+&lt;div class=&#34;sh-highlight&#34;&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# test
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# just a test
+&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; hello world&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+
+&lt;h2 id=&#34;引用&#34;&gt;引用&lt;/h2&gt;
+
+&lt;p&gt;&amp;gt; を行頭につけると引用文になる。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;This is the first pragraph.&lt;/p&gt;
+
+&lt;p&gt;This is the second paragraph.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&#34;リスト&#34;&gt;リスト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Red&lt;/li&gt;
+&lt;li&gt;Green&lt;/li&gt;
+&lt;li&gt;Blue&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Red&lt;/li&gt;
+&lt;li&gt;Green&lt;/li&gt;
+&lt;li&gt;Blue
+
+&lt;ul&gt;
+&lt;li&gt;A&lt;/li&gt;
+&lt;li&gt;B&lt;/li&gt;
+&lt;li&gt;C
+
+&lt;ol&gt;
+&lt;li&gt;D&lt;/li&gt;
+&lt;li&gt;E&lt;/li&gt;
+&lt;li&gt;F&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;タスクリスト&#34;&gt;タスクリスト&lt;/h2&gt;
+
+&lt;ul class=&#34;task-list&#34;&gt;
+&lt;li&gt;&lt;label&gt;&lt;input type=&#34;checkbox&#34; disabled class=&#34;task-list-item&#34;&gt; a task list item&lt;/label&gt;&lt;/li&gt;
+&lt;li&gt;&lt;label&gt;&lt;input type=&#34;checkbox&#34; disabled class=&#34;task-list-item&#34;&gt; list syntax &lt;del&gt;required&lt;/del&gt;&lt;/label&gt;&lt;/li&gt;
+&lt;li&gt;&lt;label&gt;&lt;input type=&#34;checkbox&#34; disabled class=&#34;task-list-item&#34;&gt; normal &lt;strong&gt;formatting&lt;/strong&gt;&lt;/label&gt;&lt;/li&gt;
+&lt;li&gt;&lt;label&gt;&lt;input type=&#34;checkbox&#34; disabled class=&#34;task-list-item&#34;&gt; incomplete&lt;/label&gt;&lt;/li&gt;
+&lt;li&gt;&lt;label&gt;&lt;input type=&#34;checkbox&#34; checked disabled class=&#34;task-list-item&#34;&gt; completed&lt;/label&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;書式付きテキスト&#34;&gt;書式付きテキスト&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;th&gt;Markdown&lt;/th&gt;
+&lt;th&gt;HTML tag&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;em&gt;Emphasis&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;*Emphasis*&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;lt;em&amp;gt;&amp;lt;/em&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Strong&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;**Strong**&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;lt;strong&amp;gt;&amp;lt;/strong&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;code&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;`code`&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;lt;code&amp;gt;&amp;lt;/code&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;del&gt;Strikethrough&lt;/del&gt;&lt;/td&gt;
+&lt;td&gt;~~Strikethrough~~&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;lt;del&amp;gt;&amp;lt;/del&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Underline&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;__underline__&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;lt;u&amp;gt;&amp;lt;/u&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;kbd&gt;Key&lt;/kbd&gt;&lt;/td&gt;
+&lt;td&gt;&amp;lt;kbd&amp;gt;Key&amp;lt;/kbd&amp;gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;lt;kbd&amp;gt;&amp;lt;/kbd&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;tables&#34;&gt;Tables&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;A&lt;/th&gt;
+&lt;th&gt;B&lt;/th&gt;
+&lt;th&gt;C&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;a&lt;/td&gt;
+&lt;td&gt;b&lt;/td&gt;
+&lt;td&gt;c&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;d&lt;/td&gt;
+&lt;td&gt;e&lt;/td&gt;
+&lt;td&gt;f&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;脚注&#34;&gt;脚注&lt;/h2&gt;
+
+&lt;p&gt;脚注は下記の通り記載できる。[^脚注1]&lt;/p&gt;
+
+&lt;p&gt;[^脚注1]: 脚注の内容を記載する。&lt;/p&gt;
+
+&lt;p&gt;脚注の実例&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:footnote1&#34;&gt;&lt;a href=&#34;#fn:footnote1&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;水平線&#34;&gt;水平線&lt;/h2&gt;
+
+&lt;p&gt;----&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;****&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;リンク&#34;&gt;リンク&lt;/h2&gt;
+
+&lt;p&gt;リンクをインライン表示&lt;br /&gt;
+[an example](&amp;ldquo;URLキャプション&amp;rdquo;)&lt;/p&gt;
+
+&lt;p&gt;ここ &lt;a href=&#34;http://github.com/otaon&#34; title=&#34;筆者GitHubページ&#34;&gt;GitHub&lt;/a&gt; をクリック。&lt;/p&gt;
+
+&lt;h2 id=&#34;images&#34;&gt;Images&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;自動的にページ幅に合わせて表示&lt;br /&gt;
+![Globe](&lt;a href=&#34;https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Octicons-globe.svg/120px-Octicons-globe.svg.png&#34;&gt;https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Octicons-globe.svg/120px-Octicons-globe.svg.png&lt;/a&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Octicons-globe.svg/120px-Octicons-globe.svg.png&#34; alt=&#34;Globe&#34; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;幅を指定して表示&lt;br /&gt;
+{{&amp;lt;figure src=&amp;ldquo;/images/globe.svg&amp;rdquo; alt=&amp;ldquo;Globe&amp;rdquo; align=&amp;ldquo;aligncenter&amp;rdquo; width=&amp;ldquo;100&amp;rdquo; caption=&amp;rdquo;&lt;strong&gt;Globe&lt;/strong&gt;&amp;rdquo;&amp;gt;}}&lt;br /&gt;
+
+&lt;link rel=&#34;stylesheet&#34; href=&#34;https://otaon.github.io/css/hugo-easy-gallery.css&#34; /&gt;
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:100px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;https://otaon.github.io/images/globe.svg&#34; alt=&#34;Globe&#34; /&gt;
+    &lt;/div&gt;
+    
+      &lt;figcaption&gt;
+          &lt;p&gt;&lt;strong&gt;Globe&lt;/strong&gt;
+              
+          &lt;/p&gt;
+      &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;twiiter&#34;&gt;Twiiter&lt;/h2&gt;
+
+&lt;p&gt;ツイッターの投稿IDを指定することで、そのツイートを表示できる。&lt;br /&gt;
+{{&amp;lt; tweet 877500564405444608 &amp;gt;}}&lt;/p&gt;
+
+&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;en&#34; dir=&#34;ltr&#34;&gt;Hugo 0.24 Released: Big archetype update + &lt;a href=&#34;https://twitter.com/Netlify?ref_src=twsrc%5Etfw&#34;&gt;@Netlify&lt;/a&gt; _redirects etc. file support&lt;a href=&#34;https://t.co/X94FmYDEZJ&#34;&gt;https://t.co/X94FmYDEZJ&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/gohugo?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#gohugo&lt;/a&gt; &lt;a href=&#34;https://twitter.com/hashtag/golang?src=hash&amp;amp;ref_src=twsrc%5Etfw&#34;&gt;#golang&lt;/a&gt; &lt;a href=&#34;https://twitter.com/spf13?ref_src=twsrc%5Etfw&#34;&gt;@spf13&lt;/a&gt; &lt;a href=&#34;https://twitter.com/bepsays?ref_src=twsrc%5Etfw&#34;&gt;@bepsays&lt;/a&gt;&lt;/p&gt;&amp;mdash; GoHugo.io (@GoHugoIO) &lt;a href=&#34;https://twitter.com/GoHugoIO/status/877500564405444608?ref_src=twsrc%5Etfw&#34;&gt;June 21, 2017&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;
+
+
+&lt;h2 id=&#34;google-map&#34;&gt;Google Map&lt;/h2&gt;
+
+&lt;p&gt;Google MapのIDを指定して、Google Mapをインライン表示できる。&lt;br /&gt;
+{{&amp;lt; googlemaps id=&amp;ldquo;17_6iCOL6LkRjIFGPKmXBxjsvbBc&amp;rdquo; height=&amp;ldquo;400&amp;rdquo;&amp;gt;}}&lt;/p&gt;
+
+&lt;div class=&#34;embed googlemaps&#34;&gt;
+	&lt;iframe
+		src=&#34;https://mapsengine.google.com/map/embed?mid=17_6iCOL6LkRjIFGPKmXBxjsvbBc&#34;
+		frameborder=&#34;0&#34;
+		scrolling=&#34;no&#34;
+        width=&#34;100%&#34;
+        height=&#34;400&#34;
+        &gt;
+	&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;footnotes&#34;&gt;
+
+&lt;hr /&gt;
+
+&lt;ol&gt;
+&lt;li id=&#34;fn:footnote1&#34;&gt;ここに脚注の内容が表示される。
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:footnote1&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description>
+      
+    </item>
+    
+  </channel>
+</rss>
