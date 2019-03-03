@@ -6,4 +6,4 @@ menu: "main"
 weight: 50
 ---
 
-This web site is written to memoize for my knowlegde.
+This web site is written to memoize for my knowledge.
