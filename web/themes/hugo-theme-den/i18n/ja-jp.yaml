@@ -1,0 +1,81 @@
+- id: sitemap
+  translation: サイトマップ
+
+- id: tags
+  translation: タグ
+
+- id: categories
+  translation: カテゴリ
+
+- id: social
+  translation: SNS
+
+- id: links
+  translation: リンク
+
+- id: rss_feed
+  translation: RSS Feed
+
+- id: tag
+  translation: タグ
+
+- id: category
+  translation: カテゴリ
+
+- id: archive_of_tag
+  translation: タグ：
+
+- id: archive_of_category
+  translation: カテゴリ：
+
+- id: archive
+  translation: アーカイブ
+
+- id: list_of_tags
+  translation: タグ一覧
+
+- id: list_of_categories
+  translation: カテゴリ一覧
+
+- id: more_post
+  translation: 他の投稿
+
+- id: articles_tagged
+  translation: 件タグ有り
+
+- id: article_tagged
+  translation: 件タグ有り
+
+- id: error_404
+  translation: '404 そんなページありませんよ'
+
+- id: in_category
+  translation: カテゴリ：
+
+
+- id: latest_posts
+  translation: 最新記事
+
+- id: page
+  translation: ページ
+
+- id: previous
+  translation: 前ページ
+
+- id: next
+  translation: 次ページ
+
+- id: author_by
+  translation: 著者：
+
+- id: related
+  translation: 関連記事
+
+- id: load_disqus
+  translation: Disqusコメントをロード
+
+- id: translations
+  translation: "他言語： "
+
+- id: author
+  translation: 著者
