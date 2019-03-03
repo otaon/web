@@ -18,7 +18,7 @@
       
       <guid>https://otaon.github.io/web/en/about/</guid>
       
-        <description>&lt;p&gt;This web site is written to memoize for my knowlegde.&lt;/p&gt;
+        <description>&lt;p&gt;This web site is written to memoize for my knowledge.&lt;/p&gt;
 </description>
       
     </item>
@@ -43,8 +43,6 @@
       <guid>https://otaon.github.io/web/en/2019/03/03/template/</guid>
       
         <description>&lt;p&gt;This is a simple preview for styles in Den.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;header&#34;&gt;Header&lt;/h2&gt;
 
@@ -249,10 +247,10 @@ text code blocks
 
 &lt;h2 id=&#34;highlight-for-shells&#34;&gt;Highlight for Shells&lt;/h2&gt;
 
-&lt;div class=&#34;sh-highlight&#34;&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# test
-&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt;
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# just a test
-&lt;/span&gt;&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; hello world&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&#34;sh-highlight&#34;&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# test&lt;/span&gt;
+&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# just a test&lt;/span&gt;
+&lt;span class=&#34;hl&#34;&gt;&lt;span class=&#34;nb&#34;&gt;echo&lt;/span&gt; hello world&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;div class=&#34;footnotes&#34;&gt;
 

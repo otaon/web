@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Template on Lazy Lambda</title>
+    <title>template on Lazy Lambda</title>
     <link>https://otaon.github.io/web/en/tag/template/</link>
-    <description>Recent content in Template on Lazy Lambda</description>
+    <description>Recent content in template on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Sun, 03 Mar 2019 16:01:23 +0900</lastBuildDate>
@@ -26,9 +26,7 @@
       <pubDate>Sun, 03 Mar 2019 16:00:00 +0900</pubDate>
       
       <guid>https://otaon.github.io/web/en/2019/03/03/template/</guid>
-      <description>&lt;p&gt;This is a simple preview for styles in Den.&lt;/p&gt;
-
-&lt;p&gt;&lt;/p&gt;</description>
+      <description>&lt;p&gt;This is a simple preview for styles in Den.&lt;/p&gt;</description>
     </item>
     
   </channel>
