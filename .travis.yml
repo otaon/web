@@ -6,7 +6,7 @@ sudo: false
 
 env:
   # 良い方法が思い浮かばないのでバージョンを固定
-  - HUGO_VERSION=0.41
+  - HUGO_VERSION=0.54.0
 
 # このセクションを挟まないと勝手にgo getを走らせようとしてこける
 install: true
