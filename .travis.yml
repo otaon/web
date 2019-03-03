@@ -1,0 +1,39 @@
+language: go
+dist: trusty
+
+# これでdockerコンテナとして立ち上がるので起動が速い
+sudo: false
+
+env:
+  # 良い方法が思い浮かばないのでバージョンを固定
+  - HUGO_VERSION=0.41
+
+# このセクションを挟まないと勝手にgo getを走らせようとしてこける
+install: true
+
+# .debパッケージをダウンロードしてインストール
+before_script:
+  - wget https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.deb
+  - sudo dpkg -i hugo_${HUGO_VERSION}_Linux-64bit.deb
+
+# ビルドを実行
+script:
+  - hugo -v
+
+# デプロイの設定
+deploy:
+  # github pages用のプロバイダを設定
+  provider: pages
+  # 公開するファイルがあるディレクトリを指定
+  local-dir: public
+  # scriptセクションで実行したビルド結果をそのまま残す
+  skip-cleanup: true
+  # githubから取得したpersonal access token
+  github-token: $GitHubToken
+  # force pushせずにcommitを重ねる
+  keep-history: true
+  # masterブランチへのpush時のみに限る
+  on:
+    branch: master
+
+# https://poyo.hatenablog.jp/entry/2018/06/08/145255
