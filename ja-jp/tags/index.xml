@@ -6,14 +6,42 @@
     <description>Recent content in Tags on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
+    <lastBuildDate>Sun, 03 Mar 2019 16:23:58 +0900</lastBuildDate>
     
 	<atom:link href="https://otaon.github.io/web/ja-jp/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>GitHub Pages</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/github-pages/</link>
+      <pubDate>Sun, 03 Mar 2019 16:23:58 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/github-pages/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hugo</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/hugo/</link>
+      <pubDate>Sun, 03 Mar 2019 16:23:58 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/hugo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TravisCI</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/travisci/</link>
+      <pubDate>Sun, 03 Mar 2019 16:23:58 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/travisci/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>template</title>
       <link>https://otaon.github.io/web/ja-jp/tag/template/</link>
-      <pubDate>Sun, 03 Mar 2019 16:23:58 +0900</pubDate>
+      <pubDate>Sun, 03 Mar 2019 16:01:23 +0900</pubDate>
       
       <guid>https://otaon.github.io/web/ja-jp/tag/template/</guid>
       <description></description>
