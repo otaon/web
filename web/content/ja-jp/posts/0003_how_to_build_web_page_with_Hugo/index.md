@@ -1,9 +1,9 @@
 ---
 title: "GitHub + Hugo + Travis CI で静的サイトを GitHub Pages に公開する"
 date:    2019-03-03T16:23:58+09:00
-lastmod: 2019-03-04T16:00:00+09:00
+lastmod: 2019-03-06T02:35:00+09:00
 draft: false
-tags: ["template"]
+tags: ["Hugo", "TravisCI", "GitHub Pages"]
 categories: ["Notes"]
 authors:
 - otaon
