@@ -168,8 +168,8 @@ echo hello world
 ![Globe](https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Octicons-globe.svg/120px-Octicons-globe.svg.png)
 
 - 幅を指定して表示  
-\{\{\<figure src="/images/globe.svg" alt="Globe" align="aligncenter" width="100" caption="**Globe**">}}  
-{{<figure src="/images/globe.svg" alt="Globe" align="aligncenter" width="100" caption="**Globe**">}}
+\{\{\<figure src="/web/images/globe.svg" alt="Globe" align="aligncenter" width="100" caption="**Globe**">}}  
+{{<figure src="/web/images/globe.svg" alt="Globe" align="aligncenter" width="100" caption="**Globe**">}}
 
 ## Twiiter
 ツイッターの投稿IDを指定することで、そのツイートを表示できる。  
