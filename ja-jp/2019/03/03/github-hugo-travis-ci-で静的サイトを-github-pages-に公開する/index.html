@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>GitHub &#43; Hugo &#43; Travis CI で静的サイトを GitHub Pages に公開する · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="はじめに 自前でサーバを構築することなく、全て外部サービスを使用してブログ的な静的サイトを楽に作りたい場合、この記事が役に立つと思う。
+このWebサイトも、この記事と全く同じ方法で作成している。
+html, css諸々を書いて、サーバを立てて、ドメインを取って…という事を全くせずにWebサイトが構築できる。
+" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/03/03/github-hugo-travis-ci-%E3%81%A7%E9%9D%99%E7%9A%84%E3%82%B5%E3%82%A4%E3%83%88%E3%82%92-github-pages-%E3%81%AB%E5%85%AC%E9%96%8B%E3%81%99%E3%82%8B/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="GitHub &#43; Hugo &#43; Travis CI で静的サイトを GitHub Pages に公開する" />
+<meta property="og:description" content="はじめに
+
+自前でサーバを構築することなく、全て外部サービスを使用してブログ的な静的サイトを楽に作りたい場合、この記事が役に立つと思う。
+このWebサイトも、この記事と全く同じ方法で作成している。
+
+html, css諸々を書いて、サーバを立てて、ドメインを取って…という事を全くせずにWebサイトが構築できる。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/03/github-hugo-travis-ci-%E3%81%A7%E9%9D%99%E7%9A%84%E3%82%B5%E3%82%A4%E3%83%88%E3%82%92-github-pages-%E3%81%AB%E5%85%AC%E9%96%8B%E3%81%99%E3%82%8B/" />
+<meta property="article:published_time" content="2019-03-03T16:23:58&#43;09:00"/>
+<meta property="article:modified_time" content="2019-03-04T16:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="GitHub &#43; Hugo &#43; Travis CI で静的サイトを GitHub Pages に公開する">
+<meta itemprop="description" content="はじめに
+
+自前でサーバを構築することなく、全て外部サービスを使用してブログ的な静的サイトを楽に作りたい場合、この記事が役に立つと思う。
+このWebサイトも、この記事と全く同じ方法で作成している。
+
+html, css諸々を書いて、サーバを立てて、ドメインを取って…という事を全くせずにWebサイトが構築できる。">
+
+
+<meta itemprop="datePublished" content="2019-03-03T16:23:58&#43;09:00" />
+<meta itemprop="dateModified" content="2019-03-04T16:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="6621">
+
+
+
+<meta itemprop="keywords" content="template," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="GitHub &#43; Hugo &#43; Travis CI で静的サイトを GitHub Pages に公開する"/>
+<meta name="twitter:description" content="はじめに
+
+自前でサーバを構築することなく、全て外部サービスを使用してブログ的な静的サイトを楽に作りたい場合、この記事が役に立つと思う。
+このWebサイトも、この記事と全く同じ方法で作成している。
+
+html, css諸々を書いて、サーバを立てて、ドメインを取って…という事を全くせずにWebサイトが構築できる。"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">GitHub &#43; Hugo &#43; Travis CI で静的サイトを GitHub Pages に公開する</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-03-03
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/template/">template</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  <h1 id="はじめに">はじめに</h1>
+
+<p>自前でサーバを構築することなく、全て外部サービスを使用してブログ的な静的サイトを楽に作りたい場合、この記事が役に立つと思う。<br />
+このWebサイトも、この記事と全く同じ方法で作成している。</p>
+
+<p><code>html</code>, <code>css</code>諸々を書いて、サーバを立てて、ドメインを取って…という事を全くせずにWebサイトが構築できる。</p>
+
+<hr />
+
+<h1 id="前提条件">前提条件</h1>
+
+<ul>
+<li>GitHub、および、Gitの基本的な使い方が分かる。</li>
+<li>Markdown記法、および、極初歩的な<code>html</code>, <code>css</code>が扱える。</li>
+<li>CIツールを使用したことがある。TravisCIの使用経験は問わない。</li>
+</ul>
+
+<h1 id="事前に知っておくべきこと">事前に知っておくべきこと</h1>
+
+<h2 id="github-pagesとは">GitHub Pagesとは</h2>
+
+<p><a href="https://pages.github.com/">GitHub Pages</a> とは、GitHubによる静的サイトのホスティングサービス。<br />
+GitHubアカウントがあれば、誰でも独自のWebサイトが構築できる。<br />
+デフォルトでは<code>&lt;アカウント名&gt;.github.io</code>にページを公開できる。</p>
+
+<h2 id="hugoとは">Hugoとは</h2>
+
+<p><a href="https://gohugo.io/">Hugo</a>とは、Go言語で書かれた、比較的新しい静的サイトジェネレータ。<br />
+これを使うと、Markdown記法で記事を書くだけで、<code>html</code>, <code>css</code>ファイルを生成できる。</p>
+
+<h2 id="travisciとは">TravisCIとは</h2>
+
+<p>TravisCIとは、ドイツのTravis CI社によって運営されている継続的インテグレーション(CI)サービス。<br />
+オープンソースプロジェクトなら<code>travis-ci.org</code>で無料で、プライベートプロジェクトであれば<code>travis-ci.com</code>で有料で利用できる。<br />
+ただし、GitHubアカウントでログインする場合は、無料だが<code>travis-ci.com</code>での利用になるらしい(実経験に基づく)。</p>
+
+<p><img src="travisCI-personal-page.PNG" alt="travisCI-personal-page" /></p>
+
+<hr />
+
+<h1 id="どうやってhugoで記事編集-デプロイするのか">どうやってHugoで記事編集・デプロイするのか?</h1>
+
+<p>この記事のとおりにサービスの設定を行えば、下記の手順で記事を編集し、デプロイできるようになる。</p>
+
+<h2 id="記事を編集する">記事を編集する</h2>
+
+<ol>
+<li>記事を編集する。</li>
+<li>端末(cmd, power shell, bash, &hellip;)で<code>hugo server</code>を実行する。</li>
+<li>hugoが、<code>localhost:1313/web</code>(本記事の設定の場合)でサイトをサーブする。</li>
+</ol>
+
+<p>この手順を繰り返すことで、ローカル環境でもブラウザから記事の様子を確認しながら記事を編集できる。</p>
+
+<p>また、<code>hugo server</code>を実行し続けながら記事を編集すると、大体の場合でhugoが自動的にサーブ内容を更新してくれる。
+これによって、記事の変更をリアルタイムに確認できる。</p>
+
+<p><img src="edit-articles.svg" alt="edit-articles" /></p>
+
+<h2 id="記事をデプロイする">記事をデプロイする</h2>
+
+<p>記事をGitHub Pagesにデプロイするのは手動でも可能だ。<br />
+しかし、TravisCIを使えば、記事をGitHubにpushするだけで自動的にGitHub Pagesにデプロイまで実行される(下記手順参照)。</p>
+
+<ol>
+<li>GitHubリポジトリに記事用のブランチを作成して、記事をpushする。</li>
+<li>ブランチを<code>master</code>にマージすると、GitHubがTravisCIにマージを通知する。</li>
+<li>TravisCIが、記事の自動ビルドとデプロイを開始する。</li>
+<li>TravisCIが、<code>gh-page</code>ブランチ(orphanブランチ)にhtmlファイルをpushする。</li>
+<li>GitHubが、GitHub Pagesにhtmlファイルをデプロイする。</li>
+<li>GitHub Pagesが、デプロイされたファイル一式をサーブする。</li>
+</ol>
+
+<p><img src="deploy-articles.svg" alt="deploy-articles" /></p>
+
+<hr />
+
+<h1 id="サイト-編集環境の構築手順">サイト&amp;編集環境の構築手順</h1>
+
+<p>ほとんどの手順で下記サイトを参考にした。ありがとうございます。<br />
+大体は下記サイトを参照すれば良いが、詳細部分の備忘録、また一部構成を変えた部分の補足を目的として下記に全手順を残す。<br />
+<a href="https://poyo.hatenablog.jp/entry/2018/06/08/145255">ぽよメモ - Hugo + Travis CI + Github pagesで独自ドメイン+HTTPSなWebページを公開する</a></p>
+
+<p>記事編集・デプロイを可能にするためには、まずサイトを構築する必要がある。<br />
+といっても、サイトはGitHub Pagesがホスティングしてくれるし、ファイルのデプロイ自体もGitHubの<code>gh-pages</code>ブランチに格納するだけだ。<br />
+つまり下記のみを実施すれば良い。</p>
+
+<ol>
+<li>Webサイトの記事を置くリポジトリを作成する</li>
+<li>Hugoを用いたサイトのプレビュー環境の構築</li>
+<li>Hugoによるビルド&amp;<code>gh-pages</code>ブランチへのpushの自動化設定</li>
+</ol>
+
+<h2 id="1-webサイトの記事を置くリポジトリを作成する">1. Webサイトの記事を置くリポジトリを作成する</h2>
+
+<p>作成するリポジトリ名は<code>&lt;ユーザ名&gt;.github.io</code>とそれ以外の2種類ある。それぞれの特徴を下記に示す。</p>
+
+<ul>
+<li>リポジトリ名を<code>&lt;ユーザ名&gt;.github.io</code>にする
+
+<ul>
+<li>公開されるURL: <code>https://&lt;ユーザ名&gt;.github.io</code></li>
+<li>公開対象のコンテンツ: <code>master</code>ブランチの内容</li>
+</ul></li>
+<li>リポジトリ名をそれ以外(本サイトでは<code>web</code>)にする
+
+<ul>
+<li>公開されるURL: <code>https://&lt;ユーザ名&gt;.github.io/&lt;リポジトリ名&gt;</code></li>
+<li>公開対象のコンテンツ: <code>gh-pages</code>ブランチ(orphanブランチ)の内容</li>
+</ul></li>
+</ul>
+
+<p>ここではCIを使用する都合上、後者を選択する。<sup class="footnote-ref" id="fnref:-"><a href="#fn:-">1</a></sup><br />
+本サイトではリポジトリ名を<code>web</code>としたが、他のリポジトリ名でも適宜読み替えれば問題無い。</p>
+
+<p>ここからの設定は全て<code>master</code>ブランチ上で実施する。</p>
+
+<p>では、GitHubで<code>web</code>リポジトリを作成し、ローカルにcloneする。</p>
+
+<h2 id="2-hugoを用いたサイトのプレビュー環境の構築">2. Hugoを用いたサイトのプレビュー環境の構築</h2>
+
+<h3 id="2-1-hugoをインストールする">2-1. Hugoをインストールする</h3>
+
+<p>Hugoはマルチプラットフォーム対応しており、Windows, Mac, Linuxで使用できる。<br />
+Windowsの場合は<a href="https://gohugo.io/getting-started/installing/#chocolatey-windows">公式ドキュメント</a>のとおり、chocolateyを使用してHugoをインストールする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cmd" data-lang="cmd"><span class="p">&gt;</span> choco install hugo -confirm</code></pre></div>
+<h3 id="2-2-hugoでサイトの初期設定を行う">2-2. Hugoでサイトの初期設定を行う</h3>
+
+<p><code>web</code>リポジトリのワークツリーに移動して、Hugoでサイトの雛形を生成する。<br />
+本サイトでは、コマンド末尾の引数(サイトの全データが入るディレクトリ名)をリポジトリ名と同じにしてしまったが、ややこしいかもしれない。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cmd" data-lang="cmd"><span class="p">&gt;</span> hugo new site web</code></pre></div>
+<p>上記を実行すると<code>web/</code> の下に更に<code>web</code>フォルダが作成され、その中にHugo用のファイルやフォルダがごそっと作成されている。<br />
+これでHugoが最低限使用できる状態となったため、一旦コミットしておくと良い。</p>
+
+<h3 id="2-3-hugoのテーマを作るor公式サイトで選ぶ">2-3. Hugoのテーマを作るor公式サイトで選ぶ</h3>
+
+<p>Hugoの公式サイトに、様々なテーマが公開されている。ここから自分の気に入った&amp;目的に見合ったテーマを選ぶ。テーマを自作しても良いが、おそらくかなりの手間になるのでやめてしまった。<br />
+スマートフォンなどからも見やすい方が良いと思うので、下記のレスポンシブデザインから選ぶと後で困らない(と思う)。</p>
+
+<p><a href="https://themes.gohugo.io/tags/responsive/">Hugo Themes (Tag: Responsive)</a></p>
+
+<p>ちなみに本サイトでは<a href="https://themes.gohugo.io/hugo-theme-den/">Den</a>を使用している。サッパリしていて使いやすい。ライセンスがGPLv2だが、そもそも本サイトがサーブするのはGitHubに公開したデータなのだから、あまり気にしなくて良いかと考えた(考えるのをやめた)。</p>
+
+<h3 id="2-4-hugoのテーマをワークツリーに格納する">2-4. Hugoのテーマをワークツリーに格納する</h3>
+
+<p>テーマを選択したら、テーマのzipをダウンロードして、<code>web/web/themes/</code>の下に格納する。submoduleとして取り込むのはおすすめしない。<sup class="footnote-ref" id="fnref:-"><a href="#fn:-">2</a></sup><br />
+本サイトの場合、<code>web/web/themes/hugo-theme-den</code>というディレクトリ構成となった。</p>
+
+<h3 id="2-5-hugoのテーマが使用可能か確認する">2-5. Hugoのテーマが使用可能か確認する</h3>
+
+<p>ここで、ダウンロードしたテーマが本当に利用可能なのかを確かめてみた方が良い。<br />
+Denの場合は<code>hugo-theme-den/exampleSite</code>フォルダにサンプルサイトのデータ一式が入っていたので、これを<code>web/web/*</code>にコピーした。
+<code>web/web/*</code>には手順2-2によって<code>content/</code>や<code>config.toml</code>といったフォルダ&amp;ファイルが作成されていると思うが、これらに上書きしてしまえば良い。失敗したら巻き戻せるのもgitの強み。</p>
+
+<p>サンプルサイト用のデータをコピーしたら、下記コマンドを実行する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cmd" data-lang="cmd">hugo server</code></pre></div>
+<p>エラーらしきメッセージが出ていなかったら成功してサーブ状態になっているはず。<br />
+<code>localhost:1313</code>にアクセスしてサンプルページが表示されれば、Hugoがビルド可能&amp;テーマがバグってない事が分かる。<br />
+(まだ設定ファイルを修正していないため<code>localhost:1313/web</code>でのサーブではないことに注意。)</p>
+
+<h3 id="2-6-hugoの設定ファイル-config-toml-を自分用に修正する">2-6. Hugoの設定ファイル<code>config.toml</code>を自分用に修正する</h3>
+
+<p>上記までの手順を実施したら<code>web/web/</code>の下に<code>config.toml</code>が存在していると思う。これはサンプルのテーマからコピーしたものなので、自分の環境に合わせて編集する必要がある。設定を全て説明するのは面倒なので、一部抜粋して記載する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-toml" data-lang="toml"><span class="c"># ------------------------------------- #</span>
+<span class="c"># ---- General Settings --------------- #</span>
+<span class="c"># ------------------------------------- #</span>
+<span class="nx">baseURL</span> <span class="p">=</span> <span class="s2">&#34;https://otaon.github.io/web&#34;</span> <span class="c"># Webサイトのエントリポイントを設定する</span>
+<span class="nx">title</span> <span class="p">=</span> <span class="s2">&#34;Lazy Lambda&#34;</span> <span class="c"># Webサイト名を設定する</span>
+<span class="nx">theme</span> <span class="p">=</span> <span class="s2">&#34;hugo-theme-den&#34;</span> <span class="c"># テーマ名を設定する(サンプルテーマなら、そのテーマのサンプル設定ファイルを参照)</span>
+<span class="c">#enableRobotsTXT = true       # generate robots.txt</span>
+<span class="nx">enableEmoji</span> <span class="p">=</span> <span class="kc">true</span>           <span class="c"># use emoji support</span>
+<span class="nx">hasCJKLanguage</span> <span class="p">=</span> <span class="kc">true</span>        <span class="c"># detect CJK languages for word count etc.(日本語を使用するならtrue)</span>
+<span class="nx">preserveTaxonomyNames</span> <span class="p">=</span> <span class="kc">true</span> <span class="c"># do not make tag names lowercase</span>
+<span class="c"># uglyURLs = true            # more info: https://gohugo.io/content-management/urls/#ugly-urls(末尾がファイル名のURLを許可するか)</span>
+<span class="nx">rssLimit</span> <span class="p">=</span> <span class="mi">20</span>                <span class="c"># limit number of entries in RSS feeds</span>
+
+<span class="c"># Copyright, appears in the footer</span>
+<span class="c"># copyright = &#34;&#34;             # default: author.name</span>
+
+<span class="c"># Pagination</span>
+<span class="c"># number of entries per page for archives, tags and categories</span>
+<span class="c"># since we don&#39;t have list view, recommend a large value</span>
+<span class="nx">paginate</span> <span class="p">=</span> <span class="mi">20</span>
+<span class="nx">paginatePath</span> <span class="p">=</span> <span class="s2">&#34;page&#34;</span>
+
+<span class="c"># Syntax Hightlight</span>
+<span class="nx">PygmentsCodeFences</span> <span class="p">=</span> <span class="kc">true</span>
+<span class="nx">PygmentsUseClasses</span> <span class="p">=</span> <span class="kc">true</span>    <span class="c"># required for shhighlight shortcode</span>
+
+<span class="c"># service plugins</span>
+<span class="nx">disqusShortname</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>         <span class="c"># disqus_shortname</span>
+<span class="nx">googleAnalytics</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>         <span class="c"># UA-XXXXXXXX-X</span>
+
+<span class="c"># language support # en / zh-tw / other... translations present in i18n/</span>
+<span class="nx">defaultContentLanguage</span> <span class="p">=</span> <span class="s2">&#34;ja-jp&#34;</span>           <span class="c"># Default language to use</span>
+<span class="nx">defaultContentLanguageInSubdir</span> <span class="p">=</span> <span class="kc">true</span>
+
+<span class="c">###### snipped ######</span></code></pre></div>
+<p>実際の設定ファイルは下記参照。<br />
+<a href="https://github.com/otaon/web/blob/how-to-make-web-page-with-hugo/web/config.toml">GitHub - web/web/config.toml</a></p>
+
+<h3 id="2-7-日本語用の多言語対応ファイルを作成する">2-7. 日本語用の多言語対応ファイルを作成する</h3>
+
+<p>選択したテーマにもよるが、Denの場合は言語ファイルを作れば複数言語の記事公開が可能だ。<br />
+テーマによって設定が違うかもしれないが、作成した言語ファイルはテーマのフォルダ内に格納すれば良いと思う。<br />
+本サイトの場合、日本語用の言語ファイルを作成して下記に格納した。<br />
+<a href="https://github.com/otaon/web/blob/how-to-make-web-page-with-hugo/web/themes/hugo-theme-den/i18n/ja-jp.yaml">web/web/themes/hugo-theme-den/i18n/ja-jp.yaml</a></p>
+
+<h3 id="2-8-サイトのコンテンツを自分向けに変更する">2-8. サイトのコンテンツを自分向けに変更する</h3>
+
+<p>ここまでの設定で、自分用のサイトをビルドできる状態になった。しかし、コンテンツ自体はまだサンプルのままなので修正する。とりあえず、下記ファイルを修正しておけば良いと思う。</p>
+
+<ul>
+<li>著者情報
+
+<ul>
+<li>サイト管理者の情報を記載する。</li>
+<li><a href="https://github.com/otaon/web/blob/how-to-make-web-page-with-hugo/web/data/authors/otaon.toml">web/web/data/authors/otaon.toml</a></li>
+</ul></li>
+<li>画像ファイル
+
+<ul>
+<li>サイト全般で使用する画像を格納する。記事内だけに使用する画像は、ここではなく記事のフォルダ内に入れる。</li>
+<li><a href="https://github.com/otaon/web/tree/how-to-make-web-page-with-hugo/web/static/images">web/web/static/images/</a></li>
+</ul></li>
+<li>記事
+
+<ul>
+<li>このフォルダに記事を格納する。</li>
+<li>言語別にフォルダが分かれている。</li>
+<li>画像ファイルを使用した記事を書くなら、記事ごとにフォルダを作成して、その中にファイルを格納する。</li>
+<li>単一のmarkdownファイルで完結する記事の場合は、フォルダ分けする必要はない。</li>
+<li><a href="https://github.com/otaon/web/tree/how-to-make-web-page-with-hugo/web/content">web/web/content/</a></li>
+</ul></li>
+</ul>
+
+<h3 id="2-9-ファイルをコミットする">2-9. ファイルをコミットする</h3>
+
+<p>ここまでに編集したファイルをコミットする。これで<code>hugo server</code>を実行しながら記事を記述する環境が整った。</p>
+
+<h2 id="3-hugoによるビルド-gh-pagesへのpushの自動化設定">3. Hugoによるビルド&amp;gh-pagesへのpushの自動化設定</h2>
+
+<p>Hugoによってビルドした成果物をGitHubに格納するのを自動化するために、TravisCIを使用する。<br />
+ここでは、TravisCIを初めて使用する場合の設定方法も含めて説明する。</p>
+
+<h3 id="3-1-travisciにサインアップする">3-1. TravisCIにサインアップする</h3>
+
+<p><a href="https://travis-ci.com/">https://travis-ci.com/</a> にアクセスして、GitHubのアカウントでサインアップする。</p>
+
+<h3 id="3-2-githubでtravisciが使うためのトークンを作成する">3-2. GitHubでTravisCIが使うためのトークンを作成する</h3>
+
+<p><a href="https://github.com/settings/tokens">https://github.com/settings/tokens</a> で、TravisCI用のトークンを作成する。scopeは画像のとおり、repoのみで良い。<sup class="footnote-ref" id="fnref:-"><a href="#fn:-">3</a></sup>
+作成したトークンをコピーしておくこと。</p>
+
+<p><img src="github-token.PNG" alt="GitHub-Token" /></p>
+
+<h3 id="3-3-travisciの-web-リポジトリの設定をする">3-3. TravisCIの<code>web</code>リポジトリの設定をする</h3>
+
+<p>TravisCIの<code>web</code>リポジトリのsettingページで自動ビルド用の設定を行う。</p>
+
+<p>まず、「General」設定で、Build pushed branchesをチェックする。これでブランチに何らかがpushされたときにTravisCIが自動的にビルドしてくれる。<br />
+次に、「Environment Variables」設定で、先程コピーしておいたGitHubのトークンを登録する。ここでは<code>GitHubToken</code>という環境変数名にした。<sup class="footnote-ref" id="fnref:-"><a href="#fn:-">4</a></sup><br />
+<img src="travisCI-settings.PNG" alt="travisCI-settings" /></p>
+
+<h3 id="3-4-travisciのビルド設定ファイル-travis-yml-を作成する">3-4. TravisCIのビルド設定ファイル<code>.travis.yml</code>を作成する</h3>
+
+<p>TravisCIは、リポジトリのトップディレクトリの<code>.travis.yml</code>ファイルに書かれたビルドレシピを実行する。<br />
+したがって<code>web/.travis.yml</code>に、Hugoによるビルドと、ビルド成果物の<code>gh-pages</code>ブランチへの<code>push</code>を実施するように記載することで、ビルドとデプロイを自動化できる。</p>
+
+<p>実際の設定ファイルは下記のとおり。本サイトの場合はこれでビルド&amp;デプロイできた。<br />
+<a href="https://github.com/otaon/web/blob/master/.travis.yml">web/.travis.yml</a></p>
+
+<p>念のための注意点を下記に述べる。</p>
+
+<ul>
+<li><code>script</code>でhugoが実行されるとき、カレントディレクトリは<code>hugo server</code>が正常に動作するディレクトリである必要がある。<br />
+本サイトの場合は<code>cd web</code>としてカレントディレクトリを変更しておく必要がある。</li>
+<li>ビルドに使用するHugoは、Hugo公式リポジトリのdepパッケージを使用している。
+
+<ul>
+<li>Hugoのバージョンが古いとうまく動作しないテーマもあるらしいため、うまく動作しない場合はHugoのバージョンを怪しんでみると良いかも知れない。</li>
+</ul></li>
+</ul>
+
+<h3 id="3-5-ワークツリーの内容を全て-push-する">3-5. ワークツリーの内容を全て<code>push</code>する</h3>
+
+<p>ここまでで、ワークツリーにはHugoにビルドさせるデータと、TravisCIの設定ファイルが格納されていることになる。<br />
+ここで、ワークツリーの内容を全て<code>master</code>ブランチにpushする。数十秒経つとTravisCIが自動ビルドとデプロイを開始する。<br />
+下記画像のようにビルドが成功したことを確認すること。<br />
+<a href="https://travis-ci.com/otaon/web">本サイトのTravisCI自動ビルド結果</a></p>
+
+<p><img src="travisCI-build.PNG" alt="travisCI-build" /></p>
+
+<h3 id="3-6-gh-pages-ブランチにビルド結果が-push-されていることを確認する">3-6. <code>gh-pages</code>ブランチにビルド結果が<code>push</code>されていることを確認する</h3>
+
+<p>ビルドが成功していれば、下記のとおり<code>gh-pages</code>ブランチにビルド成果物が<code>push</code>されているはずだ。<br />
+<img src="gh-pages.PNG" alt="gh-pages" /></p>
+
+<p>最後に<code>gh-pages</code>ブランチに格納されたデータがGitHub Pagesに公開されたことを確認する。<br />
+<a href="https://otaon.github.io/web/">https://otaon.github.io/web/</a></p>
+
+<p>Webサイトが公開されていれば自動ビルド&amp;デプロイは成功。<br />
+今後は、下記のサイクルで記事を公開することができる。とても楽だと思う。</p>
+
+<ol>
+<li>記事毎にブランチを切る</li>
+<li>ローカル環境のHugoでプレビューしながら記事を書く</li>
+<li>ブランチをmasterにマージする</li>
+<li>自動ビルド&amp;デプロイが走り、勝手に記事が公開される</li>
+</ol>
+
+<h1 id="まとめ">まとめ</h1>
+
+<ul>
+<li>Hugoを使って、ローカルでプレビューしながらサイトの記事を書けるようにした</li>
+<li>Hugoを使って、Webサーバにデプロイするためのhtmlファイルをビルドできるようにした</li>
+<li>TravisCIを使って、Hugoによるビルドとhtmlファイルのデプロイを自動化できるようにした</li>
+</ul>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:-">前者の場合、ユーザが<code>master</code>に記事をpushした場合、前者のリポジトリ名だと、CIはビルドした成果物を<code>master</code>にpushすることになる。こうなると、ユーザが編集していないのに勝手に<code>master</code>の<code>head</code>が進むし、何より<code>master</code>の内容が公開されてしまうので、Hugoに食わせる「素」のデータも無駄に公開することになってしまい汚い(どこかでエントリポイントの変更ができるのかもしれないが・・・)。
+ <a class="footnote-return" href="#fnref:-"><sup>[return]</sup></a></li>
+<li id="fn:-">submoduleとして取り込むのはよく考えてからの方が良い。当初はGitHubのリポジトリをsubmoduleとして取り込んだが、これは失敗だった。Denの多言語化設定に日本語用の設定ファイルが入っていなかったため、結局自分で日本語用の設定ファイルを書くことになった。その結果submoduleに変更が入ってしまいsubmoduleとの同期がずれた・・・。日本語用の設定ファイルを正しくPRしても良かったが、正しい翻訳になっているのか未検証なので、とりあえず自分の環境だけで様子見とした。おそらく最も良い方法は、Denをforkして、それをsubmoduleとして取り込む方法だろう。こうすればsubmoduleとして分割したまま編集できるし、気が向いたらPRを送ることもできる。
+ <a class="footnote-return" href="#fnref:-"><sup>[return]</sup></a></li>
+<li id="fn:-">本当ならリポジトリ固有のトークンを作成した方がリスク低減できるが、リポジトリのアクセス程度なら最悪の場合でも泣くだけなので目を瞑った。<br />
+ <a class="footnote-return" href="#fnref:-"><sup>[return]</sup></a></li>
+<li id="fn:-">TravisCIでは、環境設定に追加した文字列が誤ってビルドログに出力されてしまっても、それを隠してくれる。トークン流出防止のためには、必ず環境変数を使用すること。
+ <a class="footnote-return" href="#fnref:-"><sup>[return]</sup></a></li>
+</ol>
+</div>
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

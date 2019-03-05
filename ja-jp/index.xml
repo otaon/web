@@ -24,6 +24,349 @@
     </item>
     
     <item>
+      <title>GitHub &#43; Hugo &#43; Travis CI で静的サイトを GitHub Pages に公開する</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/03/github-hugo-travis-ci-%E3%81%A7%E9%9D%99%E7%9A%84%E3%82%B5%E3%82%A4%E3%83%88%E3%82%92-github-pages-%E3%81%AB%E5%85%AC%E9%96%8B%E3%81%99%E3%82%8B/</link>
+      <pubDate>Sun, 03 Mar 2019 16:23:58 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/03/github-hugo-travis-ci-%E3%81%A7%E9%9D%99%E7%9A%84%E3%82%B5%E3%82%A4%E3%83%88%E3%82%92-github-pages-%E3%81%AB%E5%85%AC%E9%96%8B%E3%81%99%E3%82%8B/</guid>
+      
+        <description>&lt;h1 id=&#34;はじめに&#34;&gt;はじめに&lt;/h1&gt;
+
+&lt;p&gt;自前でサーバを構築することなく、全て外部サービスを使用してブログ的な静的サイトを楽に作りたい場合、この記事が役に立つと思う。&lt;br /&gt;
+このWebサイトも、この記事と全く同じ方法で作成している。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;html&lt;/code&gt;, &lt;code&gt;css&lt;/code&gt;諸々を書いて、サーバを立てて、ドメインを取って…という事を全くせずにWebサイトが構築できる。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;前提条件&#34;&gt;前提条件&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;GitHub、および、Gitの基本的な使い方が分かる。&lt;/li&gt;
+&lt;li&gt;Markdown記法、および、極初歩的な&lt;code&gt;html&lt;/code&gt;, &lt;code&gt;css&lt;/code&gt;が扱える。&lt;/li&gt;
+&lt;li&gt;CIツールを使用したことがある。TravisCIの使用経験は問わない。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;事前に知っておくべきこと&#34;&gt;事前に知っておくべきこと&lt;/h1&gt;
+
+&lt;h2 id=&#34;github-pagesとは&#34;&gt;GitHub Pagesとは&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://pages.github.com/&#34;&gt;GitHub Pages&lt;/a&gt; とは、GitHubによる静的サイトのホスティングサービス。&lt;br /&gt;
+GitHubアカウントがあれば、誰でも独自のWebサイトが構築できる。&lt;br /&gt;
+デフォルトでは&lt;code&gt;&amp;lt;アカウント名&amp;gt;.github.io&lt;/code&gt;にページを公開できる。&lt;/p&gt;
+
+&lt;h2 id=&#34;hugoとは&#34;&gt;Hugoとは&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://gohugo.io/&#34;&gt;Hugo&lt;/a&gt;とは、Go言語で書かれた、比較的新しい静的サイトジェネレータ。&lt;br /&gt;
+これを使うと、Markdown記法で記事を書くだけで、&lt;code&gt;html&lt;/code&gt;, &lt;code&gt;css&lt;/code&gt;ファイルを生成できる。&lt;/p&gt;
+
+&lt;h2 id=&#34;travisciとは&#34;&gt;TravisCIとは&lt;/h2&gt;
+
+&lt;p&gt;TravisCIとは、ドイツのTravis CI社によって運営されている継続的インテグレーション(CI)サービス。&lt;br /&gt;
+オープンソースプロジェクトなら&lt;code&gt;travis-ci.org&lt;/code&gt;で無料で、プライベートプロジェクトであれば&lt;code&gt;travis-ci.com&lt;/code&gt;で有料で利用できる。&lt;br /&gt;
+ただし、GitHubアカウントでログインする場合は、無料だが&lt;code&gt;travis-ci.com&lt;/code&gt;での利用になるらしい(実経験に基づく)。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;travisCI-personal-page.PNG&#34; alt=&#34;travisCI-personal-page&#34; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;どうやってhugoで記事編集-デプロイするのか&#34;&gt;どうやってHugoで記事編集・デプロイするのか?&lt;/h1&gt;
+
+&lt;p&gt;この記事のとおりにサービスの設定を行えば、下記の手順で記事を編集し、デプロイできるようになる。&lt;/p&gt;
+
+&lt;h2 id=&#34;記事を編集する&#34;&gt;記事を編集する&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;記事を編集する。&lt;/li&gt;
+&lt;li&gt;端末(cmd, power shell, bash, &amp;hellip;)で&lt;code&gt;hugo server&lt;/code&gt;を実行する。&lt;/li&gt;
+&lt;li&gt;hugoが、&lt;code&gt;localhost:1313/web&lt;/code&gt;(本記事の設定の場合)でサイトをサーブする。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;この手順を繰り返すことで、ローカル環境でもブラウザから記事の様子を確認しながら記事を編集できる。&lt;/p&gt;
+
+&lt;p&gt;また、&lt;code&gt;hugo server&lt;/code&gt;を実行し続けながら記事を編集すると、大体の場合でhugoが自動的にサーブ内容を更新してくれる。
+これによって、記事の変更をリアルタイムに確認できる。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;edit-articles.svg&#34; alt=&#34;edit-articles&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;記事をデプロイする&#34;&gt;記事をデプロイする&lt;/h2&gt;
+
+&lt;p&gt;記事をGitHub Pagesにデプロイするのは手動でも可能だ。&lt;br /&gt;
+しかし、TravisCIを使えば、記事をGitHubにpushするだけで自動的にGitHub Pagesにデプロイまで実行される(下記手順参照)。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;GitHubリポジトリに記事用のブランチを作成して、記事をpushする。&lt;/li&gt;
+&lt;li&gt;ブランチを&lt;code&gt;master&lt;/code&gt;にマージすると、GitHubがTravisCIにマージを通知する。&lt;/li&gt;
+&lt;li&gt;TravisCIが、記事の自動ビルドとデプロイを開始する。&lt;/li&gt;
+&lt;li&gt;TravisCIが、&lt;code&gt;gh-page&lt;/code&gt;ブランチ(orphanブランチ)にhtmlファイルをpushする。&lt;/li&gt;
+&lt;li&gt;GitHubが、GitHub Pagesにhtmlファイルをデプロイする。&lt;/li&gt;
+&lt;li&gt;GitHub Pagesが、デプロイされたファイル一式をサーブする。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&#34;deploy-articles.svg&#34; alt=&#34;deploy-articles&#34; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;サイト-編集環境の構築手順&#34;&gt;サイト&amp;amp;編集環境の構築手順&lt;/h1&gt;
+
+&lt;p&gt;ほとんどの手順で下記サイトを参考にした。ありがとうございます。&lt;br /&gt;
+大体は下記サイトを参照すれば良いが、詳細部分の備忘録、また一部構成を変えた部分の補足を目的として下記に全手順を残す。&lt;br /&gt;
+&lt;a href=&#34;https://poyo.hatenablog.jp/entry/2018/06/08/145255&#34;&gt;ぽよメモ - Hugo + Travis CI + Github pagesで独自ドメイン+HTTPSなWebページを公開する&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;記事編集・デプロイを可能にするためには、まずサイトを構築する必要がある。&lt;br /&gt;
+といっても、サイトはGitHub Pagesがホスティングしてくれるし、ファイルのデプロイ自体もGitHubの&lt;code&gt;gh-pages&lt;/code&gt;ブランチに格納するだけだ。&lt;br /&gt;
+つまり下記のみを実施すれば良い。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Webサイトの記事を置くリポジトリを作成する&lt;/li&gt;
+&lt;li&gt;Hugoを用いたサイトのプレビュー環境の構築&lt;/li&gt;
+&lt;li&gt;Hugoによるビルド&amp;amp;&lt;code&gt;gh-pages&lt;/code&gt;ブランチへのpushの自動化設定&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;1-webサイトの記事を置くリポジトリを作成する&#34;&gt;1. Webサイトの記事を置くリポジトリを作成する&lt;/h2&gt;
+
+&lt;p&gt;作成するリポジトリ名は&lt;code&gt;&amp;lt;ユーザ名&amp;gt;.github.io&lt;/code&gt;とそれ以外の2種類ある。それぞれの特徴を下記に示す。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;リポジトリ名を&lt;code&gt;&amp;lt;ユーザ名&amp;gt;.github.io&lt;/code&gt;にする
+
+&lt;ul&gt;
+&lt;li&gt;公開されるURL: &lt;code&gt;https://&amp;lt;ユーザ名&amp;gt;.github.io&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;公開対象のコンテンツ: &lt;code&gt;master&lt;/code&gt;ブランチの内容&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;リポジトリ名をそれ以外(本サイトでは&lt;code&gt;web&lt;/code&gt;)にする
+
+&lt;ul&gt;
+&lt;li&gt;公開されるURL: &lt;code&gt;https://&amp;lt;ユーザ名&amp;gt;.github.io/&amp;lt;リポジトリ名&amp;gt;&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;公開対象のコンテンツ: &lt;code&gt;gh-pages&lt;/code&gt;ブランチ(orphanブランチ)の内容&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;ここではCIを使用する都合上、後者を選択する。&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:-&#34;&gt;&lt;a href=&#34;#fn:-&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;br /&gt;
+本サイトではリポジトリ名を&lt;code&gt;web&lt;/code&gt;としたが、他のリポジトリ名でも適宜読み替えれば問題無い。&lt;/p&gt;
+
+&lt;p&gt;ここからの設定は全て&lt;code&gt;master&lt;/code&gt;ブランチ上で実施する。&lt;/p&gt;
+
+&lt;p&gt;では、GitHubで&lt;code&gt;web&lt;/code&gt;リポジトリを作成し、ローカルにcloneする。&lt;/p&gt;
+
+&lt;h2 id=&#34;2-hugoを用いたサイトのプレビュー環境の構築&#34;&gt;2. Hugoを用いたサイトのプレビュー環境の構築&lt;/h2&gt;
+
+&lt;h3 id=&#34;2-1-hugoをインストールする&#34;&gt;2-1. Hugoをインストールする&lt;/h3&gt;
+
+&lt;p&gt;Hugoはマルチプラットフォーム対応しており、Windows, Mac, Linuxで使用できる。&lt;br /&gt;
+Windowsの場合は&lt;a href=&#34;https://gohugo.io/getting-started/installing/#chocolatey-windows&#34;&gt;公式ドキュメント&lt;/a&gt;のとおり、chocolateyを使用してHugoをインストールする。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cmd&#34; data-lang=&#34;cmd&#34;&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; choco install hugo -confirm&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;2-2-hugoでサイトの初期設定を行う&#34;&gt;2-2. Hugoでサイトの初期設定を行う&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;web&lt;/code&gt;リポジトリのワークツリーに移動して、Hugoでサイトの雛形を生成する。&lt;br /&gt;
+本サイトでは、コマンド末尾の引数(サイトの全データが入るディレクトリ名)をリポジトリ名と同じにしてしまったが、ややこしいかもしれない。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cmd&#34; data-lang=&#34;cmd&#34;&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; hugo new site web&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上記を実行すると&lt;code&gt;web/&lt;/code&gt; の下に更に&lt;code&gt;web&lt;/code&gt;フォルダが作成され、その中にHugo用のファイルやフォルダがごそっと作成されている。&lt;br /&gt;
+これでHugoが最低限使用できる状態となったため、一旦コミットしておくと良い。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-3-hugoのテーマを作るor公式サイトで選ぶ&#34;&gt;2-3. Hugoのテーマを作るor公式サイトで選ぶ&lt;/h3&gt;
+
+&lt;p&gt;Hugoの公式サイトに、様々なテーマが公開されている。ここから自分の気に入った&amp;amp;目的に見合ったテーマを選ぶ。テーマを自作しても良いが、おそらくかなりの手間になるのでやめてしまった。&lt;br /&gt;
+スマートフォンなどからも見やすい方が良いと思うので、下記のレスポンシブデザインから選ぶと後で困らない(と思う)。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://themes.gohugo.io/tags/responsive/&#34;&gt;Hugo Themes (Tag: Responsive)&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;ちなみに本サイトでは&lt;a href=&#34;https://themes.gohugo.io/hugo-theme-den/&#34;&gt;Den&lt;/a&gt;を使用している。サッパリしていて使いやすい。ライセンスがGPLv2だが、そもそも本サイトがサーブするのはGitHubに公開したデータなのだから、あまり気にしなくて良いかと考えた(考えるのをやめた)。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-4-hugoのテーマをワークツリーに格納する&#34;&gt;2-4. Hugoのテーマをワークツリーに格納する&lt;/h3&gt;
+
+&lt;p&gt;テーマを選択したら、テーマのzipをダウンロードして、&lt;code&gt;web/web/themes/&lt;/code&gt;の下に格納する。submoduleとして取り込むのはおすすめしない。&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:-&#34;&gt;&lt;a href=&#34;#fn:-&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;br /&gt;
+本サイトの場合、&lt;code&gt;web/web/themes/hugo-theme-den&lt;/code&gt;というディレクトリ構成となった。&lt;/p&gt;
+
+&lt;h3 id=&#34;2-5-hugoのテーマが使用可能か確認する&#34;&gt;2-5. Hugoのテーマが使用可能か確認する&lt;/h3&gt;
+
+&lt;p&gt;ここで、ダウンロードしたテーマが本当に利用可能なのかを確かめてみた方が良い。&lt;br /&gt;
+Denの場合は&lt;code&gt;hugo-theme-den/exampleSite&lt;/code&gt;フォルダにサンプルサイトのデータ一式が入っていたので、これを&lt;code&gt;web/web/*&lt;/code&gt;にコピーした。
+&lt;code&gt;web/web/*&lt;/code&gt;には手順2-2によって&lt;code&gt;content/&lt;/code&gt;や&lt;code&gt;config.toml&lt;/code&gt;といったフォルダ&amp;amp;ファイルが作成されていると思うが、これらに上書きしてしまえば良い。失敗したら巻き戻せるのもgitの強み。&lt;/p&gt;
+
+&lt;p&gt;サンプルサイト用のデータをコピーしたら、下記コマンドを実行する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cmd&#34; data-lang=&#34;cmd&#34;&gt;hugo server&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;エラーらしきメッセージが出ていなかったら成功してサーブ状態になっているはず。&lt;br /&gt;
+&lt;code&gt;localhost:1313&lt;/code&gt;にアクセスしてサンプルページが表示されれば、Hugoがビルド可能&amp;amp;テーマがバグってない事が分かる。&lt;br /&gt;
+(まだ設定ファイルを修正していないため&lt;code&gt;localhost:1313/web&lt;/code&gt;でのサーブではないことに注意。)&lt;/p&gt;
+
+&lt;h3 id=&#34;2-6-hugoの設定ファイル-config-toml-を自分用に修正する&#34;&gt;2-6. Hugoの設定ファイル&lt;code&gt;config.toml&lt;/code&gt;を自分用に修正する&lt;/h3&gt;
+
+&lt;p&gt;上記までの手順を実施したら&lt;code&gt;web/web/&lt;/code&gt;の下に&lt;code&gt;config.toml&lt;/code&gt;が存在していると思う。これはサンプルのテーマからコピーしたものなので、自分の環境に合わせて編集する必要がある。設定を全て説明するのは面倒なので、一部抜粋して記載する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-toml&#34; data-lang=&#34;toml&#34;&gt;&lt;span class=&#34;c&#34;&gt;# ------------------------------------- #&lt;/span&gt;
+&lt;span class=&#34;c&#34;&gt;# ---- General Settings --------------- #&lt;/span&gt;
+&lt;span class=&#34;c&#34;&gt;# ------------------------------------- #&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;baseURL&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;https://otaon.github.io/web&amp;#34;&lt;/span&gt; &lt;span class=&#34;c&#34;&gt;# Webサイトのエントリポイントを設定する&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;title&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;Lazy Lambda&amp;#34;&lt;/span&gt; &lt;span class=&#34;c&#34;&gt;# Webサイト名を設定する&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;theme&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;hugo-theme-den&amp;#34;&lt;/span&gt; &lt;span class=&#34;c&#34;&gt;# テーマ名を設定する(サンプルテーマなら、そのテーマのサンプル設定ファイルを参照)&lt;/span&gt;
+&lt;span class=&#34;c&#34;&gt;#enableRobotsTXT = true       # generate robots.txt&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;enableEmoji&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;           &lt;span class=&#34;c&#34;&gt;# use emoji support&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;hasCJKLanguage&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;        &lt;span class=&#34;c&#34;&gt;# detect CJK languages for word count etc.(日本語を使用するならtrue)&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;preserveTaxonomyNames&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt; &lt;span class=&#34;c&#34;&gt;# do not make tag names lowercase&lt;/span&gt;
+&lt;span class=&#34;c&#34;&gt;# uglyURLs = true            # more info: https://gohugo.io/content-management/urls/#ugly-urls(末尾がファイル名のURLを許可するか)&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;rssLimit&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;20&lt;/span&gt;                &lt;span class=&#34;c&#34;&gt;# limit number of entries in RSS feeds&lt;/span&gt;
+
+&lt;span class=&#34;c&#34;&gt;# Copyright, appears in the footer&lt;/span&gt;
+&lt;span class=&#34;c&#34;&gt;# copyright = &amp;#34;&amp;#34;             # default: author.name&lt;/span&gt;
+
+&lt;span class=&#34;c&#34;&gt;# Pagination&lt;/span&gt;
+&lt;span class=&#34;c&#34;&gt;# number of entries per page for archives, tags and categories&lt;/span&gt;
+&lt;span class=&#34;c&#34;&gt;# since we don&amp;#39;t have list view, recommend a large value&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;paginate&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;20&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;paginatePath&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;page&amp;#34;&lt;/span&gt;
+
+&lt;span class=&#34;c&#34;&gt;# Syntax Hightlight&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;PygmentsCodeFences&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;PygmentsUseClasses&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;    &lt;span class=&#34;c&#34;&gt;# required for shhighlight shortcode&lt;/span&gt;
+
+&lt;span class=&#34;c&#34;&gt;# service plugins&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;disqusShortname&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;         &lt;span class=&#34;c&#34;&gt;# disqus_shortname&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;googleAnalytics&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt;         &lt;span class=&#34;c&#34;&gt;# UA-XXXXXXXX-X&lt;/span&gt;
+
+&lt;span class=&#34;c&#34;&gt;# language support # en / zh-tw / other... translations present in i18n/&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;defaultContentLanguage&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;ja-jp&amp;#34;&lt;/span&gt;           &lt;span class=&#34;c&#34;&gt;# Default language to use&lt;/span&gt;
+&lt;span class=&#34;nx&#34;&gt;defaultContentLanguageInSubdir&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;
+
+&lt;span class=&#34;c&#34;&gt;###### snipped ######&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;実際の設定ファイルは下記参照。&lt;br /&gt;
+&lt;a href=&#34;https://github.com/otaon/web/blob/how-to-make-web-page-with-hugo/web/config.toml&#34;&gt;GitHub - web/web/config.toml&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-7-日本語用の多言語対応ファイルを作成する&#34;&gt;2-7. 日本語用の多言語対応ファイルを作成する&lt;/h3&gt;
+
+&lt;p&gt;選択したテーマにもよるが、Denの場合は言語ファイルを作れば複数言語の記事公開が可能だ。&lt;br /&gt;
+テーマによって設定が違うかもしれないが、作成した言語ファイルはテーマのフォルダ内に格納すれば良いと思う。&lt;br /&gt;
+本サイトの場合、日本語用の言語ファイルを作成して下記に格納した。&lt;br /&gt;
+&lt;a href=&#34;https://github.com/otaon/web/blob/how-to-make-web-page-with-hugo/web/themes/hugo-theme-den/i18n/ja-jp.yaml&#34;&gt;web/web/themes/hugo-theme-den/i18n/ja-jp.yaml&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;2-8-サイトのコンテンツを自分向けに変更する&#34;&gt;2-8. サイトのコンテンツを自分向けに変更する&lt;/h3&gt;
+
+&lt;p&gt;ここまでの設定で、自分用のサイトをビルドできる状態になった。しかし、コンテンツ自体はまだサンプルのままなので修正する。とりあえず、下記ファイルを修正しておけば良いと思う。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;著者情報
+
+&lt;ul&gt;
+&lt;li&gt;サイト管理者の情報を記載する。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/otaon/web/blob/how-to-make-web-page-with-hugo/web/data/authors/otaon.toml&#34;&gt;web/web/data/authors/otaon.toml&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;画像ファイル
+
+&lt;ul&gt;
+&lt;li&gt;サイト全般で使用する画像を格納する。記事内だけに使用する画像は、ここではなく記事のフォルダ内に入れる。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/otaon/web/tree/how-to-make-web-page-with-hugo/web/static/images&#34;&gt;web/web/static/images/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;記事
+
+&lt;ul&gt;
+&lt;li&gt;このフォルダに記事を格納する。&lt;/li&gt;
+&lt;li&gt;言語別にフォルダが分かれている。&lt;/li&gt;
+&lt;li&gt;画像ファイルを使用した記事を書くなら、記事ごとにフォルダを作成して、その中にファイルを格納する。&lt;/li&gt;
+&lt;li&gt;単一のmarkdownファイルで完結する記事の場合は、フォルダ分けする必要はない。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/otaon/web/tree/how-to-make-web-page-with-hugo/web/content&#34;&gt;web/web/content/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;2-9-ファイルをコミットする&#34;&gt;2-9. ファイルをコミットする&lt;/h3&gt;
+
+&lt;p&gt;ここまでに編集したファイルをコミットする。これで&lt;code&gt;hugo server&lt;/code&gt;を実行しながら記事を記述する環境が整った。&lt;/p&gt;
+
+&lt;h2 id=&#34;3-hugoによるビルド-gh-pagesへのpushの自動化設定&#34;&gt;3. Hugoによるビルド&amp;amp;gh-pagesへのpushの自動化設定&lt;/h2&gt;
+
+&lt;p&gt;Hugoによってビルドした成果物をGitHubに格納するのを自動化するために、TravisCIを使用する。&lt;br /&gt;
+ここでは、TravisCIを初めて使用する場合の設定方法も含めて説明する。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-1-travisciにサインアップする&#34;&gt;3-1. TravisCIにサインアップする&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://travis-ci.com/&#34;&gt;https://travis-ci.com/&lt;/a&gt; にアクセスして、GitHubのアカウントでサインアップする。&lt;/p&gt;
+
+&lt;h3 id=&#34;3-2-githubでtravisciが使うためのトークンを作成する&#34;&gt;3-2. GitHubでTravisCIが使うためのトークンを作成する&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/settings/tokens&#34;&gt;https://github.com/settings/tokens&lt;/a&gt; で、TravisCI用のトークンを作成する。scopeは画像のとおり、repoのみで良い。&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:-&#34;&gt;&lt;a href=&#34;#fn:-&#34;&gt;3&lt;/a&gt;&lt;/sup&gt;
+作成したトークンをコピーしておくこと。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;github-token.PNG&#34; alt=&#34;GitHub-Token&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;3-3-travisciの-web-リポジトリの設定をする&#34;&gt;3-3. TravisCIの&lt;code&gt;web&lt;/code&gt;リポジトリの設定をする&lt;/h3&gt;
+
+&lt;p&gt;TravisCIの&lt;code&gt;web&lt;/code&gt;リポジトリのsettingページで自動ビルド用の設定を行う。&lt;/p&gt;
+
+&lt;p&gt;まず、「General」設定で、Build pushed branchesをチェックする。これでブランチに何らかがpushされたときにTravisCIが自動的にビルドしてくれる。&lt;br /&gt;
+次に、「Environment Variables」設定で、先程コピーしておいたGitHubのトークンを登録する。ここでは&lt;code&gt;GitHubToken&lt;/code&gt;という環境変数名にした。&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:-&#34;&gt;&lt;a href=&#34;#fn:-&#34;&gt;4&lt;/a&gt;&lt;/sup&gt;&lt;br /&gt;
+&lt;img src=&#34;travisCI-settings.PNG&#34; alt=&#34;travisCI-settings&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;3-4-travisciのビルド設定ファイル-travis-yml-を作成する&#34;&gt;3-4. TravisCIのビルド設定ファイル&lt;code&gt;.travis.yml&lt;/code&gt;を作成する&lt;/h3&gt;
+
+&lt;p&gt;TravisCIは、リポジトリのトップディレクトリの&lt;code&gt;.travis.yml&lt;/code&gt;ファイルに書かれたビルドレシピを実行する。&lt;br /&gt;
+したがって&lt;code&gt;web/.travis.yml&lt;/code&gt;に、Hugoによるビルドと、ビルド成果物の&lt;code&gt;gh-pages&lt;/code&gt;ブランチへの&lt;code&gt;push&lt;/code&gt;を実施するように記載することで、ビルドとデプロイを自動化できる。&lt;/p&gt;
+
+&lt;p&gt;実際の設定ファイルは下記のとおり。本サイトの場合はこれでビルド&amp;amp;デプロイできた。&lt;br /&gt;
+&lt;a href=&#34;https://github.com/otaon/web/blob/master/.travis.yml&#34;&gt;web/.travis.yml&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;念のための注意点を下記に述べる。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;script&lt;/code&gt;でhugoが実行されるとき、カレントディレクトリは&lt;code&gt;hugo server&lt;/code&gt;が正常に動作するディレクトリである必要がある。&lt;br /&gt;
+本サイトの場合は&lt;code&gt;cd web&lt;/code&gt;としてカレントディレクトリを変更しておく必要がある。&lt;/li&gt;
+&lt;li&gt;ビルドに使用するHugoは、Hugo公式リポジトリのdepパッケージを使用している。
+
+&lt;ul&gt;
+&lt;li&gt;Hugoのバージョンが古いとうまく動作しないテーマもあるらしいため、うまく動作しない場合はHugoのバージョンを怪しんでみると良いかも知れない。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;3-5-ワークツリーの内容を全て-push-する&#34;&gt;3-5. ワークツリーの内容を全て&lt;code&gt;push&lt;/code&gt;する&lt;/h3&gt;
+
+&lt;p&gt;ここまでで、ワークツリーにはHugoにビルドさせるデータと、TravisCIの設定ファイルが格納されていることになる。&lt;br /&gt;
+ここで、ワークツリーの内容を全て&lt;code&gt;master&lt;/code&gt;ブランチにpushする。数十秒経つとTravisCIが自動ビルドとデプロイを開始する。&lt;br /&gt;
+下記画像のようにビルドが成功したことを確認すること。&lt;br /&gt;
+&lt;a href=&#34;https://travis-ci.com/otaon/web&#34;&gt;本サイトのTravisCI自動ビルド結果&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;travisCI-build.PNG&#34; alt=&#34;travisCI-build&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;3-6-gh-pages-ブランチにビルド結果が-push-されていることを確認する&#34;&gt;3-6. &lt;code&gt;gh-pages&lt;/code&gt;ブランチにビルド結果が&lt;code&gt;push&lt;/code&gt;されていることを確認する&lt;/h3&gt;
+
+&lt;p&gt;ビルドが成功していれば、下記のとおり&lt;code&gt;gh-pages&lt;/code&gt;ブランチにビルド成果物が&lt;code&gt;push&lt;/code&gt;されているはずだ。&lt;br /&gt;
+&lt;img src=&#34;gh-pages.PNG&#34; alt=&#34;gh-pages&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;最後に&lt;code&gt;gh-pages&lt;/code&gt;ブランチに格納されたデータがGitHub Pagesに公開されたことを確認する。&lt;br /&gt;
+&lt;a href=&#34;https://otaon.github.io/web/&#34;&gt;https://otaon.github.io/web/&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Webサイトが公開されていれば自動ビルド&amp;amp;デプロイは成功。&lt;br /&gt;
+今後は、下記のサイクルで記事を公開することができる。とても楽だと思う。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;記事毎にブランチを切る&lt;/li&gt;
+&lt;li&gt;ローカル環境のHugoでプレビューしながら記事を書く&lt;/li&gt;
+&lt;li&gt;ブランチをmasterにマージする&lt;/li&gt;
+&lt;li&gt;自動ビルド&amp;amp;デプロイが走り、勝手に記事が公開される&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h1 id=&#34;まとめ&#34;&gt;まとめ&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Hugoを使って、ローカルでプレビューしながらサイトの記事を書けるようにした&lt;/li&gt;
+&lt;li&gt;Hugoを使って、Webサーバにデプロイするためのhtmlファイルをビルドできるようにした&lt;/li&gt;
+&lt;li&gt;TravisCIを使って、Hugoによるビルドとhtmlファイルのデプロイを自動化できるようにした&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
+
+&lt;hr /&gt;
+
+&lt;ol&gt;
+&lt;li id=&#34;fn:-&#34;&gt;前者の場合、ユーザが&lt;code&gt;master&lt;/code&gt;に記事をpushした場合、前者のリポジトリ名だと、CIはビルドした成果物を&lt;code&gt;master&lt;/code&gt;にpushすることになる。こうなると、ユーザが編集していないのに勝手に&lt;code&gt;master&lt;/code&gt;の&lt;code&gt;head&lt;/code&gt;が進むし、何より&lt;code&gt;master&lt;/code&gt;の内容が公開されてしまうので、Hugoに食わせる「素」のデータも無駄に公開することになってしまい汚い(どこかでエントリポイントの変更ができるのかもしれないが・・・)。
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:-&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&#34;fn:-&#34;&gt;submoduleとして取り込むのはよく考えてからの方が良い。当初はGitHubのリポジトリをsubmoduleとして取り込んだが、これは失敗だった。Denの多言語化設定に日本語用の設定ファイルが入っていなかったため、結局自分で日本語用の設定ファイルを書くことになった。その結果submoduleに変更が入ってしまいsubmoduleとの同期がずれた・・・。日本語用の設定ファイルを正しくPRしても良かったが、正しい翻訳になっているのか未検証なので、とりあえず自分の環境だけで様子見とした。おそらく最も良い方法は、Denをforkして、それをsubmoduleとして取り込む方法だろう。こうすればsubmoduleとして分割したまま編集できるし、気が向いたらPRを送ることもできる。
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:-&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&#34;fn:-&#34;&gt;本当ならリポジトリ固有のトークンを作成した方がリスク低減できるが、リポジトリのアクセス程度なら最悪の場合でも泣くだけなので目を瞑った。&lt;br /&gt;
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:-&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&#34;fn:-&#34;&gt;TravisCIでは、環境設定に追加した文字列が誤ってビルドログに出力されてしまっても、それを隠してくれる。トークン流出防止のためには、必ず環境変数を使用すること。
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:-&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</description>
+      
+    </item>
+    
+    <item>
       <title>デモテンプレート</title>
       <link>https://otaon.github.io/web/ja-jp/2019/03/03/%E3%83%87%E3%83%A2%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88/</link>
       <pubDate>Sun, 03 Mar 2019 16:01:23 +0900</pubDate>
@@ -263,13 +606,13 @@ echo hello world&lt;br /&gt;
 
 &lt;ul&gt;
 &lt;li&gt;幅を指定して表示&lt;br /&gt;
-{{&amp;lt;figure src=&amp;ldquo;/images/globe.svg&amp;rdquo; alt=&amp;ldquo;Globe&amp;rdquo; align=&amp;ldquo;aligncenter&amp;rdquo; width=&amp;ldquo;100&amp;rdquo; caption=&amp;rdquo;&lt;strong&gt;Globe&lt;/strong&gt;&amp;rdquo;&amp;gt;}}&lt;br /&gt;
+{{&amp;lt;figure src=&amp;ldquo;/web/images/globe.svg&amp;rdquo; alt=&amp;ldquo;Globe&amp;rdquo; align=&amp;ldquo;aligncenter&amp;rdquo; width=&amp;ldquo;100&amp;rdquo; caption=&amp;rdquo;&lt;strong&gt;Globe&lt;/strong&gt;&amp;rdquo;&amp;gt;}}&lt;br /&gt;
 
 &lt;link rel=&#34;stylesheet&#34; href=&#34;https://otaon.github.io/css/hugo-easy-gallery.css&#34; /&gt;
 &lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:100px;&#34;&gt;
   &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
     &lt;div class=&#34;img&#34;&gt;
-      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;https://otaon.github.io/web/images/globe.svg&#34; alt=&#34;Globe&#34; /&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;https://otaon.github.io/web/web/images/globe.svg&#34; alt=&#34;Globe&#34; /&gt;
     &lt;/div&gt;
     
       &lt;figcaption&gt;

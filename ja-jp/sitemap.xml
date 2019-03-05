@@ -10,6 +10,13 @@
   </url>
   
   <url>
+    <loc>https://otaon.github.io/web/ja-jp/2019/03/03/github-hugo-travis-ci-%E3%81%A7%E9%9D%99%E7%9A%84%E3%82%B5%E3%82%A4%E3%83%88%E3%82%92-github-pages-%E3%81%AB%E5%85%AC%E9%96%8B%E3%81%99%E3%82%8B/</loc>
+    <lastmod>2019-03-04T16:00:00+09:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>https://otaon.github.io/web/ja-jp/2019/03/03/%E3%83%87%E3%83%A2%E3%83%86%E3%83%B3%E3%83%97%E3%83%AC%E3%83%BC%E3%83%88/</loc>
     <lastmod>2019-03-03T16:01:23+09:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -30,6 +37,13 @@
   </url>
   
   <url>
+    <loc>https://otaon.github.io/web/ja-jp/category/demos/</loc>
+    <lastmod>2019-03-03T16:01:23+09:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>https://otaon.github.io/web/ja-jp/</loc>
     <lastmod>2017-08-28T21:41:52+08:00</lastmod>
     <changefreq>weekly</changefreq>
@@ -38,14 +52,14 @@
   
   <url>
     <loc>https://otaon.github.io/web/ja-jp/category/notes/</loc>
-    <lastmod>2019-03-01T16:01:23+09:00</lastmod>
+    <lastmod>2019-03-04T16:00:00+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://otaon.github.io/web/ja-jp/posts/</loc>
-    <lastmod>2019-03-03T16:01:23+09:00</lastmod>
+    <lastmod>2019-03-04T16:00:00+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
@@ -57,15 +71,8 @@
   </url>
   
   <url>
-    <loc>https://otaon.github.io/web/ja-jp/category/demos/</loc>
-    <lastmod>2019-03-03T16:01:23+09:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://otaon.github.io/web/ja-jp/tag/template/</loc>
-    <lastmod>2019-03-03T16:01:23+09:00</lastmod>
+    <lastmod>2019-03-04T16:00:00+09:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
