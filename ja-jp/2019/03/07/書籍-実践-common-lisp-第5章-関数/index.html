@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>書籍 実践 Common Lisp 第5章 関数 · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="5.1 新しい関数の定義 (defun name (parameter*) &amp;#34;省略可能なドキュメンテーション文字列&amp;#34; body-form*) 5.2 関数のパラメータリスト parameterの部分は、関数の" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC5%E7%AB%A0-%E9%96%A2%E6%95%B0/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="書籍 実践 Common Lisp 第5章 関数" />
+<meta property="og:description" content="5.1 新しい関数の定義 (defun name (parameter*) &#34;省略可能なドキュメンテーション文字列&#34; body-form*) 5.2 関数のパラメータリスト parameterの部分は、関数の" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC5%E7%AB%A0-%E9%96%A2%E6%95%B0/" />
+<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="書籍 実践 Common Lisp 第5章 関数">
+<meta itemprop="description" content="5.1 新しい関数の定義 (defun name (parameter*) &#34;省略可能なドキュメンテーション文字列&#34; body-form*) 5.2 関数のパラメータリスト parameterの部分は、関数の">
+
+
+<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="2699">
+
+
+
+<meta itemprop="keywords" content="lisp,basic," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="書籍 実践 Common Lisp 第5章 関数"/>
+<meta name="twitter:description" content="5.1 新しい関数の定義 (defun name (parameter*) &#34;省略可能なドキュメンテーション文字列&#34; body-form*) 5.2 関数のパラメータリスト parameterの部分は、関数の"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">書籍 実践 Common Lisp 第5章 関数</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-03-07
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/basic/">basic</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/lisp/">lisp</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h2 id="5-1-新しい関数の定義">5.1 新しい関数の定義</h2>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">name</span> <span class="p">(</span><span class="nv">parameter*</span><span class="p">)</span>
+  <span class="s">&#34;省略可能なドキュメンテーション文字列&#34;</span>
+  <span class="nv">body-form*</span><span class="p">)</span></code></pre></div>
+<h2 id="5-2-関数のパラメータリスト">5.2 関数のパラメータリスト</h2>
+
+<p><code>parameter</code>の部分は、関数のパラメータリストと呼ばれる。<br />
+パラメータリストの指定方法は複数ある。<br />
+次の章で、それらについて説明する。</p>
+
+<h2 id="5-3-オプショナルパラメータ">5.3 オプショナルパラメータ</h2>
+
+<p>必須のパラメータ以外に、任意で指定したいパラメータの前に<code>&amp;optional</code>を指定する。<br />
+全ての必須パラメータに値が渡された後、まだ引数が残っていたら、その値がオプショナルパラメータに割り当てられる。<br />
+引数がオプショナルパラメータより先に足りなくなったら、残りのオプショナルパラメータには<code>NIL</code>の値が割り当てられる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">&amp;optional</span> <span class="nv">c</span> <span class="nv">d</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">list</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">foo</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1">; =&gt; (1 2 NIL NIL)</span>
+<span class="p">(</span><span class="nv">foo</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">; =&gt; (1 2 3 NIL)</span>
+<span class="p">(</span><span class="nv">foo</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)</span>
+<span class="c1">; =&gt; (1 2 3 4)</span></code></pre></div>
+<p>オプショナル引数の値が、呼び出し元により指定された<code>NIL</code>なのか、それともデフォルトの<code>NIL</code>なのかを知るには、下記の通りにする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">&amp;optional</span> <span class="p">(</span><span class="nv">c</span> <span class="mi">3</span> <span class="nv">c-supplied-p</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">list</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">c-supplied-p</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">foo</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1">; =&gt; (1 2 3 NIL)</span>
+<span class="p">(</span><span class="nv">foo</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">; =&gt; (1 2 3 T)</span>
+<span class="p">(</span><span class="nv">foo</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">4</span><span class="p">)</span>
+<span class="c1">; =&gt; (1 2 4 T)</span></code></pre></div>
+<p>まとめると、オプショナルパラメータの構文は下記の通りになる。</p>
+
+<ul>
+<li>必須パラメータの後に<code>&amp;optional</code>シンボルをつけることで、続く引数がオプショナルパラメータ扱いになる。</li>
+<li>必須パラメータには、デフォルト値を持たせることができる。</li>
+<li>必須パラメータには、その引数に値が渡されたかを判定するためのフラグを割り当てることができる。</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">必須パラメータ1</span> <span class="nv">必須パラメータ2</span> <span class="nv">&amp;optional</span> <span class="nv">オプショナル1</span> <span class="p">(</span><span class="nv">オプショナル2</span> <span class="nv">デフォルト値</span> <span class="nv">引数指定判定フラグ</span><span class="p">)))</span></code></pre></div>
+<h2 id="5-4-レストパラメータ">5.4 レストパラメータ</h2>
+
+<p>可変個のパラメータを扱うための仕組みとして、レストパラメータがある。<br />
+関数の引数に<code>&amp;rest</code>シンボルがあったら、それ以降のパラメータを全てまとめて扱うことができる。<br />
+つまり、<code>&amp;rest</code>パラメータが含まれていたら、必須パラメータとオプショナルパラメータに割り当てられた残りの引数はリストにまとめられ、そのリストが<code>&amp;rest</code>パラメータの値になる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">+</span> <span class="p">(</span><span class="nv">&amp;rest</span> <span class="nv">numbers</span><span class="p">)</span>
+  <span class="s">&#34;0個以上の数値を加算する
+</span><span class="s">   numbers: 数値(0..*)&#34;</span>
+  <span class="o">...</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">format</span> <span class="p">(</span><span class="nv">stream</span> <span class="nv">string</span> <span class="nv">&amp;rest</span> <span class="nv">values</span><span class="p">)</span>
+  <span class="s">&#34;文字列を整形して出力する
+</span><span class="s">   stream: 出力ストリーム
+</span><span class="s">   string: 出力対象文字列
+</span><span class="s">   values: フォーマット対象の値&#34;</span>
+  <span class="o">...</span><span class="p">)</span></code></pre></div>
+<p>まとめると、レストパラメータの構文は下記の通りになる。</p>
+
+<ul>
+<li>必須パラメータとオプショナルパラメータの後に<code>&amp;rest</code>シンボルをつけることで、続く引数がレストパラメータ扱いになる。</li>
+<li>必須パラメータに渡された値は、リストとなり、必須パラメータに割り当てられる。</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">必須パラメータ1</span> <span class="nv">必須パラメータ2</span> <span class="nv">&amp;rest</span> <span class="nv">レストパラメータ1</span> <span class="nv">レストパラメータ2</span><span class="p">))</span></code></pre></div>
+<h2 id="5-5-キーワードパラメータ">5.5 キーワードパラメータ</h2>
+
+<p>例えば、ある関数に4つの引数を持たせたいとする。<br />
+その関数が呼び出されるとき、ほとんどの呼び出し元は4つのパラメータのうち1つしか渡さず、しかもどのパラメータも偏りなく呼び出されるとする。
+そのような場合、キーワードパラメータを使用するとうまく解決できる。<br />
+下記の通り、キーワードパラメータを使えば、関数呼び出しの際の引数の指定の順番によらない処理が可能となる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">&amp;key</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span>
+  <span class="s">&#34;キーワードパラメータで渡された引数のリストを返す&#34;</span>
+  <span class="p">(</span><span class="nv">list</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">foo</span><span class="p">)</span>
+<span class="c1">; =&gt; (NIL NIL NIL)</span>
+
+<span class="p">(</span><span class="nv">foo</span> <span class="ss">:a</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1">; =&gt; (1 NIL NIL)</span>
+
+<span class="p">(</span><span class="nv">foo</span> <span class="ss">:b</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1">; =&gt; (NIL 1 NIL)</span>
+
+<span class="p">(</span><span class="nv">foo</span> <span class="ss">:c</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1">; =&gt; (NIL NIL 1)</span>
+
+<span class="p">(</span><span class="nv">foo</span> <span class="ss">:a</span> <span class="mi">1</span> <span class="ss">:c</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">; =&gt; (1 NIL 3)</span>
+
+<span class="p">(</span><span class="nv">foo</span> <span class="ss">:a</span> <span class="mi">1</span> <span class="ss">:b</span> <span class="mi">2</span> <span class="ss">:c</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1">; =&gt; (1 2 3)</span>
+
+<span class="p">(</span><span class="nv">foo</span> <span class="ss">:a</span> <span class="mi">1</span> <span class="ss">:c</span> <span class="mi">3</span> <span class="ss">:b</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1">; =&gt; (1 2 3)</span></code></pre></div>
+<p>既に登場したパラメータを、デフォルト値のフォームとして使用することもできる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">&amp;key</span> <span class="p">(</span><span class="nv">a</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nv">b</span> <span class="mi">0</span> <span class="nv">b-supplied-p</span><span class="p">)</span> <span class="p">(</span><span class="nv">c</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)))</span>
+  <span class="o">...</span><span class="p">)</span>
+
+
+<span class="p">(</span><span class="nv">foo</span> <span class="ss">:a</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1">; =&gt; (1 0 1 NIL)</span>
+
+<span class="p">(</span><span class="nv">foo</span> <span class="ss">:b</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1">; =&gt; (0 1 1 T)</span>
+
+<span class="p">(</span><span class="nv">foo</span> <span class="ss">:b</span> <span class="mi">1</span> <span class="ss">:c</span> <span class="mi">4</span><span class="p">)</span>
+<span class="c1">; =&gt; (0 1 4 T)</span>
+
+<span class="p">(</span><span class="nv">foo</span> <span class="ss">:a</span> <span class="mi">2</span> <span class="ss">:b</span> <span class="mi">1</span> <span class="ss">:c</span> <span class="mi">4</span><span class="p">)</span>
+<span class="c1">; =&gt; (2 1 4 T)</span></code></pre></div>
+<p>呼び出し元がパラメータ指定するために使うキーワードを、実際のパラメータと異なるものにする事もできる。<br />
+もしAPIなどを実装する場合には、このような機能が役立つ。<br />
+つまり、内部的には簡潔な変数名を使用し、外部に公開する引数には説明的なキーワードを使用する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">&amp;key</span> <span class="p">((</span><span class="ss">:apple</span> <span class="nv">a</span><span class="p">))</span> <span class="p">((</span><span class="ss">:box</span> <span class="nv">b</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span> <span class="p">((</span><span class="ss">:charlie</span> <span class="nv">c</span><span class="p">)</span> <span class="mi">0</span> <span class="nv">c-supplied-p</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">list</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">c-supplied-p</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">foo</span> <span class="ss">:apple</span> <span class="mi">10</span> <span class="ss">:box</span> <span class="mi">20</span> <span class="ss">:charlie</span> <span class="mi">30</span><span class="p">)</span>
+<span class="c1">; =&gt; (10 20 30 T)</span></code></pre></div>
+<h2 id="5-6-異なるパラメータの併用">5.6 異なるパラメータの併用</h2>
+
+<p>上記の、必須パラメータ、オプショナルパラメータ、レストパラメータ、キーワードパラメータは、全て併用することができる。<br />
+ただし、これらには使用して良い順番がある。下記の順番で使用可能である。</p>
+
+<ol>
+<li>必須パラメータ</li>
+<li>オプショナルパラメータ</li>
+<li>レストパラメータ</li>
+<li>キーワードパラメータ</li>
+</ol>
+
+<p><strong>NOTE</strong> <code>&amp;optional</code>と<code>&amp;key</code>の組み合わせは、予想外の結果になるため、併用してはいけない。<br />
+というのも、呼び出し元がオプショナルパラメータを全て与えなかった場合、オプショナルパラメータがキーワードパラメータの値を食ってしまうためである。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">x</span> <span class="nv">&amp;optional</span> <span class="nv">y</span> <span class="nv">&amp;key</span> <span class="nv">z</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">list</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span><span class="p">))</span>
+
+<span class="c1">;; これは正しく動作する</span>
+<span class="p">(</span><span class="nv">foo</span> <span class="mi">1</span> <span class="mi">2</span> <span class="ss">:z</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">; =&gt; (1 2 3)</span>
+
+<span class="c1">;; これも正しく動作する</span>
+<span class="p">(</span><span class="nv">foo</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1">; =&gt; (1 NIL NIL)</span>
+
+<span class="c1">;; これはエラーとなる</span>
+<span class="p">(</span><span class="nv">foo</span> <span class="mi">1</span> <span class="ss">:z</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">; =&gt; ERROR</span></code></pre></div>
+<p>最後の例では、<code>:z</code>がオプショナルパラメータとして認識されてしまう。
+こうなると、残りは引数3のみである。
+これをキーワードパラメータとして解釈することができないため、エラーとなる。</p>
+
+<p>レストパラメータとキーワードパラメータの組み合わせは、少々とっつきにくいが、安全に動作する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">&amp;rest</span> <span class="nv">rest</span> <span class="nv">&amp;key</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">list</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">foo</span> <span class="ss">:a</span> <span class="mi">1</span> <span class="ss">:b</span> <span class="mi">2</span> <span class="ss">:c</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">; =&gt; ((:A 1 :B 2 :C 3) 1 2 3)</span></code></pre></div>
+<p>上記は、レストパラメータとキーワードパラメータの解釈を素直に理解すれば納得できる。</p>
+
+<ul>
+<li>レストパラメータ…<code>&amp;rest</code>シンボル以降の引数を全て集めてリストに入れる</li>
+<li>キーワードパラメータ…<code>&amp;key</code>シンボル以降の引数を、キーワードの対として集める</li>
+</ul>
+
+<h2 id="5-7-関数の戻り値">5.7 関数の戻り値</h2>
+
+<p>関数の戻り値は、その関数を抜ける最後に評価された値となる。
+関数の任意の箇所で、直ちに値を返す場合は、特殊オペレータ<code>return-from</code>を使用する。<br />
+ただし、<code>return-from</code>は関数には直接関係していない。<br />
+これは、<code>block</code>で作られたブロックから抜けるために使用するものである。</p>
+
+<p><code>defun</code>は自動的に関数の本文全体を関数と同名のブロックで囲う。<br />
+そのため、<code>return-from</code>を関数の名前で評価することにより、戻したい値と一緒に直ちにその関数から脱出できる。</p>
+
+<p><code>return-from</code>には、脱出したいブロックの名前を最初の引数として指定する。<br />
+この名前は評価されないため、クォート不要である。</p>
+
+<p>例を下記に示す。<br />
+下記の関数は、引数よりも大きな積になる10未満の数のペアを探すためにネストしたループを使用している。
+数のペアが見つかったらすぐに<code>return-from</code>を使ってペアを返している。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">dotimes</span> <span class="p">(</span><span class="nv">i</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">dotimes</span> <span class="p">(</span><span class="nv">j</span> <span class="mi">10</span><span class="p">)</span>
+	 <span class="p">(</span><span class="nv">when</span> <span class="p">(</span><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">*</span> <span class="nv">i</span> <span class="nv">j</span><span class="p">)</span> <span class="nv">n</span><span class="p">)</span>
+	   <span class="p">(</span><span class="nv">return-from</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">list</span> <span class="nv">i</span> <span class="nv">j</span><span class="p">))))))</span></code></pre></div>
+<h2 id="5-8-データとしての関数または高階関数">5.8 データとしての関数または高階関数</h2>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>Common Lisp 文字列操作方法を学ぶ · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本記事の目的 この記事では、文字列表示、および、文字列操作において基本的な関数の使い方について説明する。 文字列出力用の関数 print関数 pri" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp-%E6%96%87%E5%AD%97%E5%88%97%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95%E3%82%92%E5%AD%A6%E3%81%B6/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="Common Lisp 文字列操作方法を学ぶ" />
+<meta property="og:description" content="本記事の目的 この記事では、文字列表示、および、文字列操作において基本的な関数の使い方について説明する。 文字列出力用の関数 print関数 pri" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp-%E6%96%87%E5%AD%97%E5%88%97%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95%E3%82%92%E5%AD%A6%E3%81%B6/" />
+<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="Common Lisp 文字列操作方法を学ぶ">
+<meta itemprop="description" content="本記事の目的 この記事では、文字列表示、および、文字列操作において基本的な関数の使い方について説明する。 文字列出力用の関数 print関数 pri">
+
+
+<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="2890">
+
+
+
+<meta itemprop="keywords" content="lisp,basic," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Common Lisp 文字列操作方法を学ぶ"/>
+<meta name="twitter:description" content="本記事の目的 この記事では、文字列表示、および、文字列操作において基本的な関数の使い方について説明する。 文字列出力用の関数 print関数 pri"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">Common Lisp 文字列操作方法を学ぶ</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-03-07
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/basic/">basic</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/lisp/">lisp</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h1 id="本記事の目的">本記事の目的</h1>
+
+<p>この記事では、文字列表示、および、文字列操作において基本的な関数の使い方について説明する。</p>
+
+<h1 id="文字列出力用の関数">文字列出力用の関数</h1>
+
+<h2 id="print-関数"><code>print</code>関数</h2>
+
+<p><code>print</code>関数は下記の順で文字を表示する。</p>
+
+<ol>
+<li>現在の表示位置が行頭でない場合、改行する</li>
+<li>引数を表示する</li>
+<li>空白を表示する</li>
+</ol>
+
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;this&#34;</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;is&#34;</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;a&#34;</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;test&#34;</span><span class="p">))</span>
+<span class="c1">; =&gt; &#34;this&#34;_</span>
+<span class="c1">;    &#34;is&#34;_</span>
+<span class="c1">;    &#34;a&#34;_</span>
+<span class="c1">;    &#34;test&#34;_</span>
+<span class="c1">; (_ = 空白)</span></code></pre></div>
+<h2 id="prin1-関数"><code>prin1</code>関数</h2>
+
+<p><code>prin1</code>関数は下記の順で文字を表示する。</p>
+
+<ol>
+<li>引数を表示する</li>
+</ol>
+
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">prin1</span> <span class="s">&#34;this&#34;</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">prin1</span> <span class="s">&#34;is&#34;</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">prin1</span> <span class="s">&#34;a&#34;</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">prin1</span> <span class="s">&#34;test&#34;</span><span class="p">))</span>
+<span class="c1">; =&gt; &#34;this&#34;&#34;is&#34;&#34;a&#34;&#34;test&#34;</span></code></pre></div>
+<h2 id="princ-関数"><code>princ</code>関数</h2>
+
+<p>人間が見やすい形式で文字を表示する。</p>
+
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">princ</span> <span class="ss">&#39;3</span><span class="p">)</span> <span class="c1">; =&gt; 3</span>
+<span class="p">(</span><span class="nv">print</span> <span class="ss">&#39;3</span><span class="p">)</span> <span class="c1">; =&gt; 3</span>
+
+<span class="p">(</span><span class="nv">princ</span> <span class="ss">&#39;3.4</span><span class="p">)</span> <span class="c1">; =&gt; 3.4</span>
+<span class="p">(</span><span class="nv">print</span> <span class="ss">&#39;3.4</span><span class="p">)</span> <span class="c1">; =&gt; 3.4</span>
+
+<span class="p">(</span><span class="nv">princ</span> <span class="ss">&#39;foo</span><span class="p">)</span> <span class="c1">; =&gt; FOO</span>
+<span class="p">(</span><span class="nv">print</span> <span class="ss">&#39;foo</span><span class="p">)</span> <span class="c1">; =&gt; FOO</span>
+
+<span class="p">(</span><span class="nv">princ</span> <span class="o">&#39;</span><span class="s">&#34;foo&#34;</span><span class="p">)</span> <span class="c1">; =&gt; foo</span>
+<span class="p">(</span><span class="nv">print</span> <span class="o">&#39;</span><span class="s">&#34;foo&#34;</span><span class="p">)</span> <span class="c1">; =&gt; &#34;foo&#34;</span>
+
+<span class="p">(</span><span class="nv">princ</span> <span class="o">&#39;</span><span class="sc">#\a</span><span class="p">)</span> <span class="c1">; =&gt; a</span>
+<span class="p">(</span><span class="nv">print</span> <span class="o">&#39;</span><span class="sc">#\a</span><span class="p">)</span> <span class="c1">; =&gt; #\a</span></code></pre></div>
+<h2 id="newline"><code>#\newline</code></h2>
+
+<p><code>#\newline</code>を用いることで、文字列中に改行を入れられる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;This sentence will be interrupted&#34;</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">princ</span> <span class="sc">#\newline</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;by an annoying newline character.&#34;</span><span class="p">))</span>
+<span class="c1">; =&gt; This sentence will be interrupted</span>
+<span class="c1">;    by an annoying newline character.</span></code></pre></div>
+<h2 id="prin1-to-string-関数"><code>prin1-to-string</code>関数</h2>
+
+<p>シンボルを含むリストを文字列に変換する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">print1-to-string</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span><span class="p">))</span>
+<span class="c1">; =&gt; &#34;(A B C D)&#34;</span>
+
+<span class="p">(</span><span class="nv">cons</span> <span class="ss">&#39;foo</span> <span class="p">(</span><span class="nv">list</span> <span class="p">(</span><span class="nv">prin1-to-string</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span><span class="p">))))</span>
+<span class="c1">; =&gt; (FOO &#34;(A B C D)&#34;)</span></code></pre></div>
+<h2 id="princ-to-string-関数"><code>princ-to-string</code>関数</h2>
+
+<p>上記の<code>prin1-to-string</code>関数の出力を、人間が読みやすい形式にしたもの。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">princ-to-string</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span><span class="p">))</span>
+<span class="c1">; =&gt; &#34;(A B C D)&#34;</span>
+
+<span class="p">(</span><span class="nv">princ-to-string</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="s">&#34;c&#34;</span> <span class="nv">d</span><span class="p">))</span>
+<span class="c1">; =&gt; &#34;(A B c D)&#34;</span></code></pre></div>
+<h2 id="write-to-string-関数"><code>write-to-string</code>関数</h2>
+
+<p><code>prin1-to-string</code>関数や<code>printc-to-string</code>関数の一般形。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">write-to-string</span> <span class="nv">object</span> <span class="ss">:escape</span> <span class="no">t</span><span class="p">)</span>
+<span class="c1">; =</span>
+<span class="p">(</span><span class="nv">print1-to-string</span> <span class="nv">object</span><span class="p">)</span> <span class="c1">; escape文字が出力される</span>
+
+<span class="c1">; 例</span>
+<span class="p">(</span><span class="nv">write-to-string</span> <span class="s">&#34;abc&#34;</span> <span class="ss">:escape</span> <span class="no">t</span><span class="p">)</span>
+<span class="c1">; =&gt; &#34;\&#34;abc\&#34;&#34;</span>
+
+<span class="p">(</span><span class="nv">write-to-string</span> <span class="nv">object</span> <span class="ss">:escape</span> <span class="no">nil</span> <span class="ss">:readably</span> <span class="no">nil</span><span class="p">)</span> <span class="c1">; escape文字が出力されない</span>
+<span class="c1">; =</span>
+<span class="p">(</span><span class="nv">princ-to-string</span> <span class="nv">object</span><span class="p">)</span>
+
+<span class="c1">; 例</span>
+<span class="p">(</span><span class="nv">write-to-string</span> <span class="s">&#34;abc&#34;</span> <span class="ss">:escape</span> <span class="no">nil</span> <span class="ss">:readably</span> <span class="no">nil</span><span class="p">)</span>
+<span class="c1">; =&gt; &#34;abc&#34;</span></code></pre></div>
+<h1 id="文字入力用の関数">文字入力用の関数</h1>
+
+<h2 id="read-関数"><code>read</code>関数</h2>
+
+<p>標準入力から得たものを返す。文字列からS式になる。</p>
+
+<p>構文:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">read</span> <span class="nv">&amp;optional</span> <span class="nv">input-stream</span> <span class="nv">eof-error-p</span> <span class="nv">eof-value</span> <span class="nv">recursive-p</span><span class="p">)</span> <span class="c1">; =&gt; Object</span></code></pre></div>
+<dl>
+<dt>&optional</dt>
+<dd>ここから右の引数は任意。</dd>
+
+<dt>input-stream</dt>
+<dd>ストリーム指定。<br>
+    デフォルト : 標準入力</dd>
+
+<dt>eof-error-p</dt>
+<dd>eof検出時の処理指定。<br>
+    t   : デフォルト。エラーを吐く。<br>
+    nil : エラーを吐かない。</dd>
+
+<dt>eof-value</dt>
+<dd>eof検出時の返り値指定。<br>
+    デフォルト : nil</dd>
+
+<dt>recursive-p</dt>
+<dd>これがnil以外の場合、readを再帰呼び出しする。<br>
+    デフォルト : nil</dd>
+</dl>
+
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">read</span><span class="p">)</span>
+<span class="c1">; a</span>
+<span class="c1">; =&gt; A</span>
+
+<span class="p">(</span><span class="nv">read</span><span class="p">)</span>
+<span class="c1">; &#39;a</span>
+<span class="c1">; =&gt; &#39;A</span>
+
+<span class="p">(</span><span class="nv">read</span><span class="p">)</span>
+<span class="c1">; (a)</span>
+<span class="c1">; =&gt; (A)</span>
+
+<span class="p">(</span><span class="nv">read</span><span class="p">)</span>
+<span class="c1">; &#34;a&#34;</span>
+<span class="c1">; =&gt; &#34;A&#34;</span>
+
+<span class="c1">; readの挙動について細かく見るための例を以下に示す。</span>
+<span class="p">(</span><span class="nv">setq</span> <span class="nv">a</span> <span class="s">&#34;line 1
+</span><span class="s">   line2&#34;</span><span class="p">)</span>
+<span class="c1">; 1の後ろに改行文字があることに注意</span>
+
+<span class="c1">; =&gt; &#34;line 1</span>
+<span class="c1">;    line2&#34;</span>
+
+<span class="p">(</span><span class="nv">read</span> <span class="p">(</span><span class="nv">setq</span> <span class="nv">input-stream</span> <span class="p">(</span><span class="nv">make-string-input-stream</span> <span class="nv">a</span><span class="p">)))</span>
+<span class="c1">; =&gt; LINE</span>
+
+<span class="p">(</span><span class="nv">read</span> <span class="nv">input-stream</span><span class="p">)</span>
+<span class="c1">; =&gt; 1</span>
+
+<span class="p">(</span><span class="nv">read</span> <span class="nv">input-stream</span> <span class="no">nil</span> <span class="no">nil</span><span class="p">)</span>
+<span class="c1">; =&gt; LINE2</span>
+
+<span class="p">(</span><span class="nv">read</span> <span class="nv">input-stream</span> <span class="no">nil</span> <span class="no">nil</span><span class="p">)</span>
+<span class="c1">; =&gt; NIL</span></code></pre></div>
+<h2 id="read-line-関数"><code>read-line</code>関数</h2>
+
+<p>入力から1行ずつ得たものを文字列として返す。</p>
+
+<p><strong>NOTE:</strong> newlineからeofまで見る。</p>
+
+<p><strong>NOTE:</strong>
+<code>read-line</code>関数は、実行するたびに新規に文字列を生成する。
+したがって、大量の行を読み込むとガベージコレクションの実行時間が長くなりすぎる。
+<code>read-sequence</code>を使用する方が実用的である。
+しかし、<code>read-sequence</code>は使用が面倒である。</p>
+
+<p>構文:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">read-line</span> <span class="nv">&amp;optional</span> <span class="nv">input-steam</span> <span class="nv">eof-error-p</span> <span class="nv">eof-value</span> <span class="nv">recursive-p</span><span class="p">)</span> <span class="c1">; =&gt; line, missing-newline-p</span></code></pre></div>
+<dl>
+<dt>&optional</dt>
+<dd>ここから右の引数は任意。</dd>
+
+<dt>input-stream</dt>
+<dd>ストリーム指定。<br>
+    デフォルト : 標準入力</dd>
+
+<dt>eof-error-p</dt>
+<dd>eof検出時の処理指定。<br>
+    t   : デフォルト。エラーを吐く。<br>
+    nil : エラーを吐かない。</dd>
+
+<dt>eof-value</dt>
+<dd>eof検出時の返り値指定。<br>
+    デフォルト : nil</dd>
+
+<dt>recursive-p</dt>
+<dd>これがnil以外の場合、readを再帰呼び出しする。<br>
+    デフォルト : nil</dd>
+
+<dt>返り値2: missing-newline-p</dt>
+<dd>次の行があるか否かを表す。<br>
+    read-line実行時にnewlineで終わっていたらnilを返す。<br>
+    eofで終わっているか、第1引数がeof検出時の返り値ならtを返す。</dd>
+</dl>
+
+<p><strong>例:</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">read-line</span><span class="p">)</span>
+<span class="c1">; abc</span>
+<span class="c1">; =&gt; &#34;abc&#34;;</span>
+<span class="c1">;    NIL</span>
+
+<span class="p">(</span><span class="nv">read-line</span><span class="p">)</span>
+<span class="c1">; &#34;abc&#34;</span>
+<span class="c1">; =&gt; &#34;\&#34;abc\&#34;&#34;;</span>
+<span class="c1">;    NIL</span>
+
+<span class="p">(</span><span class="nv">setq</span> <span class="nv">a</span> <span class="s">&#34;line 1
+</span><span class="s">   line2&#34;</span><span class="p">)</span>
+<span class="c1">; 1の後ろに改行文字があることに注意</span>
+
+<span class="c1">; =&gt; &#34;line 1</span>
+<span class="c1">;    line2&#34;</span>
+
+<span class="p">(</span><span class="nv">read-line</span> <span class="p">(</span><span class="nv">setq</span> <span class="nv">input-stream</span> <span class="p">(</span><span class="nv">make-string-input-stream</span> <span class="nv">a</span><span class="p">)))</span>
+<span class="c1">; =&gt; &#34;line 1&#34;;</span>
+<span class="c1">;    NIL</span>
+<span class="p">(</span><span class="nv">read-line</span> <span class="nv">input-stream</span> <span class="no">nil</span> <span class="no">nil</span><span class="p">)</span>
+<span class="c1">; =&gt; &#34;line2&#34;;</span>
+<span class="c1">;    T</span>
+<span class="p">(</span><span class="nv">read-line</span> <span class="nv">input-stream</span> <span class="no">nil</span> <span class="no">nil</span><span class="p">)</span>
+<span class="c1">; =&gt; NIL;</span>
+<span class="c1">;    T</span></code></pre></div>
+<h2 id="read-from-string-関数"><code>read-from-string</code>関数</h2>
+
+<p>文字列から、それを入力とみなして返す。</p>
+
+<p>構文:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">read-from-string</span> <span class="nv">string</span> 
+                  <span class="nv">&amp;optional</span> 
+                  <span class="nv">eof-error-p</span> 
+                  <span class="nv">eof-value</span> 
+                  <span class="nv">&amp;key</span> 
+                  <span class="nv">start</span> 
+                  <span class="nv">end</span> 
+                  <span class="nv">preserve-whitespace</span><span class="p">)</span>
+<span class="c1">; =&gt; Objects, position</span></code></pre></div>
+<dl>
+<dt>eof-error-p</dt>
+<dd>eof検出時の処理指定。<br>
+    t   : デフォルト。エラーを吐く。<br>
+    nil : エラーを吐かない。</dd>
+<dt>eof-value</dt>
+<dd>eof検出時の返り値指定。<br>
+    デフォルト : nil</dd>
+<dt>start end</dt>
+<dd>文字列の左端と右端を指定する。<br>
+    デフォルト : start = 0, end = nil</dd>
+<dt>preserve-whitespace</dt>
+<dd>whitespaceを保持するか否かを指定する。<br>
+    t   : 保持する。<br>
+    nil : デフォルト。保持しない。</dd>
+<dt>返り値 position</dt>
+<dd>読まれなかった文字列の最初の箇所を指す。<br>
+もし全体が読み込まれた場合、positionは文字数か、文字数 + 1を示す。</dd>
+</dl>
+
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">setq</span> <span class="nv">foo</span> <span class="s">&#34;(a b c d)&#34;</span><span class="p">)</span>
+<span class="c1">; =&gt; FOO</span>
+
+<span class="p">(</span><span class="nv">read-from-string</span> <span class="nv">foo</span><span class="p">)</span>
+<span class="c1">; =&gt; (A B C D);</span>
+     <span class="nv">9</span></code></pre></div>
+<h1 id="文字列編集用の関数">文字列編集用の関数</h1>
+
+<h2 id="string-trim-関数"><code>string-trim</code>関数</h2>
+
+<p>第1引数の文字を、第2引数の文字列の両端から除く。
+第1引数の文字は1つずつ独立して評価される。
+つまり、第1引数に&rdquo;abc&rdquo;が指定されている場合、
+両端から「a」「b」「c」の文字のいずれにもマッチしない文字が現れるまで文字を取り除き続ける。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">string-trim</span> <span class="s">&#34;abc&#34;</span> <span class="s">&#34;abcaakaaaabckabcbaaa&#34;</span><span class="p">)</span>
+<span class="c1">; &#34;abcaakaaaabckabcbaaa&#34;</span>
+<span class="c1">;  ~~~~~kaaaabck~~~~~~~ (~の部分が除かれる)</span>
+<span class="c1">; =&gt; kaaaabck</span>
+
+<span class="p">(</span><span class="nv">string-trim</span> <span class="o">&#39;</span><span class="p">(</span><span class="sc">#\Space</span> <span class="sc">#\e</span> <span class="sc">#\t</span><span class="p">)</span> <span class="s">&#34; trim me &#34;</span><span class="p">)</span>
+<span class="c1">; =&gt; &#34;rim m&#34;</span></code></pre></div>
+<p><strong>NOTE:</strong> スペース、タブ、改行を削除対象に指定したい場合は下記のようにする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="c1">; 下記のリストを指定する。</span>
+<span class="p">(</span><span class="nv">string-trim</span> <span class="o">&#39;</span><span class="p">(</span><span class="sc">#\Space</span> <span class="sc">#\newline</span> <span class="sc">#\tab</span> <span class="sc">#\IDEOGRAPHIC_SPACE</span><span class="p">)</span> <span class="nv">str</span><span class="p">)</span></code></pre></div>
+<h2 id="string-left-trim-関数"><code>string-left-trim</code>関数</h2>
+
+<p>第1引数の文字を、第2引数の文字列の左端から除く。</p>
+
+<h2 id="string-right-trim-関数"><code>string-right-trim</code>関数</h2>
+
+<p>第1引数の文字を、第2引数の文字列の右端から除く。</p>
+
+<h2 id="concatenate-関数"><code>concatenate</code>関数</h2>
+
+<p>文字列やリストを結合する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">concatenate</span> <span class="ss">&#39;string</span> <span class="s">&#34;Hello &#34;</span> <span class="s">&#34;world.&#34;</span><span class="p">)</span>
+<span class="c1">; =&gt; &#34;Hello World.&#34;</span>
+
+<span class="p">(</span><span class="nv">concatenate</span> <span class="ss">&#39;list</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">c</span> <span class="nv">d</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">e</span> <span class="nv">f</span><span class="p">))</span>
+<span class="c1">; =&gt; (A B C D E F)</span></code></pre></div>
+<p><strong>NOTE:</strong> ただし、リストの場合は<code>append</code>を用いれば良い。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">append</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">c</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">d</span><span class="p">))</span>
+<span class="c1">; =&gt; (A B C D)</span></code></pre></div>
+<h2 id="substitute-if-関数"><code>substitute-if</code>関数</h2>
+
+<p>与えられたテスト関数の結果によって値を置き換える。
+(substitute : 〜を代用する。代理をする。)</p>
+
+<p>構文:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">substitute-if</span> <span class="nv">new-item</span> <span class="nv">predicate</span> <span class="nv">sequence</span> <span class="nv">&amp;key</span> <span class="nv">from-end</span> <span class="nv">start</span> <span class="nv">end</span> <span class="nv">count</span> <span class="nv">key</span><span class="p">)</span>
+<span class="c1">; =&gt; result-sequence</span></code></pre></div>
+<dl>
+<dt>new-item</dt>
+<dd>置換後の要素。</dd>
+<dt>predicate</dt>
+<dd>述語。#'関数を描く要素に照らし合わせて真偽を判断する。</dd>
+<dt>sequence</dt>
+<dd>proper sequence(適切なシーケンス)<br>
+    1次元配列や、popしていくと()になるリスト。<br>
+    つまり、巡回リスト以外のリスト、および、最後のセルの参照先が非nil以外のリスト。</dd>
+<dt>count</dt>
+<dd>置換する要素数の上限。<br>
+    デフォルト : nil</dd>
+<dt>from-end</dt>
+<dd>countがセットされていれば働く。右端から上限判定を行う。<br>
+    デフォルト : false</dd>
+<dt>start end</dt>
+<dd>置換範囲は、startより大きく、end以下までの中に制限される。<br>
+    デフォルト : start = 0, end = nil<br>
+    例: :start 2 :end 5 なら (x x o o o x x)</dd>
+</dl>
+
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">substitute-if</span> <span class="sc">#\e</span> <span class="nf">#&#39;</span><span class="nv">digit-char-p</span> <span class="s">&#34;I&#39;m a l33t hack3r!&#34;</span><span class="p">)</span>
+<span class="c1">; =&gt; I&#39;m a leet hacker!</span></code></pre></div>
+<h2 id="subseq-関数"><code>subseq</code>関数</h2>
+
+<p>引数の文字列から、両端の各々任意の文字数を取り除いた文字列を返す。
+<strong>NOTE:</strong> endの一つ前までしか表示されないことに注意。</p>
+
+<p>構文:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">subseq</span> <span class="nv">sequence</span> <span class="nv">start-position</span> <span class="nv">end-position</span><span class="p">)</span>
+<span class="c1">; end-position は optional で、デフォルトではnil</span></code></pre></div>
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="c1">; &#34;h e l l o   w o r l d&#34;</span>
+<span class="c1">;  0 1 2 3 4 5 6 7 8 9 10</span>
+
+<span class="p">(</span><span class="nv">subseq</span> <span class="s">&#34;hello world&#34;</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">; =&gt; &#34;lo world&#34;</span>
+
+<span class="p">(</span><span class="nv">subseq</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span>
+<span class="c1">; =&gt; &#34;lo&#34;</span></code></pre></div>
+<h2 id="length-関数"><code>length</code>関数</h2>
+
+<p>文字列の長さを返す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">length</span> <span class="s">&#34;abcdefg&#34;</span><span class="p">)</span>
+<span class="c1">; =&gt; 7</span></code></pre></div>
+<h2 id="fresh-line-関数"><code>fresh-line</code>関数</h2>
+
+<p>行頭に出力ストリームがない場合、newlineを出力する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="c1">; 下記のようなプロンプトの状態になっているときを考える。</span>
+<span class="c1">; 前の出力 CLISP&gt;</span>
+
+<span class="p">(</span><span class="nv">fresh-line</span><span class="p">)</span>
+<span class="c1">; =&gt; プロンプトが下記のように改行される。</span>
+<span class="c1">; 前の出力</span>
+<span class="c1">; CLISP&gt;</span></code></pre></div>
+<h2 id="terpri-関数"><code>terpri</code>関数</h2>
+
+<p>出力ストリームにnewlineを出力する。</p>
+
+<h1 id="ファイル操作用の関数">ファイル操作用の関数</h1>
+
+<h2 id="with-open-file-関数"><code>with-open-file</code>関数</h2>
+
+<p>関数内でfileをopenし、streamで制御する。
+処理終了時には、fileをcloseする。</p>
+
+<p>構文:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">with-open-file</span> <span class="p">(</span><span class="nv">my-stream</span>
+                 <span class="s">&#34;file-name.txt&#34;</span>
+                 <span class="ss">:direction</span> <span class="ss">:output</span>
+                 <span class="ss">:if-exsts</span> <span class="ss">:supersede</span><span class="p">)</span>
+   <span class="p">(</span><span class="nv">procedure</span><span class="p">))</span></code></pre></div>
+<dl>
+<dt>my-stream</dt>
+<dd>ストリーム名の指定</dd>
+<dt>"file-name.txt"</dt>
+<dd>open対象のファイル名</dd>
+<dt>:direction</dt>
+<dd>方向(入出力)の指定<br>
+    output : 出力<br>
+    input  : 入力</dd>
+<dt>:if-exsts</dt>
+<dd>ファイルが既存のとき、<br>
+    :supersede : 置き換える</dd>
+<dt>procedure</dt>
+<dd>ファイルオープン後の処理</dd>
+</dl>
+
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">with-open-file</span> <span class="p">(</span><span class="nv">my-stream</span>
+                 <span class="s">&#34;file-name.txt&#34;</span>
+                 <span class="ss">:direction</span> <span class="ss">:output</span>
+                 <span class="ss">:if-exsts</span> <span class="ss">:supersede</span><span class="p">)</span>
+   <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;Hello File!&#34;</span> <span class="nv">my-stream</span><span class="p">))</span>
+<span class="c1">; =&gt; princでmy-streamに投げた文字列を、そのmy-streamに関連付けたファイルに書き出す。</span></code></pre></div>
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

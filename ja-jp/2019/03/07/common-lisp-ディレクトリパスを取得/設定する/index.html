@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>Common Lisp ディレクトリパスを取得/設定する · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本記事の目的 Lisp処理系起動時のディレクトリパス/カレントディレクトリパスを取得/設定する 参考サイト 処理系を起動したディレクトリのパスネー" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp-%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E3%83%91%E3%82%B9%E3%82%92%E5%8F%96%E5%BE%97/%E8%A8%AD%E5%AE%9A%E3%81%99%E3%82%8B/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="Common Lisp ディレクトリパスを取得/設定する" />
+<meta property="og:description" content="本記事の目的 Lisp処理系起動時のディレクトリパス/カレントディレクトリパスを取得/設定する 参考サイト 処理系を起動したディレクトリのパスネー" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp-%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E3%83%91%E3%82%B9%E3%82%92%E5%8F%96%E5%BE%97/%E8%A8%AD%E5%AE%9A%E3%81%99%E3%82%8B/" />
+<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="Common Lisp ディレクトリパスを取得/設定する">
+<meta itemprop="description" content="本記事の目的 Lisp処理系起動時のディレクトリパス/カレントディレクトリパスを取得/設定する 参考サイト 処理系を起動したディレクトリのパスネー">
+
+
+<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="565">
+
+
+
+<meta itemprop="keywords" content="lisp," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Common Lisp ディレクトリパスを取得/設定する"/>
+<meta name="twitter:description" content="本記事の目的 Lisp処理系起動時のディレクトリパス/カレントディレクトリパスを取得/設定する 参考サイト 処理系を起動したディレクトリのパスネー"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">Common Lisp ディレクトリパスを取得/設定する</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-03-07
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/lisp/">lisp</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h1 id="本記事の目的">本記事の目的</h1>
+
+<p>Lisp処理系起動時のディレクトリパス/カレントディレクトリパスを取得/設定する</p>
+
+<h1 id="参考サイト">参考サイト</h1>
+
+<p><a href="https://lisphub.jp/common-lisp/cookbook/index.cgi?%E5%87%A6%E7%90%86%E7%B3%BB%E3%82%92%E8%B5%B7%E5%8B%95%E3%81%97%E3%81%9F%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E3%81%AE%E3%83%91%E3%82%B9%E3%83%8D%E3%83%BC%E3%83%A0%E3%82%92%E8%BF%94%E3%81%99">処理系を起動したディレクトリのパスネームを返す</a></p>
+
+<h2 id="処理系を起動したディレクトリのパスネームを返す">処理系を起動したディレクトリのパスネームを返す</h2>
+
+<p>truenameを使う。</p>
+
+<h3 id="対応環境-sbcl-clisp-cmucl">対応環境: <code>SBCL</code>, <code>CLISP</code>, <code>CMUCL</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">truename</span> <span class="s">&#34;./&#34;</span><span class="p">)</span>  <span class="c1">;=&gt; #P&#34;処理系を起動したディレクトリ&#34;</span></code></pre></div>
+<h3 id="実行例">実行例</h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">truename</span> <span class="s">&#34;./&#34;</span><span class="p">)</span> <span class="c1">;=&gt; #P&#34;/users/username/&#34;</span></code></pre></div>
+<h2 id="各処理系でのカレントディレクトリの取得と設定">各処理系でのカレントディレクトリの取得と設定</h2>
+
+<h3 id="対応環境-sbcl">対応環境: <code>SBCL</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; ディレクトリパスを取得する</span>
+<span class="p">(</span><span class="nv">sb-posix:getcwd</span><span class="p">)</span> <span class="c1">;=&gt;#P&#34;カレントディレクトリ&#34;</span>
+
+<span class="c1">; ディレクトリパスを設定する</span>
+<span class="p">(</span><span class="nv">sb-posix:chdir</span> <span class="l">#P&#34;設定したいディレクトリ&#34;</span><span class="p">)</span></code></pre></div>
+<h3 id="対応環境-clisp">対応環境: <code>CLISP</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; ディレクトリパスを取得する</span>
+<span class="p">(</span><span class="nv">ext:default-directory</span><span class="p">)</span> <span class="c1">;=&gt;#P&#34;カレントディレクトリ&#34;</span>
+
+<span class="c1">; ディレクトリパスを設定する</span>
+<span class="p">(</span><span class="nv">ext:cd</span> <span class="l">#P&#34;設定したいディレクトリ&#34;</span><span class="p">)</span></code></pre></div>
+<h3 id="対応環境-cmucl">対応環境: <code>CMUCL</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; ディレクトリパスを取得する</span>
+<span class="p">(</span><span class="nv">extensions:default-directory</span><span class="p">)</span> <span class="c1">;=&gt;#P&#34;カレントディレクトリ&#34;</span>
+
+<span class="c1">; ディレクトリパスを設定する</span>
+<span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">extensions:default-directory</span><span class="p">)</span> <span class="l">#P&#34;設定したいディレクトリ&#34;</span><span class="p">)</span></code></pre></div>
+<p>カレントディレクトリの設定後に <code>(truename &quot;./&quot;)</code> が返す値が変化しているかは処理系により異なる。
+また、処理系によっては <code>*default-pathname-defaults*</code> に起動時のディレクトリが入っている。
+CLISPだと <code>*default-pathname-defaults* ;=&gt; #P&quot;&quot;</code> のとおり空白だった。</p>
+
+<p>SBCLだと、 <code>*default-pathname-defaults*</code> を書き換えないと<code>load</code>関数で参照する先が変わらない。</p>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

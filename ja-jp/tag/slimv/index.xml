@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>slimv on Lazy Lambda</title>
+    <link>https://otaon.github.io/web/ja-jp/tag/slimv/</link>
+    <description>Recent content in slimv on Lazy Lambda</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Thu, 07 Mar 2019 02:00:00 +0900</lastBuildDate>
+    
+	<atom:link href="https://otaon.github.io/web/ja-jp/tag/slimv/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>slimvショートカット一覧</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/slimv%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E4%B8%80%E8%A6%A7/</link>
+      <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/slimv%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E4%B8%80%E8%A6%A7/</guid>
+      <description>一部誤謬がある可能性がある abc^de はカーソルがcの上にあることを意味する 編集 edit 一般操作 コマンド 操作 操作例 操作結果 ,) S式を閉じる (foo ,) (foo) タブ シンボルを</description>
+    </item>
+    
+  </channel>
+</rss>

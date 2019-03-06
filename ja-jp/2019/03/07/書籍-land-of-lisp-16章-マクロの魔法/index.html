@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>書籍 Land of Lisp 16章 マクロの魔法 · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="T.O.C. 16.1 簡単なLispマクロ 16.2 もっと複雑なマクロ 16.3 マクロの危険と代替案 マクロプログラミング によって、プログラマはLispのコンパイラ/インタプリ" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-16%E7%AB%A0-%E3%83%9E%E3%82%AF%E3%83%AD%E3%81%AE%E9%AD%94%E6%B3%95/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="書籍 Land of Lisp 16章 マクロの魔法" />
+<meta property="og:description" content="T.O.C. 16.1 簡単なLispマクロ 16.2 もっと複雑なマクロ 16.3 マクロの危険と代替案 マクロプログラミング によって、プログラマはLispのコンパイラ/インタプリ" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-16%E7%AB%A0-%E3%83%9E%E3%82%AF%E3%83%AD%E3%81%AE%E9%AD%94%E6%B3%95/" />
+<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="書籍 Land of Lisp 16章 マクロの魔法">
+<meta itemprop="description" content="T.O.C. 16.1 簡単なLispマクロ 16.2 もっと複雑なマクロ 16.3 マクロの危険と代替案 マクロプログラミング によって、プログラマはLispのコンパイラ/インタプリ">
+
+
+<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="8726">
+
+
+
+<meta itemprop="keywords" content="lisp," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="書籍 Land of Lisp 16章 マクロの魔法"/>
+<meta name="twitter:description" content="T.O.C. 16.1 簡単なLispマクロ 16.2 もっと複雑なマクロ 16.3 マクロの危険と代替案 マクロプログラミング によって、プログラマはLispのコンパイラ/インタプリ"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">書籍 Land of Lisp 16章 マクロの魔法</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-03-07
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/lisp/">lisp</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h2 id="t-o-c">T.O.C.</h2>
+
+<ul>
+<li><a href="#161-簡単なlispマクロ">16.1 簡単なLispマクロ</a></li>
+<li><a href="#162-もっと複雑なマクロ">16.2 もっと複雑なマクロ</a></li>
+<li><a href="#163-マクロの危険と代替案">16.3 マクロの危険と代替案</a></li>
+</ul>
+
+<hr />
+
+<p><strong>マクロプログラミング</strong> によって、プログラマはLispのコンパイラ/インタプリタの動作に変更を加え、Lispを独自の言語へと変化させられる。</p>
+
+<h2 id="16-1-簡単なlispマクロ">16.1 簡単なLispマクロ</h2>
+
+<p>例えば、とても簡単な関数を考える。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">add</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+  <span class="s">&#34;2値を加算して、副作用として和をREPLに表示する&#34;</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">x</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;The sum is ~a&#34;</span> <span class="nv">x</span><span class="p">)</span>
+    <span class="nv">x</span><span class="p">))</span></code></pre></div>
+<p>この関数のように、たかだか1つの変数<code>x</code>を宣言するためだけに、多くの括弧が必要となっている場面は多い。<br />
+<code>let</code>関数の括弧は、いわゆる <strong>視覚ノイズ</strong> の一例である。
+この括弧を隠蔽しようと思った時、何か関数を書くことで解決することはできない。
+何故なら、<code>let</code>は <strong>特殊形式</strong> と呼ばれるコマンドの1つであるからである。<br />
+特殊形式は、言語の根幹に組み込まれており、通常のLisp関数ではできない特別なことができる。</p>
+
+<p>マクロを使えばおの余分な括弧を消すことができる。<br />
+ここで、余計な括弧を削除した<code>let1</code>関数を作ってみる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">let1</span> <span class="p">(</span><span class="nv">var</span> <span class="nv">val</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="o">,</span><span class="nv">var</span> <span class="o">,</span><span class="nv">val</span><span class="p">))</span>
+     <span class="o">,@</span><span class="nv">body</span><span class="p">))</span></code></pre></div>
+<p>見て分かる通り、マクロの定義は関数の定義とよく似ている。
+ただし、<code>defun</code>の代わりに<code>defmacro</code>を使う。<br />
+関数と同様に、マクロは名前(ここでは<code>let1</code>)と仮引数を持つ。<br />
+<code>let1</code>を上の通り定義したら、括弧の少ない<code>let</code>として次の通り使うことができる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">foo</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">*</span> <span class="nv">foo</span> <span class="nv">foo</span><span class="p">))</span>
+<span class="mi">25</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">let1</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">*</span> <span class="nv">foo</span> <span class="nv">foo</span><span class="p">))</span>
+<span class="nv">25</span></code></pre></div>
+<h3 id="マクロの展開">マクロの展開</h3>
+
+<p>Lispのコンパイラ/インタプリタは、「標準のLispコード」しか解釈できない。
+したがって、マクロ<code>let1</code>は解釈できない。</p>
+
+<p>ここで、Lispのコンパイラ/インタプリタがマクロを解釈する前に、 <strong>マクロ展開</strong> と呼ばれるステップが実施される。
+マクロ展開器は、コード中のマクロを探して、それらを標準的なLispコードへど変換する。<br />
+したがって、マクロは関数が実行されるのと異なるタイミングで実行されることが分かる。
+すなわち、下のとおりである。</p>
+
+<ul>
+<li>通常のLisp関数は、その関数を含むプログラムを実行するタイミング(実行時)で解釈される。</li>
+<li>マクロは、プログラムが実行される前、つまり、Lisp環境でプログラムが読み込まれてコンパイルされるタイミング(マクロ展開時)で解釈される。</li>
+</ul>
+
+<h3 id="マクロはどんなふうに変換されるか">マクロはどんなふうに変換されるか</h3>
+
+<p><code>defmacro</code>によって新たなマクロを定義するということは、つまり、Lispのマクロ展開器に対して、新たな変換ルールを教えるということである。
+マクロはもとのソースコードをLispの式の形で、引数として受け取る。
+マクロの仕事は、尾野本のコードを標準のLispコードに変換することである。</p>
+
+<p>上で定義した<code>let1</code>を例に、マクロがどのように変換されるのかを説明する。</p>
+
+<p><em><code>let1</code>再掲</em></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">let1</span> <span class="p">(</span><span class="nv">var</span> <span class="nv">val</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="o">,</span><span class="nv">var</span> <span class="o">,</span><span class="nv">val</span><span class="p">))</span>
+     <span class="o">,@</span><span class="nv">body</span><span class="p">))</span></code></pre></div>
+<p>最初の行は、「<code>let1</code>で始まる行があったらそれを標準的なLispコードに変換するためのルールを定義する」と、マクロ変換器に伝えている。
+<code>defmacro</code>は、また、マクロに渡される引数についても定義している。<br />
+マクロの引数には、マクロが使われている場所に現れるもとのソースコードが渡される。
+<code>let1</code>マクロの場合は、次の3つの引数を受け取ることになる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">let1</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">*</span> <span class="nv">foo</span> <span class="nv">foo</span><span class="p">))</span>
+<span class="nv">25</span></code></pre></div>
+<dl>
+<dt>var</dt>
+<dd>
+最初の引数は、ローカル変数として定義される名前である。
+マクロの中では、引数`var`の値がその名前になっている。
+上の呼び出しの例では、名前は`foo`である。
+</dd>
+<dt>val</dt>
+<dd>
+2番目の式は、ローカル変数の値を決めるコードである。
+上の呼び出しの例では、`(+ 2 3)`となっている。
+</dd>
+<dt>body</dt>
+<dd>
+3番目の式は、`let1`の中で実行されるコードの本体である。
+このコードの中では、`let1`が作る新しい変数(この例では`foo`)を使用できる。
+マクロでは、このコードが引数`body`の値として使える。
+</dd>
+</dl>
+
+<p><code>let</code>コマンドは本体の中に複数の式を書いておけるから、<code>let1</code>も同様に複数の式が書けるようにする。<br />
+<code>&amp;body</code>はそれを実現するための特別なシンボルである。
+<code>&amp;body</code>が書かれていると、マクロ展開時に「マクロの使われている場所に出てくる残りの式の全てを、リストにして次の引数に渡せ」という意味になる。
+したがって、<code>let1</code>の<code>body</code>引数に渡ってくる値は、ネストしたリスト<code>((* foo foo))</code>になっているというわけである。</p>
+
+<p>さて、<code>let1</code>マクロの引数については分かった。
+次に、マクロがその値を使ってどのように<code>let1</code>を<code>let</code>に変換するのかを見ていく。<br />
+Lispでソースコードを変換する最も簡単な方法は、バッククォート構文を使用することである。
+バッククォートを頭につけた準クォートでは、基本はデータモードで、カンマを付けた部分だけコードモードに戻る。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="o">`</span><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="o">,</span><span class="nv">var</span> <span class="o">,</span><span class="nv">val</span><span class="p">))</span></code></pre></div>
+<p><code>let1</code>マクロは、バッククォートで作られる上のリストを返す。
+リストの先頭の要素はシンボル<code>let</code>である。続いて、変数の名前と値が置かれる。<br />
+これにより、本来の<code>let</code>コマンドの構文どおりに、ネストされたリストに収まっていることが分かる。<br />
+最後に、<code>let1</code>に渡された<code>body</code>のコードが、<code>let</code>コマンドの対応する位置に挿入されている。<br />
+ここで、<code>body</code>引数の値を挿入するために、 <strong>スプライシングカンマ</strong> (<code>,@</code>)を使用している。
+スプライシングカンマを使用することで、カンマの対象範囲となるデータの括弧を取り外す(=スプライスする)。</p>
+
+<p>なぜスプライシングが必要なのかは、<code>let1</code>が次のように使われた場合を考えてみると分かりやすい。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">let1</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;Lisp is awesome!&#34;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">*</span> <span class="nv">foo</span> <span class="nv">foo</span><span class="p">))</span>
+<span class="nv">List</span> <span class="nv">is</span> <span class="nv">awesome!</span>
+<span class="nv">25</span></code></pre></div>
+<p>この例では、<code>let1</code>の本体中に複数の式が使われている。<br />
+よくよく考えれば分かるが、<code>let</code>コマンドは、暗黙の<code>progn</code>コマンドを含んでいて、本体内に複数のLispコマンドを記載できる。
+<code>let1</code>マクロも、<code>body</code>引数の前に特別な<code>&amp;body</code>シンボルを置いておいたおかげで同じように複数の式を扱える。<br />
+上の例では、<code>body</code>の値は<code>((princ &quot;Lisp is awesome!&quot;) (* foo foo))</code>となっているため、スプライスすると、<code>let</code>に複数の式を渡したことと同等の結果となるわけである。</p>
+
+<h3 id="簡単なマクロを使ってみる">簡単なマクロを使ってみる</h3>
+
+<p><code>let1</code>マクロが書けたので、それを使って本章の最初に書いた<code>add</code>関数を書き直してみる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">add</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">let1</span> <span class="nv">x</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;The sum is ~a&#34;</span> <span class="nv">x</span><span class="p">)</span>
+    <span class="nv">x</span><span class="p">))</span></code></pre></div>
+<p>また、<code>macroexpand</code>コマンドを使えば、マクロがどのようなコードを作るのか確かめられる。
+マクロの呼び出しコードを、次のように<code>macroexpand</code>に渡せば良い。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">macroexpand</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">let1</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
+                  <span class="p">(</span><span class="nv">*</span> <span class="nv">foo</span> <span class="nv">foo</span><span class="p">)))</span>
+<span class="p">(</span><span class="nv">LET</span> <span class="p">((</span><span class="nv">FOO</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">*</span> <span class="nv">FOO</span> <span class="nv">FOO</span><span class="p">)))</span> <span class="c1">;</span>
+<span class="nv">T</span></code></pre></div>
+<p>最後の<code>T</code>は、<code>macroexpand</code>が問題なくマクロを展開できたことを表している。<br />
+<strong>NOTE:</strong> マクロが複雑になるにつれ、<code>macroexpand</code>はとても有用なコマンドになる。</p>
+
+<h2 id="16-2-もっと複雑なマクロ">16.2 もっと複雑なマクロ</h2>
+
+<p>ここで、リストの長さを求める<code>my-length</code>コマンドを考える。
+末尾呼び出し最適化が可能な形で実装したものが次の例である。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">my-length</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">acc</span><span class="p">)</span>
+             <span class="p">(</span><span class="nv">if</span> <span class="nv">lst</span>
+                 <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">acc</span><span class="p">))</span>
+                 <span class="nv">acc</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">f</span> <span class="nv">lst</span> <span class="mi">0</span><span class="p">)))</span></code></pre></div>
+<p>この関数には、特に悪い意味で気になる特徴が2点ある。</p>
+
+<ul>
+<li>リストをなめていく関数に共通する処理として、次の2つがある
+
+<ul>
+<li>リストが空かどうかを調べることと</li>
+<li><code>cdr</code>でリストの残りを調べること</li>
+</ul></li>
+<li>わざわざローカル関数を定義していること</li>
+</ul>
+
+<p>これらの問題を緩和するため、ここからはマクロで対処してみる。<br />
+なお、これからの説明は、素朴なマクロ(バグあり)の作成から始めて、段々とブラッシュアップしていく流れになっている。</p>
+
+<h3 id="リストを分割するマクロ">リストを分割するマクロ</h3>
+
+<p>ここでは、<code>split</code>マクロを作成する。
+<code>my-length</code>のような、リストを頭から順に見ていく関数を簡潔に書けるようにする。</p>
+
+<p>リストをなめていく関数は、常に、まずリストが空かどうかをチェックし、空でなければその頭と残りを<code>car</code>と<code>cdr</code>で取り出して処理をする。
+<code>split</code>マクロは、その共通部分をまとめてやってくれるものである。</p>
+
+<p>まずは、<code>split</code>マクロの使い方について次に示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">split</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;This can be split into ~a and ~a.&#34;</span> <span class="nv">head</span> <span class="nv">tail</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;This can not be split&#34;</span><span class="p">))</span>
+<span class="nv">This</span> <span class="nv">can</span> <span class="nv">be</span> <span class="nv">split</span> <span class="nv">into</span> <span class="mi">2</span> <span class="nv">and</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">split</span> <span class="o">&#39;</span><span class="p">()</span>
+    <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;This can be split into ~a and ~a.&#34;</span> <span class="nv">head</span> <span class="nv">tail</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;This cannot be split.&#34;</span><span class="p">))</span>
+<span class="nv">This</span> <span class="nv">can</span> <span class="nv">not</span> <span class="nv">be</span> <span class="nv">split.</span></code></pre></div>
+<p><code>split</code>マクロの最初の引数は、頭と残りに分解したいリストである。<br />
+もし分解可能なら、2番目の引数に渡された式が実行される。
+このとき、<code>split</code>マクロは自動的に2つのローカル変数、<code>head</code>と<code>tail</code>を作り、リストの頭と残りをそれに格納する。
+これにより、関数の中で<code>car</code>と<code>cdr</code>を呼ぶ手間を省ける。
+リストが空だったら、3番目の引数に渡された式が実行される。</p>
+
+<p>次に、<code>split</code>マクロのコードを見てみる。
+このコードにはバグがある(後述)。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">;; バグあり</span>
+<span class="p">(</span><span class="nv">defmacro</span> <span class="nv">split</span> <span class="p">(</span><span class="nv">val</span> <span class="nv">yes</span> <span class="nv">no</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nv">if</span> <span class="o">,</span><span class="nv">val</span>
+       <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">head</span> <span class="p">(</span><span class="nv">car</span> <span class="o">,</span><span class="nv">val</span><span class="p">))</span>
+             <span class="p">(</span><span class="nv">tail</span> <span class="p">(</span><span class="nv">cdr</span> <span class="o">,</span><span class="nv">val</span><span class="p">)))</span>
+         <span class="o">,</span><span class="nv">yes</span><span class="p">)</span>
+       <span class="o">,</span><span class="nv">no</span><span class="p">))</span></code></pre></div>
+<p><code>split</code>マクロは3つの引数を取る。
+すなわち、このマクロを使うときには常に3つの引数を渡す必要がある。<br />
+また、リストが空だった場合、<code>no</code>の位置からは変数<code>head</code>と<code>tail</code>は見えないことに注意すること。</p>
+
+<p><code>split</code>マクロを使えば<code>my-length</code>関数は少し綺麗になる。
+<code>tail</code>変数を使うことで、コードが簡潔になっているのが分かる。
+このマクロのように、自動的に変数を作り出すマクロは、 <strong>アナフォリックマクロ</strong> と呼ばれる。</p>
+
+<p><strong>NOTE:</strong> Anaphoric macro. Anaphoric(前方参照)とは、既に出ている話題に言及する際に代名詞などを使うことである。<br />
+ここの例では、分割したリストの頭と残りを、自動的に作られる変数で言及できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">my-length</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="nv">lst</span> <span class="nv">acc</span><span class="p">)</span>
+             <span class="c1">;; lst: リスト</span>
+             <span class="c1">;; acc: アキュムレータ</span>
+             <span class="p">(</span><span class="nv">split</span> <span class="nv">lst</span>
+               <span class="p">(</span><span class="nv">f</span> <span class="nv">tail</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">acc</span><span class="p">))</span>
+               <span class="nv">acc</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">f</span> <span class="nv">lst</span> <span class="mi">0</span><span class="p">)))</span></code></pre></div>
+<h3 id="マクロ中で式が繰り返し実行されるのを防ぐ">マクロ中で式が繰り返し実行されるのを防ぐ</h3>
+
+<p>マクロでよくあるバグとしては、コードを意図せずに複数回実行してしまうことである。
+実際に、上の<code>split</code>マクロにもこのバグが存在してしまっている。
+例えば、次のコードはそのバグを引き起こす。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">split</span> <span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;Lisp rocks!&#34;</span><span class="p">)</span>
+                <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;This can be split into ~a and ~a.&#34;</span> <span class="nv">head</span> <span class="nv">tail</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;This cannot be split.&#34;</span><span class="p">))</span>
+<span class="nv">Lisp</span> <span class="nv">rocks!Lisp</span> <span class="nv">rocks!Lisp</span> <span class="nv">rocks!This</span> <span class="nv">can</span> <span class="nv">be</span> <span class="nv">split</span> <span class="nv">into</span> <span class="mi">2</span> <span class="nv">and</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span></code></pre></div>
+<p><code>split</code>を使ったら、&rdquo;Lisp rocks!&ldquo;というメッセージが3回も表示されてしまった。</p>
+
+<p>これは、マクロに渡される引数が生のソースコードであることが原因である。
+<code>split</code>マクロの展開時に<code>val</code>を3回参照するので、<code>princ</code>が3回実行されてしまったのである。</p>
+
+<p>実際にマクロがどのように展開されるかは、<code>macroexpand</code>を使えば確かめることができる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">macroexpand</span> <span class="p">(</span><span class="nv">split</span> <span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;Lisp rocks!&#34;</span><span class="p">)</span>
+                             <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
+                 <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;This can be split into ~a and ~a.&#34;</span> <span class="nv">head</span> <span class="nv">tail</span><span class="p">)</span>
+                 <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;This cannot be split.&#34;</span><span class="p">)))</span>
+<span class="p">(</span><span class="nv">IF</span> <span class="p">(</span><span class="nv">PROGN</span> <span class="p">(</span><span class="nv">PRINC</span> <span class="s">&#34;Lisp rocks!&#34;</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">LET</span> <span class="p">((</span><span class="nv">HEAD</span> <span class="p">(</span><span class="nv">CAR</span> <span class="p">(</span><span class="nv">PROGN</span> <span class="p">(</span><span class="nv">PRINC</span> <span class="s">&#34;Lisp rocks!&#34;</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">))))</span>
+        <span class="p">(</span><span class="nv">TAIL</span> <span class="p">(</span><span class="nv">CDR</span> <span class="p">(</span><span class="nv">PROGN</span> <span class="p">(</span><span class="nv">PRINC</span> <span class="s">&#34;Lisp rocks!&#34;</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">)))))</span>
+    <span class="p">(</span><span class="nv">FORMAT</span> <span class="no">T</span> <span class="s">&#34;This can be split into ~a and ~a.&#34;</span> <span class="nv">HEAD</span> <span class="nv">TAIL</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">FORMAT</span> <span class="no">T</span> <span class="s">&#34;This cannot be split.&#34;</span><span class="p">))</span> <span class="c1">;</span>
+<span class="nv">T</span></code></pre></div>
+<p>この問題の解決方法を考えてみると、次のようにローカル変数を使ってみれば良いことに気付く。
+(この新しい<code>split</code>マクロでは、間に作った<code>let1</code>マクロを使ってみている。マクロの中で別のマクロを使うことに問題はない。)<br />
+この定義を使用すれば、valの式は1度しか評価されないから、上のように<code>princ</code>が呼ばれることはない。<br />
+<strong>NOTE:</strong> しかしながら、これにはまだバグがある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">;; 注意! これにもまだバグがある</span>
+<span class="p">(</span><span class="nv">defmacro</span> <span class="nv">split</span> <span class="p">(</span><span class="nv">val</span> <span class="nv">yes</span> <span class="nv">no</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nv">let1</span> <span class="nv">x</span> <span class="o">,</span><span class="nv">val</span>
+     <span class="p">(</span><span class="nv">if</span> <span class="nv">x</span>
+         <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">head</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">x</span><span class="p">))</span>
+               <span class="p">(</span><span class="nv">tail</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">x</span><span class="p">)))</span>
+           <span class="o">,</span><span class="nv">yes</span><span class="p">)</span>
+         <span class="o">,</span><span class="nv">no</span><span class="p">)))</span></code></pre></div>
+<h3 id="変更捕捉を避ける">変更捕捉を避ける</h3>
+
+<p>上の<code>split</code>のバグを見るには、次のコードを実行すれば分かる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">let1</span> <span class="nv">x</span> <span class="mi">1000</span>
+    <span class="p">(</span><span class="nv">split</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">+</span> <span class="nv">x</span> <span class="nv">head</span><span class="p">)</span>
+      <span class="no">nil</span><span class="p">))</span>
+<span class="vg">***</span> <span class="nv">-</span> <span class="nv">+:</span> <span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="nv">is</span> <span class="nv">not</span> <span class="nv">a</span> <span class="nv">number</span>
+
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">macroexpand</span> <span class="p">(</span><span class="nv">split</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">x</span> <span class="nv">head</span><span class="p">)</span> <span class="no">nil</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">LET</span> <span class="p">((</span><span class="nv">X</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nv">IF</span> <span class="nv">X</span>
+      <span class="p">(</span><span class="nv">LET</span> <span class="p">((</span><span class="nv">HEAD</span> <span class="p">(</span><span class="nv">CAR</span> <span class="nv">X</span><span class="p">))</span>
+            <span class="p">(</span><span class="nv">TAIL</span> <span class="p">(</span><span class="nv">CDR</span> <span class="nv">X</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nv">+</span> <span class="nv">X</span> <span class="nv">HEAD</span><span class="p">))</span>
+        <span class="no">NIL</span><span class="p">))</span> <span class="c1">;</span>
+<span class="nv">T</span></code></pre></div>
+<p>このように、<code>split</code>のには<code>x</code>の展開が含まれるが、これがマクロに渡したコードと衝突を起こしてしまっている。
+この例では、<code>split</code>マクロが変数<code>x</code>を意図せず捕捉してしまい、見たい値をシャドウしてしまった。
+これによって、<code>split</code>の外で宣言した<code>x</code>には、最初に<code>1000</code>を代入したにもかかわらず、<code>split</code>の中で<code>x</code>をシャドウして、
+さらにリスト<code>'(2 3)</code>を代入しようとしたために型違いエラーが発生した。</p>
+
+<p>このような変数名の衝突を回避するための素朴な解決策としては、衝突しなさそうな<code>aeicfnuhaceknf</code>のようなおかしな名前の変数を使うというものがある。<br />
+これを実現するための仕組みとして、<code>gensym</code>関数がCommon Lispには予め備わっている。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">)</span>
+<span class="ss">#:G8695</span></code></pre></div>
+<p><code>gensym</code>関数が作る名前は、コード中で唯一だと保証される。
+また、<code>gensym</code>が返した値と同じ名前をコード中に上書き定義できないようにされており、それが分かるようにプレフィックス(<code>#:</code>)がつけられている。
+したがって、<code>gensym</code>を実行してから、その返り値と全く同じ変数名を宣言しても、別々の変数として扱われる。</p>
+
+<p>ここで、<code>gensym</code>を使って<code>split</code>マクロを変数補足に対して安全になるように修正してみる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">;; 安全なバージョン</span>
+<span class="p">(</span><span class="nv">defmacro</span> <span class="nv">split</span> <span class="p">(</span><span class="nv">val</span> <span class="nv">yes</span> <span class="nv">no</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">let1</span> <span class="nv">g</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">)</span>  <span class="c1">; マクロ展開時にgにシンボル名を代入</span>
+    <span class="c1">;; マクロ展開時には既にgはシンボル名に評価されている</span>
+    <span class="o">`</span><span class="p">(</span><span class="nv">let1</span> <span class="o">,</span><span class="nv">g</span> <span class="o">,</span><span class="nv">val</span>
+       <span class="p">(</span><span class="nv">if</span> <span class="o">,</span><span class="nv">g</span>
+           <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">head</span> <span class="p">(</span><span class="nv">car</span> <span class="o">,</span><span class="nv">g</span><span class="p">))</span>
+                 <span class="p">(</span><span class="nv">tail</span> <span class="p">(</span><span class="nv">cdr</span> <span class="o">,</span><span class="nv">g</span><span class="p">)))</span>
+             <span class="o">,</span><span class="nv">yes</span><span class="p">)</span>
+           <span class="o">,</span><span class="nv">no</span><span class="p">))))</span>
+
+<span class="nv">[9]&gt;</span> <span class="p">(</span><span class="nv">macroexpand</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">split</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">x</span> <span class="nv">head</span><span class="p">)</span> <span class="no">nil</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">LET</span> <span class="p">((</span><span class="ss">#:G2985</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nv">IF</span> <span class="ss">#:G2985</span>
+    <span class="p">(</span><span class="nv">LET</span> <span class="p">((</span><span class="nv">HEAD</span> <span class="p">(</span><span class="nv">CAR</span> <span class="ss">#:G2985</span><span class="p">))</span>
+          <span class="p">(</span><span class="nv">TAIL</span> <span class="p">(</span><span class="nv">CDR</span> <span class="ss">#:G2985</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nv">+</span> <span class="nv">X</span> <span class="nv">HEAD</span><span class="p">))</span>
+    <span class="no">NIL</span><span class="p">))</span> <span class="c1">;</span>
+<span class="no">T</span>
+<span class="nv">[10]&gt;</span> <span class="p">(</span><span class="nv">macroexpand</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">split</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">x</span> <span class="nv">head</span><span class="p">)</span> <span class="no">nil</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">LET</span> <span class="p">((</span><span class="ss">#:G2986</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nv">IF</span> <span class="ss">#:G2986</span>
+    <span class="p">(</span><span class="nv">LET</span> <span class="p">((</span><span class="nv">HEAD</span> <span class="p">(</span><span class="nv">CAR</span> <span class="ss">#:G2986</span><span class="p">))</span>
+          <span class="p">(</span><span class="nv">TAIL</span> <span class="p">(</span><span class="nv">CDR</span> <span class="ss">#:G2986</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nv">+</span> <span class="nv">X</span> <span class="nv">HEAD</span><span class="p">))</span>
+    <span class="no">NIL</span><span class="p">))</span> <span class="c1">;</span>
+<span class="no">T</span>
+<span class="nv">[11]&gt;</span> <span class="p">(</span><span class="nv">macroexpand</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">split</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">x</span> <span class="nv">head</span><span class="p">)</span> <span class="no">nil</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">LET</span> <span class="p">((</span><span class="ss">#:G2987</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nv">IF</span> <span class="ss">#:G2987</span>
+    <span class="p">(</span><span class="nv">LET</span> <span class="p">((</span><span class="nv">HEAD</span> <span class="p">(</span><span class="nv">CAR</span> <span class="ss">#:G2987</span><span class="p">))</span>
+          <span class="p">(</span><span class="nv">TAIL</span> <span class="p">(</span><span class="nv">CDR</span> <span class="ss">#:G2987</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nv">+</span> <span class="nv">X</span> <span class="nv">HEAD</span><span class="p">))</span>
+    <span class="no">NIL</span><span class="p">))</span> <span class="c1">;</span>
+<span class="nv">T</span></code></pre></div>
+<p>上のコードの<code>(let1 g (gensym))</code>部分にバッククォートが無い(=準クォートではない)ことに注意すること。
+すなわち、この部分は、 <strong>マクロが作り出したコードの実行時</strong> ではなく、 <strong>マクロ自身の展開時</strong> に評価される。
+また、マクロが展開されるたびに、<code>gensym</code>が異なる変数名を生成していることも分かる。</p>
+
+<p>また、当然だが、変数名が衝突しないことと変数捕捉しないことは同じではない。
+このバージョンでも<code>head</code>と<code>tail</code>という変数を使用しているため、これらの変数を別の意味で使っているコードと混ぜて使用したら、やはり問題は起こる。
+しかし、<code>head</code>と<code>tail</code>に関しては、むしろわざと変数を捕捉しているのだ。
+アナフォリックマクロでは、マクロ本体内でこれらの変数を使えるようにわざわざ捕捉しているわけであるから、予め決まっている変数を捕捉するのはバグではなく <strong>仕様</strong> である。</p>
+
+<h3 id="再帰呼び出しマクロ">再帰呼び出しマクロ</h3>
+
+<p>ここで、もう一度、<code>my-length</code>を修正する。
+前に作った<code>my-length</code>を再掲する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">my-length</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="nv">lst</span> <span class="nv">acc</span><span class="p">)</span>
+             <span class="c1">;; lst: リスト</span>
+             <span class="c1">;; acc: アキュムレータ</span>
+             <span class="p">(</span><span class="nv">split</span> <span class="nv">lst</span>
+               <span class="p">(</span><span class="nv">f</span> <span class="nv">tail</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">acc</span><span class="p">))</span>
+               <span class="nv">acc</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">f</span> <span class="nv">lst</span> <span class="mi">0</span><span class="p">)))</span></code></pre></div>
+<p>先述の通り、このコードにもまだ繰り返し出てくるパターンがある。
+すなわち、ローカル関数<code>f</code>を定義しているところである。</p>
+
+<p>ここで、再帰部分を隠す<code>recurse</code>マクロを次に示す。
+まず、<code>recurse</code>マクロの使用例を示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">recurse</span> <span class="p">(</span><span class="nv">n</span> <span class="mi">9</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">fresh-line</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">zerop</span> <span class="nv">n</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;lift-off!&#34;</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">princ</span> <span class="nv">n</span><span class="p">)</span>
+             <span class="p">(</span><span class="nv">self</span> <span class="p">(</span><span class="nv">1-</span> <span class="nv">n</span><span class="p">)))))</span>
+<span class="mi">9</span>
+<span class="mi">8</span>
+<span class="mi">7</span>
+<span class="mi">6</span>
+<span class="mi">5</span>
+<span class="mi">4</span>
+<span class="mi">3</span>
+<span class="mi">2</span>
+<span class="mi">1</span>
+<span class="nv">lift-off!</span></code></pre></div>
+<p><code>recurse</code>マクロの最初のパラメータは、変数とその初期値のリストである。
+この例では、変数<code>n</code>を宣言し、その初期値を<code>9</code>に設定している。<br />
+残りの行は再帰関数の本体を構成する。</p>
+
+<p>再帰関数の本体では、まず、改行している。
+次に、<code>n</code>がゼロになったか否かを調べ、ゼロになっていれば&rdquo;lift-off!&ldquo;を表示する。
+そうでなければ現在の<code>n</code>の値を出力し、自分自身を再帰呼び出しする。
+<code>split</code>マクロと同様、このマクロもアナフォリックである。
+すなわち、<code>recurse</code>マクロでは、変数<code>self</code>で自分自身の関数を参照できる。
+再帰の条件が整ったら、<code>self</code>を呼び出せば良い。
+この例では<code>(1- n)</code>を引数として渡して、カウントダウンを実現している。</p>
+
+<p>では、<code>recurse</code>マクロを実装してみる。
+まず、変数とその初期値の対を切り出すのに便利なように、補助関数<code>pairs</code>関数を定義する。
+<code>pairs</code>関数は末尾呼び出し最適化可能な、リストを舐める関数である。
+この関数を定義するためにローカル関数<code>f</code>を定義するはめに陥っているが、後述する方法でこういった関数定義をしなくて良くなる。
+この関数<code>f</code>の中では、<code>split</code>マクロを使ってリストを分解しているが、今回はリストから2つずつ要素を取り出したいため、<code>tail</code>が空でないかを改めて調べている。
+これにより、リストが空か、要素が1つしか残っていない(<code>(if tail)</code>が偽)場合は、蓄積した値を返す。
+そうでなければ最初の2つの要素をペアにしてアキュムレータ<code>acc</code>に追加し、再帰する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defun</span> <span class="nv">pairs</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+    <span class="c1">;; lst: 2要素ずつコンスセルを作る対象となるリスト</span>
+    <span class="c1">;; acc: 作ったコンスセルを格納するアキュムレータ</span>
+    <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">acc</span><span class="p">)</span>
+               <span class="p">(</span><span class="nv">split</span> <span class="nv">lst</span>
+                 <span class="p">(</span><span class="nv">if</span> <span class="nv">tail</span>
+                   <span class="c1">;; lstが空でなく、かつ、残り部分も空でない場合、</span>
+                   <span class="c1">;; =&gt; ((head . tail) これまでに作ったコンスセル達)</span>
+                   <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tail</span><span class="p">)</span> <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">cons</span> <span class="nv">head</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tail</span><span class="p">))</span> <span class="nv">acc</span><span class="p">))</span>
+                   <span class="c1">;; lstが空ではないが、残り部分が空の場合、</span>
+                   <span class="c1">;; これまでに作ったコンスセル達は逆順なので、順序を正してから返す</span>
+                   <span class="p">(</span><span class="nv">reverse</span> <span class="nv">acc</span><span class="p">))</span>
+                 <span class="c1">;; lstが空の場合、</span>
+                 <span class="c1">;; これまでに作ったコンスセル達は逆順なので、順序を正してから返す</span>
+                 <span class="p">(</span><span class="nv">reverse</span> <span class="nv">acc</span><span class="p">))))</span>
+      <span class="p">(</span><span class="nv">f</span> <span class="nv">lst</span> <span class="no">nil</span><span class="p">)))</span>
+<span class="nv">PAIRS</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">pairs</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span> <span class="nv">e</span> <span class="nv">f</span><span class="p">))</span>
+<span class="p">((</span><span class="nv">A</span> <span class="o">.</span> <span class="nv">B</span><span class="p">)</span> <span class="p">(</span> <span class="nv">C</span> <span class="o">.</span> <span class="nv">D</span><span class="p">)</span> <span class="p">(</span><span class="nv">E</span> <span class="o">.</span> <span class="nv">F</span><span class="p">))</span></code></pre></div>
+<p>次に、いよいよ<code>recurse</code>マクロを定義する。
+変数<code>p</code>には、<code>pair</code>関数を使って最初のリストを変数と初期値のコンスセルのリストにしたものを代入する。
+次に、<code>self</code>ローカル関数を定義する。
+<code>self</code>の引数は、最初のリストの基数番目の要素(つまり<code>recurse</code>に渡した<code>vars</code>のリスト中の変数)を並べたものである。
+<code>self</code>は、マクロ展開された式の中から参照できる(つまりアナフォリックに参照できる)必要があるため、<code>(gensym)</code>を使わず、直接名前を書いている。
+そしてマクロの最後で、初期値を引数として<code>self</code>を呼び出す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">recurse</span> <span class="p">(</span><span class="nv">vars</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="c1">;; p: varsで得られた変数とその初期値のコンスセルのリスト</span>
+  <span class="p">(</span><span class="nv">let1</span> <span class="nv">p</span> <span class="p">(</span><span class="nv">pairs</span> <span class="nv">vars</span><span class="p">)</span>
+    <span class="c1">;; ローカル関数self</span>
+    <span class="c1">;; 引数: varsで得られた変数</span>
+    <span class="c1">;; 関数本体 bodyで得られたリスト(複数可)</span>
+    <span class="o">`</span><span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">self</span> <span class="o">,</span><span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">car</span> <span class="nv">p</span><span class="p">)</span>
+                <span class="o">,@</span><span class="nv">body</span><span class="p">))</span>
+       <span class="c1">;; ローカル関数selfに初期値を適用</span>
+       <span class="p">(</span><span class="nv">self</span> <span class="o">,@</span><span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">cdr</span> <span class="nv">p</span><span class="p">)))))</span></code></pre></div>
+<p>最後に、<code>recurse</code>マクロを使って<code>my-length</code>関数を更に簡潔にする。
+<code>my-length</code>に必要な補助関数やマクロ定義も全て示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">let1</span> <span class="p">(</span><span class="nv">var</span> <span class="nv">val</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="c1">;; 変数を1つだけ代入して式を実行する</span>
+  <span class="c1">;; var: 代入先の変数</span>
+  <span class="c1">;; val: 代入する値</span>
+  <span class="c1">;; body: 実行する式(複数可)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="o">,</span><span class="nv">var</span> <span class="o">,</span><span class="nv">val</span><span class="p">))</span>
+     <span class="o">,@</span><span class="nv">body</span><span class="p">))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">split</span> <span class="p">(</span><span class="nv">val</span> <span class="nv">yes</span> <span class="nv">no</span><span class="p">)</span>
+  <span class="c1">;; valに対して頭と残りへの分解を試みる</span>
+  <span class="c1">;; val: 分解対象の式</span>
+  <span class="c1">;; yes: 分解成功時に実行する式</span>
+  <span class="c1">;; no: 分解失敗時に実行する式</span>
+  <span class="p">(</span><span class="nv">let1</span> <span class="nv">g</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">)</span>  <span class="c1">; マクロ展開時にgにシンボル名を代入</span>
+    <span class="c1">;; マクロ展開時には既にgはシンボル名に評価されている</span>
+    <span class="o">`</span><span class="p">(</span><span class="nv">let1</span> <span class="o">,</span><span class="nv">g</span> <span class="o">,</span><span class="nv">val</span>
+       <span class="p">(</span><span class="nv">if</span> <span class="o">,</span><span class="nv">g</span>
+           <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">head</span> <span class="p">(</span><span class="nv">car</span> <span class="o">,</span><span class="nv">g</span><span class="p">))</span>
+                 <span class="p">(</span><span class="nv">tail</span> <span class="p">(</span><span class="nv">cdr</span> <span class="o">,</span><span class="nv">g</span><span class="p">)))</span>
+             <span class="o">,</span><span class="nv">yes</span><span class="p">)</span>
+           <span class="o">,</span><span class="nv">no</span><span class="p">))))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">pairs</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+  <span class="s">&#34;2要素ずつコンスセルを作る
+</span><span class="s">   lst: 2要素ずつコンスセルを作る対象となるリスト&#34;</span>
+  <span class="c1">;; lst: 2要素ずつコンスセルを作る対象となるリスト</span>
+  <span class="c1">;; acc: 作ったコンスセルを格納するアキュムレータ</span>
+  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">acc</span><span class="p">)</span>
+             <span class="p">(</span><span class="nv">split</span> <span class="nv">lst</span>
+               <span class="p">(</span><span class="nv">if</span> <span class="nv">tail</span>
+                 <span class="c1">;; lstが空でなく、かつ、残り部分も空でない場合、</span>
+                 <span class="c1">;; =&gt; ((head . tail) これまでに作ったコンスセル達)</span>
+                 <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tail</span><span class="p">)</span> <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">cons</span> <span class="nv">head</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tail</span><span class="p">))</span> <span class="nv">acc</span><span class="p">))</span>
+                 <span class="c1">;; lstが空ではないが、残り部分が空の場合、</span>
+                 <span class="c1">;; これまでに作ったコンスセル達は逆順なので、順序を正してから返す</span>
+                 <span class="p">(</span><span class="nv">reverse</span> <span class="nv">acc</span><span class="p">))</span>
+               <span class="c1">;; lstが空の場合、</span>
+               <span class="c1">;; これまでに作ったコンスセル達は逆順なので、順序を正してから返す</span>
+               <span class="p">(</span><span class="nv">reverse</span> <span class="nv">acc</span><span class="p">))))</span>
+    <span class="p">(</span><span class="nv">f</span> <span class="nv">lst</span> <span class="no">nil</span><span class="p">)))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">recurse</span> <span class="p">(</span><span class="nv">vars</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="c1">;; 再帰処理を定義する</span>
+  <span class="c1">;; vars: 変数とその初期値(連続してOK)</span>
+  <span class="c1">;; body: 再帰する処理(再帰呼び出しする関数は変数self)</span>
+  <span class="c1">;; p: varsで得られた変数とその初期値のコンスセルのリスト</span>
+  <span class="p">(</span><span class="nv">let1</span> <span class="nv">p</span> <span class="p">(</span><span class="nv">pairs</span> <span class="nv">vars</span><span class="p">)</span>
+    <span class="c1">;; ローカル関数self</span>
+    <span class="c1">;; 引数: varsで得られた変数</span>
+    <span class="c1">;; 関数本体 bodyで得られたリスト(複数可)</span>
+    <span class="o">`</span><span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">self</span> <span class="o">,</span><span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">car</span> <span class="nv">p</span><span class="p">)</span>
+                <span class="o">,@</span><span class="nv">body</span><span class="p">))</span>
+       <span class="c1">;; ローカル関数selfに初期値を適用</span>
+       <span class="p">(</span><span class="nv">self</span> <span class="o">,@</span><span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">cdr</span> <span class="nv">p</span><span class="p">)))))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">my-length</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+  <span class="s">&#34;リストの長さを返す
+</span><span class="s">   lst: 対象のリスト
+</span><span class="s">   ret: リストの長さ&#34;</span>
+  <span class="p">(</span><span class="nv">recurse</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">lst</span> <span class="nv">acc</span> <span class="mi">0</span><span class="p">)</span>
+           <span class="c1">;; lst: 走査対象のリスト 初期値lst</span>
+           <span class="c1">;; acc: リストの長さ保持用 初期値0</span>
+           <span class="p">(</span><span class="nv">split</span> <span class="nv">lst</span>
+             <span class="c1">;; リストに残りがあれば残りに対して再帰呼び出しする</span>
+             <span class="p">(</span><span class="nv">self</span> <span class="nv">tail</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">acc</span><span class="p">))</span>
+             <span class="c1">;; リストが空になったらリストの長さを返す</span>
+             <span class="nv">acc</span><span class="p">)))</span></code></pre></div>
+<h2 id="16-3-マクロの危険と代替案">16.3 マクロの危険と代替案</h2>
+
+<p>マクロはコードを生成するコードを書く手段である。
+これにより、Lispはメタプログラミングや新しい言語のアイデアやプロトタイプを作るのに適した言語であるといえる。
+しかし、マクロはある意味、小手先のテクニックである。
+自作の言語を、標準のLispであるかのようにLispコンパイラ/インタプリタに読み込ませるためのトリックである。
+道具立てとしては非常に強力なものだが、エレガントではない。</p>
+
+<p>マクロの一番の欠点は、コードが理解しにくくなることである。
+つまり、他のプログラマにとって初見となるプログラミング方言を作っているわけである。
+したがって、しばらく後にマクロを駆使したプログラムを読み解くのは非常に骨が折れる作業になる。</p>
+
+<p>初心者Lisperがマクロを書きたくなる場合の多くは、もっとエレガントな解法があるものである。
+例えば、<code>my-length</code>をマクロを使わずに簡潔に表現する方法は、実は存在する。
+次のように、高階関数<code>reduce</code>を使えば良いだけである。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">my-length</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">reduce</span> <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span> <span class="nv">i</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">1+</span> <span class="nv">x</span><span class="p">))</span>
+          <span class="nv">lst</span>
+          <span class="ss">:initial-value</span> <span class="mi">0</span><span class="p">))</span></code></pre></div>
+<p>高階関数<code>reduce</code>は、リストの各要素に対して関数適用するための関数である。
+<code>reduce</code>関数の第1引数には、縮約を行う関数を渡してやる。
+ここでは<code>lambda</code>によって無名関数を作っている。
+この<code>lambda</code>関数の第1引数<code>x</code>は、最初に、<code>reduce</code>関数のキーワード引数の<code>:initial-value</code>の値<code>0</code>を束縛する。
+そして<code>lambda</code>関数本体の処理を行い、その結果をまた次に呼んだ<code>lambda</code>関数の<code>x</code>に束縛する。
+これにより、リストの各要素に対して<code>lambda</code>が呼ばれただけ<code>x</code>がインクリメントされつつ<code>lambda</code>に渡される。
+(すなわち<code>x</code>はアキュムレータである。)</p>
+
+<p>また、縮約関数には、その時に見ているリストの各要素の値も引数に渡されている。
+それが引数<code>i</code>である。
+ただし、<code>my-length</code>関数では<code>i</code>を使う必要はない。</p>
+
+<p>このように、高階関数が使える場合はそちらを使った方がくだらないバグに悩まされることもなく、簡単である。
+しかし、高階関数が使えない場合もあるから、その場合にマクロを使えるようになっておくことが望ましい。</p>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

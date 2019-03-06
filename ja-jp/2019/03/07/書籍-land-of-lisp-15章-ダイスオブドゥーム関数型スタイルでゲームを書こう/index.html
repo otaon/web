@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>書籍 Land of Lisp 15章 ダイスオブドゥーム：関数型スタイルでゲームを書こう · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="T.O.C. 15.5 ダイス・オブ・ドゥームを高速化する 15.5 ダイス・オブ・ドゥームを高速化する クロージャ クロージャは、lambdaで関数が作られるとき、外側の情" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-15%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E9%96%A2%E6%95%B0%E5%9E%8B%E3%82%B9%E3%82%BF%E3%82%A4%E3%83%AB%E3%81%A7%E3%82%B2%E3%83%BC%E3%83%A0%E3%82%92%E6%9B%B8%E3%81%93%E3%81%86/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="書籍 Land of Lisp 15章 ダイスオブドゥーム：関数型スタイルでゲームを書こう" />
+<meta property="og:description" content="T.O.C. 15.5 ダイス・オブ・ドゥームを高速化する 15.5 ダイス・オブ・ドゥームを高速化する クロージャ クロージャは、lambdaで関数が作られるとき、外側の情" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-15%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E9%96%A2%E6%95%B0%E5%9E%8B%E3%82%B9%E3%82%BF%E3%82%A4%E3%83%AB%E3%81%A7%E3%82%B2%E3%83%BC%E3%83%A0%E3%82%92%E6%9B%B8%E3%81%93%E3%81%86/" />
+<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="書籍 Land of Lisp 15章 ダイスオブドゥーム：関数型スタイルでゲームを書こう">
+<meta itemprop="description" content="T.O.C. 15.5 ダイス・オブ・ドゥームを高速化する 15.5 ダイス・オブ・ドゥームを高速化する クロージャ クロージャは、lambdaで関数が作られるとき、外側の情">
+
+
+<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="6022">
+
+
+
+<meta itemprop="keywords" content="lisp," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="書籍 Land of Lisp 15章 ダイスオブドゥーム：関数型スタイルでゲームを書こう"/>
+<meta name="twitter:description" content="T.O.C. 15.5 ダイス・オブ・ドゥームを高速化する 15.5 ダイス・オブ・ドゥームを高速化する クロージャ クロージャは、lambdaで関数が作られるとき、外側の情"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">書籍 Land of Lisp 15章 ダイスオブドゥーム：関数型スタイルでゲームを書こう</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-03-07
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/lisp/">lisp</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h2 id="t-o-c">T.O.C.</h2>
+
+<ul>
+<li><a href="#155-ダイスオブドゥームを高速化する">15.5 ダイス・オブ・ドゥームを高速化する</a></li>
+</ul>
+
+<hr />
+
+<h2 id="15-5-ダイス-オブ-ドゥームを高速化する">15.5 ダイス・オブ・ドゥームを高速化する</h2>
+
+<h3 id="クロージャ">クロージャ</h3>
+
+<p>クロージャは、<code>lambda</code>で関数が作られるとき、外側の情報を捕獲したものである。</p>
+
+<p>まずは、普通の関数を定義する。これは、<code>5</code>を返す関数である。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*foo*</span> <span class="p">(</span><span class="nv">lambda</span> <span class="p">()</span>
+                        <span class="mi">5</span><span class="p">))</span>
+<span class="vg">*FOO*</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">funcall</span> <span class="vg">*foo*</span><span class="p">)</span>
+<span class="nv">5</span></code></pre></div>
+<p>次に、示す関数は、クロージャの実装例である。<br />
+最初にローカル変数<code>x</code>を作り、それに<code>5</code>を代入している。
+そして、<code>lambda</code>の本体から、<code>x</code>の値を参照して返している。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*foo*</span> <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">x</span> <span class="mi">5</span><span class="p">))</span>
+                      <span class="p">(</span><span class="nv">lambda</span> <span class="p">()</span>
+                        <span class="nv">x</span><span class="p">)))</span>
+<span class="vg">*foo*</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">funcall</span> <span class="vg">*foo*</span><span class="p">)</span>
+<span class="nv">5</span></code></pre></div>
+<p>上の通り、クロージャでは関数が定義された時に参照した変数を捕捉している。</p>
+
+<p>この動作は、Lispがガベージコレクタを持っていることを考えると理解しやすい。<br />
+ガベージコレクタは、アロケートされた変数がどこからも参照されなくなると、メモリを解放する。
+上の例では、<code>let</code>の中で<code>lambda</code>を使っている。
+この場合、<code>let</code>を抜けても、変数は<code>lambda</code>の中から参照されている。
+したがって、ガベージコレクタは変数を回収しない。<br />
+そして、<code>lambda</code>自身がガベージコレクタに回収されるまでは変数も生き続けることになる。</p>
+
+<p>クロージャを使うことで、関数に紐づけたスタティック変数があるかのような処理を実装できる。<br />
+下の例では、関数が呼ばれる度に、捕捉した行番号を表示しつつインクリメントする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">line-number</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">defun</span> <span class="nv">my-print</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">print</span> <span class="nv">line-number</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">print</span> <span class="nv">x</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">incf</span> <span class="nv">line-number</span><span class="p">)</span>
+      <span class="no">nil</span><span class="p">))</span>
+<span class="nv">MY-PRINT</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">my-print</span> <span class="s">&#34;this&#34;</span><span class="p">)</span>
+<span class="mi">0</span>
+<span class="s">&#34;this&#34;</span>
+<span class="no">nil</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">my-print</span> <span class="s">&#34;is&#34;</span><span class="p">)</span>
+<span class="mi">1</span>
+<span class="s">&#34;is&#34;</span>
+<span class="no">nil</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">my-print</span> <span class="s">&#34;a&#34;</span><span class="p">)</span>
+<span class="mi">2</span>
+<span class="s">&#34;a&#34;</span>
+<span class="no">nil</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">my-print</span> <span class="s">&#34;a&#34;</span><span class="p">)</span>
+<span class="mi">3</span>
+<span class="s">&#34;test&#34;</span>
+<span class="nv">nil</span></code></pre></div>
+<h3 id="メモ化">メモ化</h3>
+
+<p>メモ化とは、関数が受け取った引数と、その結果を記録しておくテクニックである。
+このテクニックは、副作用がない関数(=関数型プログラミングによる関数)に対して使える。
+また、このテクニックは、クロージャを使って実現できる。</p>
+
+<h4 id="neighbors-関数をメモ化する"><code>neighbors</code>関数をメモ化する</h4>
+
+<p>まずは、与えられたマスから攻撃可能な隣り合うマスを計算する<code>neighbors</code>関数をメモ化してみる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">neighbors</span> <span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">3</span> <span class="mi">1</span> <span class="mi">4</span><span class="p">)</span></code></pre></div>
+<p>上のとおり、<code>neighbors</code>に引数<code>0</code>を渡した時の返り値は<code>(3 1 4)</code>となる(ゲーム盤が3x3の場合)。<br />
+また、この関数は不変のゲーム盤に対する不変的な位置計算をするものであるため、メモ化の対象とできる。
+<code>neighbors</code>関数をメモ化したものを下に示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">old-neighbors</span> <span class="p">(</span><span class="nv">symbol-function</span> <span class="ss">&#39;neighbors</span><span class="p">))</span>
+      <span class="p">(</span><span class="nv">previous</span> <span class="p">(</span><span class="nv">make-hash-table</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nv">defun</span> <span class="nv">neighbors</span> <span class="p">(</span><span class="nv">pos</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">or</span> <span class="p">(</span><span class="nv">gethash</span> <span class="nv">pos</span> <span class="nv">previous</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">gethash</span> <span class="nv">pos</span> <span class="nv">previous</span><span class="p">)</span> <span class="p">(</span><span class="nv">funcall</span> <span class="nv">old-neighbors</span> <span class="nv">pos</span><span class="p">)))))</span></code></pre></div>
+<p>最初に定義したレキシカル変数の<code>symbol-function</code>は、引数のシンボルに束縛されている関数を取り出すコマンドである。
+したがって、<code>old-neighbors</code>変数には、この行が評価されるよりも前に定義した<code>neighbors</code>が束縛される。
+つまり、この後に同名の<code>neighbors</code>関数を再定義しても、以前のバージョンの定義にアクセスできるという寸法である。</p>
+
+<p>次に定義したレキシカル変数の<code>previous</code>は、渡された引数とその結果とを全て保存していくためのハッシュテーブルである。
+このハッシュテーブルは、引数をキー、結果を値とする。</p>
+
+<p>そして、新たに<code>neighbors</code>関数を定義して以前のバージョンの<code>neighbors</code>を上書きする。
+この新しい定義の<code>neighbors</code>関数は、以前の定義の<code>neighbors</code>関数にメモ化処理を加えたものである。<br />
+この新しい定義の<code>neighbors</code>関数は、はじめに、引数<code>pos</code>を使ってハッシュテーブルを調べる。<br />
+既に値が登録されていれば、その引数をキーとした値を取り出して返す。
+未だ値が登録されていなければ、その引数を使って<code>old-neighbors</code>(つまり以前のバージョンの<code>neighbors</code>)を呼び出した結果を、引数をキーとしてハッシュテーブルに登録する。<br />
+<code>setf</code>はセットされた値を返すから、最後の式では、ハッシュテーブルへ登録すると同時に<code>old-neighbors</code>の返り値を返している。</p>
+
+<h4 id="ゲーム木をメモ化する">ゲーム木をメモ化する</h4>
+
+<p>ゲーム木を計算する関数において、同じゲーム木を何度も計算するのは全くの無駄な処理である。<br />
+そこで、<code>game-tree</code>関数をメモ化して、同じゲーム木を見つけたらそのゲーム木の枝を共有することとする。<br />
+下に、<code>game-tree</code>関数をメモ化するコードを示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">old-game-tree</span> <span class="p">(</span><span class="nv">symbol-function</span> <span class="ss">&#39;game-tree</span><span class="p">))</span>
+      <span class="p">(</span><span class="nv">previous</span> <span class="p">(</span><span class="nv">make-hash-table</span> <span class="ss">:test</span> <span class="nf">#&#39;</span><span class="nv">equalp</span><span class="p">)))</span>  <span class="c1">; キーの比較関数にequalpを使う</span>
+  <span class="p">(</span><span class="nv">defun</span> <span class="nv">game-tree</span> <span class="p">(</span><span class="nv">&amp;rest</span> <span class="nv">rest</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">or</span> <span class="p">(</span><span class="nv">gethash</span> <span class="nv">rest</span> <span class="nv">previous</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">gethash</span> <span class="nv">rest</span> <span class="nv">previous</span><span class="p">)</span> <span class="p">(</span><span class="nv">apply</span> <span class="nv">old-game-tree</span> <span class="nv">rest</span><span class="p">)))))</span></code></pre></div>
+<p>ハッシュテーブルのキーの比較関数に<code>equalp</code>関数を使用したのは、キーがゲーム盤を含む配列であるからである。
+テスト関数に<code>equalp</code>を使えば、ゲーム盤の全てのマスの同値性を比較して、完全一致した時に以前の計算結果が使われるようにできる。</p>
+
+<p>また、<code>old-game-tree</code>関数には引数が複数あるため、<code>&amp;rest rest</code>と表記することでリスト<code>rest</code>として扱っている。<br />
+そして、<code>apply</code>によりリスト<code>rest</code>を個々の引数として<code>old-game-tree</code>に適用している。</p>
+
+<h4 id="rate-position-関数をリスト化する"><code>rate-position</code>関数をリスト化する</h4>
+
+<p>最後に、メモ化する効果が高い<code>rate-position</code>をメモ化することを考える。<br />
+メモ化のコードは下のとおりである。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">;; クロージャとして補足する値: 特定のプレイヤーに対する特定のゲーム木に対応する点数のハッシュテーブル</span>
+<span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">old-rate-position</span> <span class="p">(</span><span class="nv">symbol-function</span> <span class="ss">&#39;rate-position</span><span class="p">))</span>
+      <span class="p">(</span><span class="nv">previous</span> <span class="p">(</span><span class="nv">make-hash-table</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nv">defun</span> <span class="nv">rate-position</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">player</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">tab</span> <span class="p">(</span><span class="nv">gethash</span> <span class="nv">player</span> <span class="nv">previous</span><span class="p">)))</span>  <span class="c1">; 引数のプレイヤーについての返り値の記憶を辿る</span>
+	  <span class="c1">;; 引数のプレイヤーについての返り値が記憶されていなければ、</span>
+      <span class="c1">;; 引数のプレイヤー用のハッシュテーブルを新規作成する</span>
+      <span class="p">(</span><span class="nv">unless</span> <span class="nv">tab</span>
+        <span class="p">(</span><span class="nv">setf</span> <span class="nv">tab</span> <span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">gethash</span> <span class="nv">player</span> <span class="nv">previous</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-hash-table</span><span class="p">))))</span>
+      <span class="c1">;; 引数のプレイヤーについて、引数のゲーム木が記憶されていれば、それに対応する値を返す</span>
+      <span class="c1">;; 記憶されていなければ、引数のプレイヤーと引数のゲーム木に対応する戻り値を新たに計算して記憶し、</span>
+      <span class="c1">;; それを返り値とする</span>
+      <span class="p">(</span><span class="nv">or</span> <span class="p">(</span><span class="nv">gethash</span> <span class="nv">tree</span> <span class="nv">tab</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">gethash</span> <span class="nv">tree</span> <span class="nv">tab</span><span class="p">)</span>
+                <span class="p">(</span><span class="nv">funcall</span> <span class="nv">old-rate-position</span> <span class="nv">tree</span> <span class="nv">player</span><span class="p">))))))</span></code></pre></div>
+<p><code>rate-position</code>には問題がある。<br />
+<code>rate-position</code>の引数である<code>tree</code>はゲーム木であるため、非常に大きなデータである可能性がある。
+また、<code>game-tree</code>で使用した<code>equalp</code>は同値性の比較をするため、大きなデータに対しては比較コストが非常に高い。<br />
+したがって、これを<code>game-tree</code>と同様に<code>equalp</code>(同値性比較)で比較すると、キーの比較だけで処理が増大してしまい、メモ化の効果が薄れる可能性がある。</p>
+
+<p>ところで、先程の<code>game-tree</code>関数のメモ化によって、同値のゲーム木は必ず同一のインスタンスとなることが保証されている。
+そこで、<code>rate-position</code>の引数のうち、<code>tree</code>は、デフォルトの<code>eql</code>(低コストな同一性比較)で済むようにしたい。
+なお、残りの引数<code>player</code>はシンボルであるため、<code>player</code>単体ならば既にデフォルトの<code>eql</code>で比較可能である。<br />
+(<code>tree</code>と<code>player</code>をコンスしたりしてしまうと同一性が保てない点に注意。)</p>
+
+<p>そこで、<code>rate-position</code>関数の2つの引数(<code>tree</code>と<code>palyer</code>)を別々に記憶しておくようにしたい。<br />
+上のコードでは、ネストしたハッシュテーブルを使用してそれを実現している。
+下に、このハッシュテーブルの構造を示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; ネストしたハッシュテーブルの構造</span>
+<span class="c1">; previous = #S((player1 . tab1)</span>
+<span class="c1">;               (player2 . tab2))</span>
+<span class="c1">; tab = #S((tree1 . ret1)</span>
+<span class="c1">;          (tree2 . ret2))</span>
+
+<span class="nv">&gt;</span> <span class="nv">previous</span>
+<span class="l">#S</span><span class="p">((</span><span class="nv">プレイヤーID-1</span> <span class="o">.</span> <span class="l">#S</span><span class="p">((</span><span class="nv">ゲーム木a</span> <span class="o">.</span> <span class="nv">返り値1-a</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nv">ゲーム木b</span> <span class="o">.</span> <span class="nv">返り値1-b</span><span class="p">)))</span>
+   <span class="p">(</span><span class="nv">プレイヤーID-2</span> <span class="o">.</span> <span class="l">#S</span><span class="p">((</span><span class="nv">ゲーム木c</span> <span class="o">.</span> <span class="nv">返り値2-c</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nv">ゲーム木d</span> <span class="o">.</span> <span class="nv">返り値2-d</span><span class="p">))))</span></code></pre></div>
+<p><strong>NOTE:</strong> メモ化は、関数型スタイルで書かれたコードの最適化に使えるテクニックであるが、メモ化するコード自体は <em>以前の計算結果</em> という状態を持つため、関数型では書けない。</p>
+
+<h3 id="末尾再帰最適化">末尾再帰最適化</h3>
+
+<p>ここでは、 <strong>末尾再帰最適化</strong> と呼ばれる、関数型プログラミングの最適化テクニックを説明する。<br />
+このテクニックを理解するために、リストの長さを求める簡単な関数を考えてみる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defun</span> <span class="nv">my-length</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">if</span> <span class="nv">lst</span>
+        <span class="p">(</span><span class="nv">1+</span> <span class="p">(</span><span class="nv">my-length</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)))</span>
+        <span class="mi">0</span><span class="p">))</span>
+<span class="nv">MY-LENGTH</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">my-length</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">fie</span> <span class="nv">foh</span> <span class="nv">fum</span><span class="p">))</span>
+<span class="nv">3</span></code></pre></div>
+<p>じつは、この関数はかなり非効率である。<br />
+試しに、とても大きなリストにこの関数を適用すると、CLISPではプログラムがクラッシュする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">;; 注意:このプログラムはクラッシュするので実行しないこと!!</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*biglist*</span> <span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">100000</span> <span class="nv">collect</span> <span class="ss">&#39;x</span><span class="p">))</span>
+<span class="vg">*BIGLIST*</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">my-length</span> <span class="vg">*biglist*</span><span class="p">)</span>
+
+<span class="vg">***</span> <span class="nv">-</span> <span class="nv">Program</span> <span class="nv">stack</span> <span class="nv">overflow.</span> <span class="nv">RESET</span></code></pre></div>
+<p>なぜクラッシュするのか。
+それは、再帰された関数を呼び出す際に現在の関数の情報をスタックに積むからである。<br />
+スタックに積み上げたデータが取り出されるのは、関数が終了した時であるから、関数が再帰的に呼び出され続けていればスタックオーバーフローを起こす。<br />
+ただし、処理系によってはスタックオーバーフローが起こらないように設計されている。</p>
+
+<p>この問題を回避したバージョンの<code>my-length</code>を以下に示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defun</span> <span class="nv">my-length</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">acc</span><span class="p">)</span>  <span class="c1">; アキュムレータ</span>
+               <span class="p">(</span><span class="nv">if</span> <span class="nv">lst</span>  <span class="c1">; このlstはfのローカル変数</span>
+                   <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">acc</span><span class="p">))</span>
+                   <span class="nv">acc</span><span class="p">)))</span>
+            <span class="p">(</span><span class="nv">f</span> <span class="nv">lst</span> <span class="mi">0</span><span class="p">)))</span>
+<span class="nv">MY-LENGTH</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">my-length</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">fie</span> <span class="nv">foh</span> <span class="nv">fum</span><span class="p">))</span>
+<span class="nv">3</span></code></pre></div>
+<p>このバージョンでは、リストを走査するローカル変数<code>f</code>を定義して、それを再帰的に呼び出している。<br />
+この関数<code>f</code>は、入力リストに加え、余分な引数<code>acc</code>を取る。<br />
+この<code>acc</code>はアキュムレータ(accumlator)と呼ばれる。
+引数<code>acc</code>は、それまでにいくつのリストの要素に出会ったかを数えている。
+一番最初に<code>f</code>を呼び出すとき、<code>acc</code>は<code>0</code>である。<br />
+アキュムレータを使うと、関数<code>f</code>が自分自身を再帰的に呼び出す際にその結果を受け取って<code>1</code>を加算しなくても良い。
+代わりに、引数<code>acc</code>に<code>1</code>を加算した値を再帰呼び出しの引数へと渡していく。
+リストの最後に到達したら(<code>list</code>が<code>nil</code>)、引数の<code>acc</code>はリストの要素数と同じになっているから、この<code>acc</code>をそのまま返せば良い。</p>
+
+<p><em>(accumlator(アキュムレータ)とは、CPUの演算回路を構成するレジスタの一種で、論理演算や四則演算などによるデータの入出力と結果の保持に用いられるレジスタのことである。)</em><br />
+<em>(accumlate: 蓄積する。)</em></p>
+
+<p>このバージョンで大事なのは、「リストが空ではない場合、<code>f</code>の最後の処理が <strong>自分自身を呼び出すこと</strong> である」ということである。
+Lispの関数が、その最後の処理として自分自身や他の関数を呼び出すとき、それを末尾呼び出しと呼ぶ。<br />
+末尾呼び出しの場合、Lispでは現在の状態をスタックに積み上げず、すぐに<code>f</code>の処理に取り掛かる。
+これは、C言語の<code>longjump</code>やBASICの<code>GOTO</code>に相当する動きである。<br />
+現在の状態をスタックに積み上げない場合、スタック操作が無い分非常に速く、そもそもスタックを消費せずに済む。
+また、Lispの末尾呼び出しは<code>longjump</code>や<code>GOTO</code>とは違い、構造化プログラミングの範疇となり、安全な処理のままである。</p>
+
+<p>また、上の例の<code>lst</code>は、下の通り2種類の意味で使われている。</p>
+
+<ul>
+<li><code>my-length</code>の引数</li>
+<li><code>f</code>の引数</li>
+</ul>
+
+<p>したがって、<code>f</code>の内部では、<code>lst</code>は<code>f</code>の引数として扱われる。<br />
+このように、同じ名前の変数があるときに近い方の引数が優先されることを、「変数の <strong>シャドウイング</strong> 」という。</p>
+
+<h5 id="common-lispにおける末尾呼び出しのサポート">Common Lispにおける末尾呼び出しのサポート</h5>
+
+<p>Common Lispにおいては、コンパイラ/インタプリタが末尾呼び出しを最適化することを常に期待できない。
+何故なら、ANSI Common Lispでは、末尾再帰最適化を要求していないからである。<br />
+(<code>Scheme</code>では、その規格において末尾呼び出し最適化を厳密に要求している)<br />
+ただし、ほとんどのCommon Lispの処理系では、末尾呼び出し最適化をサポートしている。</p>
+
+<p><strong>CLISPでは、末尾呼び出し最適化を有効にするために、以下のコードを実行する必要がある。</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">compile</span> <span class="ss">&#39;my-length</span><span class="p">)</span></code></pre></div>
+<p>わざわざ末尾呼び出し最適化を有効にするためにコード実行が必要である理由としては、末尾呼び出し最適化が性能上の問題を引き起こすケースが存在するからである。<br />
+また、プログラムをデバッグする際には、スタックにはなるべく多くの情報が保存されていた方が良いに決まっているが、末尾呼び出し最適化を施してしまうと、その情報は失われてしまう。</p>
+
+<h5 id="ダイス-オブ-ドゥームでの末尾呼び出し最適化">ダイス・オブ・ドゥームでの末尾呼び出し最適化</h5>
+
+<p>ダイス・オブ・ドゥームで末尾呼び出し最適化の効果が大きく現れるのは、<code>add-new-dice</code>関数である。</p>
+
+<p>まずは、末尾呼び出し最適化していないバージョンの<code>add-new-dice</code>関数を示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">add-new-dice</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">player</span> <span class="nv">spare-dice</span><span class="p">)</span>
+  <span class="s">&#34;ゲーム盤にサイコロを足していく
+</span><span class="s">   board: 現在のゲーム盤情報
+</span><span class="s">   player: 現在のプレイヤーID
+</span><span class="s">   spare-dice: 補給できるサイコロの個数
+</span><span class="s">   ret: サイコロ追加後のゲーム盤情報&#34;</span>
+  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">n</span><span class="p">)</span>
+             <span class="c1">;; lst: ゲーム盤情報(リスト)</span>
+             <span class="c1">;; n: 補給できるサイコロの個数</span>
+
+             <span class="c1">;; ゲーム盤情報が無ければ、そのまま無し(nil)を返す</span>
+             <span class="c1">;; 補給できるサイコロが無ければ、ゲーム盤情報を返す</span>
+             <span class="c1">;; その他の場合、サイコロを補給する</span>
+             <span class="p">(</span><span class="nv">cond</span> <span class="p">((</span><span class="nv">null</span> <span class="nv">lst</span><span class="p">)</span> <span class="no">nil</span><span class="p">)</span>
+                   <span class="p">((</span><span class="nv">zerop</span> <span class="nv">n</span><span class="p">)</span> <span class="nv">lst</span><span class="p">)</span>
+                   <span class="p">(</span><span class="no">t</span> <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">cur-player</span> <span class="p">(</span><span class="nv">caar</span> <span class="nv">lst</span><span class="p">))</span>  <span class="c1">; 現在のプレイヤーID</span>
+                            <span class="p">(</span><span class="nv">cur-dice</span> <span class="p">(</span><span class="nv">cadar</span> <span class="nv">lst</span><span class="p">)))</span>  <span class="c1">; 着目中のマスのサイコロの個数</span>
+                        <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">and</span> <span class="p">(</span><span class="nv">eq</span> <span class="nv">cur-player</span> <span class="nv">player</span><span class="p">)</span> <span class="p">(</span><span class="nv">&lt;</span> <span class="nv">cur-dice</span> <span class="vg">*max-dice*</span><span class="p">))</span>
+                            <span class="c1">;; 着目中のマスが現在のプレイヤーのマス、かつ、</span>
+                            <span class="c1">;; マスにおけるサイコロの個数が上限でなければ、</span>
+                            <span class="c1">;; サイコロを追加して次のマスへ移動</span>
+                            <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">list</span> <span class="nv">cur-player</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">cur-dice</span><span class="p">))</span>
+                                  <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)</span> <span class="p">(</span><span class="nv">1-</span> <span class="nv">n</span><span class="p">)))</span>
+                            <span class="c1">;; そうでなければ、サイコロを追加せずに次のマスへ移動</span>
+                            <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span> <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)</span> <span class="nv">n</span><span class="p">))))))))</span>
+    <span class="c1">;; ゲーム盤情報をリストに変換して、</span>
+    <span class="c1">;; サイコロを追加して、</span>
+    <span class="c1">;; ゲーム盤情報を再び配列に戻す</span>
+    <span class="p">(</span><span class="nv">board-array</span> <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">coerce</span> <span class="nv">board</span> <span class="ss">&#39;list</span><span class="p">)</span> <span class="nv">spare-dice</span><span class="p">))))</span></code></pre></div>
+<p>次に、末尾呼び出し最適化を施した<code>add-new-dice</code>関数を以下に示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">add-new-dice</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">player</span> <span class="nv">spare-dice</span><span class="p">)</span>
+  <span class="s">&#34;ゲーム盤にサイコロを足していく
+</span><span class="s">   board: 現在のゲーム盤情報
+</span><span class="s">   player: 現在のプレイヤーID
+</span><span class="s">   spare-dice: 補給できるサイコロの個数
+</span><span class="s">   ret: サイコロ追加後のゲーム盤情報&#34;</span>
+  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">n</span> <span class="nv">acc</span><span class="p">)</span>
+             <span class="c1">;; lst: ゲーム盤情報(リスト)</span>
+             <span class="c1">;; n: 補給できるサイコロの個数</span>
+             <span class="c1">;; acc: 新たなサイコロの追加を考慮された、更新済みのマスのリスト(右下-&gt;左上の順)</span>
+
+             <span class="p">(</span><span class="nv">cond</span>
+               <span class="c1">;; 補給できるサイコロが無ければ、ゲーム盤情報を返す</span>
+               <span class="p">((</span><span class="nv">zerop</span> <span class="nv">n</span><span class="p">)</span> <span class="p">(</span><span class="nv">append</span> <span class="p">(</span><span class="nv">reverse</span> <span class="nv">acc</span><span class="p">)</span> <span class="nv">lst</span><span class="p">))</span>
+               <span class="c1">;; ゲーム盤を最後まで走査したら、サイコロ追加後のゲーム盤情報を返す</span>
+               <span class="p">((</span><span class="nv">null</span> <span class="nv">lst</span><span class="p">)</span> <span class="p">(</span><span class="nv">reverse</span> <span class="nv">acc</span><span class="p">))</span>
+               <span class="c1">;; その他の場合、サイコロを補給する</span>
+               <span class="p">(</span><span class="no">t</span> <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">cur-player</span> <span class="p">(</span><span class="nv">caar</span> <span class="nv">lst</span><span class="p">))</span>  <span class="c1">; 現在のプレイヤーID</span>
+                        <span class="p">(</span><span class="nv">cur-dice</span> <span class="p">(</span><span class="nv">cadar</span> <span class="nv">lst</span><span class="p">)))</span>  <span class="c1">; 着目中のマスのサイコロの個数</span>
+                    <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">and</span> <span class="p">(</span><span class="nv">eq</span> <span class="nv">cur-player</span> <span class="nv">player</span><span class="p">)</span> <span class="p">(</span><span class="nv">&lt;</span> <span class="nv">cur-dice</span> <span class="vg">*max-dice*</span><span class="p">))</span>
+                        <span class="c1">;; 着目中のマスが現在のプレイヤーのマス、かつ、</span>
+                        <span class="c1">;; マスにおけるサイコロの個数が上限でなければ、</span>
+                        <span class="c1">;; サイコロを追加して次のマスへ移動</span>
+                        <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)</span>  <span class="c1">; サイコロを足していく対象のゲーム盤のうち未走査部分</span>
+                           <span class="p">(</span><span class="nv">1-</span> <span class="nv">n</span><span class="p">)</span>  <span class="c1">; 補給できるサイコロを1減らす</span>
+                           <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">list</span> <span class="nv">cur-player</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">cur-dice</span><span class="p">))</span> <span class="nv">acc</span><span class="p">))</span>  <span class="c1">; 更新済みのマスのリスト</span>
+                        <span class="c1">;; そうでなければ、サイコロを追加せずに次のマスへ移動</span>
+                        <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)</span>  <span class="c1">; サイコロを足していく対象のゲーム盤のうち未走査部分</span>
+                           <span class="nv">n</span>  <span class="c1">; 補給できるサイコロ</span>
+                           <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span> <span class="nv">acc</span><span class="p">))))))))</span>  <span class="c1">; 更新済みのマスのリスト</span>
+    <span class="c1">;; ゲーム盤情報をリストに変換して、</span>
+    <span class="c1">;; サイコロを追加して、</span>
+    <span class="c1">;; ゲーム盤情報を再び配列に戻す</span>
+    <span class="p">(</span><span class="nv">board-array</span> <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">coerce</span> <span class="nv">board</span> <span class="ss">&#39;list</span><span class="p">)</span> <span class="nv">spare-dice</span> <span class="p">()))))</span></code></pre></div>
+<p>関数<code>f</code>の引数のアキュムレータ<code>acc</code>に渡されるのは、新たなサイコロの追加を考慮された、更新済みのマスのリストである。<br />
+<code>f</code>の中では、2箇所で<code>f</code>自身を末尾呼び出ししており、それぞれ、新たなマスの情報を<code>acc</code>に<code>cons</code>している。</p>
+
+<p>注意点としては、<code>acc</code>には左上から右下に向けて走査しつつ<code>cons</code>していっているため、左上の情報はリストの末尾に、右下の情報はリストの先頭にある。
+したがって、正しいゲーム盤情報を返すには<code>acc</code>を<code>reverse</code>する必要がある。</p>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

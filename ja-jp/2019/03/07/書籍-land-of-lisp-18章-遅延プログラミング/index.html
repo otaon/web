@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>書籍 Land of Lisp 18章 遅延プログラミング · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="T.O.C. 18.1 Lispに遅延評価を足す 18.2 ダイスオブドゥームVer2 18.3 大きなゲーム盤でAIを動かす 関数型プログラミングによって、コードが簡潔になることが" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-18%E7%AB%A0-%E9%81%85%E5%BB%B6%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="書籍 Land of Lisp 18章 遅延プログラミング" />
+<meta property="og:description" content="T.O.C. 18.1 Lispに遅延評価を足す 18.2 ダイスオブドゥームVer2 18.3 大きなゲーム盤でAIを動かす 関数型プログラミングによって、コードが簡潔になることが" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-18%E7%AB%A0-%E9%81%85%E5%BB%B6%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/" />
+<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="書籍 Land of Lisp 18章 遅延プログラミング">
+<meta itemprop="description" content="T.O.C. 18.1 Lispに遅延評価を足す 18.2 ダイスオブドゥームVer2 18.3 大きなゲーム盤でAIを動かす 関数型プログラミングによって、コードが簡潔になることが">
+
+
+<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="13852">
+
+
+
+<meta itemprop="keywords" content="lisp," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="書籍 Land of Lisp 18章 遅延プログラミング"/>
+<meta name="twitter:description" content="T.O.C. 18.1 Lispに遅延評価を足す 18.2 ダイスオブドゥームVer2 18.3 大きなゲーム盤でAIを動かす 関数型プログラミングによって、コードが簡潔になることが"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">書籍 Land of Lisp 18章 遅延プログラミング</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-03-07
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/lisp/">lisp</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h2 id="t-o-c">T.O.C.</h2>
+
+<ul>
+<li><a href="#181-lispに遅延評価を足す">18.1 Lispに遅延評価を足す</a></li>
+<li><a href="#182-ダイスオブドゥームver2">18.2 ダイスオブドゥームVer2</a></li>
+<li><a href="#183-大きなゲーム盤でaiを動かす">18.3 大きなゲーム盤でAIを動かす</a></li>
+</ul>
+
+<hr />
+
+<p>関数型プログラミングによって、コードが簡潔になることが分かった。
+数学的な関数は、同じ引数に対して常に同じ結果を返すことによる利点である。</p>
+
+<p>しかし、15章で関数型プログラミングによってゲームを造ったとき、問題点も明らかになった。
+すなわち、引数のみに依存して関数の値を計算しようとすると、引数に <strong>膨大</strong> な情報量を渡す羽目になる。</p>
+
+<p>ダイスオブドゥームでは、ゲーム盤でこれから起き得る全ての状態を表した<code>game-tree</code>引数を渡していた。
+この引数は、たった3x3のゲーム盤でさえ巨大な構造となっていた。
+このときの設計は、コードを簡単でエレガントにしてはいたものの、より大きなゲーム盤に対して容易にはスケールしてくれない。
+なぜなら、ゲーム木はゲーム盤が大きくなるにつれて指数関数的に大きくなるからである。</p>
+
+<p>幸いにも、コードの現在のエレガントさを保ったまま(関数型プログラミングのまま)、より大きなゲーム盤で複雑なゲームを実現する方法は存在する。
+すなわち、ゲームの最初から全ての可能性を見なくて済むように、 <strong>遅延評価</strong> という機能を使う。
+この章では、遅延評価を使ってダイスオブドゥームを改善する。</p>
+
+<h1 id="18-1-lispに遅延評価を足す">18.1 Lispに遅延評価を足す</h1>
+
+<p>遅延評価を使っても、コード上ではゲームの初期化時にゲーム木を作ってしまうことに変わりはない。
+ただし、ゲーム木の一部以外は、本物の枝を作る時にやっていたような実際の計算を行わない。
+すなわち、実際にゲーム木のその箇所を評価する必要ができてからはじめて計算するのである。
+プレーヤーがゲーム中のある手を指さず、AIもその手を考慮しなかったとしたら、プログラムはその枝から先がどうなっているかを計算しなくても良いのである。</p>
+
+<p>計算の必要が出てきてからはじめて計算する部分を、遅延評価における <strong>遅延部分</strong> と呼ぶ。</p>
+
+<p>HaskellやClojureといった言語では、遅延評価が言語のコアでサポートされている。
+むしろ、Clojureでは遅延評価が推奨されている。
+しかし、残念なことにCommon Lispには遅延評価やそれに類する機能がサポートされていない。
+そこで、Common Lispのマクロ機能を使用することで、自分で遅延評価の機能を実現することとする。</p>
+
+<h2 id="lazy-コマンドと-force-コマンドを作成する"><code>lazy</code>コマンドと<code>force</code>コマンドを作成する</h2>
+
+<p>遅延評価の機能を実現するために、<code>lazy</code>コマンドと<code>force</code>コマンドを作成する。
+まず、<code>lazy</code>コマンドは、コードを包むことでLispにそのコードの評価を後回しにするように指示する。
+<code>lazy</code>の使用例を次に示す。
+見て分かる通り、<code>lazy</code>コマンドで包まれたコードは関数としてまとめられる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span> <span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">))</span>
+<span class="err">#</span><span class="nv">&lt;FUNCTION</span> <span class="o">...</span><span class="nv">&gt;</span></code></pre></div>
+<p>次に、<code>force</code>コマンドは、先程の<code>lazy</code>コマンドによってまとめられた関数を実行する。
+<code>force</code>の使用例を次に示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">force</span> <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)))</span>
+<span class="nv">3</span></code></pre></div>
+<p>ここで重要な点は、「実際の計算が、遅延された値が作られたときではなく、その結果が要求された時にはじめて行われた」という事実である。
+これを実感するため、より複雑な例を示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defun</span> <span class="nv">add</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;I am adding now&#34;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">+</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">))</span>
+<span class="nv">ADD</span>
+
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*foo*</span> <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nv">add</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)))</span>
+<span class="vg">*FOO*</span>
+
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">force</span> <span class="vg">*foo*</span><span class="p">)</span>
+<span class="nv">I</span> <span class="nv">am</span> <span class="nv">adding</span> <span class="nv">now</span>
+<span class="nv">3</span></code></pre></div>
+<p>この例では、2個の数を足す<code>add</code>関数を定義した。
+この関数は、評価されるときに副作用としてコンソールにメッセージを表示する。
+コンソールにメッセージが表示されているタイミングが、<code>force</code>を呼び出したときであることから、<code>add</code>の計算が実際にこの部分でなされたことが分かる。</p>
+
+<h3 id="lazy-コマンド"><code>lazy</code>コマンド</h3>
+
+<p><code>lazy</code>の簡単な実装は次のとおりである。
+<code>lazy</code>はマクロによって実現している。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">lazy</span> <span class="p">(</span><span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">forced</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">))</span>
+        <span class="p">(</span><span class="nv">value</span>  <span class="p">(</span><span class="nv">gensym</span><span class="p">)))</span>
+    <span class="o">`</span><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="o">,</span><span class="nv">forced</span> <span class="no">nil</span><span class="p">)</span>
+           <span class="p">(</span><span class="o">,</span><span class="nv">value</span> <span class="no">nil</span><span class="p">))</span>
+       <span class="p">(</span><span class="nv">lambda</span> <span class="p">()</span>
+         <span class="p">(</span><span class="nv">unless</span> <span class="o">,</span><span class="nv">forced</span>
+           <span class="p">(</span><span class="nv">setf</span> <span class="o">,</span><span class="nv">value</span> <span class="p">(</span><span class="nv">progn</span> <span class="o">,@</span><span class="nv">body</span><span class="p">))</span>
+           <span class="p">(</span><span class="nv">setf</span> <span class="o">,</span><span class="nv">forced</span> <span class="no">t</span><span class="p">))</span>
+         <span class="o">,</span><span class="nv">value</span><span class="p">))))</span></code></pre></div>
+<p>マクロは生成されたコード中で変数を2つ使用するため、<code>gensym</code>を使って変数の名前を作り出している。</p>
+
+<p>次に来るのが、マクロが実際に生成するコード本体である(行頭にバッククォートがついている行)。
+コード本体の行頭では、<code>gensym</code>によって作られた変数名を使って、ローカル変数を2つ生成している(<code>,forced</code>と<code>,value</code>)。
+最初の変数<code>,forced</code>は、遅延した値が既に評価されたかどうかのフラグである。
+これが<code>nil</code>であれば、値はまだ評価されていない。
+これが<code>t</code>なら、すでに評価済みである。
+次の変数<code>,value</code>は、評価された関数の戻り値を格納する変数である。</p>
+
+<p>このマクロによって生成された<code>lambda</code>は、クロージャの仕組みを使って<code>,forced</code>変数と<code>,value</code>変数を捕捉している。
+さらに、この<code>lambda</code>は、マクロの引数に渡された式をそのまま中に取り込んでいる。
+これによって、<code>lambda</code>は、次の2種類の情報を持っている。</p>
+
+<ul>
+<li>クロージャによって呼び出されたか否かといった情報を持つ</li>
+<li><code>lazy</code>呼び出し時に渡された式を内部にすべて持つ</li>
+</ul>
+
+<p>ここで、<code>force</code>コマンドによって<code>lambda</code>が計算されると、次のとおり動作する。</p>
+
+<ul>
+<li><code>,forced</code>が<code>nil</code>(まだ計算されていない場合)
+
+<ol>
+<li><code>nil</code>で初期化しておいた<code>,value</code>に計算結果を格納する</li>
+<li><code>,forced</code>を<code>t</code>に更新する</li>
+</ol></li>
+<li><code>,forced</code>が<code>t</code>(すでに計算されている場合)
+
+<ol>
+<li><code>,value</code>の値を返す(<code>lambda</code>は一切評価しない)</li>
+</ol></li>
+</ul>
+
+<h3 id="force-マクロ"><code>force</code>マクロ</h3>
+
+<p>次に<code>force</code>マクロを実装する。
+<code>lazy</code>マクロのようなトリッキーな実装ではなく、<code>force</code>は非常に素朴な実装である。
+単純に、引数に渡された関数を呼び出すだけである。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">force</span> <span class="p">(</span><span class="nv">lazy-value</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">funcall</span> <span class="nv">lazy-value</span><span class="p">))</span></code></pre></div>
+<h2 id="遅延リストライブラリを作る">遅延リストライブラリを作る</h2>
+
+<p>先程作ったコマンドを基にして、 <strong>遅延リスト</strong> のライブラリを作ることにする。
+この遅延リストライブラリはClojureのものを参考にしている(Clojureでは遅延リストを <strong>遅延シーケンス</strong> と呼ぶ)。</p>
+
+<p>Lispにおいてリストを扱う最も基本的なコマンドは<code>cons</code>である。
+したがって、遅延リストでは<code>lazy-cons</code>コマンドから作成する。
+このマクロは<code>cons</code>と似ているが、結果を<code>lazy</code>マクロで包んで返す。
+ついでに、<code>lazy-car</code>と<code>lazy-cdr</code>も作っておくことにする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">lazy-cons</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nv">cons</span> <span class="o">,</span><span class="nv">a</span> <span class="o">,</span><span class="nv">b</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nv">defun</span> <span class="nv">lazy-car</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">car</span> <span class="p">(</span><span class="nv">force</span> <span class="nv">x</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nv">defun</span> <span class="nv">lazy-cdr</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">cdr</span> <span class="p">(</span><span class="nv">force</span> <span class="nv">x</span><span class="p">)))</span></code></pre></div>
+<p>これらの使用例を次に示す。
+実行結果から分かるように、<code>lazy-cons</code>と<code>lazy-car</code>と<code>lazy-cdr</code>は、それぞれ、<code>cons</code>と<code>car</code>と<code>cdr</code>と同じように使用できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*foo*</span> <span class="p">(</span><span class="nv">lazy-cons</span> <span class="mi">4</span> <span class="mi">7</span><span class="p">))</span>
+<span class="vg">*FOO*</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="vg">*foo*</span><span class="p">)</span>
+<span class="mi">4</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="vg">*foo*</span><span class="p">)</span>
+<span class="nv">7</span></code></pre></div>
+<p>これらの単純な関数で、次のような有用な定義を実現できる。
+すなわち、全ての正整数のリスト<code>*integers*</code>を定義しているのである。
+無限長のリストを定義しているにも関わらず、遅延評価を導入したことで全ての評価をしてシステムダウンするような自体を回避できている。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*integers*</span>
+  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+             <span class="p">(</span><span class="nv">lazy-cons</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">n</span><span class="p">)))))</span>
+    <span class="p">(</span><span class="nv">f</span> <span class="mi">1</span><span class="p">)))</span></code></pre></div>
+<p>実際にこれを評価すると次のとおりになる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="vg">*integers*</span><span class="p">)</span>
+<span class="mi">1</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="vg">*integers*</span><span class="p">))</span>
+<span class="mi">2</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="vg">*integers*</span><span class="p">)))</span>
+<span class="nv">3</span></code></pre></div>
+<p>マクロを展開すると、次のとおりになる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">lazy-car</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="vg">*integers*</span><span class="p">)))</span>
+
+<span class="c1">; =&gt;</span>
+
+<span class="p">(</span><span class="nv">lazy-car</span>
+  <span class="p">(</span><span class="nv">lazy-cdr</span>
+    <span class="p">(</span><span class="nv">lazy-cdr</span>
+      <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+                 <span class="p">(</span><span class="nv">lazy-cons</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">n</span><span class="p">)))))</span>
+        <span class="p">(</span><span class="nv">f</span> <span class="mi">1</span><span class="p">)))))</span>
+
+<span class="c1">; =&gt;</span>
+
+<span class="p">(</span><span class="nv">car</span>
+  <span class="p">(</span><span class="nv">force</span>
+    <span class="p">(</span><span class="nv">cdr</span>
+      <span class="p">(</span><span class="nv">force</span>
+        <span class="p">(</span><span class="nv">cdr</span>
+          <span class="p">(</span><span class="nv">force</span>
+            <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+                       <span class="p">(</span><span class="nv">lazy</span>
+                         <span class="p">(</span><span class="nv">cons</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">n</span><span class="p">))))))</span>
+              <span class="p">(</span><span class="nv">f</span> <span class="mi">1</span><span class="p">))))))))</span></code></pre></div>
+<p><code>lazy-</code>コマンドを使っている限り、この正整数のリスト<code>*integers*</code>から、欲しいだけ正整数を取り出すことができる。
+取り出したいところまでの整数が、必要に応じて計算されるのである。</p>
+
+<p>このような無限長のリストばかりが遅延リストではない。
+すなわち、終端を持つ遅延リストも存在する。</p>
+
+<p>終端を持つ遅延リストを実現するためには、<code>lazy-nil</code>コマンドも必要となる。
+そして、通常のリストに対して、終端に達したかどうかを調べる<code>null</code>関数に対応する、遅延リストの終端を調べる<code>lazy-null</code>関数も必要となる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">lazy-nil</span> <span class="p">()</span>
+  <span class="s">&#34;forceされるとnilを返す&#34;</span>
+  <span class="p">(</span><span class="nv">lazy</span> <span class="no">nil</span><span class="p">))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">lazy-null</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+  <span class="s">&#34;遅延リストがnilならtを返す&#34;</span>
+  <span class="p">(</span><span class="nv">not</span> <span class="p">(</span><span class="nv">force</span> <span class="nv">x</span><span class="p">)))</span></code></pre></div>
+<h2 id="通常のリストと遅延リストとの変換">通常のリストと遅延リストとの変換</h2>
+
+<p>ここからは、遅延リストの操作に便利な関数を作っていく。</p>
+
+<p>まず必要となるのは、通常のリストを遅延リストに変換する関数である。
+これを実現する<code>make-lazy</code>関数を実装する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">make-lazy</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nv">when</span> <span class="nv">lst</span>
+          <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-lazy</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">))))))</span></code></pre></div>
+<p>この<code>make-lazy</code>関数は、大雑把に言えば、再帰で与えられたリストを順に見ていき、それぞれのコンスを<code>lazy</code>なマクロで包んでいるということになる。
+しかしながら、この関数の実際の意味を正しく理解するには、<code>lazy</code>と<code>force</code>の意味を考える必要がある。
+幸いなことに、遅延リストライブラリを完成させてしまえば、これらの遅延評価にまつわる奇妙さはライブラリの中に隠されることとなる。</p>
+
+<p><code>make-lazy</code>関数は普通のリストを遅延リストに変換した。
+では反対に、遅延リストを普通のリストに変換するための<code>take</code>および<code>take-all</code>関数を実装する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">take</span> <span class="p">(</span><span class="nv">n</span> <span class="nv">lst</span><span class="p">)</span>
+  <span class="s">&#34;遅延リストから指定した数の要素だけ取り出す&#34;</span>
+  <span class="p">(</span><span class="nv">unless</span> <span class="p">(</span><span class="nv">or</span> <span class="p">(</span><span class="nv">zerop</span> <span class="nv">n</span><span class="p">)</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">lst</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="nv">lst</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">take</span> <span class="p">(</span><span class="nv">1-</span> <span class="nv">n</span><span class="p">)</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="nv">lst</span><span class="p">)))))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">take-all</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+  <span class="s">&#34;遅延リストから全ての要素を取り出す
+</span><span class="s">   無限長の遅延リストには使用禁止&#34;</span>
+  <span class="p">(</span><span class="nv">unless</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">lst</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="nv">lst</span><span class="p">)</span> <span class="p">(</span><span class="nv">take-all</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="nv">lst</span><span class="p">)))))</span></code></pre></div>
+<p>これらを使用すると、次のようになる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">take</span> <span class="mi">10</span> <span class="vg">*integers*</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span> <span class="mi">7</span> <span class="mi">8</span> <span class="mi">9</span> <span class="mi">10</span><span class="p">)</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">take</span> <span class="mi">10</span> <span class="p">(</span><span class="nv">make-lazy</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">q</span> <span class="nv">w</span> <span class="nv">e</span> <span class="nv">r</span> <span class="no">t</span> <span class="nv">y</span> <span class="nv">u</span> <span class="nv">i</span> <span class="nv">o</span> <span class="nv">p</span> <span class="nv">a</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">f</span><span class="p">)))</span>
+<span class="p">(</span><span class="nv">Q</span> <span class="nv">W</span> <span class="nv">E</span> <span class="nv">R</span> <span class="no">T</span> <span class="nv">Y</span> <span class="nv">U</span> <span class="nv">I</span> <span class="nv">O</span> <span class="nv">P</span><span class="p">)</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">take-all</span> <span class="p">(</span><span class="nv">make-lazy</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">q</span> <span class="nv">w</span> <span class="nv">e</span> <span class="nv">r</span> <span class="no">t</span> <span class="nv">y</span> <span class="nv">u</span> <span class="nv">i</span> <span class="nv">o</span> <span class="nv">p</span> <span class="nv">a</span> <span class="nv">s</span> <span class="nv">d</span> <span class="nv">f</span><span class="p">)))</span>
+<span class="p">(</span><span class="nv">Q</span> <span class="nv">W</span> <span class="nv">E</span> <span class="nv">R</span> <span class="no">T</span> <span class="nv">Y</span> <span class="nv">U</span> <span class="nv">I</span> <span class="nv">O</span> <span class="nv">P</span> <span class="nv">A</span> <span class="nv">S</span> <span class="nv">D</span> <span class="nv">F</span><span class="p">)</span></code></pre></div>
+<h2 id="遅延リストに対するマッピングと検索">遅延リストに対するマッピングと検索</h2>
+
+<p>遅延リストに対して、マップや検索を実現する関数を次に示す。
+<code>mapcar</code>、<code>mapcan</code>、<code>find-if</code>、<code>nth</code>に対する遅延リスト版の関数を実装する。
+これらの関数は、引数に遅延リストを取り、戻り値もリストを返す場合は遅延リストを返す。
+これらの関数の実装には、<code>lazy-null</code>、<code>lazy-car</code>、<code>lazy-cdr</code>を使う必要がある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">lazy-mapcar</span> <span class="p">(</span><span class="nv">fun</span> <span class="nv">lst</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nv">unless</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">lst</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">funcall</span> <span class="nv">fun</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="nv">lst</span><span class="p">))</span>
+                <span class="p">(</span><span class="nv">lazy-mapcar</span> <span class="nv">fun</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="nv">lst</span><span class="p">))))))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">lazy-mapcan</span> <span class="p">(</span><span class="nv">fun</span> <span class="nv">lst</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="p">(</span><span class="nv">lst-cur</span><span class="p">)</span>
+             <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">lst-cur</span><span class="p">)</span>
+                 <span class="p">(</span><span class="nv">force</span> <span class="p">(</span><span class="nv">lazy-mapcan</span> <span class="nv">fun</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="nv">lst</span><span class="p">)))</span>
+                 <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="nv">lst-cur</span><span class="p">)</span> <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="nv">lst-cur</span><span class="p">)))))))</span>
+    <span class="p">(</span><span class="nv">lazy</span> <span class="p">(</span><span class="nv">unless</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">lst</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">funcall</span> <span class="nv">fun</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="nv">lst</span><span class="p">)))))))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">lazy-find-if</span> <span class="p">(</span><span class="nv">fun</span> <span class="nv">lst</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">unless</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">lst</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">x</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">lst</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">funcall</span> <span class="nv">fun</span> <span class="nv">x</span><span class="p">)</span>
+        <span class="nv">x</span>
+        <span class="p">(</span><span class="nv">lazy-find-if</span> <span class="nv">fun</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="nv">lst</span><span class="p">))))))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">lazy-nth</span> <span class="p">(</span><span class="nv">n</span> <span class="nv">lst</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">zerop</span> <span class="nv">n</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">lazy-car</span> <span class="nv">lst</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">lazy-nth</span> <span class="p">(</span><span class="nv">1-</span> <span class="nv">n</span><span class="p">)</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="nv">lst</span><span class="p">))))</span></code></pre></div>
+<p>上の関数の使い方は、次のとおりである。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">take</span> <span class="mi">10</span> <span class="p">(</span><span class="nv">lazy-mapcar</span> <span class="nf">#&#39;</span><span class="nv">sqrt</span> <span class="vg">*integers*</span><span class="p">))</span>
+<span class="p">(</span><span class="mi">1</span> <span class="mf">1.4143135</span> <span class="mf">1.7320508</span> <span class="mi">2</span> <span class="mf">2.236068</span> <span class="mf">2.4494898</span> <span class="mf">2.6457512</span> <span class="mf">2.828427</span> <span class="mi">3</span> <span class="mf">3.1622777</span><span class="p">)</span></code></pre></div>
+<p><code>lazy-mapcar</code>を使って無限長の正整数リストに<code>sqrt</code>をマップすると、全ての正整数の平方根の遅延リストが得られる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">take</span> <span class="mi">10</span> <span class="p">(</span><span class="nv">lazy-mapcan</span> <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+                          <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">evenp</span> <span class="nv">x</span><span class="p">)</span>
+                              <span class="p">(</span><span class="nv">make-lazy</span> <span class="p">(</span><span class="nv">list</span> <span class="nv">x</span><span class="p">))</span>
+                              <span class="p">(</span><span class="nv">lazy-nil</span><span class="p">)))</span>
+                        <span class="vg">*integers*</span><span class="p">))</span>
+<span class="p">(</span><span class="mi">2</span> <span class="mi">4</span> <span class="mi">6</span> <span class="mi">8</span> <span class="mi">10</span> <span class="mi">12</span> <span class="mi">14</span> <span class="mi">16</span> <span class="mi">18</span> <span class="mi">20</span><span class="p">)</span></code></pre></div>
+<p><code>lazy-mapcan</code>を使って、各正整数について、それが偶数ならその数だけからなる遅延リストを、それが奇数なら遅延空リストを返す関数を適用している。
+ここでは、結果として、無限正整数リストから偶数だけを取り出したリストを、要素10個分だけ返している。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">lazy-find-if</span> <span class="nf">#&#39;</span><span class="nv">oddp</span> <span class="p">(</span><span class="nv">make-lazy</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">4</span> <span class="mi">6</span> <span class="mi">7</span> <span class="mi">8</span> <span class="mi">10</span><span class="p">)))</span>
+<span class="nv">7</span></code></pre></div>
+<p><code>find-if</code>を使って、遅延リストから最初の奇数を探している。
+この例では、結果として<code>7</code>を返している。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">lazy-nth</span> <span class="mi">4</span> <span class="p">(</span><span class="nv">make-lazy</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span> <span class="nv">e</span> <span class="nv">f</span> <span class="nv">g</span><span class="p">)))</span>
+<span class="nv">E</span></code></pre></div>
+<p><code>lazy-nth</code>を使って、遅延リストの指定箇所の要素を取り出している。</p>
+
+<p>これら、遅延リスト版の関数を、例えば<code>lazy.lisp</code>ファイルに記載しておき、このファイルをロードしていつでも使えるようにしておくと良い。</p>
+
+<h1 id="18-2-ダイスオブドゥームver2">18.2 ダイスオブドゥームVer2</h1>
+
+<p>15章で作成したダイスオブドゥームVer1に、遅延リストライブラリを適用する。
+まず、ダイスオブドゥームのコードと、遅延リストライブラリをロードする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">load</span> <span class="s">&#34;dice_of_doom_v1.lisp&#34;</span><span class="p">)</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">load</span> <span class="s">&#34;lazy-lisp&#34;</span><span class="p">)</span></code></pre></div>
+<p>ロードしたコードに変更を加えることで、ゲームを遅延リスト版に変更する。</p>
+
+<p>次に、ゲーム盤の大きさを4x4に拡大する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*board-size*</span> <span class="mi">4</span><span class="p">)</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*board-hexnum*</span> <span class="p">(</span><span class="nv">*</span> <span class="vg">*board-size*</span> <span class="vg">*board-size*</span><span class="p">))</span></code></pre></div>
+<p>この大きさのゲームを実用的な速度で実行するには、ゲーム木のそれぞれの枝を遅延リストとして表現する必要がある。
+そのためには、バージョン1のゲームのいくつかの関数を遅延リスト関数を使ったものに差し替える必要がある。</p>
+
+<p>まず、与えられたゲーム盤の状態に対して、攻撃と手番終了の手を計算する関数を変更する。</p>
+
+<p><code>add-passing-move</code>関数では、1箇所だけ変更する。
+手のリストを遅延リストにするため、可能な手のリストに手番を終える手を加えるのに<code>lazy-cons</code>を使う。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">add-passing-move</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">player</span> <span class="nv">spare-dice</span> <span class="nv">first-move</span> <span class="nv">moves</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">if</span> <span class="nv">first-move</span>
+    <span class="nv">moves</span>
+    <span class="p">(</span><span class="nv">lazy-cons</span> <span class="p">(</span><span class="nv">list</span> <span class="no">nil</span>
+                     <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">add-new-dice</span> <span class="nv">board</span> <span class="nv">player</span>
+                                              <span class="p">(</span><span class="nv">1-</span> <span class="nv">spare-dice</span><span class="p">))</span>
+                                <span class="p">(</span><span class="nv">mod</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">player</span><span class="p">)</span> <span class="vg">*num-players*</span><span class="p">)</span>
+                                <span class="mi">0</span>
+                                <span class="no">t</span><span class="p">))</span>
+               <span class="nv">moves</span><span class="p">)))</span></code></pre></div>
+<p><code>attacking-moves</code>関数では、多めの変更が必要である。<br />
+まず、遅延リストを返すために、手のリストを組み立てる2箇所の<code>mapcan</code>を<code>lazy-mapcan</code>に置き換える。<br />
+<code>lazy-mapcan</code>関数はその中で作るリストも遅延リストでなければならないので、<code>make-lazy</code>関数を使うようにする。<br />
+また、<code>nil</code>を返していたところは<code>lazy-nil</code>を返すようにする。<br />
+最後に、計算されたゲーム盤のリストも遅延リストにする。
+このリストは外側の<code>lazy-mapcan</code>に使われる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">attacking-moves</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">cur-player</span> <span class="nv">spare-dice</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">player</span> <span class="p">(</span><span class="nv">pos</span><span class="p">)</span>
+             <span class="p">(</span><span class="nv">car</span> <span class="p">(</span><span class="nv">aref</span> <span class="nv">board</span> <span class="nv">pos</span><span class="p">)))</span>
+           <span class="p">(</span><span class="nv">dice</span> <span class="p">(</span><span class="nv">pos</span><span class="p">)</span>
+             <span class="p">(</span><span class="nv">cadr</span> <span class="p">(</span><span class="nv">aref</span> <span class="nv">board</span> <span class="nv">pos</span><span class="p">))))</span>
+    <span class="p">(</span><span class="nv">lazy-mapcan</span>
+      <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">src</span><span class="p">)</span>
+        <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">eq</span> <span class="p">(</span><span class="nv">player</span> <span class="nv">src</span><span class="p">)</span> <span class="nv">cur-player</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">lazy-mapcan</span>
+            <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">dst</span><span class="p">)</span>
+              <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">and</span> <span class="p">(</span><span class="nv">not</span> <span class="p">(</span><span class="nv">eq</span> <span class="p">(</span><span class="nv">player</span> <span class="nv">dst</span><span class="p">)</span>
+                                <span class="nv">cur-player</span><span class="p">))</span>
+                       <span class="p">(</span><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">dice</span> <span class="nv">src</span><span class="p">)</span> <span class="p">(</span><span class="nv">dice</span> <span class="nv">dst</span><span class="p">)))</span>
+                <span class="p">(</span><span class="nv">make-lazy</span>
+                  <span class="p">(</span><span class="nv">list</span> <span class="p">(</span><span class="nv">list</span> <span class="p">(</span><span class="nv">list</span> <span class="nv">src</span> <span class="nv">dst</span><span class="p">)</span>
+                              <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">board-attack</span> <span class="nv">board</span>
+                                                       <span class="nv">cur-player</span>
+                                                       <span class="nv">src</span>
+                                                       <span class="nv">dst</span>
+                                                       <span class="p">(</span><span class="nv">dice</span> <span class="nv">src</span><span class="p">))</span>
+                                         <span class="nv">cur-player</span>
+                                         <span class="p">(</span><span class="nv">+</span> <span class="nv">spare-dice</span> <span class="p">(</span><span class="nv">dice</span> <span class="nv">dst</span><span class="p">))</span>
+                                         <span class="no">nil</span><span class="p">))))</span>
+                <span class="p">(</span><span class="nv">lazy-nil</span><span class="p">)))</span>
+          <span class="p">(</span><span class="nv">make-lazy</span> <span class="p">(</span><span class="nv">neighbors</span> <span class="nv">src</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nv">lazy-nil</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nv">make-lazy</span> <span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">n</span> <span class="nv">below</span> <span class="vg">*board-hexnum*</span>
+                       <span class="nv">collect</span> <span class="nv">n</span><span class="p">)))))</span></code></pre></div>
+<p>次に、人間のプレイヤーに対応する2つの関数に変更を加える。</p>
+
+<p><code>handle-human</code>関数では、ローカル関数<code>print-moves</code>を定義している。
+これは可能な手のリストを舐めていく関数である。</p>
+
+<ul>
+<li>リスト終端のチェック</li>
+<li>リストの先頭からの手を取り出す</li>
+<li>リストの残りの部分で再帰する</li>
+</ul>
+
+<p>上の3箇所について、遅延版のコマンドを使うように変更する。
+さらに、プレイヤーが選んだ手を可能な手のリストから取り出すところに<code>lazy-nth</code>を使うようにする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">handle-human</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">fresh-line</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;choose your move:&#34;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">moves</span> <span class="p">(</span><span class="nv">caddr</span> <span class="nv">tree</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">print-moves</span> <span class="p">(</span><span class="nv">moves</span> <span class="nv">n</span><span class="p">)</span>
+               <span class="p">(</span><span class="nv">unless</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">moves</span><span class="p">)</span>
+                 <span class="p">(</span><span class="nv">let*</span> <span class="p">((</span><span class="nv">move</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="nv">moves</span><span class="p">))</span>
+                        <span class="p">(</span><span class="nv">action</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">move</span><span class="p">)))</span>
+                   <span class="p">(</span><span class="nv">fresh-line</span><span class="p">)</span>
+                   <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~a. &#34;</span> <span class="nv">n</span><span class="p">)</span>
+                   <span class="p">(</span><span class="nv">if</span> <span class="nv">action</span>
+                     <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~a -&gt; ~a&#34;</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">action</span><span class="p">)</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">action</span><span class="p">))</span>
+                     <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;end turn&#34;</span><span class="p">)))</span>
+                 <span class="p">(</span><span class="nv">print-moves</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="nv">moves</span><span class="p">)</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">n</span><span class="p">)))))</span>
+      <span class="p">(</span><span class="nv">print-moves</span> <span class="nv">moves</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">fresh-line</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">cadr</span> <span class="p">(</span><span class="nv">lazy-nth</span> <span class="p">(</span><span class="nv">1-</span> <span class="p">(</span><span class="nv">read</span><span class="p">))</span> <span class="nv">moves</span><span class="p">))))</span></code></pre></div>
+<p><code>paly-vs-human</code>関数では、変更は1箇所だけである。
+ゲームの終了状態に達したかどうかを判断するのに、可能な手のリストが空かどうかを調べ、もし空なら勝者を計算する。
+この、リストが空かどうかを調べる箇所を、<code>lazy-null</code>に置き換える。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">play-vs-human</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">print-info</span> <span class="nv">tree</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">not</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="p">(</span><span class="nv">caddr</span> <span class="nv">tree</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nv">play-vs-human</span> <span class="p">(</span><span class="nv">handle-human</span> <span class="nv">tree</span><span class="p">))</span>
+      <span class="p">(</span><span class="nv">announce-winner</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">tree</span><span class="p">))))</span></code></pre></div>
+<p>ここまでの変更で、より大きな盤面を使ったダイスオブドゥームを人間対人間で遊べるようになった。
+すなわち、ゲーム技はプレイヤーがその状態を選んだ場合にしか計算されない。
+4x4のゲーム盤でゲームを開始するには、バージョン1と同様に、次のコマンドを入力すれば良い。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">play-vs-human</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">gen-board</span><span class="p">)</span> <span class="mi">0</span> <span class="mi">0</span> <span class="no">t</span><span class="p">))</span>
+<span class="nv">current</span> <span class="nv">player</span> <span class="nv">=</span> <span class="nv">a</span>
+        <span class="nv">a-1</span> <span class="nv">a-3</span> <span class="nv">a-1</span> <span class="nv">b-2</span>
+      <span class="nv">b-3</span> <span class="nv">a-3</span> <span class="nv">a-3</span> <span class="nv">a-1</span>
+    <span class="nv">a-3</span> <span class="nv">a-3</span> <span class="nv">b-1</span> <span class="nv">a-2</span>
+  <span class="nv">b-3</span> <span class="nv">a-3</span> <span class="nv">a-1</span> <span class="nv">a-3</span>
+<span class="nv">choose</span> <span class="nv">your</span> <span class="nv">move:</span>
+<span class="mi">1.</span> <span class="mi">5</span> <span class="nv">-&gt;</span> <span class="mi">10</span>
+<span class="mi">2.</span> <span class="mi">6</span> <span class="nv">-&gt;</span> <span class="mi">10</span>
+<span class="mi">3.</span> <span class="mi">9</span> <span class="nv">-&gt;</span> <span class="mi">10</span>
+<span class="mi">4.</span> <span class="mi">11</span> <span class="nv">-&gt;</span> <span class="mi">10</span>
+<span class="mi">5.</span> <span class="mi">15</span> <span class="nv">-&gt;</span> <span class="nv">10</span></code></pre></div>
+<h1 id="18-3-大きなゲーム盤でaiを動かす">18.3 大きなゲーム盤でAIを動かす</h1>
+
+<p>ここでは、ゲームAIの関数を遅延リストライブラリに対応させる。
+また、ついでにAIコードにいくつかの改善をする。</p>
+
+<h2 id="ゲーム木の刈り込み">ゲーム木の刈り込み</h2>
+
+<p>ダイスオブドゥームver1のAIコードは、ある意味では最強だった。
+というのも、手を決める全ての機会に、AIは <strong>将来起こりうる全ての状態</strong> を調べて、その中で最良手を指していたからである。</p>
+
+<p>しかし、この方法は、ゲーム盤の規模が少し大きくなるだけで計算量が爆発して破綻する。
+そもそも、ゲーム木に遅延評価を入れた目的は、全ての枝を計算対象にしたくないからであった。</p>
+
+<p>したがって、このバージョンにおいては、ゲームAIには「最大でも何手までしか計算しなくて良い」と指示できる仕組みが必要となる。</p>
+
+<p>関数型プログラミングスタイルを使ったダイスオブドゥームでは、この変更は非常に簡潔に記述できるが、すぐには思いつかないような方法である。
+そこで、ステップバイステップで考えることとする。</p>
+
+<p>すぐに思いつく方法としては、バージョン1の<code>get-rating</code>と<code>rate-position</code>を変更して、<code>search-depth</code>という新しいアキュムレータを引数に足すことである。
+そして、これらの関数を呼び出す度に、先読みの最大値に達したかどうかを調べる。</p>
+
+<p>でもこの方法には問題がある。
+それぞれの関数が余分な引数を背負わされて、本来の関数の処理が分かりにくくなってしまっている。
+本来、盤面の状態を評価することと、なんて先まで読むかを判断することは、別々の関心事のはずである。
+つまり、これらの関心事は直行している、といえる。
+したがって、各々の処理は別々の関数で扱われるべきである。</p>
+
+<p>ここで、先程の遅延ゲーム木を使うと、探索木を「刈り込む」という仕事だけをする関数を、可能な手を評価して次の手を考えるAIコードとは完全に独立して記述できる。</p>
+
+<p>ゲーム木を刈り込む関数を次に示す。
+この関数は、引数を2つだけ取る、かなり簡単な関数である。
+返り値は、新しく作られるゲーム木のコピーである。
+コピーの枝は、この関数を再帰的に呼んで作成されるが、再帰する度に<code>depth</code>をデクリメントする。
+<code>depth</code>が<code>0</code>になったら、そこか刈り込む深さであるから、可能な指し手に対応する遅延ゲーム木を空にする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">limit-tree-depth</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">depth</span><span class="p">)</span>
+  <span class="s">&#34;ゲーム木を指定の深さで刈り込む
+</span><span class="s">   tree: 遅延ゲーム木
+</span><span class="s">   depth: 何手先まで読むか(何手先で枝を刈るか)
+</span><span class="s">   ret: 新しく作られる遅延ゲーム木のコピー&#34;</span>
+  <span class="p">(</span><span class="nv">list</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">)</span>  <span class="c1">; プレイヤーID</span>
+        <span class="p">(</span><span class="nv">cadr</span> <span class="nv">tree</span><span class="p">)</span> <span class="c1">; ゲーム盤情報</span>
+        <span class="c1">;; 刈り込む深さになったら、指し手の遅延リスト部分を空にする</span>
+        <span class="c1">;; 刈り込む深さでなかったら、可能な指し手に対応する遅延ゲーム木を取得する</span>
+        <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">zerop</span> <span class="nv">depth</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">lazy-nil</span><span class="p">)</span>  <span class="c1">; 空のゲーム木</span>
+            <span class="p">(</span><span class="nv">lazy-mapcar</span> <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">move</span><span class="p">)</span>
+                           <span class="c1">;; 指定された指し手に対応する遅延ゲーム木を取得する</span>
+                           <span class="c1">;; move: 指し手をキーに持つ遅延ゲーム木のalist</span>
+                           <span class="c1">;; ret: 指し手に対応する遅延ゲーム木</span>
+                           <span class="p">(</span><span class="nv">list</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">move</span><span class="p">)</span>  <span class="c1">; 指し手</span>
+                                 <span class="p">(</span><span class="nv">limit-tree-depth</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">move</span><span class="p">)</span> <span class="p">(</span><span class="nv">1-</span> <span class="nv">depth</span><span class="p">))))</span> <span class="c1">; 指し手に対応するゲーム盤情報</span>
+                         <span class="c1">;; 指し手をキーに持つ遅延ゲーム木のalistのリスト</span>
+                         <span class="p">(</span><span class="nv">caddr</span> <span class="nv">tree</span><span class="p">)))))</span></code></pre></div>
+<p>他に必要となるのは、ゲームAIが手を評価する直前にこの<code>limit-tree-depth</code>を呼んでやることだけである。
+<code>hadle-computer</code>関数を少し変更すれば実現できる。
+すなわち、<code>get-ratings</code>を呼んで現在の木から先の手を評価する前に、現在の木を刈り込む。
+すると、元のゲーム木の全容をゲームAIは意識しない。
+さらに細かな変更として、評価後の手を遅延リストから選び出すために<code>lazy-nth</code>を使用するようにした。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">;;; ゲームAIが先読みする遅延ゲーム木の深さ</span>
+<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*ai-level*</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nv">defun</span> <span class="nv">handle-computer</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
+  <span class="s">&#34;ゲームAIを操作する
+</span><span class="s">   tree: 現在の遅延ゲーム木
+</span><span class="s">   ret: ゲームAIの指し手に対応する遅延ゲーム木&#34;</span>
+  <span class="c1">;; ratings: 現在のゲーム盤情報における、各指し手に対する点数のリスト</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">ratings</span> <span class="p">(</span><span class="nv">get-ratings</span> <span class="p">(</span><span class="nv">limit-tree-depth</span> <span class="nv">tree</span> <span class="vg">*ai-level*</span><span class="p">)</span>
+                              <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">))))</span>
+    <span class="c1">;; 最高得点を得られる指し手を計算し、それに対応する遅延ゲーム木を返す</span>
+    <span class="p">(</span><span class="nv">cadr</span> <span class="p">(</span><span class="nv">lazy-nth</span> <span class="p">(</span><span class="nv">position</span> <span class="p">(</span><span class="nv">apply</span> <span class="nf">#&#39;</span><span class="nv">max</span> <span class="nv">ratings</span><span class="p">)</span> <span class="nv">ratings</span><span class="p">)</span>
+                    <span class="p">(</span><span class="nv">caddr</span> <span class="nv">tree</span><span class="p">)))))</span></code></pre></div>
+<p>さらに、<code>play-vs-computer</code>にも1箇所変更がある。
+可能な指し手の遅延リストが空であるか確かめるために<code>lazy-null</code>を使うように変更する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">play-vs-computer</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
+  <span class="s">&#34;対コンピュータ戦を開始する
+</span><span class="s">   tree: 遅延ゲーム木
+</span><span class="s">   ret: &#34;</span>
+  <span class="c1">;; ゲーム情報を表示する</span>
+  <span class="p">(</span><span class="nv">print-info</span> <span class="nv">tree</span><span class="p">)</span>
+  <span class="c1">;; 指し手をキーとする遅延ゲーム木のalistが空なら、現在のゲーム盤情報から勝者を表示してゲーム終了</span>
+  <span class="c1">;; プレイヤーIDが0(人間の手番)なら、人間から指し手を要求してゲーム続行する</span>
+  <span class="nv">//</span> <span class="nv">プレイヤーIDがゲームAIの手番なら</span><span class="err">、</span><span class="nv">ゲームAIに指し手を計算させてゲーム続行する</span>
+  <span class="p">(</span><span class="nv">cond</span> <span class="p">((</span><span class="nv">lazy-null</span> <span class="p">(</span><span class="nv">caddr</span> <span class="nv">tree</span><span class="p">))</span> <span class="p">(</span><span class="nv">announce-winner</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">tree</span><span class="p">)))</span>
+        <span class="p">((</span><span class="nv">zerop</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">))</span> <span class="p">(</span><span class="nv">play-vs-computer</span> <span class="p">(</span><span class="nv">handle-human</span> <span class="nv">tree</span><span class="p">)))</span>
+        <span class="p">(</span><span class="no">t</span> <span class="p">(</span><span class="nv">play-vs-computer</span> <span class="p">(</span><span class="nv">handle-computer</span> <span class="nv">tree</span><span class="p">)))))</span></code></pre></div>
+<h2 id="ヒューリスティクスを適用する">ヒューリスティクスを適用する</h2>
+
+<p>ここでは、AIを強化する方法について考える。</p>
+
+<p>ゲーム木を刈り込む事により、ゲームAIについて本質的に変化が生じた。
+すなわち、刈り込みがなければ完璧なプレイを見せたゲームAIは、いまや、勝てる指し手を「見逃す」可能性を生じるようになった。
+これは、性能と引き換えに、完璧な手を指すことを捨てたといえる。</p>
+
+<p>このような状況は、ヒューリスティクスな状況であるといえる。
+コンピュータサイエンスにおけるヒューリスティクスは、完全ではないが及第点以上の良い結果を素早く得られるようなプログラミングテクニックを意味する。
+ダイスオブドゥームにおいても、簡単なチューニングを実施することで、ゲームAIの性能を大幅に引き上げることができる。</p>
+
+<h2 id="大きく勝つか小さく勝つか">大きく勝つか小さく勝つか</h2>
+
+<p>ゲーム木の全ての枝について勝敗を評価する場合、ゲームAIはどのくらい差をつけて勝つかを気にする必要はなかった。
+つまり、ゲームの終了時点で、相手より1つでも多くのマスを確保していれば勝ちであった。</p>
+
+<p>しかし、今のゲームAIはヒューリスティックなアルゴリズムとなった。
+すなわち、ゲームの任意の時点において、どの程度相手をリードしているのかはとても重要な勝因となる。</p>
+
+<p>ここで有効な経験則としては、「今、相手を十分に引き離していれば、たとえ数手先しか読まなくとも相手に追いつかれる確率は低い」というものがある。</p>
+
+<p>このゲームのゲームAIに実装したミニマックスアルゴリズムでは、ゲーム木の「葉」にそれぞれスコアをつけていた。
+まず、バージョン1(全ての枝を確認するVer.)では、このスコアは0(AIの負け)、1(AIの勝ち)、1/2(引き分け)という単純なものであった。</p>
+
+<p>しかし、バージョン2においては、評価関数が見ることのできる範囲でのゲーム木の「葉」は、本当のゲームの勝敗を決するものではなく、その先に刈られた枝が続いている。
+この場合、スコアの範囲を拡大して、どの手を指すと「より大きく」勝ち、どの手を指すと「より小さく」勝つのかということを判断できるようにしたい。</p>
+
+<p>もっと複雑なヒューリスティクスを使用して、葉の部分のゲーム盤の状態を評価する<code>score-board</code>を記述してみる。
+<code>score-board</code>関数は、ゲーム盤の全てのマスをループして、<code>loop</code>マクロの<code>sum</code>を使って各マスのスコアを合計する。
+プレイヤーが現在のマスを占領していれば正のスコアを加算する。
+下記のルールで各マスのスコアを算出する。</p>
+
+<ul>
+<li>プレイヤーが所有するマスで、より強い敵のマスが隣にない:2</li>
+<li>プレイヤーが所有するマスで、より強い敵のマスが隣にある:1</li>
+<li>敵が所有するマス:-1</li>
+</ul>
+
+<p><strong>NOTE</strong> <code>score-board</code>はヒューリスティックな関数であって、スコアの付け方に絶対的な正解は無い。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">score-board</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">player</span><span class="p">)</span>
+  <span class="s">&#34;指定のプレイヤーにとっての現在のゲーム盤情報のスコアを算出する
+</span><span class="s">   board: ゲーム盤情報
+</span><span class="s">   player: プレイヤーID
+</span><span class="s">   ret: ゲーム盤情報のスコア&#34;</span>
+  <span class="c1">;; ゲーム盤を走査しながら、各マスのスコアを合計する</span>
+  <span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">hex</span> <span class="nv">across</span> <span class="nv">board</span>
+        <span class="nv">for</span> <span class="nv">pos</span> <span class="nv">from</span> <span class="mi">0</span>
+        <span class="c1">;; 下記のルールで各マスのスコアを算出する</span>
+        <span class="c1">;; - プレイヤーが所有するマスで、より強い敵のマスが隣にない:2</span>
+        <span class="c1">;; - プレイヤーが所有するマスで、より強い敵のマスが隣にある:1</span>
+        <span class="c1">;; - 敵が所有するマス:-1</span>
+        <span class="nv">sum</span> <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">eq</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">hex</span><span class="p">)</span> <span class="nv">player</span><span class="p">)</span>
+                <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">threatened</span> <span class="nv">pos</span> <span class="nv">board</span><span class="p">)</span>
+                    <span class="mi">1</span>
+                    <span class="mi">2</span><span class="p">)</span>
+                <span class="mi">-1</span><span class="p">)))</span></code></pre></div>
+<p>上の<code>score-board</code>関数で使われている<code>threatened</code>関数を次に示す。
+この関数では、引数で指定したマスの隣を走査して、敵が所有している、かつ、サイコロが引数のマスよりも多いマスが無いかを調べる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">threatened</span> <span class="p">(</span><span class="nv">pos</span> <span class="nv">board</span><span class="p">)</span>
+  <span class="s">&#34;隣のマスにより強い敵のマスがあるか判定する
+</span><span class="s">   pos: ゲーム盤の位置
+</span><span class="s">   board: ゲーム盤情報
+</span><span class="s">   ret: t:隣により強い敵のマスがある nil:ない&#34;</span>
+  <span class="p">(</span><span class="nv">let*</span> <span class="p">((</span><span class="nv">hex</span> <span class="p">(</span><span class="nv">aref</span> <span class="nv">board</span> <span class="nv">pos</span><span class="p">))</span>  <span class="c1">; 引数posで指定したマス情報</span>
+         <span class="p">(</span><span class="nv">player</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">hex</span><span class="p">))</span>      <span class="c1">; マスを所有するプレイヤーのID</span>
+         <span class="p">(</span><span class="nv">dice</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">hex</span><span class="p">)))</span>      <span class="c1">; マスに置かれたサイコロの数</span>
+    <span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">n</span> <span class="nv">in</span> <span class="p">(</span><span class="nv">neighbors</span> <span class="nv">pos</span><span class="p">)</span>
+          <span class="nv">do</span> <span class="p">(</span><span class="nv">let*</span> <span class="p">((</span><span class="nv">nhex</span> <span class="p">(</span><span class="nv">aref</span> <span class="nv">board</span> <span class="nv">n</span><span class="p">))</span> <span class="c1">; posの隣のマス情報</span>
+                    <span class="p">(</span><span class="nv">nplayer</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">nhex</span><span class="p">))</span>  <span class="c1">; posの隣のマスを所有するプレイヤーのID</span>
+                    <span class="p">(</span><span class="nv">ndice</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">nhex</span><span class="p">)))</span>  <span class="c1">; posの隣のマスに置かれたサイコロの数</span>
+               <span class="c1">;; posの隣のマスが、異なる所有者でより多くのサイコロを持っていたら、</span>
+               <span class="c1">;; 隣のマスにより強い敵のマスがあると評価する</span>
+               <span class="p">(</span><span class="nv">when</span> <span class="p">(</span><span class="nv">and</span> <span class="p">(</span><span class="nv">not</span> <span class="p">(</span><span class="nv">eq</span> <span class="nv">player</span> <span class="nv">nplayer</span><span class="p">))</span> <span class="p">(</span><span class="nv">&gt;</span> <span class="nv">ndice</span> <span class="nv">dice</span><span class="p">))</span>
+                 <span class="p">(</span><span class="nv">return</span> <span class="nv">n</span><span class="p">))))))</span></code></pre></div>
+<p>次に、上の<code>score-board</code>と<code>threatened</code>を使って、<code>get-ratings</code>と<code>rate-position</code>を改良してみる。
+大きな改良点としては、これ以上続く指し手のないゲーム木に対して、得点をつけていることである。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">get-ratings</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">player</span><span class="p">)</span>
+  <span class="s">&#34;現在の遅延ゲーム木における指定したプレイヤーが取りうる得点を全パターン返す
+</span><span class="s">   tree: 遅延ゲーム木
+</span><span class="s">   player: 得点を算出したいプレイヤーのID
+</span><span class="s">   ret: 得点のリスト&#34;</span>
+  <span class="p">(</span><span class="nv">take-all</span> <span class="p">(</span><span class="nv">lazy-mapcar</span> <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">move</span><span class="p">)</span>
+                           <span class="c1">;; 指し手に対応するそのマスの得点を計算する</span>
+                           <span class="p">(</span><span class="nv">rate-position</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">move</span><span class="p">)</span> <span class="nv">player</span><span class="p">))</span>
+                         <span class="c1">;; 可能な全ての指し手</span>
+                         <span class="p">(</span><span class="nv">caddr</span> <span class="nv">tree</span><span class="p">))))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">rate-position</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">player</span><span class="p">)</span>
+  <span class="s">&#34;現在のゲーム木から指定プレイヤーの得点を算出する
+</span><span class="s">   tree: 遅延ゲーム木
+</span><span class="s">   player: プレイヤーID
+</span><span class="s">   ret: 得点&#34;</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">moves</span> <span class="p">(</span><span class="nv">caddr</span> <span class="nv">tree</span><span class="p">)))</span>  <span class="c1">; 可能な指し手</span>
+    <span class="c1">;; 現在のゲーム木に可能な指し手があれば、次に取りうる全てのゲーム木を見ていき、</span>
+    <span class="c1">;; ミニマックスアルゴリズムを適用したときの得点を返す</span>
+    <span class="c1">;; 現在のゲーム木に可能な指し手がなければ、現在のゲーム盤の得点を返す</span>
+    <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">not</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">moves</span><span class="p">))</span>
+        <span class="p">(</span><span class="nv">apply</span> <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">eq</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">)</span> <span class="nv">player</span><span class="p">)</span>
+                   <span class="nf">#&#39;</span><span class="nv">max</span>
+                   <span class="nf">#&#39;</span><span class="nv">min</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">get-ratings</span> <span class="nv">tree</span> <span class="nv">player</span><span class="p">))</span>
+        <span class="p">(</span><span class="nv">score-board</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">tree</span><span class="p">)</span> <span class="nv">player</span><span class="p">))))</span></code></pre></div>
+<p>これで、ヒューリスティクスを用いたゲームAIが大きな盤面で動かせる。
+以前の例と同様に、プレイヤーBの指してはAIアルゴリズムで自動的に計算されたものとなる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">play-vs-computer</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">gen-board</span><span class="p">)</span> <span class="mi">0</span> <span class="mi">0</span> <span class="no">t</span><span class="p">))</span>
+<span class="o">...</span>
+<span class="o">...</span>
+<span class="o">...</span></code></pre></div>
+<h2 id="アルファ-ベータ法">アルファ・ベータ法</h2>
+
+<p><strong>アルファ・ベータ法</strong> はミニマックスアルゴリズムにおける、よく知られた最適化手法である。
+最終的なミニマックス評価の結果に影響を及ぼさないと判断した枝を飛ばしてしまう(枝刈りする)ことで処理速度を上げるのである。</p>
+
+<p>ゲーム木のとある枝が最終的な評価に影響を及ぼさないというのはどういう場合か。<br />
+アルファ・ベータ法を理解するため、2x2のゲーム盤でのゲーム木を示した図を見てみる。</p>
+
+<p><img src="alpha-beta-pruning.svg" alt="alpha-beta-pruning" /></p>
+
+<p><strong>図の意味</strong></p>
+
+<ul>
+<li>ゲームは図の一番上からスタートする</li>
+<li>矢印が可能な手を表す</li>
+<li>各四角には、どちらが手番化を示してある</li>
+<li>各ゲーム盤の右下の数字が、(<code>score-board</code>関数を使った)最新の<code>get-ratings</code>による評価値
+
+<ul>
+<li>葉ノードでは、評価値は<code>score-board</code>により直接計算される</li>
+<li>葉ノード以外では、数値はミニマックスアルゴリズムにより選ばれる</li>
+</ul></li>
+<li>ゲーム木の各状態の中で、指し手を選ぶ余地のあるノード(分岐のあるノード)はMAXノード、または、MINと示してある
+
+<ul>
+<li>プレイヤーAが選べる分岐はMAXノード</li>
+<li>プレイヤーBが選べる分岐はMINノード</li>
+</ul></li>
+</ul>
+
+<p>ミニマックスアルゴリズムは、<strong>深さ優先探索</strong>である。
+つまり、ゲーム木を左から右に、深さ優先で、全ての葉を調べていく。
+(ここでは、<code>*ai-level*</code>が高く設定されていて、木が一切刈り込まれていないとしよう。)
+全ての葉を見た後、分岐があるノードについて、最小または最大のスコアを採用する。</p>
+
+<p>ここで、MINの分岐に注目する。
+ミニマックスアルゴリズムを適用すると、MINノードの最初(左側)のぶん機のスコアは<code>8</code>であることが分かる。
+AIエンジンが右側の枝を見に行く際には、スコアが8以下になることだけが重要である。
+8とそれより大きい数から最小を取れば常に8であるから、<strong>8より大きな数</strong>は結果に影響しない。</p>
+
+<p>したがって、AIが左の分岐でスコア8を見つけたら、その時点でもうそれ以上右側の枝を調べる必要がない事がわかる。
+つまり、ミニマックスアルゴリズムにおいては、図中の点線で示されている部分の枝を調べる必要はないということである。</p>
+
+<p>この例においては、枝刈りできた部分はごく一部分のみであったが、ゲーム木の規模が大きくなれば、大抵は大部分の枝を刈り取ることができる。</p>
+
+<h3 id="アルファ-ベータ法のライブラリを作る">アルファ・ベータ法のライブラリを作る</h3>
+
+<p>巷でよく見られるアルファ・ベータ法においては、<code>alpha</code>と<code>beta</code>という変数を利用する。
+つまり、MINノードかMAXノードかによって、<code>alpha</code>と<code>beta</code>の役割(上限か下限か)を適宜入れ替えて使うことで、同じコードを両方の種類のノードに使えるようにする。<br />
+しかし、ここで作成するコードでは、わかりやすさを優先して、<code>upper-limit</code>と<code>lower-limit</code>という変数を受け渡していくことにする。
+これらは、それぞれ、ゲーム木を調べている最中に気にすべき上限値と下限値を表す。
+<code>alpha</code>と<code>beta</code>を使わないことで、MINとMAXそれぞれの場合分けのコードに重複が生じるが、上限値と下限値を明確にしておくことで、アルファ・ベータ法のコードをより平易にする意味がある。</p>
+
+<p>もう一つの注意として、ここでは、ミニマックスアルゴリズムのコード部分と、アルファ・ベータ法のコード部分を分離しない。
+先程のダイスオブドゥームにおける「先読み制限」のコードでは、先読みを制限する<code>limit-tree-depth</code>関数をAIコードの残りの部分と独立して実践した。
+アルファ・ベータ法も同様に、ゲーム木を変換する独立した関数として実装できなくはない。
+しかし、アルファ・ベータ法のコードはミニマックスの計算の中間結果を参照しなければならないので、少しややこしくなる。
+もっと進んだAIエンジンなら、それでも分離しておくのが良い設計となるが、この規模のゲームであれば、アルファ・ベータ法のチェックもミニマックスアルゴリズムのコード中に入れてしまっても良いであろう。</p>
+
+<p>ここからは、実装に入る。
+まず、<code>get-ratings</code>関数を、<code>ab-get-ratings-max</code>関数と<code>ab-get-ratings-min</code>関数で置き換える。
+<code>get-ratings</code>関数は、与えられたゲーム盤の状態から、可能な指し手のうち最良のものを計算する関数であった。
+そして、これから実装したいのは、「評価関数が「これ以上の指しては存在しない」と判断したら直ちに評価を打ち切る処理」である。
+打ち切りの決定ロジックは、今見ているノードがMAX(自分のプレイヤーの手番)か、MIN(相手プレイヤーの手番)かによって異なる。</p>
+
+<p>まず、MAXノードについて計算する関数<code>ab-get-ratings-max</code>を実装する。
+この関数は引数として<code>get-ratings</code>関数が受け取っていた引数に加え、<code>upper-limit</code>と<code>lower-limit</code>を受け取る。
+この関数自身は最大値だけに関心があるため、<code>lower-limit</code>は参照しない。
+ただし、子ノードにMINノードがあれば、再帰呼出しの先では最小値を求める必要がある。
+したがって、再帰呼び出し先のために下限を引数に持つ。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">ab-get-ratings-max</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">player</span> <span class="nv">upper-limit</span> <span class="nv">lower-limit</span><span class="p">)</span>
+  <span class="s">&#34;MAXノードにおいて、現在のゲーム盤で取りうるスコアの最大値を計算する
+</span><span class="s">   tree: 現在の遅延ゲーム木
+</span><span class="s">   player: プレイヤーID
+</span><span class="s">   upper-limit: スコアの上限
+</span><span class="s">   lower-limit: スコアの下限
+</span><span class="s">   ret: スコアの最大値&#34;</span>
+  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="p">(</span><span class="nv">moves</span> <span class="nv">lower-limit</span><span class="p">)</span>
+             <span class="c1">;; 可能な指し手の中からスコアの最大値を求める</span>
+             <span class="c1">;; moves: 可能な指し手</span>
+             <span class="c1">;; lower-limit: 探索すべきスコアの下限</span>
+             <span class="c1">;; ret: スコアの最大値</span>
+             <span class="c1">;; 可能な指し手があれば、それらに対してスコアの最大値を計算する</span>
+             <span class="p">(</span><span class="nv">unless</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">moves</span><span class="p">)</span>
+               <span class="c1">;; x: 未探索の指し手のうち一番左側の指し手のスコアを計算する</span>
+               <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">x</span> <span class="p">(</span><span class="nv">ab-rate-position</span> <span class="p">(</span><span class="nv">cadr</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="nv">moves</span><span class="p">))</span>
+                                          <span class="nv">player</span>
+                                          <span class="nv">upper-limit</span>
+                                          <span class="nv">lower-limit</span><span class="p">)))</span>
+                 <span class="c1">;; - xが上限以上なら、それ以上探索する必要はないので評価を打ち切る</span>
+                 <span class="c1">;; - xがそれ以外なら、残りの枝をさらに探索する必要がある</span>
+                 <span class="c1">;;   - xがそれまでのlower-limitより大きければxを新たなlower-limitとして採用する</span>
+                 <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">&gt;=</span> <span class="nv">x</span> <span class="nv">upper-limit</span><span class="p">)</span>
+                     <span class="p">(</span><span class="nv">list</span> <span class="nv">x</span><span class="p">)</span>
+                     <span class="p">(</span><span class="nv">cons</span> <span class="nv">x</span> <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="nv">moves</span><span class="p">)</span> <span class="p">(</span><span class="nv">max</span> <span class="nv">x</span> <span class="nv">lower-limit</span><span class="p">))))))))</span>
+
+    <span class="c1">;; 可能な指し手と下限を指定して、スコアの最大値を計算する</span>
+    <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">caddr</span> <span class="nv">tree</span><span class="p">)</span> <span class="nv">lower-limit</span><span class="p">)))</span></code></pre></div>
+<p>次に、MINノードについて計算する関数<code>ab-get-ratings-min</code>を実装する。
+この関数は引数として<code>get-ratings</code>関数が受け取っていた引数に加え、<code>upper-limit</code>と<code>lower-limit</code>を受け取る。
+この関数自身は最小値だけに関心があるため、<code>upper-limit</code>は参照しない。
+ただし、子ノードにMAXノードがあれば、再帰呼出しの先では最大値を求める必要がある。
+したがって、再帰呼び出し先のために上限を引数に持つ。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">ab-get-ratings-min</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">player</span> <span class="nv">upper-limit</span> <span class="nv">lower-limit</span><span class="p">)</span>
+  <span class="s">&#34;MINノードにおいて、現在のゲーム盤で取りうるスコアの最小値を計算する
+</span><span class="s">   tree: 現在の遅延ゲーム木
+</span><span class="s">   player: プレイヤーID
+</span><span class="s">   upper-limit: スコアの上限
+</span><span class="s">   lower-limit: スコアの下限
+</span><span class="s">   ret: スコアの最大値&#34;</span>
+  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="p">(</span><span class="nv">moves</span> <span class="nv">upper-limit</span><span class="p">)</span>
+             <span class="c1">;; 可能な指し手の中からスコアの最大値を求める</span>
+             <span class="c1">;; moves: 可能な指し手</span>
+             <span class="c1">;; upper-limit: 探索すべきスコアの上限</span>
+             <span class="c1">;; ret: スコアの最大値</span>
+             <span class="c1">;; 可能な指し手があれば、それらに対してスコアの最大値を計算する</span>
+             <span class="p">(</span><span class="nv">unless</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">moves</span><span class="p">)</span>
+               <span class="c1">;; x: 未探索の指し手のうち一番左側の指し手のスコアを計算する</span>
+               <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">x</span> <span class="p">(</span><span class="nv">ab-rate-position</span> <span class="p">(</span><span class="nv">cadr</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="nv">moves</span><span class="p">))</span>
+                                          <span class="nv">player</span>
+                                          <span class="nv">upper-limit</span>
+                                          <span class="nv">lower-limit</span><span class="p">)))</span>
+                 <span class="c1">;; - xが下限以下なら、それ以上探索する必要はないので評価を打ち切る</span>
+                 <span class="c1">;; - xがそれ以外なら、残りの枝をさらに探索する必要がある</span>
+                 <span class="c1">;;   - xがそれまでのupper-limitより大きければxを新たなupper-limitとして採用する</span>
+                 <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">&lt;=</span> <span class="nv">x</span> <span class="nv">lower-limit</span><span class="p">)</span>
+                     <span class="p">(</span><span class="nv">list</span> <span class="nv">x</span><span class="p">)</span>
+                     <span class="p">(</span><span class="nv">cons</span> <span class="nv">x</span> <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">lazy-cdr</span> <span class="nv">moves</span><span class="p">)</span> <span class="p">(</span><span class="nv">min</span> <span class="nv">x</span> <span class="nv">upper-limit</span><span class="p">))))))))</span>
+
+    <span class="c1">;; 可能な指し手と上限を指定して、スコアの最小値を計算する</span>
+    <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">caddr</span> <span class="nv">tree</span><span class="p">)</span> <span class="nv">upper-limit</span><span class="p">)))</span></code></pre></div>
+<p>新たな関数<code>ab-rate-position</code>では、まず現在のノードが自分の手番化相手の手番化を確認する。
+自分の手番であればMAXノードということであるから、処理を<code>ab-get-ratings-max</code>に任せる。
+相手の手番であればMINノードということであるから、処理を<code>ab-get-ratings-min</code>に任せる。
+その他の部分は以前の<code>rate-position</code>と同じである。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">ab-rate-position</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">player</span> <span class="nv">upper-limit</span> <span class="nv">lower-limit</span><span class="p">)</span>
+  <span class="s">&#34;&#34;</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">moves</span> <span class="p">(</span><span class="nv">caddr</span> <span class="nv">tree</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">not</span> <span class="p">(</span><span class="nv">lazy-null</span> <span class="nv">moves</span><span class="p">))</span>
+        <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">eq</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">)</span> <span class="nv">player</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">apply</span> <span class="nf">#&#39;</span><span class="nv">max</span> <span class="p">(</span><span class="nv">ab-get-ratings-max</span> <span class="nv">tree</span>
+                                             <span class="nv">player</span>
+                                             <span class="nv">upper-limit</span>
+                                             <span class="nv">lower-limit</span><span class="p">))</span>
+            <span class="p">(</span><span class="nv">apply</span> <span class="nf">#&#39;</span><span class="nv">min</span> <span class="p">(</span><span class="nv">ab-get-ratings-min</span> <span class="nv">tree</span>
+                                             <span class="nv">player</span>
+                                             <span class="nv">upper-limit</span>
+                                             <span class="nv">lower-limit</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nv">score-board</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">tree</span><span class="p">)</span> <span class="nv">player</span><span class="p">))))</span></code></pre></div>
+<p>最後に、ミニマックスアルゴリズムを起動する<code>handle-computer</code>関数を、新しい関数を呼ぶように変更する。
+この関数は、<code>ab-get-ratings-max</code>を呼び出すことでミニマックスアルゴリズムを起動する。
+この関数が呼ばれるのは、自分の手番なわけだから、最初に評価されるノードはMAXノードである。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">handle-computer</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">ratings</span> <span class="p">(</span><span class="nv">ab-get-ratings-max</span> <span class="p">(</span><span class="nv">limit-tree-depth</span> <span class="nv">tree</span> <span class="vg">*ai-level*</span><span class="p">)</span>
+                                     <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">)</span>
+                                     <span class="nv">most-positive-fixnum</span>
+                                     <span class="nv">most-negative-fixnum</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nv">cadr</span> <span class="p">(</span><span class="nv">lazy-nth</span> <span class="p">(</span><span class="nv">position</span> <span class="p">(</span><span class="nv">apply</span> <span class="nf">#&#39;</span><span class="nv">max</span> <span class="nv">ratings</span><span class="p">)</span> <span class="nv">ratings</span><span class="p">)</span> <span class="p">(</span><span class="nv">caddr</span> <span class="nv">tree</span><span class="p">)))))</span></code></pre></div>
+<p>この関数を呼び出すにあたって、<code>upper-limit</code>と<code>lower-limit</code>の初期値を決めてやらないとならない。
+ミニマックスアルゴリズムをこれから開始するわけであるから、上限および上限はできる限り無限に近づけておきたい。
+多くのLisp環境では無限大が定義されているが、ANSI Common Lispには無限大が含まれていない。
+ただし、規格としては、<code>most-positive-fixnum</code>と<code>most-negative-fixnum</code>を定めていて、これらはとても大きな絶対値を持つ正負の数である。
+今回の目的としてはこれで十分であるため、これらの値を<code>ab-get-ratings-max</code>に渡している。</p>
+
+<p>AIエンジンの効率をもう少し上げたいなら、<code>upper-limit</code>と<code>lower-limit</code>を<code>score-board</code>が返しうる最大値と最小値にしておくことも考えられる。
+そうすれば、多少は枝刈りできる機会が増えるであろう。
+しかし、<code>score-board</code>が返す値の範囲はゲーム盤の大きさに依存しており、将来、点数計算を更に最適化したら変化するリスクを持つ。
+したがって、今のところは初期値には安全なものを採用することとする。</p>
+
+<p>ここまでの最適化を完了させたところで、ゲーム盤の大きさを5x5に拡張してみる。
+ここまでで、下の最適化を実装したAIアルゴリズムであれば、この大きさのゲーム盤でも難なく処理できるであろう。</p>
+
+<ul>
+<li>遅延評価</li>
+<li>先読み制限</li>
+<li>枝刈り</li>
+</ul>
+
+<p><strong>5x5ゲーム盤でゲーム開始</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*board-size*</span> <span class="mi">5</span><span class="p">)</span>
+<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*board-hexnum*</span> <span class="p">(</span><span class="nv">*</span> <span class="vg">*board-size*</span> <span class="vg">*board-size*</span><span class="p">))</span></code></pre></div>
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

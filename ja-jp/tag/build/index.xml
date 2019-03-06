@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>build on Lazy Lambda</title>
+    <link>https://otaon.github.io/web/ja-jp/tag/build/</link>
+    <description>Recent content in build on Lazy Lambda</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Thu, 07 Mar 2019 02:00:00 +0900</lastBuildDate>
+    
+	<atom:link href="https://otaon.github.io/web/ja-jp/tag/build/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Vimをビルドする</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/vim%E3%82%92%E3%83%93%E3%83%AB%E3%83%89%E3%81%99%E3%82%8B/</link>
+      <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/vim%E3%82%92%E3%83%93%E3%83%AB%E3%83%89%E3%81%99%E3%82%8B/</guid>
+      <description>gitからclone $ git clone https://github.com/vim/vim.git ~/git/vim コンフィグ prefixにvimのインストール先を設定する。 $ cd ~/git/vim $ ./configure \ --prefix=$HOME/.local \ --with-features=huge \ --enable-multibyte \ --enable-rubyinterp \ --enable-pythoninterp \ --enable-python3interp \ --enable-perlinterp \ --enable-fontset \ --enable-luainterp \ --enable-fail-if-missing make</description>
+    </item>
+    
+  </channel>
+</rss>

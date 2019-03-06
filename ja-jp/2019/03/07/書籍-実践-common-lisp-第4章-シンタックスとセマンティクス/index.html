@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>書籍 実践 Common Lisp 第4章 シンタックスとセマンティクス · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="4.1 なんでこんなに括弧があるの？ 括弧がたくさんあるのは、M式よりもS式の方が初期のLisperに好まれたからである。 4.2 ブラックボックスをばらし" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC4%E7%AB%A0-%E3%82%B7%E3%83%B3%E3%82%BF%E3%83%83%E3%82%AF%E3%82%B9%E3%81%A8%E3%82%BB%E3%83%9E%E3%83%B3%E3%83%86%E3%82%A3%E3%82%AF%E3%82%B9/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="書籍 実践 Common Lisp 第4章 シンタックスとセマンティクス" />
+<meta property="og:description" content="4.1 なんでこんなに括弧があるの？ 括弧がたくさんあるのは、M式よりもS式の方が初期のLisperに好まれたからである。 4.2 ブラックボックスをばらし" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC4%E7%AB%A0-%E3%82%B7%E3%83%B3%E3%82%BF%E3%83%83%E3%82%AF%E3%82%B9%E3%81%A8%E3%82%BB%E3%83%9E%E3%83%B3%E3%83%86%E3%82%A3%E3%82%AF%E3%82%B9/" />
+<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="書籍 実践 Common Lisp 第4章 シンタックスとセマンティクス">
+<meta itemprop="description" content="4.1 なんでこんなに括弧があるの？ 括弧がたくさんあるのは、M式よりもS式の方が初期のLisperに好まれたからである。 4.2 ブラックボックスをばらし">
+
+
+<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="4377">
+
+
+
+<meta itemprop="keywords" content="lisp," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="書籍 実践 Common Lisp 第4章 シンタックスとセマンティクス"/>
+<meta name="twitter:description" content="4.1 なんでこんなに括弧があるの？ 括弧がたくさんあるのは、M式よりもS式の方が初期のLisperに好まれたからである。 4.2 ブラックボックスをばらし"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">書籍 実践 Common Lisp 第4章 シンタックスとセマンティクス</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-03-07
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/lisp/">lisp</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h2 id="4-1-なんでこんなに括弧があるの">4.1 なんでこんなに括弧があるの？</h2>
+
+<p>括弧がたくさんあるのは、M式よりもS式の方が初期のLisperに好まれたからである。</p>
+
+<h2 id="4-2-ブラックボックスをばらして中を見ると">4.2 ブラックボックスをばらして中を見ると</h2>
+
+<p>Lispのシンタックスとセマンティクスがどのように定義されるのかを見る。</p>
+
+<p>たいていの言語処理系は、ブラックボックスの中で、プログラムのテキストから動作やオブジェクトコードへと変換する作業を、それぞれ一部分ずつ担うサブシステムに分割されている。<br />
+よくあるのは、処理系を3つのフェーズに分割し、それぞれの出力結果を次のフェーズに流し込む方式である。</p>
+
+<p><strong>たいていの言語処理系の処理の流れ</strong></p>
+
+<pre><code>文字列
+ -&gt; [字句解析器] 文字列を字句に分解する
+ -&gt; 字句
+ -&gt; [パーサ] 言語の文法に基づいてプログラムに置ける式を表す木を作る
+ -&gt; 抽象構文木(AST: abstract syntax tree)
+ -&gt; [評価器] インタプリタとして直接実行したり、機械語のような他の言語へとコンパイルする
+</code></pre>
+
+<p>Common Lispの場合、この処理のフェーズ分割が少し異なる。</p>
+
+<pre><code>文字列
+ -&gt; [読み取り器(reader)] 文字列をS式と呼ばれるLispオブジェクトに変換する
+ -&gt; Lispオブジェクト(S式)
+ -&gt; [評価器(evaluator)] セマンティクスを評価して、インタプリタとして直接実行したり、機械語のような他の言語へとコンパイルする
+</code></pre>
+
+<h2 id="4-3-s式">4.3 S式</h2>
+
+<h3 id="リストとアトム">リストとアトム</h3>
+
+<p>S式の基本構成要素は、 <strong>リスト</strong> と <strong>アトム</strong> である。</p>
+
+<ul>
+<li>リスト：括弧で括られており、単数、または複数のS式を要素に持つ</li>
+<li>アトム：リスト以外のS式</li>
+</ul>
+
+<p>LispのBNF(バッカス・ナウア記法)を参照すると、このあたりの詳細が分かる。</p>
+
+<ul>
+<li><a href="http://cui.unige.ch/isi/bnf/LISP/BNFindex.html">BNF Index of LISP</a></li>
+<li><a href="https://github.com/arrdem/sad/blob/master/test/lisp.bnf">arrdem/sad sad/test/lisp.bnf</a></li>
+</ul>
+
+<h3 id="シンボル">シンボル</h3>
+
+<p>先述の<code>format</code>や<code>*bd*</code>といった名前は、<strong>シンボル</strong>と呼ばれるオブジェクトによって表されている。<br />
+読み取り器は、指定された名前が変数名なのか関数名なのかは一切知らない。<br />
+名前には、下記以外、ほとんどの文字を使用することができる。</p>
+
+<ul>
+<li>数字(シンボル名の全てが数字でなければ使用可能)</li>
+<li>開き括弧 <code>(</code></li>
+<li>閉じ括弧 <code>)</code></li>
+<li>ダブルクォート <code>&quot;</code></li>
+<li>シングルクォート <code>'</code></li>
+<li>バッククォート <code>\</code>`</li>
+<li>カンマ <code>,</code></li>
+<li>コロン <code>:</code></li>
+<li>セミコロン <code>;</code></li>
+<li>バックスラッシュ <code>\</code></li>
+<li>縦線 <code>|</code></li>
+</ul>
+
+<p>読み取り器が名前をシンボルオブジェクトに変換する方法について、下記の2点を理解すべきである。</p>
+
+<ol>
+<li>名前に出てくる大文字と小文字を読み取り器が扱う方法</li>
+<li>同一の名前をいつも同一のシンボルとして読むのを読み取り器が保証する方法</li>
+</ol>
+
+<h4 id="1-名前に出てくる大文字と小文字を読み取り器が扱う方法">1. 名前に出てくる大文字と小文字を読み取り器が扱う方法</h4>
+
+<p>読み取り器は、名前を読む時に、エスケープされていない文字を全て大文字に変換する。<br />
+つまり、読み取り器は、<code>foo</code>も<code>FOO</code>も<code>Foo</code>も、全て同じシンボルとして読む。<br />
+そして、<code>\f\o\o</code>や<code>|foo|</code>は、エスケープされているため、<code>foo</code>というシンボルとして読まれる。<br />
+現代の標準的なLispでは、コードを全て小文字で書き、読み取り機で名前を大文字に変換する。</p>
+
+<h4 id="2-同一の名前をいつも同一のシンボルとして読むのを読み取り器が保証する方法">2. 同一の名前をいつも同一のシンボルとして読むのを読み取り器が保証する方法</h4>
+
+<p>同一の名前をいつも同一のシンボルとして読むのを読み取り器が保証するために、読み取り器はシンボルを <strong>インターン(intern)</strong> する。<br />
+このインターンにより、S式のどこに同じ名前が現れてもそれを表すために同一のオブジェクトが使用されることになる。</p>
+
+<p><strong>インターンの仕組み</strong><br />
+1. 読み取り器は、名前を読み込んで大文字に変換したら、その名前のシンボルが <strong>パッケージ(package)</strong> と呼ばれる表に存在しているかどうか調べる。
+2. シンボルが表に存在していたら、そのシンボルを返す。
+3. 見つからなかったら、新しいシンボルを作成して表に追加し、それを返す。</p>
+
+<h2 id="4-4-lispフォームとしてのs式">4.4 LispフォームとしてのS式</h2>
+
+<p>ここからは、評価器について説明する。</p>
+
+<p>読み取り器がテキストの集まりをS式に変換したら、そのS式はLispコードとして評価できる。
+しかしながら、S式の全てがLispコードとして評価できるわけではない。
+すなわち、S式がLispコードのセマンティクスを満たすかどうかを評価する必要がある。</p>
+
+<p>評価器は、S式がLispコードとして評価できるかを決める評価規則を持つ。<br />
+といっても、この評価規則は非常にシンプルである。
+すなわち、「正規のLispフォームとは、任意のアトム、または、リストの先頭要素がシンボルとなっているリスト」という規則である。</p>
+
+<p>アトムには2種類ある。シンボルと、シンボル以外である。</p>
+
+<ul>
+<li>シンボル： 変数の名前とみなされ、その変数の現在の値として評価される(定数もこちら)</li>
+<li>シンボル以外： シンボル意外である以外の <strong>自己評価型(self-evaluating)</strong> のオブジェクト(数値、文字列)</li>
+</ul>
+
+<p><strong>NOTE</strong><br />
+自己評価型とは、評価機構に渡したら自分自身を評価値として返すという意味である。</p>
+
+<p>シンボルも、変数名にシンボル自身を代入すれば自己評価型になる。<br />
+例えば、標準で用意されている真偽値である<code>t</code>と<code>nil</code>がそれにあたる。<br />
+他にも、 <strong>キーワードシンボル</strong> も自己評価型のシンボルである。
+キーワードシンボルとは、シンボル名の先頭に<code>:</code>がついたものである。
+読み取り器は、<code>:</code>から始まる名前をインターンするとき、そのシンボルを値として持つ定数を自動的に定義する。</p>
+
+<hr />
+
+<p>正規のリストフォームは、必ず先頭要素がシンボルである。<br />
+そして、リストが評価される方法には、このシンボルの種類によって3種類に分けられる。</p>
+
+<ul>
+<li>シンボルが関数の名前、または、未定義の名前：関数呼び出し</li>
+<li>シンボルが特殊オペレータの名前：特殊オペレータ</li>
+<li>シンボルがマクロの名前：マクロ</li>
+</ul>
+
+<h2 id="4-5-関数呼び出し">4.5 関数呼び出し</h2>
+
+<p>関数呼び出しのルールは、「リストの先頭以外の要素を評価し、その結果の値を関数に渡す」である。<br />
+したがって、関数呼び出しフォームのシンタックスにおいては、「リストの先頭以外の要素は <strong>well-formed</strong> である必要がある」というルールも自明的に存在する。</p>
+
+<p><strong>関数呼び出しのシンタックス</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">function-name</span> <span class="nv">arguments*</span><span class="p">)</span></code></pre></div>
+<h2 id="4-6-特殊オペレータ">4.6 特殊オペレータ</h2>
+
+<p>関数で定義できないような操作は、特殊オペレータによって実現されている。<br />
+例えば、<code>if</code>のように、先頭以外の要素について、片方を評価しない場合があるような操作は関数では定義できない。<br />
+なぜなら、関数では、先頭以外の要素について最初に全て評価しきってしまうからである。</p>
+
+<p><strong>例：<code>if</code>のシンタックス</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">if</span> <span class="nv">test-form</span>
+    <span class="nv">then-form</span>
+    <span class="nv">[else-form]</span><span class="p">)</span></code></pre></div>
+<p>また、他のフォームが評価される環境を操作するような特殊オペレータも存在する。
+つまり、<code>let</code>などがそれにあたる。</p>
+
+<h2 id="4-7-マクロ">4.7 マクロ</h2>
+
+<p>マクロとは、端的に言えば、シンタックスを拡張する手段をユーザに提供する機能である。<br />
+マクロは、S式を引数として受け取り、そのS式(マクロフォーム)の代わりに評価される別のS式(Lispフォーム)を返す関数である。</p>
+
+<p>マクロフォームの評価は2段階である。</p>
+
+<ol>
+<li>マクロフォームの要素がそのまま(=通常の手順で評価器に評価される前に)マクロ関数に渡される</li>
+<li>マクロ関数が返すLispフォーム(=マクロ展開されたS式)が、通常の評価手順で評価される</li>
+</ol>
+
+<p>したがって、例えば<code>compile-file</code>コマンドでコードをコンパイルする時は、下記の手順でマクロが展開される。</p>
+
+<ol>
+<li>ファイル中の全てのマクロフォームが、関数と特殊フォームだけになるまで再帰的にマクロ展開される</li>
+<li>マクロのない状態のコードが、<code>load</code>コマンドで読み込める形式の<code>fasl</code>ファイルへとコンパイルされる</li>
+<li>コンパイルされたコードは、ロードされるまで実行されない</li>
+</ol>
+
+<p>ここで、重要な事が2点分かる。</p>
+
+<ul>
+<li>マクロ展開されるのはコンパイル時なので、ファイルのロード時や、ファイル中に定義された関数の呼び出し時にマクロ展開のコストはかからない</li>
+<li>評価器は、S式をマクロ関数に渡す前に評価しないため、マクロフォーム内のS式は、それぞれのマクロが解釈できる形で自由に記述可能である</li>
+</ul>
+
+<h2 id="4-8-真偽-等しさ">4.8 真偽、等しさ</h2>
+
+<h3 id="真偽">真偽</h3>
+
+<p>Lispの真偽は非常にシンプルである。<br />
+すなわち、<code>nil</code>が偽で、それ以外は全て真である。<br />
+ただし、明確に真偽値の真であることが分かるように、<code>t</code>が特別に用意されている。</p>
+
+<p><code>nil</code>と<code>'nil</code>と<code>()</code>と<code>'()</code>は、全て同じものとして評価されるように設計されているため、これらは全て偽である。<br />
+同様に、<code>t</code>と<code>'t</code>も、全て同じものとして評価されるように設計されているためこれらは全て真である。</p>
+
+<p><strong>NOTE</strong><br />
+上記のシンボルのうち、クォート有りのものは、特殊オペレータ<code>quote</code>によって、与えられたシンボルそのものとして評価され、クォート無しのものは、値としてシンボル<code>nil</code>やシンボル<code>t</code>を持つ定数への参照として評価される。<br />
+これにより、実質的には<code>nil</code>が偽でそれ以外が真である、といえる。</p>
+
+<h3 id="等しさ-同一性-同値性">等しさ(同一性、同値性)</h3>
+
+<h4 id="eq"><code>eq</code></h4>
+
+<p><code>eq</code>は「オブジェクト同一性」を比較する。<br />
+すなわち、2つのオブジェクトが同一であるとき、それらは<code>eq</code>である、と換言できる。</p>
+
+<p>ただし、同じ値を持つ2つの数値や2つの文字を同一であるとするかは <strong>処理系依存</strong> である。
+そのため、数値や文字に対して同一性を比較したい時に<code>eq</code>を使ってはならない。</p>
+
+<h4 id="eql"><code>eql</code></h4>
+
+<p>数値や文字の「値が等しい」、つまり、同値であることを比較したい場合は、<code>eql</code>を使用する。<br />
+ただし、<code>eql</code>は、同じ数値や文字の値を表している <strong>同じクラス</strong> のオブジェクトを等しいとみなす。
+したがって、<code>(eql 1 1)</code>は真であるが、<code>(eql 1 1.0)</code>はオブジェクトのクラスが違うため偽である。</p>
+
+<h4 id="equal"><code>equal</code></h4>
+
+<p><code>equal</code>は、同じ構造と内容を持つリストを再帰的に等しいとみなす。<br />
+また、同じ文字で構成された文字列も<code>equal</code>では等しいと判断される。<br />
+さらに、一次元配列やパス名といったデータ型に対しても、<code>equal</code>は<code>eql</code>よりもゆるい判断をする。<br />
+それ以外のデータ型については、<code>eql</code>を用いたときと同じ判断をする。</p>
+
+<h4 id="equalp"><code>equalp</code></h4>
+
+<p><code>equalp</code>は、<code>equal</code>よりも判断基準がさらに緩く、文字列の比較において、大文字小文字の区別をしない。<br />
+さらに、数値に対しては、数学的に同じ値であれば等しいと判断する。<br />
+したがって、<code>(equalp 1 1.0)</code>は真となる。<br />
+また、<code>equalp</code>で真となる要素を持つリスト同士も、<code>equalp</code>で真となる。<br />
+同様に、<code>equalp</code>で真となる要素を持つ配列同士も、<code>equalp</code>で真となる。<br />
+その他の大抵のデータ型については、<code>eql</code>を用いたときと同じ判断をする。</p>
+
+<h2 id="4-9-lispコードの書式付け">4.9 Lispコードの書式付け</h2>
+
+<h3 id="インデント">インデント</h3>
+
+<p>殊、Lispにおいては、コードのインデントには気を遣うべきである。<br />
+しかし幸いなことに、SLIMEやSLIMVのようなエディタの機能を使用すれば、自動的にインデントを適切に修正してくれる。<br />
+重要なのは、どのようなインデントが一般的であるのかを覚えておくことである。</p>
+
+<h3 id="コメント">コメント</h3>
+
+<p>Lispのコメントの流儀として一般的なものを下記に示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">;;;; aaaaaa セミコロン4つ・・・ファイルヘッダのコメント</span>
+
+<span class="c1">;;; bbbbbbb セミコロン3つ・・・以降のコードセクションに対する段落コメント</span>
+<span class="c1">;;; bbbbbbb</span>
+
+<span class="p">(</span><span class="nv">defun</span> <span class="p">(</span><span class="nv">foo</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">x</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="c1">;; cccc セミコロン2つ・・・以降のコードに対するコメント</span>
+    <span class="p">(</span><span class="nv">some-function-call</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">another-function-call</span> <span class="nv">x</span><span class="p">)</span> <span class="c1">; dddd セミコロン1つ・・・この行のみに対するコメント</span>
+    <span class="p">(</span><span class="nv">another</span><span class="p">)))</span></code></pre></div>
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

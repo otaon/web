@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>書籍 Land of Lisp 13章 Webサーバを作ろう！ · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="T.O.C. 13.1 Common Lispでのエラー処理 13.2 ゼロからWebサーバを書く 13.3 動的なWebサイトを作る 13.1 Common Lispでのエラー処理 Webサーバのように外部とやりと" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-13%E7%AB%A0-web%E3%82%B5%E3%83%BC%E3%83%90%E3%82%92%E4%BD%9C%E3%82%8D%E3%81%86/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="書籍 Land of Lisp 13章 Webサーバを作ろう！" />
+<meta property="og:description" content="T.O.C. 13.1 Common Lispでのエラー処理 13.2 ゼロからWebサーバを書く 13.3 動的なWebサイトを作る 13.1 Common Lispでのエラー処理 Webサーバのように外部とやりと" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-13%E7%AB%A0-web%E3%82%B5%E3%83%BC%E3%83%90%E3%82%92%E4%BD%9C%E3%82%8D%E3%81%86/" />
+<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="書籍 Land of Lisp 13章 Webサーバを作ろう！">
+<meta itemprop="description" content="T.O.C. 13.1 Common Lispでのエラー処理 13.2 ゼロからWebサーバを書く 13.3 動的なWebサイトを作る 13.1 Common Lispでのエラー処理 Webサーバのように外部とやりと">
+
+
+<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="8873">
+
+
+
+<meta itemprop="keywords" content="lisp," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="書籍 Land of Lisp 13章 Webサーバを作ろう！"/>
+<meta name="twitter:description" content="T.O.C. 13.1 Common Lispでのエラー処理 13.2 ゼロからWebサーバを書く 13.3 動的なWebサイトを作る 13.1 Common Lispでのエラー処理 Webサーバのように外部とやりと"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">書籍 Land of Lisp 13章 Webサーバを作ろう！</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-03-07
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/lisp/">lisp</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h2 id="t-o-c">T.O.C.</h2>
+
+<ul>
+<li><a href="#131-common-lispでのエラー処理">13.1 Common Lispでのエラー処理</a></li>
+<li><a href="#132-ゼロからwebサーバを書く">13.2 ゼロからWebサーバを書く</a></li>
+<li><a href="#133-動的なwebサイトを作る">13.3 動的なWebサイトを作る</a></li>
+</ul>
+
+<hr />
+
+<h2 id="13-1-common-lispでのエラー処理">13.1 Common Lispでのエラー処理</h2>
+
+<p>Webサーバのように外部とやりとりする場合、予想外の自体が起きる可能性がある。<br />
+Common Lispにはコード内で例外を扱う機能が豊富に備わっている。<br />
+Common Lispの例外システムは柔軟である。</p>
+
+<h3 id="コンディションを通知する-error">コンディションを通知する<code>(error)</code></h3>
+
+<p>関数内で何か問題が起きた時、Lisp関数はLispの実行環境に問題が発生したことを伝える。
+この手段が <strong>コンディションを通知する</strong> ことである。
+(コンディションは、他の言語では例外(exception)と呼ばれるオブジェクトと同じようなもの)</p>
+
+<p>自分で書いたコードで、どうしても処理を続けられない場合が、コンディションを通知するときである。<br />
+自分の書くコードから直接コンディションを通知するには、<code>error</code>コマンドを使う。
+<code>error</code>コマンドは、他の場所でエラーを横取りしていなければ、Lispプログラムの実行を中断する。</p>
+
+<p>コンディションを通知して、エラーの説明メッセージとして&rdquo;foo&rdquo;を表示してみる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">error</span> <span class="s">&#34;foo&#34;</span><span class="p">)</span>
+<span class="vg">***</span> <span class="nv">-</span> <span class="nv">foo</span>
+<span class="nv">The</span> <span class="nv">following</span> <span class="nv">restarts</span> <span class="nv">are</span> <span class="nv">available:</span>
+<span class="nv">ABORT</span>       <span class="nv">R1:</span>      <span class="nv">Abort</span> <span class="nv">main</span> <span class="nv">loop</span>
+<span class="nv">&gt;</span></code></pre></div>
+<p>上の例の通り、コンディションの通知によってLispシステムはプログラムを中断し、メッセージ&rdquo;foo&rdquo;を出力した後、REPLにエラープロンプトを表示する。
+(CLISPでは、この時点で<code>:a</code>をタイプすればプログラムの実行を放棄して通常のREPLに戻る。)</p>
+
+<h3 id="自前のコンディションを作る-define-condition">自前のコンディションを作る<code>(define-condition)</code></h3>
+
+<p>最初の例では、コンディションを説明する文字列を<code>error</code>関数に渡した。
+しかし、単にテキストでエラーメッセージを表示するだけでは、どういったコンディションかを判断するのは難しい。
+そこで、Common Lispでは、コンディションの型を定義して、その型に応じて異なる処理をすることができる。</p>
+
+<p>最初に次の例のように<code>define-condition</code>でコンディションの型を定義する。
+ここではコンディションを<code>foo</code>と名付けた。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">define-condition</span> <span class="nv">foo</span> <span class="p">()</span> <span class="p">()</span>
+    <span class="p">(</span><span class="ss">:report</span> <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">condition</span> <span class="nv">stream</span><span class="p">)</span>
+               <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;Stop FOOing around, numbskull!&#34;</span> <span class="nv">stream</span><span class="p">))))</span>
+<span class="nv">FOO</span></code></pre></div>
+<p>定義したコンディションが通知されたときにどう表示されるかを制御する、専用の関数を定義できる。<br />
+上の例では、<code>lambda</code>を使ってその関数を定義した。
+<code>lambda</code>関数の中では、専用のエラーメッセージを表示するようにした。</p>
+
+<p>このコンディションを通知してみる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">[5]&gt;</span> <span class="p">(</span><span class="nv">error</span> <span class="ss">&#39;foo</span><span class="p">)</span>
+
+<span class="vg">***</span> <span class="nv">-</span> <span class="nv">Stop</span> <span class="nv">FOOing</span> <span class="nv">around,</span> <span class="nv">numbskull!</span>
+<span class="nv">The</span> <span class="nv">following</span> <span class="nv">restarts</span> <span class="nv">are</span> <span class="nv">available:</span>
+<span class="nv">ABORT</span>          <span class="ss">:R1</span>      <span class="nv">Abort</span> <span class="nv">main</span> <span class="nv">loop</span>
+<span class="nv">Break</span> <span class="mi">1</span> <span class="nv">[6]&gt;</span> <span class="ss">:a</span>
+<span class="nv">[7]&gt;</span></code></pre></div>
+<p>この通り、専用のメッセージが表示された。この方法を使えば、コンディションの型に応じてより分かりやすいメッセージを表示できる。</p>
+
+<h3 id="コンディションを横取りする-handler-case">コンディションを横取りする<code>(handler-case)</code></h3>
+
+<p><code>define-condition</code>でコンディション型を定義したときに名前（上の例では<code>foo</code>）を与えた。
+この名前を使えば、この型のコンディションが通知されたときに、プログラムを中断する代わりに実行する処理を、プログラムの上位層で書いておくことができる。
+そのためのコマンドが<code>handler-case</code>である。</p>
+
+<p><code>handler-case</code>コマンドの第1引数には、横取りしたいコンディションを通知するかもしれないコードを与える。（下の例では<code>bad-function</code>）<br />
+<code>handler-case</code>の残りの部分には、特定のコンディションが通知されたときに何をすべきかを列記する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defun</span> <span class="nv">bad-function</span> <span class="p">()</span>
+     <span class="p">(</span><span class="nv">error</span> <span class="ss">&#39;foo</span><span class="p">))</span>
+<span class="nv">BAD-FUNCTION</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">handler-case</span> <span class="p">(</span><span class="nv">bad-function</span><span class="p">)</span>
+     <span class="p">(</span><span class="nv">foo</span> <span class="p">()</span> <span class="s">&#34;somebody signaled foo!&#34;</span><span class="p">)</span>
+     <span class="p">(</span><span class="nv">bar</span> <span class="p">()</span> <span class="s">&#34;somebody signaled bar!&#34;</span><span class="p">))</span>
+<span class="s">&#34;somebody signaled foo!&#34;</span></code></pre></div>
+<p>この<code>handler-case</code>が呼び出されると<code>bad-function</code>が呼び出され、その中の<code>(error 'foo)</code>によって<code>foo</code>コンディションが通知される。<br />
+もし<code>handler-case</code>がなかったら、この時点でプログラムが中断されてREPLにエラープロンプトが表示されることになっていたが、
+この例では、<code>handler-case</code>が<code>foo</code>コンディションを横取りして、プログラムは中断されることなく、<code>&quot;somebody signaled foo!&quot;</code>という結果が返る。</p>
+
+<h3 id="予想外のコンディションからリソースを保護する-unwind-protect">予想外のコンディションからリソースを保護する<code>(unwind-protect)</code></h3>
+
+<p>予想外の例外が発生した場合、プログラムがクラッシュしたり、下手すると外部のリソースを壊してしまう。<br />
+例えば、ファイルやソケットストリームに何かを書いている最中に例外が発生したと想定する。
+この時、ストリームを正しくクローズしてファイルハンドルやソケットを解放してやる必要がある。
+リソースが正しい手順でクリーンアップされないと、そのリソースをユーザが再び使いたい場合はコンピュータをリブートする必要がある、という場合もある。</p>
+
+<p>このような「想定外のコンディションからリソースを保護する」ために使うのが、<code>unwind-protect</code>コマンドである。
+このコマンドは、Common Lispコンパイラに「このコードだけは絶対に実行しろ」と伝えるものである。<br />
+下記の通り、<code>unwind-protect</code>の中でゼロ除算を行った場合、コンディションを通知する。<br />
+しかし、エラープロンプトからCLISPに実行の放棄を指示した後、重要なメッセージが表示されていることがわかる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">unwind-protect</span> <span class="p">(</span><span class="nv">/</span> <span class="mi">1</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1">; division by zero</span>
+    <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;I need to say &#39;flubyduby&#39; matter what&#34;</span><span class="p">))</span>
+<span class="vg">***</span> <span class="nv">-</span> <span class="nv">/:</span> <span class="nv">division</span> <span class="nv">by</span> <span class="nv">zero</span>
+<span class="nv">The</span> <span class="nv">following</span> <span class="nv">restarts</span> <span class="nv">are</span> <span class="nv">available:</span>
+<span class="nv">ABORT</span>          <span class="ss">:R1</span>      <span class="nv">Abort</span> <span class="nv">main</span> <span class="nv">loop</span>
+<span class="nv">Break</span> <span class="mi">1</span> <span class="nv">[8]&gt;</span> <span class="ss">:r1</span>
+<span class="nv">I</span> <span class="nv">need</span> <span class="nv">to</span> <span class="nv">say</span> <span class="ss">&#39;flubyduby</span><span class="o">&#39;</span> <span class="nv">matter</span> <span class="nv">what</span>
+<span class="nv">[9]&gt;</span> </code></pre></div>
+<p>Common Lispの<code>with-</code>マクロを使っている場合、そのマクロが内部で<code>unwind-protect</code>を呼んでくれることが多いため、直接<code>unwind-protect</code>を使用する場面はあまりない。
+（16章では<code>unwind-protect</code>のようなマクロを実際に作成する）</p>
+
+<h2 id="13-2-ゼロからwebサーバを書く">13.2 ゼロからWebサーバを書く</h2>
+
+<h3 id="webサーバの仕組み">Webサーバの仕組み</h3>
+
+<p>HTTP(Hypertext Transfer Protocol)は、Webページをやりとりするために使われるインターネットのプロトコルである。
+確立されたソケットコネクションを通じて、TCP/IPの上でページをやりとりするを定義している。
+クライアント上で走っているプログラム(Webブラウザなど)が定められた形式に沿ったリクエストを送ると、サーバは要求されたページを作り出して、ソケットストリームを通じてレスポンスを返す。</p>
+
+<p><strong>NOTE:</strong> このWebサーバはRon Garretのhttp.lispを元にしている。</p>
+
+<p>例えば、ブラウザがクライアントとして、<code>lolcats.html</code>というページを要求したとする。
+リクエストメッセージは次のような内容になっているはずである。
+これらのサーバに送られるメッセージ全体は <strong>リクエストヘッダ</strong> と呼ばれる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-http" data-lang="http"><span class="nf">GET</span> <span class="nn">/lolcats.html</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="n">Host</span><span class="o">:</span> <span class="l">localhost:8080</span>
+<span class="n">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.5)</span>
+<span class="n">Accept</span><span class="o">:</span> <span class="l">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span>
+<span class="n">Accept-Language</span><span class="o">:</span> <span class="l">en-us,en;q=0.5</span>
+<span class="n">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip,deflate</span>
+<span class="n">Accept-Charset</span><span class="o">:</span> <span class="l">ISO-8859-1,utf-8;q=0.7,*;q=0.7</span>
+<span class="n">Keep-Alive</span><span class="o">:</span> <span class="l">300</span>
+<span class="n">Connection</span><span class="o">:</span> <span class="l">keep-alive</span></code></pre></div>
+<p>最初の行は <strong>リクエストライン</strong> と呼ばれる。
+ここには、リクエストの種類(GET)と、要求するページの名前(lolcats.html)が含まれている。</p>
+<div class="highlight"><pre class="chroma"><code class="language-http" data-lang="http"><span class="nf">GET</span> <span class="nn">/lolcats.html</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span></code></pre></div>
+<p>2行目以降は、 <strong>HTTPヘッダフィールド</strong> と呼ばれる。
+行頭からコロンまでの箇所にヘッダ、コロンの右側に内容がある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-http" data-lang="http"><span class="err">Host: localhost:8080
+</span><span class="err">User-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.5)
+</span><span class="err">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+</span><span class="err">Accept-Language: en-us,en;q=0.5
+</span><span class="err">Accept-Encoding: gzip,deflate
+</span><span class="err">Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+</span><span class="err">Keep-Alive: 300
+</span><span class="err">Connection: keep-alive</span></code></pre></div>
+<p>リクエストヘッダに続いて、 <strong>リクエストボディ</strong> と呼ばれる部分を使って他の情報を送ることもできる。</p>
+
+<p>サーバは、クライアントからリクエストを受け取ったら、 <strong>レスポンスヘッダ</strong> (Webブラウザは受け取ったドキュメントに関する追加情報)と <strong>レスポンスボディ</strong> (Webページを表現するHTMLドキュメント)を返信する。
+ただし、今回作っているWebサーバでは、ヘッダを生成せずにただボディだけを返す。</p>
+
+<p><strong>レスポンスボディ</strong> の一例を示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+    Sorry dudez, I don&#39;t have any LOLZ for you today :(
+  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span></code></pre></div>
+<h3 id="リクエストパラメータ">リクエストパラメータ</h3>
+
+<p>ここで、Webサイトに次のログインフォームを作ることを考える。</p>
+
+<pre><code>--------------------------------
+| userid    [                ] |
+| password  [                ] |
+|                     [submit] |
+--------------------------------
+</code></pre>
+
+<p>サイトを訪れた人がSubmitボタンをクリックすると、ブラウザはPOSTリクエストやGETリクエストをWebサーバに送信する。</p>
+
+<h4 id="postリクエストパラメータ">POSTリクエストパラメータ</h4>
+
+<p>POSTリクエストは前節で説明したGETリクエストによく似ている。
+ただ、POSTリクエストはサーバにあるデータに変更を加えたいときに使われる。</p>
+
+<p>今のログインフォームの例では、訪問者がフォームのテキストフィールドに記入したユーザIDとパスワードをサーバに送る必要がある。
+フィールドに記入された値は、POSTリクエストの <strong>リクエストパラメータ</strong> として送られる。
+つまり、POSTリクエストヘッダの後ろにある、リクエストボディに当たる部分が使われる。</p>
+
+<p>次に、このログインフォームによって送られるPOSTリクエストの例を示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-http" data-lang="http"><span class="nf">POST</span> <span class="nn">/lolcats.html</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="n">Host</span><span class="o">:</span> <span class="l">www.mywebsite.com</span>
+<span class="n">User-Agent</span><span class="o">:</span> <span class="l">Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.5)</span>
+<span class="n">Accept</span><span class="o">:</span> <span class="l">text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</span>
+<span class="n">Accept-Language</span><span class="o">:</span> <span class="l">en-us,en;q=0.5</span>
+<span class="n">Accept-Encoding</span><span class="o">:</span> <span class="l">gzip,deflate</span>
+<span class="n">Accept-Charset</span><span class="o">:</span> <span class="l">ISO-8859-1,utf-8;q=0.7,*;q=0.7</span>
+<span class="n">Keep-Alive</span><span class="o">:</span> <span class="l">300</span>
+<span class="n">Connection</span><span class="o">:</span> <span class="l">keep-alive</span>
+<span class="n">Content-Length</span><span class="o">:</span> <span class="l">39</span>
+
+<span class="g">userid=foo&amp;password=supersecretpassword</span></code></pre></div>
+<p>最後の行は、リクエストパラメータである。<br />
+POSTリクエストのヘッダに追加の情報が付加されている。
+Content-Lengthは、リクエストのボディに含まれるデータの長さを表す。
+ここではContent-Length: 39となっているので、リクエストパラメータの大きさが39バイトであることをサーバに知らせている。</p>
+
+<h4 id="getリクエストパラメータ">GETリクエストパラメータ</h4>
+
+<p>リクエストパラメータは主としてPOSTリクエストでサーバにデータを送るために使われている。
+しかし、GETリクエストにもリクエストパラメータを入れることもできる。
+POSTリクエストでは、パラメータはリクエストボディの中に隠されているが、GETリクエストでは、パラメータはリクエストのURLに含まれる。</p>
+
+<p>例えば、Googleで&rdquo;dogs&rdquo;と検索したい場合、リクエストされるページのURLに<code>?q=dogs</code>といった値が入っている。
+これがリクエストパラメータである。</p>
+
+<p>ここで作るWebサーバは、POSTリクエストパラメータと、GETリクエストパラメータの両方とも扱えるようにする。</p>
+
+<h3 id="リクエストパラメータから値を取り出す">リクエストパラメータから値を取り出す</h3>
+
+<p>HTTPでフォームのデータを送る場合、通常のアルファベット以外の文字はHTTPエスケープコードと呼ばれる特殊形式に変換される(RFC3986)。
+エスケープコードを使うことで、HTTPフォーマットでは特別な文字を持つような文字もデータとして送ることができる。</p>
+
+<p>例えば、ユーザが<code>foo?</code>とテキストフィールドにタイプした場合、リクエストには<code>foo%3F</code>という文字列が送られる。
+ここではクエスチョンマークがエスケープされている。
+Webサーバは、このようなエスケープされた文字をデコードできなければならない。</p>
+
+<p>では、デコードする関数を次に示す。</p>
+
+<p><strong>英語版リクエストパラメータデコーダ</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">http-char</span> <span class="p">(</span><span class="nv">c1</span> <span class="nv">c2</span> <span class="nv">&amp;optional</span> <span class="p">(</span><span class="nv">default</span> <span class="sc">#\Space</span><span class="p">))</span>
+  <span class="s">&#34;16進数で表されたASCIIコードをデコードする
+</span><span class="s">   c1: 2桁目の数値となる文字
+</span><span class="s">   c2: 1桁目の数値となる文字&#34;</span>
+  <span class="c1">;; 16進数の文字列を整数へと変換する</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">code</span> <span class="p">(</span><span class="nv">parse-integer</span>
+                <span class="p">(</span><span class="nv">coerce</span> <span class="p">(</span><span class="nv">list</span> <span class="nv">c1</span> <span class="nv">c2</span><span class="p">)</span> <span class="ss">&#39;string</span><span class="p">)</span>
+                <span class="ss">:radix</span> <span class="mi">16</span>            <span class="c1">; 数の基数を指定</span>
+                <span class="ss">:junk-allowed</span> <span class="no">t</span><span class="p">)))</span>	 <span class="c1">; 数値の解釈を失敗した時、エラー通知ではなくnilを返す</span>
+    <span class="c1">;; 整数への変換が成功したら、そのコードに対応した文字を返す</span>
+    <span class="c1">;; 整数への変換が失敗したら、default値を返す</span>
+    <span class="p">(</span><span class="nv">if</span> <span class="nv">code</span>
+        <span class="p">(</span><span class="nv">code-char</span> <span class="nv">code</span><span class="p">)</span>
+        <span class="nv">default</span><span class="p">)))</span>
+
+
+<span class="p">(</span><span class="nv">defun</span> <span class="nv">decode-param-en</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span>
+  <span class="s">&#34;httpエスケープされているリクエストパラメータをデコードする(ASCIIコードのみ対応)&#34;</span>
+  <span class="c1">;; f: 文字のリストを再帰的に処理するローカル関数</span>
+  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+              <span class="p">(</span><span class="nv">when</span> <span class="nv">lst</span>
+                <span class="c1">;; 文字が%なら、次に2桁の16進数で表されるASCIIコードをデコードする</span>
+                <span class="c1">;; 文字が+なら、空白文字として解釈する</span>
+                <span class="c1">;; 他の文字なら、そのまま出力する</span>
+                <span class="p">(</span><span class="nv">case</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span>
+                    <span class="c1">;; リストの先頭の文字を処理し、残りの文字列（処理済み）と組み合わせる</span>
+                    <span class="p">(</span><span class="sc">#\%</span> <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">http-char</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">lst</span><span class="p">)</span> <span class="p">(</span><span class="nv">caddr</span> <span class="nv">lst</span><span class="p">))</span>
+                               <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">cdddr</span> <span class="nv">lst</span><span class="p">))))</span>
+                    <span class="p">(</span><span class="sc">#\+</span> <span class="p">(</span><span class="nv">cons</span> <span class="sc">#\space</span>
+                               <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">))))</span>
+                    <span class="p">(</span><span class="nv">otherwise</span> <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span>
+                               <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">))))))))</span>
+    <span class="c1">;; リストの要素を文字列として結合する</span>
+    <span class="p">(</span><span class="nv">coerce</span> <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">coerce</span> <span class="nv">s</span> <span class="ss">&#39;list</span><span class="p">))</span> <span class="ss">&#39;string</span><span class="p">)))</span></code></pre></div>
+<p><strong>日本語版リクエストパラメータデコーダ</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">;; 文字ごとではなく、バイトごとにデコードする(URLの正式なエンコーディング準拠)</span>
+<span class="p">(</span><span class="nv">defun</span> <span class="nv">http-byte</span> <span class="p">(</span><span class="nv">c1</span> <span class="nv">c2</span> <span class="nv">&amp;optional</span> <span class="p">(</span><span class="nv">default</span> <span class="sc">#\Space</span><span class="p">))</span>
+  <span class="s">&#34;16進数で表された文字をバイト数値にデコードする
+</span><span class="s">   c1: 2桁目の数値となる文字
+</span><span class="s">   c2: 1桁目の数値となる文字&#34;</span>
+  <span class="c1">;; 16進数の文字列を整数へと変換する</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">code</span> <span class="p">(</span><span class="nv">parse-integer</span>
+                <span class="p">(</span><span class="nv">coerce</span> <span class="p">(</span><span class="nv">list</span> <span class="p">(</span><span class="nv">code-char</span> <span class="nv">c1</span><span class="p">)</span> <span class="p">(</span><span class="nv">code-char</span> <span class="nv">c2</span><span class="p">))</span> <span class="ss">&#39;string</span><span class="p">)</span>
+                <span class="ss">:radix</span> <span class="mi">16</span>            <span class="c1">; 数の基数を指定</span>
+                <span class="ss">:junk-allowed</span> <span class="no">t</span><span class="p">)))</span>	 <span class="c1">; 数値の解釈を失敗した時、エラー通知ではなくnilを返す</span>
+    <span class="c1">;; 整数への変換が成功したら、そのコードに対応したバイト数値を返す</span>
+    <span class="c1">;; 整数への変換が失敗したら、default値を返す</span>
+    <span class="p">(</span><span class="nv">or</span> <span class="nv">code</span> <span class="nv">default</span><span class="p">)))</span>
+
+
+<span class="p">(</span><span class="nv">defun</span> <span class="nv">decode-param-ja</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span>
+  <span class="s">&#34;httpエスケープされているリクエストパラメータをデコードする(マルチバイト文字対応)&#34;</span>
+  <span class="c1">;; f: 文字のリストを再帰的に処理するローカル関数</span>
+  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">f</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+              <span class="p">(</span><span class="nv">when</span> <span class="nv">lst</span>
+                <span class="c1">;; 文字が%なら、次に2桁の16進数で表されるASCIIコードをデコードする</span>
+                <span class="c1">;; 文字が+なら、空白文字として解釈する</span>
+                <span class="c1">;; 他の文字なら、そのまま出力する</span>
+                <span class="p">(</span><span class="nv">case</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span>
+                    <span class="c1">;; リストの先頭の文字を処理し、残りの文字列（処理済み）と組み合わせる</span>
+                    <span class="p">(</span><span class="o">#.</span><span class="p">(</span><span class="nv">char-code</span> <span class="sc">#\%</span><span class="p">)</span> <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">http-byte</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">lst</span><span class="p">)</span> <span class="p">(</span><span class="nv">caddr</span> <span class="nv">lst</span><span class="p">))</span>
+                                             <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">cdddr</span> <span class="nv">lst</span><span class="p">))))</span>
+                    <span class="p">(</span><span class="o">#.</span><span class="p">(</span><span class="nv">char-code</span> <span class="sc">#\+</span><span class="p">)</span> <span class="p">(</span><span class="nv">cons</span> <span class="o">#.</span><span class="p">(</span><span class="nv">char-code</span> <span class="sc">#\space</span><span class="p">)</span>
+                                             <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">))))</span>
+                    <span class="p">(</span><span class="nv">otherwise</span> <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span>
+                               <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">))))))))</span>
+    <span class="c1">;; リストの要素を文字列として結合する</span>
+    <span class="p">(</span><span class="nv">ext:convert-string-from-bytes</span>
+      <span class="p">(</span><span class="nv">coerce</span> <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">coerce</span> <span class="p">(</span><span class="nv">ext:convert-string-to-bytes</span> <span class="nv">s</span> <span class="nv">charset:utf-8</span><span class="p">)</span> <span class="ss">&#39;list</span><span class="p">))</span> <span class="ss">&#39;vector</span><span class="p">)</span>
+      <span class="nv">charset:utf-8</span><span class="p">)))</span></code></pre></div>
+<p><strong>NOTE:</strong> CLISPで端末のエンコーディングを設定するには、下記コマンドを使う。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">;; charsetには下記などが使える。</span>
+<span class="c1">;; charset:utf-8</span>
+<span class="c1">;; charset:euc-jp</span>
+<span class="c1">;; charset:shift-jis</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">setf</span> <span class="vg">*terminal-encoding*</span> <span class="nv">charset:utf-8</span><span class="p">)</span></code></pre></div>
+<p><strong>NOTE:</strong> Webサーバで日本語を表示するためには、ソケットの文字エンコーディングも指定する必要がある。
+<code>serve</code>コマンド（後述）を起動する前に、REPL上で次のコマンドを実行すること。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">setf</span> <span class="vg">*default-file-encoding*</span> <span class="nv">charset:utf-8</span><span class="p">)</span>
+<span class="err">#</span><span class="nv">&lt;ENCODING</span> <span class="nv">CHARSET:UTF-8</span> <span class="ss">:UNIX&gt;</span></code></pre></div>
+<p><strong>NOTE:</strong> ここで扱っているHTTPエスケープコードは、Lisp文字列のエスケープ文字とは無関係。</p>
+
+<h3 id="リクエストパラメータのリストをデコードする">リクエストパラメータのリストをデコードする</h3>
+
+<p>リクエストパラメータには、&rdquo;name=bob&amp;age=25&amp;gender=male&rdquo;といった具合に、名前/値の組が複数含まれている。<br />
+このようなパラメータは、Webページの末尾にもよく含まれている。<br />
+ここでは、これらの組をリストとして取り出す。<br />
+データ構造としては連想リスト(alist)と同じである。
+そこで、リクエストパラメータの文字列を解釈してalistを返す関数を作る。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">parse-params</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span>
+  <span class="s">&#34;リクエストパラメータのalistを返す
+</span><span class="s">   s: リクエストパラメータの文字列
+</span><span class="s">   ret: リクエストパラメータのalist&#34;</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">i1</span> <span class="p">(</span><span class="nv">position</span> <span class="sc">#\=</span> <span class="nv">s</span><span class="p">))</span>	<span class="c1">; リクエストパラメータ中の=の位置</span>
+        <span class="p">(</span><span class="nv">i2</span> <span class="p">(</span><span class="nv">position</span> <span class="sc">#\&amp;</span> <span class="nv">s</span><span class="p">)))</span>  <span class="c1">; リクエストパラメータ中の&amp;の位置</span>
+    <span class="p">(</span><span class="nv">cond</span> <span class="p">(</span><span class="nv">i1</span> <span class="p">(</span><span class="nv">cons</span>	<span class="c1">; 名前と値の各コンスセルをコンスする</span>
+                <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">intern</span> <span class="p">(</span><span class="nv">string-upcase</span> <span class="p">(</span><span class="nv">subseq</span> <span class="nv">s</span> <span class="mi">0</span> <span class="nv">i1</span><span class="p">)))</span>	<span class="c1">; car部：名前をシンボルに変換したもの</span>
+                      <span class="p">(</span><span class="nv">decode-param</span> <span class="p">(</span><span class="nv">subseq</span> <span class="nv">s</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">i1</span><span class="p">)</span> <span class="nv">i2</span><span class="p">)))</span>		<span class="c1">; cdr部：値のhttpエスケープをデコードしたもの</span>
+                <span class="p">(</span><span class="nv">and</span> <span class="nv">i2</span> <span class="p">(</span><span class="nv">parse-params</span> <span class="p">(</span><span class="nv">subseq</span> <span class="nv">s</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">i2</span><span class="p">))))))</span>	<span class="c1">; 残りのリクエストパラメータに対して処理</span>
+          <span class="p">((</span><span class="nv">equal</span> <span class="nv">s</span> <span class="s">&#34;&#34;</span><span class="p">)</span> <span class="no">nil</span><span class="p">)</span>	<span class="c1">; リクエストパラメータが空になったらリストを閉じるためにnilを返す</span>
+          <span class="p">(</span><span class="no">t</span> <span class="nv">s</span><span class="p">))))</span>	<span class="c1">; リクエストパラメータの書式ではない文字列の場合、文字列をそのまま返す</span></code></pre></div>
+<p><code>decode-param</code>では、文字列を文字のリストとして変換してから処理した。
+<code>parse-params</code>では、文字列をそのまま扱う。</p>
+
+<p><code>position</code>関数は、文字列から指定した文字を探してその位置を返す関数である。
+これを使って、渡された文字列から<code>&amp;</code>と<code>=</code>の位置を求めている。</p>
+
+<p><code>i1</code>が<code>nil</code>でない、つまり、<code>=</code>が見つかったら、それは文字列中に名前/値のペアが見つかったということになる。
+この場合、<code>subseq</code>を使って名前と値それぞれを切り出す。
+名前部分については<code>intern</code>関数を使って文字列をLispのシンボルに変換する。
+値部分についてはhttpエスケープをデコードする。</p>
+
+<p>これらを実行すると、次のような結果になる。
+このようにリクエストのパラメータををalistに治すことで、後から特定のパラメータの値を取り出しやすくなる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">parse-params</span> <span class="s">&#34;name=bob&amp;age=25&amp;gender=male&#34;</span><span class="p">)</span>
+<span class="p">((</span><span class="nv">NAME</span> <span class="o">.</span> <span class="s">&#34;bob&#34;</span><span class="p">)</span> <span class="p">(</span><span class="nv">AGE</span> <span class="o">.</span> <span class="s">&#34;25&#34;</span><span class="p">)</span> <span class="p">(</span><span class="nv">GENDER</span> <span class="o">.</span> <span class="s">&#34;male&#34;</span><span class="p">))</span></code></pre></div>
+<p><strong>NOTE:</strong> 上の<code>parse-param</code>関数では、簡略化のために、名前部分がエスケープされている可能性を無視していることに注意。</p>
+
+<h3 id="リクエストヘッダを解析する">リクエストヘッダを解析する</h3>
+
+<h4 id="リクエストラインを解析する">リクエストラインを解析する</h4>
+
+<p>次は、リクエストヘッダの最初の行(リクエストライン)である、<code>GET /lolcats.html HTTP/1.1</code>といった文字列を解析する。
+次に示す<code>parse-request-line</code>関数によって行う。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">parse-request-line</span> <span class="p">(</span><span class="nv">s</span><span class="p">)</span>
+  <span class="s">&#34;リクエストヘッダのリクエストラインからURLを取り出す
+</span><span class="s">   s: リクエストライン
+</span><span class="s">   ret: url本体部とリクエストパラメータ部とのコンスセル&#34;</span>
+  <span class="p">(</span><span class="nv">let*</span> <span class="p">((</span><span class="nv">url</span> <span class="p">(</span><span class="nv">subseq</span> <span class="nv">s</span>
+                      <span class="p">(</span><span class="nv">+</span> <span class="mi">2</span> <span class="p">(</span><span class="nv">position</span> <span class="sc">#\space</span> <span class="nv">s</span><span class="p">))</span>          <span class="c1">; スペース位置から2つ進んだ箇所(`/`の次)</span>
+                      <span class="p">(</span><span class="nv">position</span> <span class="sc">#\space</span> <span class="nv">s</span> <span class="ss">:from-end</span> <span class="no">t</span><span class="p">)))</span>  <span class="c1">; 文字列の後ろから見てスペースのある箇所</span>
+         <span class="p">(</span><span class="nv">x</span> <span class="p">(</span><span class="nv">position</span> <span class="sc">#\?</span> <span class="nv">url</span><span class="p">)))</span>  <span class="c1">; URL中のリクエストパラメータの開始位置</span>
+    <span class="p">(</span><span class="nv">if</span> <span class="nv">x</span>    <span class="c1">; リクエストパラメータがある</span>
+        <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">subseq</span> <span class="nv">url</span> <span class="mi">0</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nv">parse-params</span> <span class="p">(</span><span class="nv">subseq</span> <span class="nv">url</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">x</span><span class="p">))))</span>    <span class="c1">; url本体部とリクエストパラメータ部とのコンスセル</span>
+        <span class="p">(</span><span class="nv">cons</span> <span class="nv">url</span> <span class="o">&#39;</span><span class="p">()))))</span>    <span class="c1">; url本体部と空リストとのコンスセル</span></code></pre></div>
+<p>この関数では、まず、リクエストヘッダのリクエストラインを受け取り、最初にスペースを探し出して、URL部分を抜き出す。<br />
+次に <code>?</code>を探し、もし存在すればそれ以降はリクエストパラメータなので、切り出して<code>parse-params</code>に渡す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">GET</span> <span class="nv">/lolcats.html</span> <span class="nv">HTTP/1.1</span>
+     <span class="nv">^^^^^^^^^^^^</span>
+     <span class="nv">car部</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">parse-request-line</span> <span class="s">&#34;GET /lolcats.html HTTP/1.1&#34;</span><span class="p">)</span>
+<span class="p">(</span><span class="s">&#34;lolcats.html&#34;</span><span class="p">)</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">parse-request-line</span> <span class="s">&#34;GET /lolcats.html?extra-funny=yes HTTP/1.1&#34;</span><span class="p">)</span>
+<span class="p">(</span><span class="s">&#34;lolcats.html&#34;</span> <span class="p">(</span><span class="nv">EXTRA-FUNNY</span> <span class="o">.</span> <span class="s">&#34;yes&#34;</span><span class="p">))</span></code></pre></div>
+<h4 id="httpヘッダフィールドを解析する">HTTPヘッダフィールドを解析する</h4>
+
+<p>次に、リクエストヘッダのHTTPヘッダフィールドを処理する。
+次に示す<code>get-header</code>は、リクエストヘッダの残りの行を読み込んでalistにして返す関数である。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">get-header</span> <span class="p">(</span><span class="nv">stream</span><span class="p">)</span>
+  <span class="s">&#34;リクエストヘッダのHTTPヘッダフィールドからリクエストパラメータを返す
+</span><span class="s">   stream: HTTPヘッダフィールド
+</span><span class="s">   ret: リクエストパラメータと値とのコンスセル&#34;</span>
+  <span class="p">(</span><span class="nv">let*</span> <span class="p">((</span><span class="nv">s</span> <span class="p">(</span><span class="nv">read-line</span> <span class="nv">stream</span><span class="p">))</span>  <span class="c1">; 入力ストリームから得た文字列1行分</span>
+         <span class="p">(</span><span class="nv">h</span> <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">i</span> <span class="p">(</span><span class="nv">position</span> <span class="sc">#\:</span> <span class="nv">s</span><span class="p">)))</span>  <span class="c1">; コロンの位置</span>
+              <span class="p">(</span><span class="nv">when</span> <span class="nv">i</span>	<span class="c1">; コロンがある場合、コロンを区切りとしたリクエスト名/値のコンスセルを作る</span>
+                <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">intern</span> <span class="p">(</span><span class="nv">string-upcase</span> <span class="p">(</span><span class="nv">subseq</span> <span class="nv">s</span> <span class="mi">0</span> <span class="nv">i</span><span class="p">)))</span>
+                      <span class="p">(</span><span class="nv">subseq</span> <span class="nv">s</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">i</span> <span class="mi">2</span><span class="p">)))))))</span>
+    <span class="c1">;; コンスセルができたら、残りのリクエストも処理する</span>
+    <span class="c1">;; コンスセルができなかったら、それ以降はリクエストは無いなずなので、処理を終わる</span>
+    <span class="p">(</span><span class="nv">when</span> <span class="nv">h</span>
+      <span class="p">(</span><span class="nv">cons</span> <span class="nv">h</span> <span class="p">(</span><span class="nv">get-header</span> <span class="nv">stream</span><span class="p">)))))</span></code></pre></div>
+<h4 id="文字列ストリームを使って-get-header-をテストする">文字列ストリームを使って<code>get-header</code>をテストする</h4>
+
+<p><code>get-header</code>関数はソケットストリームから直接データを読み込む想定である。
+したがって、そのままではREPLでテストできない……と思うかもしれない。<br />
+ここで、前章でやったことを利用する。</p>
+
+<p>Common Lispでは、ソケット以外にも異なる種類のリソースを扱う何種類化のストリームが有る。
+ストリームはどれも同じインターフェースでアクセスできるため、ソケットストリームの代わりに文字列ストリームを渡して、<code>get-header</code>をテストできる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">get-header</span> <span class="p">(</span><span class="nv">make-string-input-stream</span> <span class="s">&#34;foo: 1
+</span><span class="s">bar: abc,123
+</span><span class="s">
+</span><span class="s">&#34;</span><span class="p">))</span>
+<span class="p">((</span><span class="nv">FOO</span> <span class="o">.</span> <span class="s">&#34;1&#34;</span><span class="p">)</span> <span class="p">(</span><span class="nv">BAR</span> <span class="o">.</span> <span class="s">&#34;abc,123&#34;</span><span class="p">))</span></code></pre></div>
+<p><code>make-string-input-stream</code>関数で、リテラル文字列から入力ストリームを作り出している。
+この例では、文字列は2つのキー(fooとbar)を含み、HTTPヘッダの形式通り、空行で終わっている。
+(Common Lispではリテラル文字列を複数行に渡って書くことができる。)</p>
+
+<h3 id="postリクエストの場合-リクエストボディの解析">(POSTリクエストの場合)リクエストボディの解析</h3>
+
+<p>POSTリクエストでは、パラメータはリクエストヘッダの後、リクエストボディやリクエストコンテントと呼ばれる領域を使って送られる。<br />
+次の<code>get-content-params</code>関数によって、そこからパラメータを取り出す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">get-content-params</span> <span class="p">(</span><span class="nv">stream</span> <span class="nv">header</span><span class="p">)</span>
+  <span class="s">&#34;リクエストヘッダの後にあるリクエストボディから、パラメータを取り出す
+</span><span class="s">   stream: ストリーム
+</span><span class="s">   header: HTTPヘッダフィールドの連想リスト&#34;</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">length</span> <span class="p">(</span><span class="nv">cdr</span> <span class="p">(</span><span class="nv">assoc</span> <span class="ss">&#39;content-length</span> <span class="nv">header</span><span class="p">))))</span>  <span class="c1">; HTTPヘッダフィールドからコンテンツの長さを取得する</span>
+    <span class="c1">;; もしcontent-lengthがHTTPヘッダフィールドにあれば、リクエストパラメータの連想リストを作る</span>
+    <span class="p">(</span><span class="nv">when</span> <span class="nv">length</span>
+      <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">content</span> <span class="p">(</span><span class="nv">make-string</span> <span class="p">(</span><span class="nv">parse-integer</span> <span class="nv">length</span><span class="p">))))</span>  <span class="c1">; 与えられた長さの文字列を`make-string`で作成する</span>
+        <span class="p">(</span><span class="nv">read-sequence</span> <span class="nv">content</span> <span class="nv">stream</span><span class="p">)</span>  <span class="c1">; ストリームからデータを読み込んで、contentを満たす</span>
+        <span class="p">(</span><span class="nv">parse-params</span> <span class="nv">content</span><span class="p">)))))</span>      <span class="c1">; リクエストパラメータの連想リストを作る</span></code></pre></div>
+<p>この関数は、リクエストボディに含まれるパラメータの長さを示す<code>content-hength</code>ヘッダを探す。
+もし<code>content-length</code>ヘッダがリクエストヘッダに見つかれば、処理すべきリクエストパラメータが存在するということになる。
+その場合、与えられた長さの文字列を<code>make-string</code>で作成し、<code>read-sequence</code>を使ってストリームからデータを読み込む。
+最後に、読み込まれた文字列に対して<code>parse-params</code>を使って、リクエストパラメータの連想リストを作る。</p>
+
+<h3 id="最後の仕上げのサーバ関数">最後の仕上げのサーバ関数</h3>
+
+<p>ここまでで必要な機能は実装した。
+ここでは、Webサーバの核となる<code>serve</code>関数を実装する。
+この関数は、引数にとったリクエストハンドラに、パス、HTTPヘッダフィールド、パラメータを使った処理を委譲する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">serve</span> <span class="p">(</span><span class="nv">request-handler</span><span class="p">)</span>
+  <span class="s">&#34;request-handler: リクエストハンドラ。解析したリクエストを使う。&#34;</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">socket</span> <span class="p">(</span><span class="nv">socket-server</span> <span class="mi">8080</span><span class="p">)))</span>  <span class="c1">; サーバのポート番号</span>
+    <span class="p">(</span><span class="nv">unwind-protect</span>  <span class="c1">; 例外時にソケットが確実に閉じられるようにする</span>
+      <span class="p">(</span><span class="nv">loop</span> <span class="p">(</span><span class="nv">with-open-stream</span> <span class="p">(</span><span class="nv">stream</span> <span class="p">(</span><span class="nv">socket-accept</span> <span class="nv">socket</span><span class="p">))</span>  <span class="c1">; 接続が確立したらソケットオブジェクトをstreamにセットする</span>
+              <span class="p">(</span><span class="nv">let*</span> <span class="p">((</span><span class="nv">url</span>    <span class="p">(</span><span class="nv">parse-request-line</span> <span class="p">(</span><span class="nv">read-line</span> <span class="nv">stream</span><span class="p">)))</span>  <span class="c1">; streamからURLとリクエストパラメータを得る</span>
+                     <span class="p">(</span><span class="nv">path</span>   <span class="p">(</span><span class="nv">car</span> <span class="nv">url</span><span class="p">))</span>            <span class="c1">; URLのパス部</span>
+                     <span class="p">(</span><span class="nv">header</span> <span class="p">(</span><span class="nv">get-header</span> <span class="nv">stream</span><span class="p">))</span>  <span class="c1">; HTTPヘッダフィールド</span>
+                     <span class="p">(</span><span class="nv">params</span> <span class="p">(</span><span class="nv">append</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">url</span><span class="p">)</span>     <span class="c1">; URL末尾(GET用)とリクエストボディ(POST用)のリクエストパラメータ</span>
+                                     <span class="p">(</span><span class="nv">get-content-params</span> <span class="nv">stream</span> <span class="nv">header</span><span class="p">)))</span>
+                     <span class="p">(</span><span class="vg">*standard-output*</span> <span class="nv">stream</span><span class="p">))</span>   <span class="c1">; ストリームを標準出力に設定</span>
+                <span class="p">(</span><span class="nv">funcall</span> <span class="nv">request-handler</span> <span class="nv">path</span> <span class="nv">header</span> <span class="nv">params</span><span class="p">))))</span>  <span class="c1">; </span>
+      <span class="p">(</span><span class="nv">socket-server-close</span> <span class="nv">socket</span><span class="p">))))</span></code></pre></div>
+<h2 id="13-3-動的なwebサイトを作る">13.3 動的なWebサイトを作る</h2>
+
+<p>ここまでで作ったWebサーバを動かしてみる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">hello-request-handler</span> <span class="p">(</span><span class="nv">path</span> <span class="nv">header</span> <span class="nv">params</span><span class="p">)</span>
+  <span class="s">&#34;名前を問いかけて、得られたその名前を使って挨拶する
+</span><span class="s">   CAUTION! リクエストパラメータをサニタイズしていないため、WANでの使用不可
+</span><span class="s">   path: URLのパス部分
+</span><span class="s">   header: HTTPヘッダフィールド
+</span><span class="s">   params: URL末尾(GET用)とリクエストボディ(POST用)のリクエストパラメータ
+</span><span class="s">   ret: レスポンスするHTMLドキュメント&#34;</span>
+  <span class="p">(</span><span class="nv">declare</span> <span class="p">(</span><span class="nv">ignore</span> <span class="nv">header</span><span class="p">))</span>  <span class="c1">; 本関数ではHTTPヘッダフィールドは無視する</span>
+  <span class="c1">;; &#34;/greeting&#34;ページのみ提供する</span>
+  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">equal</span> <span class="nv">path</span> <span class="s">&#34;greeting&#34;</span><span class="p">)</span>
+      <span class="c1">;; ページが&#34;greeting&#34;ならパラメータに合わせて表示処理を行う</span>
+      <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">name</span> <span class="p">(</span><span class="nv">assoc</span> <span class="ss">&#39;name</span> <span class="nv">params</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">not</span> <span class="nv">name</span><span class="p">)</span>
+            <span class="c1">;; パラメータにnameが無ければ、もう一度名前を問いかける</span>
+            <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;&lt;html&gt;&lt;form&gt;What is your name?&lt;input name=&#39;name&#39; /&gt;&lt;/form&gt;&lt;/html&gt;&#34;</span><span class="p">)</span>
+            <span class="c1">;; パラメータにnameがあれば、挨拶を表示する</span>
+            <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;&lt;html&gt;Nice to meet you, ~a!&lt;/html&gt;&#34;</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">name</span><span class="p">))))</span>
+      <span class="c1">;; ページが&#34;greeting&#34;でなければ、要求されたページが無い旨を表示する</span>
+      <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;Sorry... I don&#39;t know that page.&#34;</span><span class="p">)))</span></code></pre></div>
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

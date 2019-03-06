@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>basic on Lazy Lambda</title>
+    <link>https://otaon.github.io/web/ja-jp/tag/basic/</link>
+    <description>Recent content in basic on Lazy Lambda</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Thu, 07 Mar 2019 00:00:00 +0900</lastBuildDate>
+    
+	<atom:link href="https://otaon.github.io/web/ja-jp/tag/basic/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Common Lisp リスト操作方法を学ぶ</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp-%E3%83%AA%E3%82%B9%E3%83%88%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95%E3%82%92%E5%AD%A6%E3%81%B6/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp-%E3%83%AA%E3%82%B9%E3%83%88%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95%E3%82%92%E5%AD%A6%E3%81%B6/</guid>
+      <description>目的 この記事では、リスト操作において基本的な関数の使い方について説明する。 関数の説明 member関数 リスト中に、或る要素が含まれているか否か</description>
+    </item>
+    
+    <item>
+      <title>Common Lisp 基本構文を学ぶ</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp-%E5%9F%BA%E6%9C%AC%E6%A7%8B%E6%96%87%E3%82%92%E5%AD%A6%E3%81%B6/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp-%E5%9F%BA%E6%9C%AC%E6%A7%8B%E6%96%87%E3%82%92%E5%AD%A6%E3%81%B6/</guid>
+      <description>本記事の構成 001_Common-Lisp-基本構文説明.md 002_Common-Lisp-リスト操作説明.md 003_Lisp処理系起動</description>
+    </item>
+    
+    <item>
+      <title>Common Lisp 文字列操作方法を学ぶ</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp-%E6%96%87%E5%AD%97%E5%88%97%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95%E3%82%92%E5%AD%A6%E3%81%B6/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp-%E6%96%87%E5%AD%97%E5%88%97%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95%E3%82%92%E5%AD%A6%E3%81%B6/</guid>
+      <description>本記事の目的 この記事では、文字列表示、および、文字列操作において基本的な関数の使い方について説明する。 文字列出力用の関数 print関数 pri</description>
+    </item>
+    
+    <item>
+      <title>書籍 実践 Common Lisp 第5章 関数</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC5%E7%AB%A0-%E9%96%A2%E6%95%B0/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC5%E7%AB%A0-%E9%96%A2%E6%95%B0/</guid>
+      <description>5.1 新しい関数の定義 (defun name (parameter*) &amp;#34;省略可能なドキュメンテーション文字列&amp;#34; body-form*) 5.2 関数のパラメータリスト parameterの部分は、関数の</description>
+    </item>
+    
+  </channel>
+</rss>

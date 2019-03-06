@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>Common Lisp 基本構文を学ぶ · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本記事の構成 001_Common-Lisp-基本構文説明.md 002_Common-Lisp-リスト操作説明.md 003_Lisp処理系起動" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp-%E5%9F%BA%E6%9C%AC%E6%A7%8B%E6%96%87%E3%82%92%E5%AD%A6%E3%81%B6/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="Common Lisp 基本構文を学ぶ" />
+<meta property="og:description" content="本記事の構成 001_Common-Lisp-基本構文説明.md 002_Common-Lisp-リスト操作説明.md 003_Lisp処理系起動" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp-%E5%9F%BA%E6%9C%AC%E6%A7%8B%E6%96%87%E3%82%92%E5%AD%A6%E3%81%B6/" />
+<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="Common Lisp 基本構文を学ぶ">
+<meta itemprop="description" content="本記事の構成 001_Common-Lisp-基本構文説明.md 002_Common-Lisp-リスト操作説明.md 003_Lisp処理系起動">
+
+
+<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="3396">
+
+
+
+<meta itemprop="keywords" content="lisp,basic," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Common Lisp 基本構文を学ぶ"/>
+<meta name="twitter:description" content="本記事の構成 001_Common-Lisp-基本構文説明.md 002_Common-Lisp-リスト操作説明.md 003_Lisp処理系起動"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">Common Lisp 基本構文を学ぶ</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-03-07
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/basic/">basic</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/lisp/">lisp</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h1 id="本記事の構成">本記事の構成</h1>
+
+<ul>
+<li>001_Common-Lisp-基本構文説明.md</li>
+<li>002_Common-Lisp-リスト操作説明.md</li>
+<li>003_Lisp処理系起動時のディレクトリパス-カレントディレクトリパスを取得-設定する.md</li>
+</ul>
+
+<h1 id="目的">目的</h1>
+
+<ul>
+<li>Common Lisp の基本的なシンタックスをすぐに確認するため。</li>
+<li>自分用の備忘録。</li>
+</ul>
+
+<h1 id="前提条件">前提条件</h1>
+
+<ul>
+<li>Common Lisp および Lisp が、括弧だらけのプログラミング言語だと知っていること。<br /></li>
+<li>Common Lisp の実行環境を持っていること。(CLisp、Steel Bank Common Lisp など)</li>
+</ul>
+
+<h1 id="lisp-listprocessor-list構造を理解しよう">Lisp = ListProcessor (List構造を理解しよう)</h1>
+
+<h2 id="lispとast">LispとAST</h2>
+
+<p>LispはAST(抽象構文木)を直接記述するかの如くプログラミングする言語である。
+換言すれば、ソースコードが殆どASTと等価であると見做せる。
+また、Lispは、そのインタプリタによって、逐次的にソースコードを読み込み、評価し、表示する。
+そして、この手順を繰り返してソースコード全体を処理する。
+この仕組みを、REPL(Read–Eval–Print Loop)という。</p>
+
+<h2 id="コンスセル">コンスセル</h2>
+
+<p>上記のとおり、Lispのソースコードは殆どASTであるから、データ構造も命令と同様の表現を取る。
+即ち、全ての表現を同様に記述できる。
+これを実現するために、Lispでは「コンスセル」という概念を導入している。
+これは、単純化すれば、2つの値を代入できる<strong>箱</strong>である。
+視覚化するならば、<code>[a|b]</code>のようになる。このaおよびbに、値が入る。
+ここで、値とは、シンボルへの参照と、コンスセルへの参照を意味する。
+即ち、Lispでは、ソースコードのアトムとしてシンボルがあり、それらが構造を成す際にコンスセルを用いているといえる。</p>
+
+<h2 id="リスト表現の例">リスト表現の例</h2>
+
+<p>下記に、Lispに於けるリスト表現を樹形図として表す。</p>
+
+<pre><code>'(A)
+*--nil
+|
+A
+
+'((A B) (C D))
+*----------*-----nil
+|          |
+*--*--nil  *--*--nil
+|  |       |  |
+A  B       C  D
+</code></pre>
+
+<h1 id="リストの記述方法">リストの記述方法</h1>
+
+<p>リストは<code>(list hoge foo bar)</code>の様に記述する。
+またはquote(<code>'</code>)を使って、<code>'(hoge foo bar)</code>の様に記述する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span>
+<span class="c1">; =&gt; (A B C)</span>
+
+<span class="o">```</span><span class="nv">cl</span>
+<span class="p">(</span><span class="nv">defun</span> <span class="nv">describe-path</span> <span class="p">(</span><span class="nv">edge</span><span class="p">)</span>
+ <span class="o">`</span><span class="p">(</span><span class="nv">there</span> <span class="nv">is</span> <span class="nv">a</span> <span class="o">,</span><span class="p">(</span><span class="nv">caddr</span> <span class="nv">edge</span><span class="p">)</span> <span class="nv">going</span> <span class="o">,</span><span class="p">(</span><span class="nv">cadr</span> <span class="nv">edge</span><span class="p">)</span> <span class="nv">from</span> <span class="nv">here.</span><span class="p">))</span>
+
+<span class="o">`</span><span class="p">(</span><span class="nv">describe-path</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">garden</span> <span class="nv">west</span> <span class="nv">door</span><span class="p">))</span>
+<span class="c1">; =&gt; (THERE IS A DOOR GOING WEST FROM HERE.)</span></code></pre></div>
+<h1 id="コンスセル-リストの操作方法">コンスセル・リストの操作方法</h1>
+
+<p>下記に、コンスセル、および、リストの操作方法を示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">cons</span> <span class="ss">&#39;x</span> <span class="ss">&#39;y</span><span class="p">)</span>
+<span class="c1">; =&gt; (x . y)</span>
+<span class="p">(</span><span class="nv">cons</span> <span class="ss">&#39;x</span> <span class="no">nil</span><span class="p">)</span>
+<span class="c1">; =&gt; (X)</span>
+<span class="p">(</span><span class="nv">cons</span> <span class="ss">&#39;x</span> <span class="p">())</span>
+<span class="c1">; =&gt; (X)</span>
+
+<span class="c1">; 先頭のスロットのデータを取り出す</span>
+<span class="p">(</span><span class="nv">car</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span><span class="p">))</span>
+<span class="c1">; =&gt; A</span>
+
+<span class="c1">; 2番めのスロットのデータを取り出す</span>
+<span class="p">(</span><span class="nv">cdr</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="nv">d</span><span class="p">))</span>
+<span class="c1">; =&gt; (b c d)</span>
+
+<span class="c1">; car cdr を同時に行う関数</span>
+<span class="p">(</span><span class="nv">cadr</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">))</span>
+<span class="nv">=</span> <span class="p">(</span><span class="nv">car</span> <span class="p">(</span><span class="nv">cdr</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)))</span>
+<span class="c1">; =&gt; &#39;B</span></code></pre></div>
+<h1 id="キーワードシンボル">キーワードシンボル</h1>
+
+<p>コロンを先頭に付けたシンボルの使い方の1つ。
+シンボルが、そのシンボルそのままの名前を評価値に持つ。
+用途は以下がある。</p>
+
+<ul>
+<li>普通の変数により、値を持たせる</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">cigar</span> <span class="mi">5</span><span class="p">))</span>
+   <span class="nv">cigar</span><span class="p">)</span>
+<span class="c1">; =&gt; 5</span>
+
+<span class="ss">:cigar</span>
+<span class="c1">; =&gt; CIGAR</span></code></pre></div>
+<ul>
+<li>定数として使う</li>
+</ul>
+
+<p>定数として使うと、Lispが処理をより効率的に最適化してくれる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="ss">:cigar</span> <span class="mi">5</span><span class="p">))</span>
+   <span class="ss">:cigar</span><span class="p">)</span>
+<span class="c1">; =&gt; LET :CIGAR is constant ...</span></code></pre></div>
+<h1 id="変数">変数</h1>
+
+<p>Lispに於ける変数は、他の言語と同様に、グローバル変数とローカル変数が存在する。</p>
+
+<h3 id="グローバル変数">グローバル変数</h3>
+
+<table>
+<thead>
+<tr>
+<th>上書き</th>
+<th>定義</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>する</td>
+<td><code>(defparameter *global-value* num)</code></td>
+</tr>
+
+<tr>
+<td>しない</td>
+<td><code>(defvar *global-value* num)</code></td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="ローカル変数">ローカル変数</h3>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">variable-name1</span> <span class="nv">value1</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">variable-name2</span> <span class="nv">value2</span><span class="p">))</span>
+  <span class="o">...</span><span class="p">)</span></code></pre></div>
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">a</span> <span class="mi">5</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">b</span> <span class="mi">6</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">+</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">))</span></code></pre></div>
+<h2 id="関数">関数</h2>
+
+<p>Lispに於ける関数は、グローバル関数とローカル関数が存在する。</p>
+
+<h3 id="グローバル関数">グローバル関数</h3>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defun</span> <span class="nv">function-name</span> <span class="p">(</span><span class="nv">arguments</span><span class="p">)</span>
+  <span class="o">...</span><span class="p">)</span></code></pre></div>
+<p>例</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defun</span> <span class="nv">function-name</span> <span class="p">(</span><span class="nv">arguments</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">ash</span> <span class="p">(</span><span class="nv">+</span> <span class="vg">*small*</span> <span class="vg">*big*</span><span class="p">)</span> <span class="nv">-</span> <span class="mi">1</span><span class="p">))</span>
+<span class="c1">; (ash x n) := xを2進nビット左にずらす</span></code></pre></div>
+<h3 id="ローカル関数">ローカル関数</h3>
+
+<h4 id="基本的な定義方法">基本的な定義方法</h4>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">flet</span> <span class="p">((</span><span class="nv">function-name1</span> <span class="p">(</span><span class="nv">arguments</span><span class="p">)</span>
+        <span class="o">...</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">function-name2</span> <span class="p">(</span><span class="nv">arguments</span><span class="p">)</span>
+        <span class="o">...</span><span class="p">))</span>
+      <span class="o">...</span><span class="p">)</span></code></pre></div>
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">flet</span> <span class="nv">function-name</span> <span class="p">(</span><span class="nv">arguments</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">ash</span> <span class="p">(</span><span class="nv">+</span> <span class="vg">*small*</span> <span class="vg">*big*</span><span class="p">)</span> <span class="nv">-</span> <span class="mi">1</span><span class="p">))</span>
+<span class="c1">; (ash x n) := xを2進nビット左にずらす</span></code></pre></div>
+<h4 id="ローカル関数定義中-同じスコープで定義されるローカル関数を使う場合">ローカル関数定義中、同じスコープで定義されるローカル関数を使う場合</h4>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">function-name1</span> <span class="p">(</span><span class="nv">arguments</span><span class="p">)</span>
+       <span class="o">...</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">function-name2</span> <span class="p">(</span><span class="nv">arguments</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">function-name1</span> <span class="vg">*arguments*</span><span class="p">))</span>
+     <span class="o">...</span><span class="p">)</span></code></pre></div>
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">a</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">+</span> <span class="nv">n</span> <span class="mi">5</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">b</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+          <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">n</span><span class="p">)</span> <span class="mi">6</span><span class="p">)))</span>
+ <span class="p">(</span><span class="nv">b</span> <span class="mi">10</span><span class="p">))</span>
+<span class="c1">; =&gt; 21</span></code></pre></div>
+<h2 id="関数をパラメータとして渡す">関数をパラメータとして渡す</h2>
+
+<h3 id="functionパラメータ">functionパラメータ</h3>
+
+<p>下記の表記を使うことで、関数をパラメータとして渡すことができる。
+これを使って、<code>mapcar</code>関数などに使用できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="c1">; (方法1)</span>
+<span class="nf">#&#39;</span><span class="nv">関数名</span>
+
+<span class="c1">; (方法2)</span>
+<span class="p">(</span><span class="nv">function</span> <span class="nv">関数名</span><span class="p">)</span></code></pre></div>
+<h2 id="無名関数-lambda">無名関数(<code>Lambda</code>)</h2>
+
+<p>一連の処理を纏める。
+関数名を定義するまでもない場合に有効。</p>
+
+<p>構文:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">args</span><span class="p">)</span> <span class="p">(</span><span class="nv">procedure</span><span class="p">))</span>
+<span class="c1">; =&gt; &lt;FUNCTION :LAMBDA...&gt;</span></code></pre></div>
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="c1">; 下記のように通常どおり処理を纏めると関数名が必要となる。</span>
+<span class="p">(</span><span class="nv">defun</span> <span class="nv">half</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+   <span class="p">(</span><span class="nv">/</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">))</span>
+<span class="c1">; =&gt; &lt;FUNCTION :HALF...&gt;</span>
+
+<span class="c1">; 下記のように書けば関数名は不要となる。</span>
+<span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+   <span class="p">(</span><span class="nv">/</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">mapcar</span> <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span> <span class="p">(</span><span class="nv">/</span> <span class="nv">n</span> <span class="mi">2</span><span class="p">))</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">4</span> <span class="mi">6</span><span class="p">))</span>
+<span class="c1">; =&gt; (1 2 3)</span></code></pre></div>
+<h2 id="返り値が複数ある関数">返り値が複数ある関数</h2>
+
+<p>Lispでは、返り値を複数持つ関数が存在する。例えば<code>read-line</code>がそれにあたる。
+通常は1つ目の返り値しか使われない。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">read-line</span><span class="p">)</span>
+<span class="c1">; abc</span>
+<span class="c1">; =&gt; &#34;abc&#34;;</span>
+     <span class="nv">NIL</span></code></pre></div>
+<h3 id="複数の返り値を持つ関数の作成方法">複数の返り値を持つ関数の作成方法</h3>
+
+<p>下記のように<code>values</code>を用いる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">()</span>
+   <span class="p">(</span><span class="nv">values</span> <span class="mi">3</span> <span class="mi">7</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">foo</span><span class="p">)</span>
+<span class="c1">; =&gt; 3;</span>
+<span class="c1">;    7</span></code></pre></div>
+<h3 id="複数の返り値を受け取る方法">複数の返り値を受け取る方法</h3>
+
+<p><code>multiple-value-bind</code>を用いる。</p>
+
+<p><code>multiple-value-bind</code>の構文:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">multiple-value-bind</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">binding-vals</span><span class="p">)</span> <span class="p">(</span><span class="nv">func-call</span><span class="p">))</span></code></pre></div>
+<dl>
+<dt>'(binding-vals)</dt>
+<dd>(func-call)の返り値を束縛するための変数のリスト。</dd>
+<dt>(func-call)</dt>
+<dd>複数の返り値を持つ関数の呼び出し。</dd>
+</dl>
+
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">()</span>
+   <span class="p">(</span><span class="nv">values</span> <span class="mi">3</span> <span class="mi">7</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nv">multiple-value-bind</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span> <span class="p">(</span><span class="nv">foo</span><span class="p">)</span>
+   <span class="p">(</span><span class="nv">list</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">))</span>
+<span class="c1">; =&gt; ( 3 7)</span>
+
+<span class="c1">; fooの返り値を、aとbに束縛している。</span></code></pre></div>
+<h1 id="制御構文">制御構文</h1>
+
+<h2 id="条件分岐">条件分岐</h2>
+
+<h3 id="if"><code>if</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">審議を返すリスト</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">真の時に実行するリスト</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">偽の時に実行するリスト</span><span class="p">))</span></code></pre></div>
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
+  <span class="ss">&#39;yup</span>
+  <span class="ss">&#39;nop</span><span class="p">)</span>
+<span class="c1">; =&gt; YUP</span></code></pre></div>
+<h3 id="when"><code>when</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">when</span> <span class="p">(</span><span class="nv">条件式</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">処理1</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">処理2</span><span class="p">)</span>
+  <span class="o">...</span>
+  <span class="p">(</span><span class="nv">処理n</span><span class="p">))</span></code></pre></div>
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">when</span> <span class="p">(</span><span class="nv">oddp</span> <span class="mi">5</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">setf</span> <span class="vg">*number-is-odd*</span> <span class="no">t</span><span class="p">)</span>
+  <span class="ss">&#39;odd-number</span><span class="p">)</span>
+<span class="c1">; =&gt; ODD-NUMBER</span>
+<span class="vg">*number-is-odd*</span>
+<span class="c1">; =&gt; T</span></code></pre></div>
+<h3 id="unless"><code>unless</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">unless</span> <span class="p">(</span><span class="nv">条件式</span><span class="p">)</span>
+	<span class="p">(</span><span class="nv">処理1</span><span class="p">)</span>
+	<span class="p">(</span><span class="nv">処理2</span><span class="p">)</span>
+	<span class="o">...</span>
+	<span class="p">(</span><span class="nv">処理n</span><span class="p">))</span></code></pre></div>
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">unless</span> <span class="p">(</span><span class="nv">oddp</span> <span class="mi">4</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">setf</span> <span class="vg">*number-is-odd*</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="ss">&#39;even-number</span><span class="p">)</span>
+<span class="c1">; =&gt; EVEN-NUMBER</span>
+<span class="vg">*number-is-odd*</span>
+<span class="c1">; =&gt; nil</span></code></pre></div>
+<h3 id="progn"><code>progn</code></h3>
+
+<p>上記に示した<code>if</code>などの制御構文では、実行処理するリストが1つのみ持てる構造となっている。
+しかし、一般的には複数の処理を行いたいことが多い。
+prognは、中のリストを順繰りに評価して、最後の評価値をprognフォームの値として持つ。</p>
+
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">if</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">oddp</span> <span class="mi">5</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">setf</span> <span class="vg">*number-was-odd*</span> <span class="no">t</span><span class="p">)</span>
+   <span class="ss">&#39;odd-number</span><span class="p">)</span>
+   <span class="ss">&#39;even-number</span><span class="p">)</span>
+<span class="c1">; =&gt; ODD-NUMBER</span>
+<span class="vg">*number-was-odd*</span>
+<span class="c1">; =&gt; T</span></code></pre></div>
+<h3 id="case"><code>case</code></h3>
+
+<p>condは、C言語の<code>switch-case</code>文のようなものである。
+つまり、複数のシンボルに対するテストを行う。
+caseのシンボルと、それぞれのシンボルをeqlを使って評価する。
+もし偽と評価されれば、otherwiseに分岐される。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">case</span> <span class="nv">シンボル</span>
+  <span class="p">((</span><span class="nv">分岐のシンボル</span><span class="p">)</span> <span class="p">(</span><span class="nv">処理1</span><span class="p">)</span>
+                  <span class="p">(</span><span class="nv">処理2</span><span class="p">)</span>
+                  <span class="o">...</span>
+                  <span class="p">(</span><span class="nv">処理n</span><span class="p">))</span>
+  <span class="p">((</span><span class="nv">分岐のシンボル</span><span class="p">)</span> <span class="p">(</span><span class="nv">処理1</span><span class="p">)</span>
+                  <span class="p">(</span><span class="nv">処理2</span><span class="p">)</span>
+                  <span class="o">...</span>
+                  <span class="p">(</span><span class="nv">処理n</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">otherwise</span>      <span class="p">(</span><span class="nv">処理1</span><span class="p">)</span>
+                  <span class="p">(</span><span class="nv">処理2</span><span class="p">)</span>
+                  <span class="o">...</span>
+                  <span class="p">(</span><span class="nv">処理n</span><span class="p">)))</span></code></pre></div>
+<h3 id="cond"><code>cond</code></h3>
+
+<p>condは、caseと同じく、C言語の<code>switch-case</code>文のようなものである。
+<strong>ただし、C言語の<code>switch-case</code>文とは異なり、シンボルではなく条件式を列挙する。</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">cond</span> <span class="p">((</span><span class="nv">条件式1</span><span class="p">)</span> <span class="p">(</span><span class="nv">処理1</span><span class="p">)</span>
+                <span class="p">(</span><span class="nv">処理2</span><span class="p">)</span>
+                <span class="o">...</span>
+                <span class="p">(</span><span class="nv">処理n</span><span class="p">))</span>
+      <span class="p">((</span><span class="nv">条件式2</span><span class="p">)</span> <span class="p">(</span><span class="nv">処理1</span><span class="p">)</span>
+                <span class="p">(</span><span class="nv">処理2</span><span class="p">)</span>
+                <span class="o">...</span>
+                <span class="p">(</span><span class="nv">処理n</span><span class="p">))</span>
+      <span class="p">(</span><span class="no">t</span>        <span class="p">(</span><span class="nv">処理1</span><span class="p">)</span>
+                <span class="p">(</span><span class="nv">処理2</span><span class="p">)</span>
+                <span class="o">...</span>
+                <span class="p">(</span><span class="nv">処理n</span><span class="p">)))</span>
+<span class="c1">; 条件式nが全て偽だった時、tが実行される。</span></code></pre></div>
+<h2 id="ループ処理">ループ処理</h2>
+
+<h3 id="loop"><code>loop</code></h3>
+
+<p>loopは、第1引数の値によって、異なるループ方法を指定できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">loop</span> <span class="nv">repeat</span> <span class="mi">10</span>
+   <span class="nv">collect</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1">; =&gt; (1 1 1 1 1 1 1 1 1 1)</span>
+
+<span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">n</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="mi">10</span>
+   <span class="nv">collect</span> <span class="nv">n</span><span class="p">)</span>
+<span class="c1">; =&gt; (1 2 3 4 5 6 7 8 9 10)</span>
+
+<span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">n</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="mi">10</span>
+   <span class="nv">collect</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">100</span> <span class="nv">n</span><span class="p">))</span>
+<span class="c1">; =&gt; (101 102 103 104 105 106 107 108 109 110)</span></code></pre></div>
+<h2 id="論理演算">論理演算</h2>
+
+<p>C言語の<code>||</code>や<code>&amp;&amp;</code>のように、制御構文の条件式に使用できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">or</span> <span class="p">(</span><span class="nv">oddp</span> <span class="mi">4</span><span class="p">)</span> <span class="p">(</span><span class="nv">setf</span> <span class="vg">*it-is-even*</span> <span class="no">t</span><span class="p">))</span>
+<span class="c1">; =&gt; T</span>
+<span class="vg">*it-is-even*</span>
+<span class="c1">; =&gt; T</span></code></pre></div>
+<p>短絡評価:
+下記のように、lispは短絡評価する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">or</span> <span class="p">(</span><span class="nv">oddp</span> <span class="mi">5</span><span class="p">)</span> <span class="p">(</span><span class="nv">setf</span> <span class="vg">*it-is-even*</span> <span class="no">t</span><span class="p">))</span>
+<span class="c1">; =&gt; T</span>
+<span class="vg">*it-is-even*</span>
+<span class="c1">; =&gt; NIL</span></code></pre></div>
+<h1 id="シンボル-リストを比較-検査する">シンボル・リストを比較、検査する</h1>
+
+<p>ここでは、シンボル、または、リストの値が他のリストの値と等しいか、また、リストの中に目当ての値が入っているかなどを調べるための方法を示す。</p>
+
+<h2 id="eq-equal-eql-equalp-string-equal-char-equal-関数"><code>eq</code>,<code>equal</code>,<code>eql</code>,<code>equalp</code>,<code>=</code>,<code>string-equal</code>,<code>char-equal</code>関数</h2>
+
+<p>シンボルやリストが等しいか否かを調べる関数。</p>
+
+<table>
+<thead>
+<tr>
+<th>関数名</th>
+<th>比較方法</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>eq</td>
+<td>シンボル同士はeqで比較する</td>
+</tr>
+
+<tr>
+<td>equal</td>
+<td>シンボル同士では無い場合はequalで比較する</td>
+</tr>
+
+<tr>
+<td>eql</td>
+<td>eqと似ているが、更に数値と文字を比較できる</td>
+</tr>
+
+<tr>
+<td>equalp</td>
+<td>equalと似ているが、少し緩い評価をする</td>
+</tr>
+
+<tr>
+<td>=</td>
+<td>数値用のequal</td>
+</tr>
+
+<tr>
+<td>string-equal</td>
+<td>文字列用のequal</td>
+</tr>
+
+<tr>
+<td>char-equal</td>
+<td>文字用のequal</td>
+</tr>
+</tbody>
+</table>
+
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*fruit*</span> <span class="ss">&#39;apple</span><span class="p">)</span>
+<span class="nv">=&gt;</span> <span class="vg">*FRUIT*</span>
+<span class="p">(</span><span class="nv">cond</span>	<span class="p">((</span><span class="nv">eq</span> <span class="vg">*fruit*</span> <span class="ss">&#39;apple</span><span class="p">)</span> <span class="ss">&#39;its-an-apple</span><span class="p">)</span>
+		<span class="p">((</span><span class="nv">eq</span> <span class="vg">*fruit*</span> <span class="ss">&#39;orange</span><span class="p">)</span> <span class="ss">&#39;its-an-orange</span><span class="p">))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">equal</span> <span class="ss">&#39;apple</span> <span class="ss">&#39;apple</span><span class="p">)</span>
+<span class="nv">=&gt;</span> <span class="no">T</span>
+<span class="p">(</span><span class="nv">equal</span> <span class="ss">&#39;apple</span> <span class="ss">&#39;apple</span><span class="p">)</span>
+<span class="nv">=&gt;</span> <span class="no">T</span>
+<span class="p">(</span><span class="nv">equal</span> <span class="p">(</span><span class="nv">list</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="nv">list</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
+<span class="nv">=&gt;</span> <span class="no">T</span>
+<span class="p">(</span><span class="nv">equal</span> <span class="o">&#39;</span><span class="p">(</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="nv">cons</span> <span class="mi">1</span> <span class="p">(</span><span class="nv">cons</span> <span class="mi">1</span> <span class="p">(</span><span class="nv">cons</span> <span class="mi">2</span> <span class="p">(</span><span class="nv">cons</span> <span class="mi">3</span> <span class="no">nil</span><span class="p">)))))</span>
+<span class="nv">=&gt;</span> <span class="nv">T</span>	<span class="c1">; 中身が同じなら同一とみなす</span>
+<span class="p">(</span><span class="nv">equal</span> <span class="mi">5</span> <span class="mi">5</span><span class="p">)</span>
+<span class="nv">=&gt;</span> <span class="nv">T</span>	<span class="c1">; 整数同士</span>
+<span class="p">(</span><span class="nv">equal</span> <span class="mf">2.5</span> <span class="mf">2.5</span><span class="p">)</span>
+<span class="nv">=&gt;</span> <span class="nv">T</span>	<span class="c1">; 浮動小数点同士</span>
+<span class="p">(</span><span class="nv">equal</span> <span class="s">&#34;foo&#34;</span> <span class="s">&#34;foo&#34;</span><span class="p">)</span>
+<span class="nv">=&gt;</span> <span class="nv">T</span>	<span class="c1">; 文字列同士</span>
+<span class="p">(</span><span class="nv">equal</span> <span class="sc">#\a</span> <span class="sc">#\a</span><span class="p">)</span>
+<span class="nv">=&gt;</span> <span class="nv">T</span>	<span class="c1">; 文字同士</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">eql</span> <span class="ss">&#39;foo</span> <span class="ss">&#39;foo</span><span class="p">)</span>
+<span class="nv">=&gt;</span> <span class="nv">T</span>	<span class="c1">; シンボル同士</span>
+<span class="p">(</span><span class="nv">eql</span> <span class="mf">3.4</span> <span class="mf">3.4</span><span class="p">)</span>
+<span class="nv">=&gt;</span> <span class="nv">T</span>	<span class="c1">; 数値同士</span>
+<span class="p">(</span><span class="nv">eql</span> <span class="sc">#\a</span> <span class="sc">#\a</span><span class="p">)</span>
+<span class="nv">=&gt;</span> <span class="nv">T</span>	<span class="c1">; 文字列同士</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="c1">; equalpの使い方</span>
+<span class="p">(</span><span class="nv">equalp</span> <span class="s">&#34;Bob Smith&#34;</span> <span class="s">&#34;bob smith&#34;</span><span class="p">)</span>
+<span class="nv">=&gt;</span> <span class="nv">T</span>	<span class="c1">; 大文字、小文字を無視した文字列同士</span>
+<span class="p">(</span><span class="nv">equalp</span> <span class="mi">0</span> <span class="mf">0.0</span><span class="p">)</span>
+<span class="nv">=&gt;</span> <span class="nv">T</span>	<span class="c1">; 整数と浮動小数点数</span></code></pre></div>
+<h2 id="coerce-関数"><code>coerce</code>関数</h2>
+
+<p>オブジェクトを指定した形式へ強制変換する。
+(coerce : 〜を無理にdoさせる。)</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">coerce</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span> <span class="ss">&#39;vector</span><span class="p">)</span> <span class="c1">; =&gt; #(A B C)</span>
+<span class="p">(</span><span class="nv">coerce</span> <span class="ss">&#39;a</span> <span class="ss">&#39;character</span><span class="p">)</span> <span class="c1">; =&gt; #\A</span>
+<span class="p">(</span><span class="nv">coerce</span> <span class="mf">4.56</span> <span class="ss">&#39;complex</span><span class="p">)</span> <span class="c1">; =&gt; #C(4.56 0.0)</span>
+<span class="p">(</span><span class="nv">coerce</span> <span class="mf">4.5s0</span> <span class="ss">&#39;complex</span><span class="p">)</span> <span class="c1">; =&gt; #C(4.5s0 0.0s0)</span>
+<span class="p">(</span><span class="nv">coerce</span> <span class="m">7/2</span> <span class="ss">&#39;complex</span><span class="p">)</span> <span class="c1">; =&gt; 7/2</span>
+<span class="p">(</span><span class="nv">coerce</span> <span class="mi">0</span> <span class="ss">&#39;short-float</span><span class="p">)</span> <span class="c1">; =&gt; 3.5L0</span>
+<span class="p">(</span><span class="nv">coerce</span> <span class="mf">3.5L0</span> <span class="ss">&#39;float</span><span class="p">)</span> <span class="c1">; =&gt; 3.5L0</span>
+<span class="p">(</span><span class="nv">coerce</span> <span class="p">(</span><span class="nv">cons</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="no">t</span><span class="p">)</span> <span class="c1">; =&gt; (1 . 2)</span>
+<span class="c1">; NOTE: タイプtは、全てのオブジェクトのタイプの集合。</span>
+<span class="c1">;       従って、この場合は、引数をそのまま返す。</span></code></pre></div>
+<h2 id="complement-関数"><code>complement</code>関数</h2>
+
+<p>補集合。(高階関数)</p>
+
+<p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">complement</span> <span class="nf">#&#39;</span><span class="nv">alphanumericp</span><span class="p">)</span>
+<span class="c1">; =&gt; アルファベットでも数字でもない</span></code></pre></div>
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

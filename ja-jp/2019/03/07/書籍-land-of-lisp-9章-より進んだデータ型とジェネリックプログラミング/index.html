@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>書籍 Land of Lisp 9章 より進んだデータ型とジェネリックプログラミング · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="T.O.C. 9.1 配列 9.2 ハッシュテーブル 9.3 構造体 9.4 データをジェネリックに扱う Common Lisp では、下記のようなデータ型が使用できる。 コンスセル シンボル 文字列 数値 配列 ハ" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-9%E7%AB%A0-%E3%82%88%E3%82%8A%E9%80%B2%E3%82%93%E3%81%A0%E3%83%87%E3%83%BC%E3%82%BF%E5%9E%8B%E3%81%A8%E3%82%B8%E3%82%A7%E3%83%8D%E3%83%AA%E3%83%83%E3%82%AF%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="書籍 Land of Lisp 9章 より進んだデータ型とジェネリックプログラミング" />
+<meta property="og:description" content="T.O.C. 9.1 配列 9.2 ハッシュテーブル 9.3 構造体 9.4 データをジェネリックに扱う Common Lisp では、下記のようなデータ型が使用できる。 コンスセル シンボル 文字列 数値 配列 ハ" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-9%E7%AB%A0-%E3%82%88%E3%82%8A%E9%80%B2%E3%82%93%E3%81%A0%E3%83%87%E3%83%BC%E3%82%BF%E5%9E%8B%E3%81%A8%E3%82%B8%E3%82%A7%E3%83%8D%E3%83%AA%E3%83%83%E3%82%AF%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/" />
+<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="書籍 Land of Lisp 9章 より進んだデータ型とジェネリックプログラミング">
+<meta itemprop="description" content="T.O.C. 9.1 配列 9.2 ハッシュテーブル 9.3 構造体 9.4 データをジェネリックに扱う Common Lisp では、下記のようなデータ型が使用できる。 コンスセル シンボル 文字列 数値 配列 ハ">
+
+
+<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="3675">
+
+
+
+<meta itemprop="keywords" content="lisp," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="書籍 Land of Lisp 9章 より進んだデータ型とジェネリックプログラミング"/>
+<meta name="twitter:description" content="T.O.C. 9.1 配列 9.2 ハッシュテーブル 9.3 構造体 9.4 データをジェネリックに扱う Common Lisp では、下記のようなデータ型が使用できる。 コンスセル シンボル 文字列 数値 配列 ハ"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">書籍 Land of Lisp 9章 より進んだデータ型とジェネリックプログラミング</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-03-07
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/lisp/">lisp</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h2 id="t-o-c">T.O.C.</h2>
+
+<ul>
+<li><a href="#91-配列">9.1 配列</a></li>
+<li><a href="#92-ハッシュテーブル">9.2 ハッシュテーブル</a></li>
+<li><a href="#93-構造体">9.3 構造体</a></li>
+<li><a href="#94-データをジェネリックに扱う">9.4 データをジェネリックに扱う</a></li>
+</ul>
+
+<hr />
+
+<p>Common Lisp では、下記のようなデータ型が使用できる。</p>
+
+<ul>
+<li>コンスセル</li>
+<li>シンボル</li>
+<li>文字列</li>
+<li>数値</li>
+<li>配列</li>
+<li>ハッシュテーブル</li>
+<li>構造体</li>
+</ul>
+
+<h2 id="9-1-配列">9.1 配列</h2>
+
+<h3 id="配列を使う">配列を使う</h3>
+
+<p>配列を作成するには<code>make-array</code>を使用する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">make-array</span> <span class="mi">3</span><span class="p">)</span>
+<span class="o">#(</span><span class="no">NIL</span> <span class="no">NIL</span> <span class="no">NIL</span><span class="p">)</span></code></pre></div>
+<p>配列を作成する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="nv">x</span> <span class="p">(</span><span class="nv">make-array</span> <span class="mi">3</span><span class="p">))</span>
+<span class="nv">X</span></code></pre></div>
+<p>配列の1番目の要素をgetする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">aref</span> <span class="nv">x</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nv">NIL</span></code></pre></div>
+<h3 id="ジェネリックなセッター">ジェネリックなセッター</h3>
+
+<p>Common Lispは*ジェネリックなセッター*をサポートしている。<br />
+つまり、あらゆるデータ型に対してセッターが同じ形式で書ける。</p>
+
+<p>例として、<code>setf</code>によって、配列の特定の要素を変更する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="nv">x</span> <span class="p">(</span><span class="nv">make-array</span> <span class="mi">3</span><span class="p">))</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">aref</span> <span class="nv">x</span> <span class="mi">1</span><span class="p">)</span> <span class="ss">&#39;foo</span><span class="p">)</span>
+<span class="nv">FOO</span>
+<span class="nv">&gt;</span> <span class="nv">x</span>
+<span class="o">#(</span><span class="no">NIL</span> <span class="ss">&#39;FOO</span> <span class="no">NIL</span><span class="p">)</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">aref</span> <span class="nv">x</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nv">FOO</span></code></pre></div>
+<p>上記の例では、配列の第1要素を変更した。<br />
+下記の通り、配列以外のデータ型に対しても、setfは同様の操作によって値をセットできる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">setf</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">make-array</span> <span class="mi">4</span><span class="p">))</span>
+<span class="o">#(</span><span class="no">NIL</span> <span class="no">NIL</span> <span class="no">NIL</span> <span class="no">NIL</span><span class="p">)</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">aref</span> <span class="nv">foo</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nv">list</span> <span class="ss">&#39;x</span> <span class="ss">&#39;y</span> <span class="ss">&#39;z</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">X</span> <span class="nv">Y</span> <span class="nv">Z</span><span class="p">)</span>
+<span class="nv">&gt;</span> <span class="nv">foo</span>
+<span class="o">#(</span><span class="no">NIL</span> <span class="no">NIL</span> <span class="p">(</span><span class="nv">X</span> <span class="nv">Y</span> <span class="nv">Z</span><span class="p">)</span> <span class="no">NIL</span><span class="p">)</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">car</span> <span class="p">(</span><span class="nv">aref</span> <span class="nv">foo</span> <span class="mi">2</span><span class="p">))</span> <span class="p">(</span><span class="nv">make-hash-table</span><span class="p">))</span>
+<span class="l">#S</span><span class="p">(</span><span class="nv">HASH_TABLE</span><span class="p">)</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">gethash</span> <span class="ss">&#39;zoink</span> <span class="p">(</span><span class="nv">car</span> <span class="p">(</span><span class="nv">aref</span> <span class="nv">foo</span> <span class="mi">2</span><span class="p">)))</span> <span class="mi">5</span><span class="p">)</span>
+<span class="mi">5</span>
+<span class="nv">&gt;</span> <span class="nv">foo</span>
+<span class="o">#(</span><span class="no">NIL</span> <span class="no">NIL</span> <span class="p">(</span><span class="l">#S</span><span class="p">(</span><span class="nv">HASH-TABLE</span> <span class="p">(</span><span class="nv">ZOINK</span> <span class="o">.</span> <span class="mi">5</span><span class="p">))</span> <span class="nv">Y</span> <span class="nv">Z</span><span class="p">)</span> <span class="no">NIL</span><span class="p">)</span></code></pre></div>
+<h3 id="配列とリスト">配列とリスト</h3>
+
+<p>配列とリストでは、特定の要素にアクセスする方法が異なる。<br />
+具体的には、下記の違いがある。</p>
+
+<table>
+<thead>
+<tr>
+<th></th>
+<th>n番目の要素へのアクセス</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>リスト</td>
+<td><code>(nth 数字 リスト)</code></td>
+</tr>
+
+<tr>
+<td>配列</td>
+<td><code>(aref 配列 数字)</code></td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="9-2-ハッシュテーブル">9.2 ハッシュテーブル</h2>
+
+<h3 id="ハッシュテーブルを使う">ハッシュテーブルを使う</h3>
+
+<p>ハッシュテーブルを作成するには<code>make-hash-table</code>を使用する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">make-hash-table</span><span class="p">)</span>
+<span class="l">#S</span><span class="p">(</span><span class="nv">HASH-TABLE</span> <span class="o">...</span><span class="p">)</span></code></pre></div>
+<p>alistと同じく、ハッシュテーブルは要素をキーとバリューの組み合わせで格納する。<br />
+<code>gethash</code>関数を使って要素を取り出すことができる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="nv">x</span> <span class="p">(</span><span class="nv">make-hash-table</span><span class="p">))</span>
+<span class="l">#S</span><span class="p">(</span><span class="nv">HASH-TABLE</span> <span class="o">...</span><span class="p">)</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">gethash</span> <span class="ss">&#39;yup</span> <span class="nv">x</span><span class="p">)</span>
+<span class="no">NIL</span> <span class="c1">;</span>
+<span class="nv">NIL</span></code></pre></div>
+<p><code>gethash</code>は2つの値を返す関数である。
+1つ目の値は、キーに対応する値。
+2つ目の値は、キーに対応する値があるか否か。</p>
+
+<p>配列と同じように、データを取り出す関数(ここでは<code>gethash</code>)を、<code>setf</code>を組み合わせてデータをセットできる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="nv">x</span> <span class="p">(</span><span class="nv">make-hash-table</span><span class="p">))</span>
+<span class="l">#S</span><span class="p">(</span><span class="nv">HASH-TABLE</span> <span class="o">...</span><span class="p">)</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">gethash</span> <span class="ss">&#39;yup</span> <span class="nv">x</span><span class="p">)</span> <span class="ss">&#39;25</span><span class="p">)</span>
+<span class="mi">25</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">gethash</span> <span class="ss">&#39;yup</span> <span class="nv">x</span><span class="p">)</span>
+<span class="mi">25</span> <span class="c1">;</span>
+<span class="nv">T</span></code></pre></div>
+<p>同じデータを連想リストとハッシュテーブルで作成してみる。</p>
+
+<p><em>alist</em></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*drink-order*</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">bill</span> <span class="o">.</span> <span class="nv">double-espresso</span><span class="p">)</span>
+                              <span class="p">(</span><span class="nv">lisa</span> <span class="o">.</span> <span class="nv">small-drip-coffee</span><span class="p">)</span>
+                              <span class="p">(</span><span class="nv">john</span> <span class="o">.</span> <span class="nv">medium-latte</span><span class="p">)))</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">cdr</span> <span class="p">(</span><span class="nv">assoc</span> <span class="ss">&#39;lisa</span> <span class="vg">*drink-order*</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">LISA</span> <span class="o">.</span> <span class="nv">SMALL-DRIP-COFFEE</span><span class="p">)</span></code></pre></div>
+<p><em>hash-table</em></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*dring-order*</span> <span class="p">(</span><span class="nv">make-hash-table</span><span class="p">))</span>
+<span class="l">#S</span><span class="p">(</span><span class="nv">HASH-TABLE</span> <span class="o">...</span><span class="p">)</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">gethash</span> <span class="ss">&#39;bill</span> <span class="vg">*drink-order*</span><span class="p">)</span> <span class="ss">&#39;double-espresso</span><span class="p">)</span>
+<span class="nv">DOUBLE-ESPRESSO</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">gethash</span> <span class="ss">&#39;lisa</span> <span class="vg">*drink-order*</span><span class="p">)</span> <span class="ss">&#39;small-drip-coffee</span><span class="p">)</span>
+<span class="nv">SMALL-DRIP-COFFEE</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">gethash</span> <span class="ss">&#39;john</span> <span class="vg">*drink-order*</span><span class="p">)</span> <span class="ss">&#39;medium-latte</span><span class="p">)</span>
+<span class="nv">MEDIUM-LATTE</span>
+
+<span class="p">(</span><span class="nv">gethash</span> <span class="ss">&#39;lisa</span> <span class="vg">*drink-order*</span><span class="p">)</span>
+<span class="nv">SMALL-DRIP-COFFEE</span> <span class="c1">;</span>
+<span class="nv">T</span></code></pre></div>
+<h3 id="複数の値を返す">複数の値を返す</h3>
+
+<p>Common Lispでは、複数の値を返す関数を定義できる。<br />
+既成の関数でも、複数の値を返すものがある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">round</span> <span class="mf">2.4</span><span class="p">)</span>
+<span class="mi">2</span> <span class="c1">;</span>
+<span class="nv">0.4</span></code></pre></div>
+<p>複数の値を返す関数を自作するには、<code>(values)</code>を使用する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">()</span>
+    <span class="p">(</span><span class="nv">values</span> <span class="mi">3</span> <span class="mi">7</span><span class="p">))</span>
+<span class="nv">FOO</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">foo</span><span class="p">)</span>
+<span class="mi">3</span> <span class="c1">;</span>
+<span class="nv">7</span></code></pre></div>
+<p>1番目の値を使用する方法は、単数の返り値の扱い方と変わらない。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">foo</span><span class="p">)</span> <span class="mi">5</span><span class="p">)</span>
+<span class="nv">8</span></code></pre></div>
+<p>2番目以降の値を使用するには<code>(multiple-value-bind)</code>を使用する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">multiple-value-bind</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span> <span class="p">(</span><span class="nv">foo</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">*</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">))</span>
+<span class="nv">21</span></code></pre></div>
+<h2 id="9-3-構造体">9.3 構造体</h2>
+
+<h3 id="構造体を使う">構造体を使う</h3>
+
+<p>構造体は、OOPに見られるように、属性を持つオブジェクトを表現するために使用される。<br />
+構造体を定義するには<code>(defstruct)</code>を使用する。<br />
+スロットに初期値を与える場合、括弧で囲う。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defstruct</span> <span class="nv">person</span>
+    <span class="nv">name</span>
+    <span class="nv">age</span>
+    <span class="nv">waist-size</span>
+    <span class="nv">favorite-color</span><span class="p">)</span>
+<span class="nv">PERSON</span>
+
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defstruct</span> <span class="nv">human</span>
+    <span class="p">(</span><span class="nv">name</span> <span class="s">&#34;John Doe&#34;</span><span class="p">)</span>
+    <span class="nv">age</span>
+    <span class="nv">waist-size</span>
+    <span class="nv">favorite-color</span><span class="p">)</span>
+<span class="nv">HUMAN</span></code></pre></div>
+<p>上記の例では、<code>person</code>は4つの属性(lispにおいては*スロット*と呼ばれる)を持つ。</p>
+
+<ul>
+<li>name   名前</li>
+<li>age   年齢</li>
+<li>waist-size    ウェストサイズ</li>
+<li>favorite-color   好きな色</li>
+</ul>
+
+<p>構造体を定義する(<code>defstruct</code>を呼ぶ)と、下記が自動的に生成される。</p>
+
+<h4 id="構造体のインスタンスを作成する関数">構造体のインスタンスを作成する関数</h4>
+
+<p><code>(make-person)</code>関数</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*bob*</span> <span class="p">(</span><span class="nv">make-person</span> <span class="ss">:name</span> <span class="s">&#34;Bob&#34;</span>
+                                   <span class="ss">:age</span> <span class="mi">35</span>
+                                   <span class="ss">:waist-size</span> <span class="mi">32</span>
+                                   <span class="ss">:favorite-color</span> <span class="s">&#34;blue&#34;</span><span class="p">))</span>
+<span class="vg">*BOB*</span></code></pre></div>
+<h4 id="各スロットへのゲッター">各スロットへのゲッター</h4>
+
+<p><code>(person-age)</code>関数</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">person-age</span> <span class="vg">*bob*</span><span class="p">)</span>
+<span class="mi">35</span>
+
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">person-age</span> <span class="vg">*bob*</span><span class="p">)</span> <span class="mi">36</span><span class="p">)</span>
+<span class="nv">36</span></code></pre></div>
+<p>LispのReaderは、<code>person</code>の出力表記を読み込み、<code>person</code>のインスタンスを生成できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*that-guy*</span> <span class="l">#S</span><span class="p">(</span><span class="nv">PERSON</span> <span class="ss">:NAME</span> <span class="s">&#34;bob&#34;</span> <span class="ss">:AGE</span> <span class="mi">35</span> <span class="ss">:WAIST-SIZE</span> <span class="mi">32</span> <span class="ss">:FAVORITE-COLOR</span> <span class="s">&#34;blue&#34;</span><span class="p">))</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">person-age</span> <span class="vg">*that-guy*</span><span class="p">)</span>
+<span class="nv">35</span></code></pre></div>
+<h3 id="構造体をいつ使うか">構造体をいつ使うか</h3>
+
+<p>仮に、構造体を使用せずにリストでデータの塊を管理することを考える。<br />
+この場合、インスタンスを作成する関数や、各スロットへのゲッターは下記のとおり書ける。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defun</span> <span class="nv">make-person</span> <span class="p">(</span><span class="nv">name</span> <span class="nv">age</span> <span class="nv">waist-size</span> <span class="nv">favorite-color</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">list</span> <span class="nv">name</span> <span class="nv">age</span> <span class="nv">waist-size</span> <span class="nv">favorite-color</span><span class="p">))</span>
+<span class="nv">MAKE-PERSON</span>
+
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defun</span> <span class="nv">person-age</span> <span class="p">(</span><span class="nv">person</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">cadr</span> <span class="nv">person</span><span class="p">))</span>
+<span class="nv">PERSON-AGE</span></code></pre></div>
+<p>見て分かる通り、どの属性が<code>person</code>リストのどの位置にあるのかを意識する必要がある。<br />
+したがって、リストで沢山の属性を管理するのはバグの原因となる。<br />
+また、構造体の方がリストよりも属性へのセット、ゲットのコードが簡潔に書ける。<br />
+したがって、複数の属性を持つミュータブルなデータを管理したい場合、リストよりも構造体が適している。</p>
+
+<h2 id="9-4-データをジェネリックに扱う">9.4 データをジェネリックに扱う</h2>
+
+<p>ジェネリック = 一般的。<br />
+Common Lispでは、様々なデータ型を意識せずに、数値を統一的に操作できる。<br />
+そのための道具立てとして、下記のようなものが用意されている。</p>
+
+<ul>
+<li>ジェネリックライブラリ関数</li>
+<li>型述語</li>
+<li><code>defmethod</code></li>
+<li>ジェネリックアクセサ</li>
+</ul>
+
+<h3 id="シーケンスを使う">シーケンスを使う</h3>
+
+<p>引数のデータ型によらず動作するコードを*手軽に*書くには、型チェックを別の関数に任せれば良い。<br />
+Common Lispには、ジェネリックな関数が既に用意されている(e.g. シーケンス関数)。</p>
+
+<p>シーケンス関数は、Lispにおける3つの主要なシーケンスを統一的に扱える(e.g. <code>length</code>関数)。<br />
+(シーケンス: リスト 配列 文字列)</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">length</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">))</span>
+<span class="mi">3</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">length</span> <span class="s">&#34;blub&#34;</span><span class="p">)</span>
+<span class="mi">4</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">length</span> <span class="p">(</span><span class="nv">make-array</span> <span class="mi">5</span><span class="p">))</span>
+<span class="nv">5</span></code></pre></div>
+<p><em>補足:</em><br />
+Common Lispにも、リスト専用の長さを求める関数<code>list-length</code>がある。<br />
+ジェネリックな関数よりも処理が速いが、始めから使用する必要はない。<br />
+処理の最適化のフェーズで明確に必要だと分かったら使用すれば良い。</p>
+
+<h3 id="探索のためのシーケンス関数">探索のためのシーケンス関数</h3>
+
+<p>シーケンス関数の中には、シーケンスから何かを探し出すためのものがある。</p>
+
+<ul>
+<li><code>find-if</code>    与えられた述語を満たす最初の要素を見つける</li>
+<li><code>count</code>    特定の要素がいくつシーケンス中にあるか数える</li>
+<li><code>position</code>    特定の要素がシーケンスのどの位置にあるか返す</li>
+<li><code>some</code>    シーケンス中に条件を満たす要素が存在するか返す</li>
+<li><code>every</code>    シーケンス中の全要素が条件を満たすか返す</li>
+</ul>
+
+<p>上記の関数の実行例を示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">find-if</span> <span class="nf">#&#39;</span><span class="nv">numberp</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="mi">5</span> <span class="nv">d</span><span class="p">))</span>
+<span class="mi">5</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">cound</span> <span class="sc">#\s</span> <span class="s">&#34;mississippi&#34;</span><span class="p">)</span>
+<span class="mi">4</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">position</span> <span class="sc">#\4</span> <span class="s">&#34;2kewl4skewl&#34;</span><span class="p">)</span>
+<span class="mi">5</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">some</span> <span class="nf">#&#39;</span><span class="nv">numberp</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="mi">5</span> <span class="nv">d</span><span class="p">))</span>
+<span class="no">T</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">every</span> <span class="nf">#&#39;</span><span class="nv">numberp</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="mi">5</span> <span class="nv">d</span><span class="p">))</span>
+<span class="nv">NIL</span></code></pre></div>
+<h3 id="シーケンスの要素について繰り返す関数の例">シーケンスの要素について繰り返す関数の例</h3>
+
+<h4 id="reduce"><code>reduce</code></h4>
+
+<p>ジェネリックなシーケンス関数において、<code>reduce</code>はとりわけ便利である。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">reduce</span> <span class="nf">#&#39;</span><span class="nv">+</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">6</span> <span class="mi">5</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nv">20</span></code></pre></div>
+<p><code>reduce</code>の第1引数に渡す関数を、縮約関数(reduction function)と呼ぶ。<br />
+上記の例では、<code>+</code>が縮約関数である。</p>
+
+<p><code>reduce</code>では、<code>initial-value</code>というキーワード引数を使って、初期値を与えられる。<br />
+初期値を与えなかった場合は、シーケンスの最初の要素を初期値とする。</p>
+
+<p>下記に、リスト<code>(a b c)</code>に初期値<code>x</code>を与えなかった場合と与えた場合の処理の違いを示す。</p>
+
+<table>
+<thead>
+<tr>
+<th>初期値</th>
+<th>処理内容(tは一時変数)</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>無し</td>
+<td>t=a t=t+b t=t+c</td>
+</tr>
+
+<tr>
+<td>有り</td>
+<td>t=x t=t+a t=t+b t=t+c</td>
+</tr>
+</tbody>
+</table>
+
+<p>下記の通り、初期値を与えないと、aが初期値として設定されたまま結果として返されてしまう。<br />
+例えば、縮約関数が「シーケンスの中で最大の偶数を見つける」だった場合、初期値は必須である。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">best</span> <span class="nv">item</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">and</span> <span class="p">(</span><span class="nv">evenp</span> <span class="nv">item</span><span class="p">)</span> <span class="p">(</span><span class="nv">&gt;</span> <span class="nv">item</span> <span class="nv">best</span><span class="p">))</span>
+    <span class="nv">item</span>
+    <span class="nv">best</span><span class="p">))</span>
+<span class="c1">; initial-valueが無い場合</span>
+<span class="c1">; &#39;(7 4 6 5 2)</span>
+<span class="c1">; 7 &lt;- (&gt; item best)がTとならないため</span>
+
+<span class="c1">; initial-valueが0の場合</span>
+<span class="c1">; &#39;(7 4 6 5 2)</span>
+<span class="c1">; 6 &lt;- 正しく評価できた</span></code></pre></div>
+<p><code>reduce</code>をpythonで手続き的に記載すると、下記のようになる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="k">def</span> <span class="nf">reduce</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">lst</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s1">&#39;initial_value&#39;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">lst</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;initial_value&#39;</span><span class="p">])</span>
+
+    <span class="n">temp</span> <span class="o">=</span> <span class="n">lst</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">temp</span><span class="p">,</span> <span class="n">lst</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">temp</span>
+
+<span class="n">lst</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+
+<span class="k">print</span><span class="p">(</span><span class="nb">reduce</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">lst</span><span class="p">))</span>
+<span class="c1"># =&gt; 55</span>
+<span class="k">print</span><span class="p">(</span><span class="nb">reduce</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">lst</span><span class="p">,</span> <span class="n">initial_value</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+<span class="c1"># =&gt; 65</span></code></pre></div>
+<h4 id="map"><code>map</code></h4>
+
+<p><code>map</code>は<code>mapcar</code>と同じく、各要素を引数に渡した関数を呼んで結果を集める。<br />
+しかし、<code>map</code>は任意のシーケンスに対して使用できる。<br />
+また、<code>map</code>は返り値としてどのシーケンス型の値を返すかという引数を取る。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">map</span> <span class="ss">&#39;list</span>
+    <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">eq</span> <span class="nv">x</span> <span class="sc">#\s</span><span class="p">)</span>
+          <span class="sc">#\S</span>
+          <span class="nv">x</span><span class="p">))</span>
+    <span class="s">&#34;this is a string&#34;</span><span class="p">)</span>
+<span class="p">(</span><span class="sc">#\t</span> <span class="sc">#\h</span> <span class="sc">#\i</span> <span class="sc">#\S</span> <span class="sc">#\ </span> <span class="sc">#\i</span> <span class="sc">#\s</span> <span class="sc">#\ </span> <span class="sc">#\a</span> <span class="sc">#\ </span> <span class="sc">#\S</span> <span class="sc">#\t</span> <span class="sc">#\r</span> <span class="sc">#\i</span> <span class="sc">#\n</span> <span class="sc">#\g</span><span class="p">)</span></code></pre></div>
+<h4 id="subseq"><code>subseq</code></h4>
+
+<p><code>subseq</code>関数は始点と終点を指定してシーケンスの一部分を取り出すのに使える。<br />
+位置は0から数え始め、始点は含まれ、終点は含まれない。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">subseq</span> <span class="s">&#34;america&#34;</span> <span class="mi">2</span> <span class="mi">6</span><span class="p">)</span>
+<span class="s">&#34;eric&#34;</span></code></pre></div>
+<h4 id="sort"><code>sort</code></h4>
+
+<p><code>sort</code>関数は任意の比較関数を渡してシーケンスをソートする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">sort</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">5</span> <span class="mi">8</span> <span class="mi">2</span> <span class="mi">4</span> <span class="mi">9</span> <span class="mi">3</span> <span class="mi">6</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="nv">&lt;</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">8</span> <span class="mi">9</span><span class="p">)</span></code></pre></div>
+<h3 id="型述語を使って自分でジェネリック関数を作る">型述語を使って自分でジェネリック関数を作る</h3>
+
+<p>Common Lispは動的型付け言語であるため、ある変数のデータ型を調べる関数が揃っている。<br />
+例えば数値かどうかは<code>numberp</code>によって調べられる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">numberp</span> <span class="mi">5</span><span class="p">)</span>
+<span class="nv">T</span></code></pre></div>
+<p>よく使う型述語には下記がある。</p>
+
+<ul>
+<li><code>arrayp</code></li>
+<li><code>characterp</code></li>
+<li><code>consp</code></li>
+<li><code>functionp</code></li>
+<li><code>hash-table-p</code></li>
+<li><code>listp</code></li>
+<li><code>stringp</code></li>
+<li><code>symbolp</code></li>
+</ul>
+
+<p>これらを使えば、色々な型の引数をジェネリックに取る関数を自分で書ける。<br />
+例えば、数値同士とリスト同士を「足す」関数を作るとする。<br />
+単純に関数定義するなら、下記のようになる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defun</span> <span class="nv">add</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">cond</span> <span class="p">((</span><span class="nv">and</span> <span class="p">(</span><span class="nv">numberp</span> <span class="nv">a</span><span class="p">)</span> <span class="p">(</span><span class="nv">numberp</span> <span class="nv">b</span><span class="p">))</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">))</span>
+          <span class="p">((</span><span class="nv">and</span> <span class="p">(</span><span class="nv">listp</span> <span class="nv">a</span><span class="p">)</span> <span class="p">(</span><span class="nv">listp</span> <span class="nv">b</span><span class="p">))</span> <span class="p">(</span><span class="nv">app</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">))))</span>
+<span class="nv">ADD</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">add</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)</span>
+<span class="mi">7</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">add</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">c</span> <span class="nv">d</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> <span class="nv">D</span><span class="p">)</span></code></pre></div>
+<p>上記の関数は、複数の型に対する処理が固まっているため、保守性が低い。<br />
+そこで、lispは関数の <strong>多重定義(オーバーロード)</strong> が可能なので、これを利用する。<br />
+<code>defmethod</code>を使うと各々の型に特化した複数の関数を定義できる。
+<code>defmethod</code>によって定義された関数が呼ばれたとき、Lispは自動的に引数の型を調べ、対応する関数本体を呼び出す。<br />
+このように、インタプリタ/コンパイラは複数の関数本体から引数の型に応じたものを選び出すことを、 <strong>型によるディスパッチ(type dispatching)</strong> と呼ぶ。</p>
+
+<p><code>defmethod</code>を使うと、上記の<code>add</code>は下記のようになる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defmethod</span> <span class="nv">add</span> <span class="p">((</span><span class="nv">a</span> <span class="nv">number</span><span class="p">)</span> <span class="p">(</span><span class="nv">b</span> <span class="nv">number</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">+</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">))</span>
+<span class="nv">ADD</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defmethod</span> <span class="nv">add</span> <span class="p">((</span><span class="nv">a</span> <span class="nv">list</span><span class="p">)</span> <span class="p">(</span><span class="nv">b</span> <span class="nv">list</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">append</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">))</span>
+<span class="nv">ADD</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">add</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)</span>
+<span class="mi">7</span>
+<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">add</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">c</span> <span class="nv">d</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> <span class="nv">D</span><span class="p">)</span></code></pre></div>
+<p><code>defmethod</code>は、上記9.3章の<code>defstruct</code>で定義した構造体に対しても使用できる。<br />
+これを使用して、簡単なオブジェクトシステムを実装することも出来る。</p>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Proudly powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>

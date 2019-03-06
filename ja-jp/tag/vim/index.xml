@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>vim on Lazy Lambda</title>
+    <link>https://otaon.github.io/web/ja-jp/tag/vim/</link>
+    <description>Recent content in vim on Lazy Lambda</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Thu, 07 Mar 2019 02:00:00 +0900</lastBuildDate>
+    
+	<atom:link href="https://otaon.github.io/web/ja-jp/tag/vim/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Vimをビルドする</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/vim%E3%82%92%E3%83%93%E3%83%AB%E3%83%89%E3%81%99%E3%82%8B/</link>
+      <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/vim%E3%82%92%E3%83%93%E3%83%AB%E3%83%89%E3%81%99%E3%82%8B/</guid>
+      <description>gitからclone $ git clone https://github.com/vim/vim.git ~/git/vim コンフィグ prefixにvimのインストール先を設定する。 $ cd ~/git/vim $ ./configure \ --prefix=$HOME/.local \ --with-features=huge \ --enable-multibyte \ --enable-rubyinterp \ --enable-pythoninterp \ --enable-python3interp \ --enable-perlinterp \ --enable-fontset \ --enable-luainterp \ --enable-fail-if-missing make</description>
+    </item>
+    
+    <item>
+      <title>slimvショートカット一覧</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/slimv%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E4%B8%80%E8%A6%A7/</link>
+      <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/slimv%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E4%B8%80%E8%A6%A7/</guid>
+      <description>一部誤謬がある可能性がある abc^de はカーソルがcの上にあることを意味する 編集 edit 一般操作 コマンド 操作 操作例 操作結果 ,) S式を閉じる (foo ,) (foo) タブ シンボルを</description>
+    </item>
+    
+  </channel>
+</rss>

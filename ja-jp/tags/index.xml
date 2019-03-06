@@ -39,11 +39,74 @@
     </item>
     
     <item>
+      <title>basic</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/basic/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/basic/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>build</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/build/</link>
+      <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/build/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>continuation</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/continuation/</link>
+      <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/continuation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lisp</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/lisp/</link>
+      <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/lisp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>slimv</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/slimv/</link>
+      <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/slimv/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>template</title>
       <link>https://otaon.github.io/web/ja-jp/tag/template/</link>
       <pubDate>Sun, 03 Mar 2019 16:01:23 +0900</pubDate>
       
       <guid>https://otaon.github.io/web/ja-jp/tag/template/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>toc</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/toc/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/toc/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>vim</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/vim/</link>
+      <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/vim/</guid>
       <description></description>
     </item>
     
