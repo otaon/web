@@ -24,6 +24,130 @@
     </item>
     
     <item>
+      <title>mermaid.jsをHugoで使えるようにする</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/08/mermaid.js%E3%82%92hugo%E3%81%A7%E4%BD%BF%E3%81%88%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E3%81%99%E3%82%8B/</link>
+      <pubDate>Fri, 08 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/08/mermaid.js%E3%82%92hugo%E3%81%A7%E4%BD%BF%E3%81%88%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E3%81%99%E3%82%8B/</guid>
+      
+        <description>
+
+&lt;h2 id=&#34;目的&#34;&gt;目的&lt;/h2&gt;
+
+&lt;p&gt;Hugoで&lt;code&gt;mermaid.js&lt;/code&gt;を使用できるようにする設定手順を示す。&lt;br /&gt;
+&lt;code&gt;mermaid.js&lt;/code&gt;は&lt;code&gt;mermaid&lt;/code&gt;のjavascript版で、これを使えばサイトで表示するダイアグラム等を簡単に記述できるようになる。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;mermaid&lt;/code&gt;説明サイト: &lt;a href=&#34;https://mermaidjs.github.io/&#34;&gt;mermaid - GitBook&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;参考にしたページ: &lt;a href=&#34;https://qiita.com/_takeuchi_/items/35c52fd85884a83c154d&#34;&gt;Hugoにmermaidを組み込んでみた&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;mermaidをunpkgから取得する&#34;&gt;mermaidをUNPKGから取得する&lt;/h2&gt;
+
+&lt;p&gt;今回はmermaid.jsの本体のみ必要なので、UNPKGから&lt;code&gt;mermaid.js&lt;/code&gt;をダウンロードする。&lt;br /&gt;
+ちなみにUNPKGとは、npmなどのコンテンツをダウンロードすることができるCDNのひとつ。&lt;br /&gt;
+サイトのデータ量を少しでも削減したい場合は、ダウンロードせずに、直接CDNのURLを指定すること。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://unpkg.com/mermaid/dist/&#34;&gt;最新版のmermaid.jsが置いてあるURL&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;mermaid.js&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;今回は気が向いたときにコードを読み書きするかも知れないので通常版をダウンロードした。&lt;br /&gt;
+ミニマイズ済みのもので良ければ&lt;code&gt;mermaid.min.js&lt;/code&gt;をダウンロードすれば良い。&lt;/p&gt;
+
+&lt;p&gt;ダウンロードしたら&lt;code&gt;themes/&amp;lt;テーマ名&amp;gt;/static/asset&lt;/code&gt;にmermaidフォルダを作成してコピーする。&lt;br /&gt;
+本サイトの場合、下記に格納した。&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:-&#34;&gt;&lt;a href=&#34;#fn:-&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;br /&gt;
+&lt;code&gt;&amp;lt;git-top&amp;gt;/web/web/themes/hugo-theme-den/static/asset/mermaid/mermaid.js&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;mermaid-js-用の-div-に置換するためショートコードを作成する&#34;&gt;&lt;code&gt;mermaid.js&lt;/code&gt;用の&lt;code&gt;div&lt;/code&gt;に置換するためショートコードを作成する&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;themes/theme/layouts/shortcodes&lt;/code&gt;に&lt;code&gt;mermaid.html&lt;/code&gt;を作成して下記を記述する。&lt;br /&gt;
+これで&lt;code&gt;mermaid&lt;/code&gt;クラス内のコンテンツが、&lt;code&gt;align&lt;/code&gt;設定を考慮しつつ表示されるようになる。
+本サイトの場合&lt;code&gt;&amp;lt;git-top&amp;gt;/web/web/themes/hugo-theme-den/layouts/shortcodes/mermaid.js&lt;/code&gt;に置いてある。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;mermaid&amp;#34;&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;align&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;{{ if .Get &amp;#34;&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;align&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;}}{{&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Get&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;align&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;}}{{&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;else&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;}}&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;center&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;{{&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;end&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;}}&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+    {{ safeHTML .Inner }}
+&lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;全ページで-mermaid-js-が読み込まれるように設定する&#34;&gt;全ページで&lt;code&gt;mermaid.js&lt;/code&gt;が読み込まれるように設定する&lt;/h2&gt;
+
+&lt;p&gt;下記の設定を、scriptタグが書かれている箇所に追記しておく。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;script&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;{{&amp;#34;&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;asset&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;mermaid&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;mermaid&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;js&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;relURL&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;}}&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;script&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;追記対象ファイル&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;scriptをthemes/theme/layouts/partials&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;header.html&lt;/code&gt; or &lt;code&gt;footer.html&lt;/code&gt; or &lt;code&gt;scripts.html&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;scripts.html&lt;/code&gt;に&lt;code&gt;jquery&lt;/code&gt;や&lt;code&gt;bootstrap&lt;/code&gt;などの読み込みも行っているため、ここに記述するのが良さそう。&lt;/p&gt;
+
+&lt;h2 id=&#34;記事内で-mermaid-js-を使用する&#34;&gt;記事内で&lt;code&gt;mermaid.js&lt;/code&gt;を使用する&lt;/h2&gt;
+
+&lt;p&gt;記事内で下記のように記述すると&lt;code&gt;mermaid.js&lt;/code&gt;がレンダリングしてくれる。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;記事に記載する&lt;code&gt;mermaid.js&lt;/code&gt;用コード&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:-&#34;&gt;&lt;a href=&#34;#fn:-&#34;&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;{&lt;/code&gt;の前のエスケープは実際には無い。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;\{\{\&amp;lt;mermaid align=&amp;quot;center&amp;quot;&amp;gt;}}
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice-&amp;gt;John: Hello John, how are you?
+    loop Healthcheck
+        John-&amp;gt;John: Fight against hypochondria
+    end
+    Note right of John: Rational thoughts &amp;lt;br/&amp;gt;prevail...
+    John--&amp;gt;Alice: Great!
+    John-&amp;gt;Bob: How about you?
+    Bob--&amp;gt;John: Jolly good!
+\{\{\&amp;lt;/mermaid&amp;gt;}}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;mermaid.js&lt;/code&gt;がレンダリングした結果&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;mermaid&#34; align=&#34;center&#34;&gt;
+    
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice-&gt;John: Hello John, how are you?
+    loop Healthcheck
+        John-&gt;John: Fight against hypochondria
+    end
+    Note right of John: Rational thoughts &lt;br/&gt;prevail...
+    John--&gt;Alice: Great!
+    John-&gt;Bob: How about you?
+    Bob--&gt;John: Jolly good!
+
+&lt;/div&gt;
+
+&lt;div class=&#34;footnotes&#34;&gt;
+
+&lt;hr /&gt;
+
+&lt;ol&gt;
+&lt;li id=&#34;fn:-&#34;&gt;本サイトのディレクトリ構成は&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/03/03/github-hugo-travis-ci-%E3%81%A7%E9%9D%99%E7%9A%84%E3%82%B5%E3%82%A4%E3%83%88%E3%82%92-github-pages-%E3%81%AB%E5%85%AC%E9%96%8B%E3%81%99%E3%82%8B/&#34;&gt;ここ&lt;/a&gt;を参照すること。
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:-&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li id=&#34;fn:-&#34;&gt;&lt;a href=&#34;https://mermaidjs.github.io/&#34;&gt;https://mermaidjs.github.io/&lt;/a&gt;
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:-&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+      
+    </item>
+    
+    <item>
       <title>Common Lispで継続・継続渡し方式(cps)を学ぶ</title>
       <link>https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp%E3%81%A7%E7%B6%99%E7%B6%9A%E7%B6%99%E7%B6%9A%E6%B8%A1%E3%81%97%E6%96%B9%E5%BC%8Fcps%E3%82%92%E5%AD%A6%E3%81%B6/</link>
       <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
@@ -8015,34 +8139,6 @@ Common Lispにも、リスト専用の長さを求める関数&lt;code&gt;list-l
 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;A&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;B&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;C&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;D&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;code&gt;defmethod&lt;/code&gt;は、上記9.3章の&lt;code&gt;defstruct&lt;/code&gt;で定義した構造体に対しても使用できる。&lt;br /&gt;
 これを使用して、簡単なオブジェクトシステムを実装することも出来る。&lt;/p&gt;
-</description>
-      
-    </item>
-    
-    <item>
-      <title>書籍 Land of Lisp の学習記録</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-%E3%81%AE%E5%AD%A6%E7%BF%92%E8%A8%98%E9%8C%B2/</link>
-      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-%E3%81%AE%E5%AD%A6%E7%BF%92%E8%A8%98%E9%8C%B2/</guid>
-      
-        <description>
-
-&lt;h1 id=&#34;勉強記録一覧&#34;&gt;勉強記録一覧&lt;/h1&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-9%E7%AB%A0-%E3%82%88%E3%82%8A%E9%80%B2%E3%82%93%E3%81%A0%E3%83%87%E3%83%BC%E3%82%BF%E5%9E%8B%E3%81%A8%E3%82%B8%E3%82%A7%E3%83%8D%E3%83%AA%E3%83%83%E3%82%AF%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/&#34;&gt;09章-より進んだデータ型とジェネリックプログラミング&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-10%E7%AB%A0-loop%E3%83%9E%E3%82%AF%E3%83%AD/&#34;&gt;10章-loopマクロ&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-11%E7%AB%A0-format%E9%96%A2%E6%95%B0%E3%81%A7%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B/&#34;&gt;11章-format関数でテキストを表示する&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-12%E7%AB%A0-%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%A0/&#34;&gt;12章-ストリーム&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-13%E7%AB%A0-web%E3%82%B5%E3%83%BC%E3%83%90%E3%82%92%E4%BD%9C%E3%82%8D%E3%81%86/&#34;&gt;13章-Webサーバを作ろう！&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-15%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E9%96%A2%E6%95%B0%E5%9E%8B%E3%82%B9%E3%82%BF%E3%82%A4%E3%83%AB%E3%81%A7%E3%82%B2%E3%83%BC%E3%83%A0%E3%82%92%E6%9B%B8%E3%81%93%E3%81%86/&#34;&gt;15章-ダイスオブドゥーム：関数型スタイルでゲームを書こう&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-16%E7%AB%A0-%E3%83%9E%E3%82%AF%E3%83%AD%E3%81%AE%E9%AD%94%E6%B3%95/&#34;&gt;16章-マクロの魔法&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-17%E7%AB%A0-%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E7%89%B9%E5%8C%96%E8%A8%80%E8%AA%9E/&#34;&gt;17章-ドメイン特化言語&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-18%E7%AB%A0-%E9%81%85%E5%BB%B6%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/&#34;&gt;18章-遅延プログラミング&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-19%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%81%AB%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%82%AB%E3%83%AB%E3%81%AAweb%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%82%92%E3%81%A4%E3%81%91%E3%82%8B/&#34;&gt;19章-ダイスオブドゥームにグラフィカルなWebインターフェースをつける&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-20%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%82%92%E3%81%95%E3%82%89%E3%81%AB%E9%9D%A2%E7%99%BD%E3%81%8F/&#34;&gt;20章-ダイスオブドゥームをさらに面白く&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </description>
       
     </item>
