@@ -13,11 +13,61 @@ authors:
 Gitを端末上で使用するため、操作とそのコマンドを記す。
 
 # 操作の種類一覧
+1. 情報更新/情報表示
 1. リポジトリ操作
+1. ブランチ操作
 1. ファイル操作
-1. ステータス/ログ確認
-1. 差分確認
-1. Git情報操作
+1. 差分(diff)確認
+
+
+----
+
+# 情報更新/情報表示
+## リモートリポジトリの情報をローカルリポジトリに反映する(フェッチ)
+**NOTE:** `fetch`が実際にやっているのは、リモート追跡ブランチの作成。
+
+```bash
+# シンタックス
+$ git fetch [リポジトリ略称 ブランチ名]
+# 例
+$ git fetch origin how-to-use-git
+```
+
+- `[ブランチ名]` 作成対象となるリモート追跡ブランチ。省略すると全てのリモート追跡ブランチを作成する。
+
+## ローカルブランチ&リモートブランチを一覧表示
+```bash
+# シンタックス
+$ git branch [-a]
+# 例
+$ git branch -a
+```
+
+- `[-a]` ローカルとリモートの全てのリポジトリ情報。省略した場合はローカルのみ。
+
+## ローカルリポジトリ状態を表示
+現在いるブランチ、そのupstream、ファイルのステージング状況を表示する。
+
+```bash
+# シンタックス
+$ git status
+# 例
+$ git status
+```
+
+## コミットログを表示
+```bash
+# シンタックス
+$ git log [--pretty=short] [--graph] [-数字] [--decorate] [ディレクトリ名|ファイル名*]
+# 例
+$ git log 
+```
+
+- `[--pretty=short]` 表示メッセージを短くする。
+- `[--graph]` ブランチをグラフ表示する。
+- `-数字` 指定した通じの数だけログを表示する。
+- `-p|-u|--patch [ディレクトリ名|ファイル名*]` 指定ファイルの差分をパッチ形式で表示する。
+- `--decorate` 現在のHEAD、ブランチ名、タグ名を表示する。
 
 ----
 
@@ -87,6 +137,82 @@ $ git pull origin how-to-use-git
 
 ----
 
+# ブランチ操作
+## ローカルブランチを作成する
+現在のコミットに、ローカルブランチを作成する。  
+リモート追跡ブランチが作成されている場合は、それを元にローカルブランチを作成する。
+
+```bash
+# ローカルブランチを作成
+$ git branch ブランチ名
+# ローカルブランチをチェックアウトする(ローカルブランチは自動的に作成される)
+$ git checkout how-to-use-git
+```
+
+## ローカルブランチを作成する/切り替える
+```bash
+# シンタックス
+$ git checkout [-b] [-f] ブランチ名
+# 例
+$ git checkout master # masterをチェックアウト
+$ git checkout -b how-to-use-git # hot-to-use-gitブランチを作成してチェックアウト
+```
+
+- `[-b]` このオプションは、`git branch ブランチ名; git checkout ブランチ名`のショートハンドとして動作する。
+- `[-f]` 作業ブランチやステージに変更があった場合でも、それを強制的に破棄してチェックアウトする。
+
+### リモートブランチを扱いたい場合
+リモートブランチは直接チェックアウトできない。  
+そこで、リモートブランチに対応する**リモート追跡ブランチ**を作成し、それからローカルブランチをチェックアウトする。  
+リモート追跡ブランチが存在する場合、そのブランチ名をチェックアウトすると、下記が自動的に行われる。
+
+- ローカルブランチは自動的に作成される。
+- 作成されたローカルブランチの**upstream**ブランチに、リモートブランチが自動的に設定される。
+
+```bash
+# 例
+# 特定のリモート追跡ブランチを作成
+$ git fetch origin how-to-use-git
+# ローカルブランチをチェックアウトする(ローカルブランチは自動的に作成される)
+$ git checkout how-to-use-git
+```
+
+## 現在のブランチに、指定コミットの指定ファイルを展開する
+```bash
+# シンタックス
+$ git checkout [コミットSHA] ファイルパス
+# 例
+$ git checkout afpj73z index.html
+```
+
+- `[コミットSHA]` 展開対象のファイルがあるコミット。省略時は現在のindexのコミットを指す。
+
+## 指定したブランチを現在のブランチにマージ
+```bash
+# シンタックス
+$ git merge [--no-ff] ブランチ名
+# 例
+## 現在masterにいるとして、how-to-use-gitブランチをmasterにマージ
+$ git merge --no-ff how-to-use-git
+```
+
+## コミット履歴を改竄する(rebase)
+```bash
+# シンタックス
+$ git rebase -i 改竄対象の直前のコミット
+# 例
+$ git rebase -i HEAD~2
+## エディタで、HEADを含めて2つまでのコミット履歴をpickからfixupに編集する
+### 編集前 ###
+# pick 7a34294 fix bug
+# pick 6fba227 merge how-to-use-git
+### 編集後 ###
+# pick 7a34294 fix bug
+# fixup 6fba227 merge how-to-use-git
+```
+
+----
+
 # ファイル操作
 ## ファイルをステージングする
 ```bash
@@ -109,10 +235,23 @@ $ git commit -m "feature: edit index.html"
 ## 直前のコミットメッセージを修正
 ```bash
 # シンタックス
-$ git commit --amend
+$ git commit --amend # -> エディタでメッセージを修正
 # 例
-$ git commit --amend
+$ git commit --amend # -> エディタでメッセージを修正
 ```
+
+## 変更をリセット
+```bash
+# シンタックス
+$ git reset [--soft|--mixed|--hard] [HEAD|HEAD^|SHA|ブランチ名]
+# 例
+git reset --mixed HEAD # addを取り消す
+git reset --hard ORIG_HEAD # git resetを取り消す
+```
+
+- `--soft` HEADの位置のみリセットする。(`commit`のみ取り消し)
+- `--mixed|指定なし` HEADの位置とindexをリセットする。(`add`と`commit`を取り消し)
+- `--hard` HEADの位置とindexとワークツリー内容をリセットする。(ワークツリーの編集内容と`add`と`commit`を取り消し)
 
 ----
 
@@ -157,50 +296,3 @@ $ git diff master..other-web/master -U10 --compaction-heuristic
   - `-U0` `-U10` 変更行の前後0行or10行を表示する。
   - `--color-words` 単語に色を付ける。
   - `--compaction-heuristic` 上方向への差分比較も実施した上で差分表示する。
-
-## ブランチを一覧表示
-```bash
-# シンタックス
-$ git branch [-a]
-# 例
-$ git branch -a
-```
-
-- `[-a]` ローカルとリモートの全てのリポジトリ情報。省略した場合はローカルのみ。
-
-## リポジトリ状態を表示
-現在いるブランチ、そのupstream、ファイルのステージング状況を表示する。
-
-```bash
-# シンタックス
-$ git status
-# 例
-$ git status
-```
-
-## コミットログを表示
-```bash
-# シンタックス
-$ git log [--pretty=short] [--graph] [-数字] [--decorate] [ディレクトリ名|ファイル名*]
-# 例
-$ git log 
-```
-
-- `[--pretty=short]` 表示メッセージを短くする。
-- `[--graph]` ブランチをグラフ表示する。
-- `-数字` 指定した通じの数だけログを表示する。
-- `-p|-u|--patch [ディレクトリ名|ファイル名*]` 指定ファイルの差分をパッチ形式で表示する。
-- `--decorate` 現在のHEAD、ブランチ名、タグ名を表示する。
-
-## 変更をリセット
-```bash
-# シンタックス
-$ git reset [--soft|--mixed|--hard] [HEAD|HEAD^|SHA|ブランチ名]
-# 例
-git reset --mixed HEAD # addを取り消す
-git reset --hard ORIG_HEAD # git resetを取り消す
-```
-
-- `--soft` HEADの位置のみリセットする。(`commit`のみ取り消し)
-- `--mixed|指定なし` HEADの位置とindexをリセットする。(`add`と`commit`を取り消し)
-- `--hard` HEADの位置とindexとワークツリー内容をリセットする。(ワークツリーの編集内容と`add`と`commit`を取り消し)
