@@ -220,8 +220,28 @@ defaultContentLanguageInSubdir = true
   - 単一のmarkdownファイルで完結する記事の場合は、フォルダ分けする必要はない。
   - [web/web/content/](https://github.com/otaon/web/tree/how-to-make-web-page-with-hugo/web/content)
 
+### 2-9. `.gitignore`を作成する
+ビルドした結果をコミットしないように`.gitignore`を作成する。
 
-### 2-9. ファイルをコミットする
+```sh
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# ignore public directory deploied by Hugo
+web/public/*
+```
+
+### 2-10. ファイルをコミットする
 ここまでに編集したファイルをコミットする。これで`hugo server`を実行しながら記事を記述する環境が整った。
 
 ## 3. Hugoによるビルド&gh-pagesへのpushの自動化設定
