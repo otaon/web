@@ -44,7 +44,7 @@ html, css諸々を書いて、サーバを立てて、ドメインを取って�
 
 <meta itemprop="datePublished" content="2019-03-03T16:23:58&#43;09:00" />
 <meta itemprop="dateModified" content="2019-03-06T02:35:00&#43;09:00" />
-<meta itemprop="wordCount" content="6621">
+<meta itemprop="wordCount" content="6712">
 
 
 
@@ -388,7 +388,25 @@ Denの場合は<code>hugo-theme-den/exampleSite</code>フォルダにサンプ�
 </ul></li>
 </ul>
 
-<h3 id="2-9-ファイルをコミットする">2-9. ファイルをコミットする</h3>
+<h3 id="2-9-gitignore-を作成する">2-9. <code>.gitignore</code>を作成する</h3>
+
+<p>ビルドした結果をコミットしないように<code>.gitignore</code>を作成する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh"><span class="c1"># Binaries for programs and plugins</span>
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+<span class="c1"># Test binary, build with `go test -c`</span>
+*.test
+
+<span class="c1"># Output of the go coverage tool, specifically when used with LiteIDE</span>
+*.out
+
+<span class="c1"># ignore public directory deploied by Hugo</span>
+web/public/*</code></pre></div>
+<h3 id="2-10-ファイルをコミットする">2-10. ファイルをコミットする</h3>
 
 <p>ここまでに編集したファイルをコミットする。これで<code>hugo server</code>を実行しながら記事を記述する環境が整った。</p>
 
