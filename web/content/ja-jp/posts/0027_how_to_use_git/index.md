@@ -196,6 +196,54 @@ $ git merge [--no-ff] ブランチ名
 $ git merge --no-ff how-to-use-git
 ```
 
+**NOTE** indexが変化するのはカレントブランチであり、引数で指定したindexは一切変化しない事を覚えておくこと。  
+つまり、`merge`実行時のカレントブランチは常に「変更を取り込む側」となる。
+
+- `master`ブランチにいるときに`git merge --no-ff `
+  - featureブランチでの開発が完了してmasterブランチにマージしたい場合などに用いる。
+  - {{<mermaid align="center">}}
+graph LR;
+	ee[master] -.-> c
+	style ee fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
+	g>HEAD]
+	style g fill:#9f9,stroke:#333,stroke-width:4px
+	g -.-> ee
+	f[master] --> d((d))
+	style f fill:#f9f,stroke:#333,stroke-width:4px
+
+	g --> f
+	a((a)) --> b((b))
+	b --> c((c))
+	c --> d((d))
+	b --> ba((ba))
+	ba --> bb((bb))
+	bb ==>|git merge --no-ff how-to-use-git| d
+	i[how-to-use-git] --> bb
+	style i fill:#f9f,stroke:#333,stroke-width:4px
+{{</mermaid>}}
+
+- `how-to-use-git`ブランチにいるときに`git merge [--ff] master`
+  - featureブランチを作成したまま放置していたらmasterが進んでしまった場合などに用いる。
+  - {{<mermaid align="center">}}
+graph LR;
+	g>HEAD]
+	style g fill:#9f9,stroke:#333,stroke-width:4px
+	g -.-> d[how-to-use-git]
+	style d fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
+	d ==>|git merge master| f
+	g --> f[how-to-use-git]
+	style f fill:#f9f,stroke:#333,stroke-width:4px
+
+	e[master] --> c
+	style e fill:#f9f,stroke:#333,stroke-width:4px
+
+	a((a)) --> b((b))
+	b((b)) --> c((c))
+
+	d -.-> b
+	f --> c
+{{</mermaid>}}
+
 ## コミット履歴を改竄する(rebase)
 ```bash
 # シンタックス
@@ -296,3 +344,4 @@ $ git diff master..other-web/master -U10 --compaction-heuristic
   - `-U0` `-U10` 変更行の前後0行or10行を表示する。
   - `--color-words` 単語に色を付ける。
   - `--compaction-heuristic` 上方向への差分比較も実施した上で差分表示する。
+
