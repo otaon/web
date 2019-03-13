@@ -24,6 +24,477 @@
     </item>
     
     <item>
+      <title>Gitの使い方</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/13/git%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9/</link>
+      <pubDate>Wed, 13 Mar 2019 01:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/13/git%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9/</guid>
+      
+        <description>
+
+&lt;h1 id=&#34;目的&#34;&gt;目的&lt;/h1&gt;
+
+&lt;p&gt;Gitを端末上で使用するため、操作とそのコマンドを記す。&lt;/p&gt;
+
+&lt;h1 id=&#34;操作の種類一覧&#34;&gt;操作の種類一覧&lt;/h1&gt;
+
+&lt;ol&gt;
+&lt;li&gt;情報更新/情報表示&lt;/li&gt;
+&lt;li&gt;リポジトリ操作&lt;/li&gt;
+&lt;li&gt;ブランチ操作&lt;/li&gt;
+&lt;li&gt;ファイル操作&lt;/li&gt;
+&lt;li&gt;差分(diff)確認&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;情報更新-情報表示&#34;&gt;情報更新/情報表示&lt;/h1&gt;
+
+&lt;h2 id=&#34;リモートリポジトリの情報をローカルリポジトリに反映する-フェッチ&#34;&gt;リモートリポジトリの情報をローカルリポジトリに反映する(フェッチ)&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; &lt;code&gt;fetch&lt;/code&gt;が実際にやっているのは、リモート追跡ブランチの作成。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git fetch &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;リポジトリ略称 ブランチ名&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git fetch origin how-to-use-git
+From github.com:otaon/web
+ * branch            how-to-use-git -&amp;gt; FETCH_HEAD&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;[ブランチ名]&lt;/code&gt; 作成対象となるリモート追跡ブランチ。省略すると全てのリモート追跡ブランチを作成する。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;ローカルブランチ-リモートブランチを一覧表示&#34;&gt;ローカルブランチ&amp;amp;リモートブランチを一覧表示&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git branch &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-a&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git branch -a
+  how-to-make-web-page-with-hugo
+* how-to-use-git
+  how-to-use-mermaid-in-hugo
+  master
+  migrate-from-gist-to-githubio
+  remotes/origin/gh-pages
+  remotes/origin/how-to-make-web-page-with-hugo
+  remotes/origin/how-to-use-git
+  remotes/origin/how-to-use-mermaid-in-hugo
+  remotes/origin/master
+  remotes/origin/migrate-from-gist-to-githubio&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;[-a]&lt;/code&gt; ローカルとリモートの全てのリポジトリ情報。省略した場合はローカルのみ。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;ローカルリポジトリ状態を表示&#34;&gt;ローカルリポジトリ状態を表示&lt;/h2&gt;
+
+&lt;p&gt;現在いるブランチ、そのupstream、ファイルのステージング状況を表示する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git status
+
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git status
+On branch how-to-use-git
+Your branch is up to date with &lt;span class=&#34;s1&#34;&gt;&amp;#39;origin/how-to-use-git&amp;#39;&lt;/span&gt;.
+
+Changes not staged &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; commit:
+  &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;use &lt;span class=&#34;s2&#34;&gt;&amp;#34;git add &amp;lt;file&amp;gt;...&amp;#34;&lt;/span&gt; to update what will be committed&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;use &lt;span class=&#34;s2&#34;&gt;&amp;#34;git checkout -- &amp;lt;file&amp;gt;...&amp;#34;&lt;/span&gt; to discard changes in working directory&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+
+        modified:   content/ja-jp/posts/0027_how_to_use_git/index.md
+
+no changes added to commit &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;use &lt;span class=&#34;s2&#34;&gt;&amp;#34;git add&amp;#34;&lt;/span&gt; and/or &lt;span class=&#34;s2&#34;&gt;&amp;#34;git commit -a&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;コミットログを表示&#34;&gt;コミットログを表示&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git log &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--pretty&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;short&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--graph&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-数字&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-p&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;-u&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;--patch 対象ファイルパス*&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--decorate&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git log -2 --graph
+* commit d37e53c8f12bfba66c1bd1accce89ca6bcbc33a0 &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;HEAD -&amp;gt; how-to-use-git, origin/how-to-use-git&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; Author: otaon &amp;lt;******@github.com&amp;gt;
+&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; Date:   Tue Mar &lt;span class=&#34;m&#34;&gt;12&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;03&lt;/span&gt;:24:19 &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt; +0900
+&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;     feature: add figure of &lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;merge&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;
+* commit de2baba4ddb3f7469aba02f88190a790523312cd
+&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; Author: otaon &amp;lt;******@github.com&amp;gt;
+&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; Date:   Mon Mar &lt;span class=&#34;m&#34;&gt;11&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;02&lt;/span&gt;:28:11 &lt;span class=&#34;m&#34;&gt;2019&lt;/span&gt; +0900
+&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;     feature: edit an article&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;[--pretty=short]&lt;/code&gt; 表示メッセージを短くする。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[--graph]&lt;/code&gt; ブランチをグラフ表示する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[-数字]&lt;/code&gt; 指定した通じの数だけログを表示する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[-p|-u|--patch 対象ファイルパス*]&lt;/code&gt; 指定ファイルの差分をパッチ形式で表示する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[--decorate]&lt;/code&gt; 現在のHEAD、ブランチ名、タグ名を表示する。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;リポジトリ操作&#34;&gt;リポジトリ操作&lt;/h1&gt;
+
+&lt;h2 id=&#34;リポジトリを新規作成する&#34;&gt;リポジトリを新規作成する&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# -*- ローカルリポジトリを作成する -*-&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git init &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;ディレクトリ&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git init web
+
+&lt;span class=&#34;c1&#34;&gt;# -*- リモートリポジトリを作成する -*-&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git init --bare --shared &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;ディレクトリ&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git init --bare --shared web&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;[ディレクトリ]&lt;/code&gt; 指定したディレクトリに&lt;code&gt;.git&lt;/code&gt;というサブディレクトリが作成される。省略時はカレントディレクトリ。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--bare&lt;/code&gt; 最小限のリポジトリを作成する。もし環境変数&lt;code&gt;GIT_DIR&lt;/code&gt;が設定されていなければ、現在のワーキング・ディレクトリが設定される。&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:git&#34;&gt;&lt;a href=&#34;#fn:git&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--shared&lt;/code&gt; Gitリポジトリが複数のユーザで共有されることを指定する。このオプションは、同じグループに属するユーザがそのリポジトリにpushすることを許可する。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;リモートリポジトリからローカルリポジトリをクローンする&#34;&gt;リモートリポジトリからローカルリポジトリをクローンする&lt;/h2&gt;
+
+&lt;p&gt;既にリモートリポジトリが存在する時、それを元にローカルリポジトリをクローンする。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git clone リモートリポジトリ名 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;ディレクトリ&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git clone git@github.com:otaon/web.git web&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;[ディレクトリ]&lt;/code&gt; 指定したディレクトリを作成してリモートリポジトリ内のデータを置く。&lt;br /&gt;
+省略した場合はリモートリポジトリ名のディレクトリを作成してリモートリポジトリ内のデータを置く。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;リモートリポジトリをローカルリポジトリに関連付ける&#34;&gt;リモートリポジトリをローカルリポジトリに関連付ける&lt;/h2&gt;
+
+&lt;p&gt;既にローカルリポジトリとリモートリポジトリが存在する時、それをリモートリポジトリに関連付ける。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git remote add リモートリポジトリの略称 リモートリポジトリのURL
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git remote add origin git@github.com:otaon/web.git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;現在のローカルリポジトリのブランチをpush&#34;&gt;現在のローカルリポジトリのブランチをpush&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git push &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-u&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;--set-upstream&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; リモートリポジトリの略称 ブランチ名
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git push origin how-to-use-git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;[-u|--set-upstream]&lt;/code&gt; ローカルリポジトリ/現在ブランチの&lt;strong&gt;upstream&lt;/strong&gt;をリモートリポジトリの略称/ブランチ名に設定する。&lt;br /&gt;
+こうすると、次回からは&lt;code&gt;git push&lt;/code&gt;で&lt;strong&gt;upstream&lt;/strong&gt;にpushできるようになる。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;リモートリポジトリのブランチをpull&#34;&gt;リモートリポジトリのブランチをpull&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git pull リモートリポジトリの略称 ブランチ名
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git pull origin how-to-use-git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;ブランチ操作&#34;&gt;ブランチ操作&lt;/h1&gt;
+
+&lt;h2 id=&#34;ローカルブランチを作成する&#34;&gt;ローカルブランチを作成する&lt;/h2&gt;
+
+&lt;p&gt;現在のコミットに、ローカルブランチを作成する。&lt;br /&gt;
+リモート追跡ブランチが作成されている場合は、それを元にローカルブランチを作成する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# ローカルブランチを作成&lt;/span&gt;
+$ git branch ブランチ名
+&lt;span class=&#34;c1&#34;&gt;# ローカルブランチをチェックアウトする(ローカルブランチは自動的に作成される)&lt;/span&gt;
+$ git checkout how-to-use-git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;ローカルブランチを作成する-切り替える&#34;&gt;ローカルブランチを作成する/切り替える&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git checkout &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-b&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-f&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ブランチ名
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git checkout master &lt;span class=&#34;c1&#34;&gt;# masterをチェックアウト&lt;/span&gt;
+$ git checkout -b how-to-use-git &lt;span class=&#34;c1&#34;&gt;# hot-to-use-gitブランチを作成してチェックアウト&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;[-b]&lt;/code&gt; このオプションは、&lt;code&gt;git branch ブランチ名; git checkout ブランチ名&lt;/code&gt;のショートハンドとして動作する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[-f]&lt;/code&gt; 作業ブランチやステージに変更があった場合でも、それを強制的に破棄してチェックアウトする。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;リモートブランチを扱いたい場合&#34;&gt;リモートブランチを扱いたい場合&lt;/h3&gt;
+
+&lt;p&gt;リモートブランチは直接チェックアウトできない。&lt;br /&gt;
+そこで、リモートブランチに対応する&lt;strong&gt;リモート追跡ブランチ&lt;/strong&gt;を作成し、それからローカルブランチをチェックアウトする。&lt;br /&gt;
+リモート追跡ブランチが存在する場合、そのブランチ名をチェックアウトすると、下記が自動的に行われる。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ローカルブランチは自動的に作成される。&lt;/li&gt;
+&lt;li&gt;作成されたローカルブランチの&lt;strong&gt;upstream&lt;/strong&gt;ブランチに、リモートブランチが自動的に設定される。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;## 特定のリモート追跡ブランチを作成&lt;/span&gt;
+$ git fetch origin how-to-use-git
+&lt;span class=&#34;c1&#34;&gt;## ローカルブランチをチェックアウトする(ローカルブランチは自動的に作成される)&lt;/span&gt;
+$ git checkout how-to-use-git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;現在のブランチに-指定コミットの指定ファイルを展開する&#34;&gt;現在のブランチに、指定コミットの指定ファイルを展開する&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git checkout &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;コミットSHA&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ファイルパス
+
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git checkout afpj73z index.html&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;[コミットSHA]&lt;/code&gt; 展開対象のファイルがあるコミット。省略時は現在のindexのコミットを指す。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;指定したブランチを現在のブランチにマージ&#34;&gt;指定したブランチを現在のブランチにマージ&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git merge &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--no-ff&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ブランチ名
+
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;## 現在masterにいるとして、how-to-use-gitブランチをmasterにマージ&lt;/span&gt;
+$ git merge --no-ff how-to-use-git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt; indexが変化するのはカレントブランチであり、引数で指定したindexは一切変化しない事を覚えておくこと。&lt;br /&gt;
+つまり、&lt;code&gt;merge&lt;/code&gt;実行時のカレントブランチは常に「変更を取り込む側」となる。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;master&lt;/code&gt;ブランチにいるときに&lt;code&gt;git merge --no-ff&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;featureブランチでの開発が完了してmasterブランチにマージしたい場合などに用いる。&lt;/li&gt;
+&lt;li&gt;&lt;div class=&#34;mermaid&#34; align=&#34;center&#34;&gt;
+    
+graph LR;
+	ee[master] -.-&gt; c
+	style ee fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
+	g&gt;HEAD]
+	style g fill:#9f9,stroke:#333,stroke-width:4px
+	g -.-&gt; ee
+	f[master] --&gt; d((d))
+	style f fill:#f9f,stroke:#333,stroke-width:4px
+
+	g --&gt; f
+	a((a)) --&gt; b((b))
+	b --&gt; c((c))
+	c --&gt; d((d))
+	style a fill:#f99
+	style b fill:#f99
+	style c fill:#f99
+	style d fill:#f99
+
+	b --&gt; ba((ba))
+	ba --&gt; bb((bb))
+	bb ==&gt;|git merge --no-ff how-to-use-git| d
+	i[how-to-use-git] --&gt; bb
+	style i fill:#f9f,stroke:#333,stroke-width:4px
+
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;how-to-use-git&lt;/code&gt;ブランチにいるときに&lt;code&gt;git merge [--ff] master&lt;/code&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;featureブランチを作成したまま放置していたらmasterが進んでしまった場合などに用いる。&lt;/li&gt;
+&lt;li&gt;&lt;div class=&#34;mermaid&#34; align=&#34;center&#34;&gt;
+    
+graph LR;
+	g&gt;HEAD]
+	style g fill:#9f9,stroke:#333,stroke-width:4px
+	g -.-&gt; d[how-to-use-git]
+	style d fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
+	d ==&gt;|git merge master| f
+	g --&gt; f[how-to-use-git]
+	style f fill:#f9f,stroke:#333,stroke-width:4px
+
+	e[master] --&gt; c
+	style e fill:#f9f,stroke:#333,stroke-width:4px
+
+	a((a)) --&gt; b((b))
+	b((b)) --&gt; c((c))
+	style a fill:#f99
+	style b fill:#f99
+	style c fill:#f99
+
+	d -.-&gt; b
+	f --&gt; c
+
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;コミット履歴を改竄する-rebase&#34;&gt;コミット履歴を改竄する(rebase)&lt;/h2&gt;
+
+&lt;h3 id=&#34;ブランチの開始地点を変更する&#34;&gt;ブランチの開始地点を変更する&lt;/h3&gt;
+
+&lt;p&gt;ブランチ元にコミットが発生した時、それに追従するために、ブランチの開始地点を、ブランチ元の新しいHEADに変更する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git rebase &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;ブランチ元&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;現在のブランチ&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git rebase master how-to-use-git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;mermaid&#34; align=&#34;center&#34;&gt;
+    
+graph LR;
+	e[master] --&gt; c
+	style e fill:#f9f,stroke:#333,stroke-width:4px
+	a((a)) ==&gt; b((b))
+	b((b)) ==&gt; c((c))
+	style a fill:#f99
+	style b fill:#f99
+	style c fill:#f99
+	b --&gt; x((x))
+	x --&gt; y((y))
+	style x stroke-dasharray: 5, 5
+	style y stroke-dasharray: 5, 5
+
+	c --&gt; x2((x&#39;))
+	x2 --&gt; y2((y&#39;))
+
+	e2[how-to-use-git] -.-&gt; y
+	style e2 fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
+
+	x ==&gt;|git rebase master| x2
+	y ==&gt;|git rebase master| y2
+
+	e3[how-to-use-git] --&gt; y2
+	style e3 fill:#f9f,stroke:#333,stroke-width:4px
+	z3&gt;HEAD]  -.-&gt; e2
+	z3 --&gt; e3
+	style z3 fill:#9f9,stroke:#333,stroke-width:4px
+
+&lt;/div&gt;
+
+
+&lt;h3 id=&#34;複数のコミットを一つにまとめる&#34;&gt;複数のコミットを一つにまとめる&lt;/h3&gt;
+
+&lt;p&gt;複数のコミットをまとめた、新しいコミットを作る。(つまりSHAが変わることに注意)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git rebase -i 改竄対象の直前のコミット
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git rebase -i HEAD~2
+
+&lt;span class=&#34;c1&#34;&gt;# エディタで、HEADを含めて2つまでのコミット履歴をpickからfixupに編集する&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;### 編集前 ###(上の方が古い)&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# pick 7a34294 first commit&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# pick 6fba227 second commit&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;### 編集後 ###(2つ目のコミットをfixupに変更)&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# pick 7a34294 first commit&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# fixup 6fba227 second commit&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;mermaid&#34; align=&#34;center&#34;&gt;
+    
+graph LR;
+	a((a)) -.-&gt; b((b))
+	style b stroke-dasharray: 5, 5
+	b((b)) -.-&gt; c((c))
+	a --&gt; d((b + c))
+
+	z&gt;HEAD]  -.-&gt; e
+	style z fill:#9f9,stroke:#333,stroke-width:4px
+	e[master] -.-&gt; c
+	style c stroke-dasharray: 5, 5
+	style e fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
+
+	b ==&gt;|git rebase| d
+	c ==&gt;|git rebase| d
+	e2[master] --&gt; d
+	style e2 fill:#f9f,stroke:#333,stroke-width:4px
+	z --&gt; e2
+
+&lt;/div&gt;
+
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;ファイル操作&#34;&gt;ファイル操作&lt;/h1&gt;
+
+&lt;h2 id=&#34;ファイルをステージングする&#34;&gt;ファイルをステージングする&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git add &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--all&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;ファイル&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git pull index.html&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--all&lt;/code&gt; 変更が加えられたファイルと未追跡だったファイルをaddする&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;ステージング済みのファイルをリポジトリへコミット&#34;&gt;ステージング済みのファイルをリポジトリへコミット&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git commit &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-m &lt;span class=&#34;s2&#34;&gt;&amp;#34;コミットメッセージ&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git commit -m &lt;span class=&#34;s2&#34;&gt;&amp;#34;feature: edit index.html&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;直前のコミットメッセージを修正&#34;&gt;直前のコミットメッセージを修正&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git commit --amend &lt;span class=&#34;c1&#34;&gt;# -&amp;gt; エディタでメッセージを修正&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git commit --amend &lt;span class=&#34;c1&#34;&gt;# -&amp;gt; エディタでメッセージを修正&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;変更をリセット&#34;&gt;変更をリセット&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git reset &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--soft&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;--mixed&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;--hard&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;HEAD&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;HEAD^&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;SHA&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;ブランチ名&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+git reset --mixed HEAD &lt;span class=&#34;c1&#34;&gt;# addを取り消す&lt;/span&gt;
+git reset --hard ORIG_HEAD &lt;span class=&#34;c1&#34;&gt;# git resetを取り消す&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--soft&lt;/code&gt; HEADの位置のみリセットする。(&lt;code&gt;commit&lt;/code&gt;のみ取り消し)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--mixed|指定なし&lt;/code&gt; HEADの位置とindexをリセットする。(&lt;code&gt;add&lt;/code&gt;と&lt;code&gt;commit&lt;/code&gt;を取り消し)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--hard&lt;/code&gt; HEADの位置とindexとワークツリー内容をリセットする。(ワークツリーの編集内容と&lt;code&gt;add&lt;/code&gt;と&lt;code&gt;commit&lt;/code&gt;を取り消し)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;差分確認&#34;&gt;差分確認&lt;/h1&gt;
+
+&lt;h2 id=&#34;様々な差分-diff-を確認&#34;&gt;様々な差分(diff)を確認&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git diff
+  &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;HEAD
+  &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;HEAD^
+  &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;HEAD..リモート名/ブランチ名
+  &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;リモート名/ブランチ名..HEAD
+  &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;--cached
+  &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;変更前のSHA..変更後のSHA
+  &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;確認したいコミットのSHA^..確認したいコミットのSHA
+  &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;ブランチA..ブランチB&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-- 対象ファイルパス&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;その他オプション&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# 例&lt;/span&gt;
+$ git diff -U5 how-to-use-git..origin/how-to-use-git -- index.html&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;A..B&lt;/code&gt;と書いた場合、左が古く、右が新しいとみなされる&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;比較対象の状態を指定する方法
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;指定なし&lt;/code&gt; index(ステージ領域) → 現在のワークツリー&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;HEAD&lt;/code&gt; 最新コミット → 現在のワークツリー&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;HEAD^|HEAD^..HEAD&lt;/code&gt; 一つ前のコミット → 最新コミット&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;HEAD..リモートリポジトリ名/ブランチ名&lt;/code&gt; 最新コミット →指定リモートリポジトリ/指定ブランチ&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;リモート名/ブランチ名..HEAD&lt;/code&gt; 指定リモートリポジトリ/指定ブランチ →最新コミット&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--cached|--staged&lt;/code&gt; 最新コミット →index(ステージ領域)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;SHA1..SHA2&lt;/code&gt; 指定コミット(SHA1) → 指定コミット(SHA2)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;SHA1^..SHA1&lt;/code&gt; 指定コミット(SHA1)の一つ前 → 指定コミット(SHA1)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ブランチ名A..ブランチ名B&lt;/code&gt; ブランチA → ブランチB&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;比較対象のファイルを指定する方法
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-- 対象ファイルパス+&lt;/code&gt; 指定ファイルパスのみを対象とする
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;git diff -- ファイルパスA ファイルパスB&lt;/code&gt; 指定ファイルパスAと、指定ファイルパスB&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;表示形式を指定する方法
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--stat&lt;/code&gt; 変更点ではなく、ファイル毎の変更種別と変更量のみ表示する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--name-only&lt;/code&gt; ファイル名のみ表示する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;git add -n .; git diff --name-only&lt;/code&gt; git add をdry-runして追加されたファイルも対象として、ファイル名のみ表示する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-U0&lt;/code&gt; &lt;code&gt;-U10&lt;/code&gt; 変更行の前後0行or10行を表示する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--color-words&lt;/code&gt; 単語に色を付ける。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--compaction-heuristic&lt;/code&gt; 上方向への差分比較も実施した上で差分表示する。環境によっては使用不可の模様。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
+
+&lt;hr /&gt;
+
+&lt;ol&gt;
+&lt;li id=&#34;fn:git&#34;&gt;&lt;code&gt;.git&lt;/code&gt;フォルダの場所を指す環境変数。指定されていない場合、Gitはディレクトリツリーを&lt;code&gt;~&lt;/code&gt;または&lt;code&gt;/&lt;/code&gt;にたどり着くまで上っていき、各ディレクトリで&lt;code&gt;.git&lt;/code&gt;ディレクトリを探す。&lt;a href=&#34;https://git-scm.com/book/ja/v2/Git%E3%81%AE%E5%86%85%E5%81%B4-%E7%92%B0%E5%A2%83%E5%A4%89%E6%95%B0&#34;&gt;10.8_Gitの内側-環境変数&lt;/a&gt;
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:git&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+      
+    </item>
+    
+    <item>
       <title>mermaid.jsをHugoで使えるようにする</title>
       <link>https://otaon.github.io/web/ja-jp/2019/03/08/mermaid.js%E3%82%92hugo%E3%81%A7%E4%BD%BF%E3%81%88%E3%82%8B%E3%82%88%E3%81%86%E3%81%AB%E3%81%99%E3%82%8B/</link>
       <pubDate>Fri, 08 Mar 2019 00:00:00 +0900</pubDate>
@@ -7707,438 +8178,6 @@ AIエンジンが右側の枝を見に行く際には、スコアが8以下に�
 プレイするには、下記のとおりコマンドを実行する。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;serve&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dod-request-handler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;そして、webブラウザで&lt;a href=&#34;http://localhost:8080/game.html&#34;&gt;ゲームページ&lt;/a&gt;を開く。&lt;/p&gt;
-</description>
-      
-    </item>
-    
-    <item>
-      <title>書籍 Land of Lisp 9章 より進んだデータ型とジェネリックプログラミング</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-9%E7%AB%A0-%E3%82%88%E3%82%8A%E9%80%B2%E3%82%93%E3%81%A0%E3%83%87%E3%83%BC%E3%82%BF%E5%9E%8B%E3%81%A8%E3%82%B8%E3%82%A7%E3%83%8D%E3%83%AA%E3%83%83%E3%82%AF%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/</link>
-      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-9%E7%AB%A0-%E3%82%88%E3%82%8A%E9%80%B2%E3%82%93%E3%81%A0%E3%83%87%E3%83%BC%E3%82%BF%E5%9E%8B%E3%81%A8%E3%82%B8%E3%82%A7%E3%83%8D%E3%83%AA%E3%83%83%E3%82%AF%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/</guid>
-      
-        <description>
-
-&lt;h2 id=&#34;t-o-c&#34;&gt;T.O.C.&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;#91-配列&#34;&gt;9.1 配列&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#92-ハッシュテーブル&#34;&gt;9.2 ハッシュテーブル&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#93-構造体&#34;&gt;9.3 構造体&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#94-データをジェネリックに扱う&#34;&gt;9.4 データをジェネリックに扱う&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;Common Lisp では、下記のようなデータ型が使用できる。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;コンスセル&lt;/li&gt;
-&lt;li&gt;シンボル&lt;/li&gt;
-&lt;li&gt;文字列&lt;/li&gt;
-&lt;li&gt;数値&lt;/li&gt;
-&lt;li&gt;配列&lt;/li&gt;
-&lt;li&gt;ハッシュテーブル&lt;/li&gt;
-&lt;li&gt;構造体&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;9-1-配列&#34;&gt;9.1 配列&lt;/h2&gt;
-
-&lt;h3 id=&#34;配列を使う&#34;&gt;配列を使う&lt;/h3&gt;
-
-&lt;p&gt;配列を作成するには&lt;code&gt;make-array&lt;/code&gt;を使用する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-array&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;#(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;配列を作成する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-array&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;X&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;配列の1番目の要素をgetする。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;aref&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;NIL&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;ジェネリックなセッター&#34;&gt;ジェネリックなセッター&lt;/h3&gt;
-
-&lt;p&gt;Common Lispは*ジェネリックなセッター*をサポートしている。&lt;br /&gt;
-つまり、あらゆるデータ型に対してセッターが同じ形式で書ける。&lt;/p&gt;
-
-&lt;p&gt;例として、&lt;code&gt;setf&lt;/code&gt;によって、配列の特定の要素を変更する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-array&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;aref&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;foo&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;FOO&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;#(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;FOO&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;aref&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;FOO&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;上記の例では、配列の第1要素を変更した。&lt;br /&gt;
-下記の通り、配列以外のデータ型に対しても、setfは同様の操作によって値をセットできる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;foo&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-array&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;#(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;aref&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;foo&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;list&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;x&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;y&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;z&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;X&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;Y&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;Z&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;foo&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;#(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;X&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;Y&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;Z&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;aref&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;foo&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-hash-table&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;l&#34;&gt;#S&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;HASH_TABLE&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;gethash&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;zoink&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;aref&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;foo&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;foo&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;#(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;l&#34;&gt;#S&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;HASH-TABLE&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ZOINK&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;Y&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;Z&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;配列とリスト&#34;&gt;配列とリスト&lt;/h3&gt;
-
-&lt;p&gt;配列とリストでは、特定の要素にアクセスする方法が異なる。&lt;br /&gt;
-具体的には、下記の違いがある。&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;&lt;/th&gt;
-&lt;th&gt;n番目の要素へのアクセス&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;リスト&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;(nth 数字 リスト)&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;配列&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;(aref 配列 数字)&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&#34;9-2-ハッシュテーブル&#34;&gt;9.2 ハッシュテーブル&lt;/h2&gt;
-
-&lt;h3 id=&#34;ハッシュテーブルを使う&#34;&gt;ハッシュテーブルを使う&lt;/h3&gt;
-
-&lt;p&gt;ハッシュテーブルを作成するには&lt;code&gt;make-hash-table&lt;/code&gt;を使用する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-hash-table&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;l&#34;&gt;#S&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;HASH-TABLE&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;alistと同じく、ハッシュテーブルは要素をキーとバリューの組み合わせで格納する。&lt;br /&gt;
-&lt;code&gt;gethash&lt;/code&gt;関数を使って要素を取り出すことができる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-hash-table&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;l&#34;&gt;#S&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;HASH-TABLE&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;gethash&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;yup&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;no&#34;&gt;NIL&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;NIL&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;gethash&lt;/code&gt;は2つの値を返す関数である。
-1つ目の値は、キーに対応する値。
-2つ目の値は、キーに対応する値があるか否か。&lt;/p&gt;
-
-&lt;p&gt;配列と同じように、データを取り出す関数(ここでは&lt;code&gt;gethash&lt;/code&gt;)を、&lt;code&gt;setf&lt;/code&gt;を組み合わせてデータをセットできる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-hash-table&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;l&#34;&gt;#S&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;HASH-TABLE&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;gethash&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;yup&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;25&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;mi&#34;&gt;25&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;gethash&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;yup&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;mi&#34;&gt;25&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;T&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;同じデータを連想リストとハッシュテーブルで作成してみる。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;alist&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*drink-order*&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;bill&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;double-espresso&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                              &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lisa&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;small-drip-coffee&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                              &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;john&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;medium-latte&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cdr&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;assoc&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;lisa&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*drink-order*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;LISA&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;SMALL-DRIP-COFFEE&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;em&gt;hash-table&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*dring-order*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-hash-table&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;l&#34;&gt;#S&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;HASH-TABLE&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;gethash&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;bill&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*drink-order*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;double-espresso&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;DOUBLE-ESPRESSO&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;gethash&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;lisa&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*drink-order*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;small-drip-coffee&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;SMALL-DRIP-COFFEE&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;gethash&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;john&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*drink-order*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;medium-latte&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;MEDIUM-LATTE&lt;/span&gt;
-
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;gethash&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;lisa&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*drink-order*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;SMALL-DRIP-COFFEE&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;T&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;複数の値を返す&#34;&gt;複数の値を返す&lt;/h3&gt;
-
-&lt;p&gt;Common Lispでは、複数の値を返す関数を定義できる。&lt;br /&gt;
-既成の関数でも、複数の値を返すものがある。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;round&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;2.4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;0.4&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;複数の値を返す関数を自作するには、&lt;code&gt;(values)&lt;/code&gt;を使用する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;foo&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;values&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;7&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;FOO&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;foo&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;;&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;7&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;1番目の値を使用する方法は、単数の返り値の扱い方と変わらない。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;foo&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;8&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;2番目以降の値を使用するには&lt;code&gt;(multiple-value-bind)&lt;/code&gt;を使用する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;multiple-value-bind&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;foo&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;21&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&#34;9-3-構造体&#34;&gt;9.3 構造体&lt;/h2&gt;
-
-&lt;h3 id=&#34;構造体を使う&#34;&gt;構造体を使う&lt;/h3&gt;
-
-&lt;p&gt;構造体は、OOPに見られるように、属性を持つオブジェクトを表現するために使用される。&lt;br /&gt;
-構造体を定義するには&lt;code&gt;(defstruct)&lt;/code&gt;を使用する。&lt;br /&gt;
-スロットに初期値を与える場合、括弧で囲う。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defstruct&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;person&lt;/span&gt;
-    &lt;span class=&#34;nv&#34;&gt;name&lt;/span&gt;
-    &lt;span class=&#34;nv&#34;&gt;age&lt;/span&gt;
-    &lt;span class=&#34;nv&#34;&gt;waist-size&lt;/span&gt;
-    &lt;span class=&#34;nv&#34;&gt;favorite-color&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;PERSON&lt;/span&gt;
-
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defstruct&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;human&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;John Doe&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-    &lt;span class=&#34;nv&#34;&gt;age&lt;/span&gt;
-    &lt;span class=&#34;nv&#34;&gt;waist-size&lt;/span&gt;
-    &lt;span class=&#34;nv&#34;&gt;favorite-color&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;HUMAN&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;上記の例では、&lt;code&gt;person&lt;/code&gt;は4つの属性(lispにおいては*スロット*と呼ばれる)を持つ。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;name   名前&lt;/li&gt;
-&lt;li&gt;age   年齢&lt;/li&gt;
-&lt;li&gt;waist-size    ウェストサイズ&lt;/li&gt;
-&lt;li&gt;favorite-color   好きな色&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;構造体を定義する(&lt;code&gt;defstruct&lt;/code&gt;を呼ぶ)と、下記が自動的に生成される。&lt;/p&gt;
-
-&lt;h4 id=&#34;構造体のインスタンスを作成する関数&#34;&gt;構造体のインスタンスを作成する関数&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;(make-person)&lt;/code&gt;関数&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*bob*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-person&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:name&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Bob&amp;#34;&lt;/span&gt;
-                                   &lt;span class=&#34;ss&#34;&gt;:age&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;35&lt;/span&gt;
-                                   &lt;span class=&#34;ss&#34;&gt;:waist-size&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;32&lt;/span&gt;
-                                   &lt;span class=&#34;ss&#34;&gt;:favorite-color&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;blue&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;vg&#34;&gt;*BOB*&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4 id=&#34;各スロットへのゲッター&#34;&gt;各スロットへのゲッター&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;(person-age)&lt;/code&gt;関数&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;person-age&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*bob*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;mi&#34;&gt;35&lt;/span&gt;
-
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;person-age&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*bob*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;36&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;36&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;LispのReaderは、&lt;code&gt;person&lt;/code&gt;の出力表記を読み込み、&lt;code&gt;person&lt;/code&gt;のインスタンスを生成できる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*that-guy*&lt;/span&gt; &lt;span class=&#34;l&#34;&gt;#S&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;PERSON&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:NAME&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;bob&amp;#34;&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:AGE&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;35&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:WAIST-SIZE&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;32&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;:FAVORITE-COLOR&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;blue&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;person-age&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*that-guy*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;35&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;構造体をいつ使うか&#34;&gt;構造体をいつ使うか&lt;/h3&gt;
-
-&lt;p&gt;仮に、構造体を使用せずにリストでデータの塊を管理することを考える。&lt;br /&gt;
-この場合、インスタンスを作成する関数や、各スロットへのゲッターは下記のとおり書ける。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;make-person&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;age&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;waist-size&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;favorite-color&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;list&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;age&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;waist-size&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;favorite-color&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;MAKE-PERSON&lt;/span&gt;
-
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;person-age&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;person&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;person&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;PERSON-AGE&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;見て分かる通り、どの属性が&lt;code&gt;person&lt;/code&gt;リストのどの位置にあるのかを意識する必要がある。&lt;br /&gt;
-したがって、リストで沢山の属性を管理するのはバグの原因となる。&lt;br /&gt;
-また、構造体の方がリストよりも属性へのセット、ゲットのコードが簡潔に書ける。&lt;br /&gt;
-したがって、複数の属性を持つミュータブルなデータを管理したい場合、リストよりも構造体が適している。&lt;/p&gt;
-
-&lt;h2 id=&#34;9-4-データをジェネリックに扱う&#34;&gt;9.4 データをジェネリックに扱う&lt;/h2&gt;
-
-&lt;p&gt;ジェネリック = 一般的。&lt;br /&gt;
-Common Lispでは、様々なデータ型を意識せずに、数値を統一的に操作できる。&lt;br /&gt;
-そのための道具立てとして、下記のようなものが用意されている。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;ジェネリックライブラリ関数&lt;/li&gt;
-&lt;li&gt;型述語&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;defmethod&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;ジェネリックアクセサ&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;シーケンスを使う&#34;&gt;シーケンスを使う&lt;/h3&gt;
-
-&lt;p&gt;引数のデータ型によらず動作するコードを*手軽に*書くには、型チェックを別の関数に任せれば良い。&lt;br /&gt;
-Common Lispには、ジェネリックな関数が既に用意されている(e.g. シーケンス関数)。&lt;/p&gt;
-
-&lt;p&gt;シーケンス関数は、Lispにおける3つの主要なシーケンスを統一的に扱える(e.g. &lt;code&gt;length&lt;/code&gt;関数)。&lt;br /&gt;
-(シーケンス: リスト 配列 文字列)&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;length&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;length&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;blub&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;length&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-array&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;5&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;em&gt;補足:&lt;/em&gt;&lt;br /&gt;
-Common Lispにも、リスト専用の長さを求める関数&lt;code&gt;list-length&lt;/code&gt;がある。&lt;br /&gt;
-ジェネリックな関数よりも処理が速いが、始めから使用する必要はない。&lt;br /&gt;
-処理の最適化のフェーズで明確に必要だと分かったら使用すれば良い。&lt;/p&gt;
-
-&lt;h3 id=&#34;探索のためのシーケンス関数&#34;&gt;探索のためのシーケンス関数&lt;/h3&gt;
-
-&lt;p&gt;シーケンス関数の中には、シーケンスから何かを探し出すためのものがある。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;find-if&lt;/code&gt;    与えられた述語を満たす最初の要素を見つける&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;count&lt;/code&gt;    特定の要素がいくつシーケンス中にあるか数える&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;position&lt;/code&gt;    特定の要素がシーケンスのどの位置にあるか返す&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;some&lt;/code&gt;    シーケンス中に条件を満たす要素が存在するか返す&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;every&lt;/code&gt;    シーケンス中の全要素が条件を満たすか返す&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;上記の関数の実行例を示す。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;find-if&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;numberp&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;d&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cound&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\s&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;mississippi&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;position&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\4&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;2kewl4skewl&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;some&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;numberp&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;d&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;no&#34;&gt;T&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;every&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;numberp&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;d&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;NIL&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;シーケンスの要素について繰り返す関数の例&#34;&gt;シーケンスの要素について繰り返す関数の例&lt;/h3&gt;
-
-&lt;h4 id=&#34;reduce&#34;&gt;&lt;code&gt;reduce&lt;/code&gt;&lt;/h4&gt;
-
-&lt;p&gt;ジェネリックなシーケンス関数において、&lt;code&gt;reduce&lt;/code&gt;はとりわけ便利である。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;reduce&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;20&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;reduce&lt;/code&gt;の第1引数に渡す関数を、縮約関数(reduction function)と呼ぶ。&lt;br /&gt;
-上記の例では、&lt;code&gt;+&lt;/code&gt;が縮約関数である。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;reduce&lt;/code&gt;では、&lt;code&gt;initial-value&lt;/code&gt;というキーワード引数を使って、初期値を与えられる。&lt;br /&gt;
-初期値を与えなかった場合は、シーケンスの最初の要素を初期値とする。&lt;/p&gt;
-
-&lt;p&gt;下記に、リスト&lt;code&gt;(a b c)&lt;/code&gt;に初期値&lt;code&gt;x&lt;/code&gt;を与えなかった場合と与えた場合の処理の違いを示す。&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;初期値&lt;/th&gt;
-&lt;th&gt;処理内容(tは一時変数)&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;無し&lt;/td&gt;
-&lt;td&gt;t=a t=t+b t=t+c&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;有り&lt;/td&gt;
-&lt;td&gt;t=x t=t+a t=t+b t=t+c&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;下記の通り、初期値を与えないと、aが初期値として設定されたまま結果として返されてしまう。&lt;br /&gt;
-例えば、縮約関数が「シーケンスの中で最大の偶数を見つける」だった場合、初期値は必須である。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lambda&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;best&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;item&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;and&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;evenp&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;item&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;item&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;best&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-    &lt;span class=&#34;nv&#34;&gt;item&lt;/span&gt;
-    &lt;span class=&#34;nv&#34;&gt;best&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;; initial-valueが無い場合&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;; &amp;#39;(7 4 6 5 2)&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;; 7 &amp;lt;- (&amp;gt; item best)がTとならないため&lt;/span&gt;
-
-&lt;span class=&#34;c1&#34;&gt;; initial-valueが0の場合&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;; &amp;#39;(7 4 6 5 2)&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;; 6 &amp;lt;- 正しく評価できた&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;reduce&lt;/code&gt;をpythonで手続き的に記載すると、下記のようになる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;func&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
-    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;
-
-&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;reduce&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;func&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;**&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;kwargs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
-    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;initial_value&amp;#39;&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;kwargs&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;keys&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;():&lt;/span&gt;
-        &lt;span class=&#34;n&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;insert&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;kwargs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;initial_value&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])&lt;/span&gt;
-
-    &lt;span class=&#34;n&#34;&gt;temp&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
-    &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;range&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;len&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
-        &lt;span class=&#34;n&#34;&gt;temp&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;func&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;temp&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;])&lt;/span&gt;
-    
-    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;temp&lt;/span&gt;
-
-&lt;span class=&#34;n&#34;&gt;lst&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;range&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)]&lt;/span&gt;
-
-&lt;span class=&#34;k&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;reduce&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;func&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;# =&amp;gt; 55&lt;/span&gt;
-&lt;span class=&#34;k&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;reduce&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;func&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;initial_value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;# =&amp;gt; 65&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4 id=&#34;map&#34;&gt;&lt;code&gt;map&lt;/code&gt;&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;map&lt;/code&gt;は&lt;code&gt;mapcar&lt;/code&gt;と同じく、各要素を引数に渡した関数を呼んで結果を集める。&lt;br /&gt;
-しかし、&lt;code&gt;map&lt;/code&gt;は任意のシーケンスに対して使用できる。&lt;br /&gt;
-また、&lt;code&gt;map&lt;/code&gt;は返り値としてどのシーケンス型の値を返すかという引数を取る。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;map&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;list&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lambda&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;eq&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-          &lt;span class=&#34;sc&#34;&gt;#\S&lt;/span&gt;
-          &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-    &lt;span class=&#34;s&#34;&gt;&amp;#34;this is a string&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;#\t&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\h&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\i&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\S&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\ &lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\i&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\s&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\ &lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\a&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\ &lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\S&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\t&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\r&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\i&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\n&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;#\g&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4 id=&#34;subseq&#34;&gt;&lt;code&gt;subseq&lt;/code&gt;&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;subseq&lt;/code&gt;関数は始点と終点を指定してシーケンスの一部分を取り出すのに使える。&lt;br /&gt;
-位置は0から数え始め、始点は含まれ、終点は含まれない。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;subseq&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;america&amp;#34;&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;s&#34;&gt;&amp;#34;eric&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4 id=&#34;sort&#34;&gt;&lt;code&gt;sort&lt;/code&gt;&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;sort&lt;/code&gt;関数は任意の比較関数を渡してシーケンスをソートする。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;sort&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;9&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;9&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;型述語を使って自分でジェネリック関数を作る&#34;&gt;型述語を使って自分でジェネリック関数を作る&lt;/h3&gt;
-
-&lt;p&gt;Common Lispは動的型付け言語であるため、ある変数のデータ型を調べる関数が揃っている。&lt;br /&gt;
-例えば数値かどうかは&lt;code&gt;numberp&lt;/code&gt;によって調べられる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;numberp&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;T&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;よく使う型述語には下記がある。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;arrayp&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;characterp&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;consp&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;functionp&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;hash-table-p&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;listp&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;stringp&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;symbolp&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;これらを使えば、色々な型の引数をジェネリックに取る関数を自分で書ける。&lt;br /&gt;
-例えば、数値同士とリスト同士を「足す」関数を作るとする。&lt;br /&gt;
-単純に関数定義するなら、下記のようになる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;add&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cond&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;and&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;numberp&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;numberp&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-          &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;and&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;listp&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;listp&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;app&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;ADD&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;add&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;mi&#34;&gt;7&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;add&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;d&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;A&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;B&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;C&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;D&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;上記の関数は、複数の型に対する処理が固まっているため、保守性が低い。&lt;br /&gt;
-そこで、lispは関数の &lt;strong&gt;多重定義(オーバーロード)&lt;/strong&gt; が可能なので、これを利用する。&lt;br /&gt;
-&lt;code&gt;defmethod&lt;/code&gt;を使うと各々の型に特化した複数の関数を定義できる。
-&lt;code&gt;defmethod&lt;/code&gt;によって定義された関数が呼ばれたとき、Lispは自動的に引数の型を調べ、対応する関数本体を呼び出す。&lt;br /&gt;
-このように、インタプリタ/コンパイラは複数の関数本体から引数の型に応じたものを選び出すことを、 &lt;strong&gt;型によるディスパッチ(type dispatching)&lt;/strong&gt; と呼ぶ。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;defmethod&lt;/code&gt;を使うと、上記の&lt;code&gt;add&lt;/code&gt;は下記のようになる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defmethod&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;add&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;number&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;number&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;ADD&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defmethod&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;add&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;list&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;list&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;append&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;ADD&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;add&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;mi&#34;&gt;7&lt;/span&gt;
-&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;add&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;d&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;A&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;B&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;C&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;D&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;defmethod&lt;/code&gt;は、上記9.3章の&lt;code&gt;defstruct&lt;/code&gt;で定義した構造体に対しても使用できる。&lt;br /&gt;
-これを使用して、簡単なオブジェクトシステムを実装することも出来る。&lt;/p&gt;
 </description>
       
     </item>

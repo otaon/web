@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>Gitの使い方 · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="目的 Gitを端末上で使用するため、操作とそのコマンドを記す。 操作の種類一覧 情報更新/情報表示 リポジトリ操作 ブランチ操作 ファイル操作 差分(di" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/03/13/git%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="Gitの使い方" />
+<meta property="og:description" content="目的 Gitを端末上で使用するため、操作とそのコマンドを記す。 操作の種類一覧 情報更新/情報表示 リポジトリ操作 ブランチ操作 ファイル操作 差分(di" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/13/git%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9/" />
+<meta property="article:published_time" content="2019-03-13T01:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-03-13T01:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="Gitの使い方">
+<meta itemprop="description" content="目的 Gitを端末上で使用するため、操作とそのコマンドを記す。 操作の種類一覧 情報更新/情報表示 リポジトリ操作 ブランチ操作 ファイル操作 差分(di">
+
+
+<meta itemprop="datePublished" content="2019-03-13T01:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-03-13T01:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="4271">
+
+
+
+<meta itemprop="keywords" content="Git," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Gitの使い方"/>
+<meta name="twitter:description" content="目的 Gitを端末上で使用するため、操作とそのコマンドを記す。 操作の種類一覧 情報更新/情報表示 リポジトリ操作 ブランチ操作 ファイル操作 差分(di"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">Gitの使い方</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-03-13
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/git/">Git</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h1 id="目的">目的</h1>
+
+<p>Gitを端末上で使用するため、操作とそのコマンドを記す。</p>
+
+<h1 id="操作の種類一覧">操作の種類一覧</h1>
+
+<ol>
+<li>情報更新/情報表示</li>
+<li>リポジトリ操作</li>
+<li>ブランチ操作</li>
+<li>ファイル操作</li>
+<li>差分(diff)確認</li>
+</ol>
+
+<hr />
+
+<h1 id="情報更新-情報表示">情報更新/情報表示</h1>
+
+<h2 id="リモートリポジトリの情報をローカルリポジトリに反映する-フェッチ">リモートリポジトリの情報をローカルリポジトリに反映する(フェッチ)</h2>
+
+<p><strong>NOTE:</strong> <code>fetch</code>が実際にやっているのは、リモート追跡ブランチの作成。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git fetch <span class="o">[</span>リポジトリ略称 ブランチ名<span class="o">]</span>
+
+<span class="c1"># 例</span>
+$ git fetch origin how-to-use-git
+From github.com:otaon/web
+ * branch            how-to-use-git -&gt; FETCH_HEAD</code></pre></div>
+<ul>
+<li><code>[ブランチ名]</code> 作成対象となるリモート追跡ブランチ。省略すると全てのリモート追跡ブランチを作成する。</li>
+</ul>
+
+<h2 id="ローカルブランチ-リモートブランチを一覧表示">ローカルブランチ&amp;リモートブランチを一覧表示</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git branch <span class="o">[</span>-a<span class="o">]</span>
+
+<span class="c1"># 例</span>
+$ git branch -a
+  how-to-make-web-page-with-hugo
+* how-to-use-git
+  how-to-use-mermaid-in-hugo
+  master
+  migrate-from-gist-to-githubio
+  remotes/origin/gh-pages
+  remotes/origin/how-to-make-web-page-with-hugo
+  remotes/origin/how-to-use-git
+  remotes/origin/how-to-use-mermaid-in-hugo
+  remotes/origin/master
+  remotes/origin/migrate-from-gist-to-githubio</code></pre></div>
+<ul>
+<li><code>[-a]</code> ローカルとリモートの全てのリポジトリ情報。省略した場合はローカルのみ。</li>
+</ul>
+
+<h2 id="ローカルリポジトリ状態を表示">ローカルリポジトリ状態を表示</h2>
+
+<p>現在いるブランチ、そのupstream、ファイルのステージング状況を表示する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git status
+
+<span class="c1"># 例</span>
+$ git status
+On branch how-to-use-git
+Your branch is up to date with <span class="s1">&#39;origin/how-to-use-git&#39;</span>.
+
+Changes not staged <span class="k">for</span> commit:
+  <span class="o">(</span>use <span class="s2">&#34;git add &lt;file&gt;...&#34;</span> to update what will be committed<span class="o">)</span>
+  <span class="o">(</span>use <span class="s2">&#34;git checkout -- &lt;file&gt;...&#34;</span> to discard changes in working directory<span class="o">)</span>
+
+        modified:   content/ja-jp/posts/0027_how_to_use_git/index.md
+
+no changes added to commit <span class="o">(</span>use <span class="s2">&#34;git add&#34;</span> and/or <span class="s2">&#34;git commit -a&#34;</span><span class="o">)</span></code></pre></div>
+<h2 id="コミットログを表示">コミットログを表示</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git log <span class="o">[</span>--pretty<span class="o">=</span>short<span class="o">]</span> <span class="o">[</span>--graph<span class="o">]</span> <span class="o">[</span>-数字<span class="o">]</span> <span class="o">[</span>-p<span class="p">|</span>-u<span class="p">|</span>--patch 対象ファイルパス*<span class="o">]</span> <span class="o">[</span>--decorate<span class="o">]</span>
+
+<span class="c1"># 例</span>
+$ git log -2 --graph
+* commit d37e53c8f12bfba66c1bd1accce89ca6bcbc33a0 <span class="o">(</span>HEAD -&gt; how-to-use-git, origin/how-to-use-git<span class="o">)</span>
+<span class="p">|</span> Author: otaon &lt;******@github.com&gt;
+<span class="p">|</span> Date:   Tue Mar <span class="m">12</span> <span class="m">03</span>:24:19 <span class="m">2019</span> +0900
+<span class="p">|</span>
+<span class="p">|</span>     feature: add figure of <span class="sb">`</span>merge<span class="sb">`</span>
+<span class="p">|</span>
+* commit de2baba4ddb3f7469aba02f88190a790523312cd
+<span class="p">|</span> Author: otaon &lt;******@github.com&gt;
+<span class="p">|</span> Date:   Mon Mar <span class="m">11</span> <span class="m">02</span>:28:11 <span class="m">2019</span> +0900
+<span class="p">|</span>
+<span class="p">|</span>     feature: edit an article</code></pre></div>
+<ul>
+<li><code>[--pretty=short]</code> 表示メッセージを短くする。</li>
+<li><code>[--graph]</code> ブランチをグラフ表示する。</li>
+<li><code>[-数字]</code> 指定した通じの数だけログを表示する。</li>
+<li><code>[-p|-u|--patch 対象ファイルパス*]</code> 指定ファイルの差分をパッチ形式で表示する。</li>
+<li><code>[--decorate]</code> 現在のHEAD、ブランチ名、タグ名を表示する。</li>
+</ul>
+
+<hr />
+
+<h1 id="リポジトリ操作">リポジトリ操作</h1>
+
+<h2 id="リポジトリを新規作成する">リポジトリを新規作成する</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># -*- ローカルリポジトリを作成する -*-</span>
+<span class="c1"># シンタックス</span>
+$ git init <span class="o">[</span>ディレクトリ<span class="o">]</span>
+<span class="c1"># 例</span>
+$ git init web
+
+<span class="c1"># -*- リモートリポジトリを作成する -*-</span>
+<span class="c1"># シンタックス</span>
+$ git init --bare --shared <span class="o">[</span>ディレクトリ<span class="o">]</span>
+<span class="c1"># 例</span>
+$ git init --bare --shared web</code></pre></div>
+<ul>
+<li><code>[ディレクトリ]</code> 指定したディレクトリに<code>.git</code>というサブディレクトリが作成される。省略時はカレントディレクトリ。</li>
+<li><code>--bare</code> 最小限のリポジトリを作成する。もし環境変数<code>GIT_DIR</code>が設定されていなければ、現在のワーキング・ディレクトリが設定される。<sup class="footnote-ref" id="fnref:git"><a href="#fn:git">1</a></sup></li>
+<li><code>--shared</code> Gitリポジトリが複数のユーザで共有されることを指定する。このオプションは、同じグループに属するユーザがそのリポジトリにpushすることを許可する。</li>
+</ul>
+
+<h2 id="リモートリポジトリからローカルリポジトリをクローンする">リモートリポジトリからローカルリポジトリをクローンする</h2>
+
+<p>既にリモートリポジトリが存在する時、それを元にローカルリポジトリをクローンする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git clone リモートリポジトリ名 <span class="o">[</span>ディレクトリ<span class="o">]</span>
+<span class="c1"># 例</span>
+$ git clone git@github.com:otaon/web.git web</code></pre></div>
+<ul>
+<li><code>[ディレクトリ]</code> 指定したディレクトリを作成してリモートリポジトリ内のデータを置く。<br />
+省略した場合はリモートリポジトリ名のディレクトリを作成してリモートリポジトリ内のデータを置く。</li>
+</ul>
+
+<h2 id="リモートリポジトリをローカルリポジトリに関連付ける">リモートリポジトリをローカルリポジトリに関連付ける</h2>
+
+<p>既にローカルリポジトリとリモートリポジトリが存在する時、それをリモートリポジトリに関連付ける。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git remote add リモートリポジトリの略称 リモートリポジトリのURL
+<span class="c1"># 例</span>
+$ git remote add origin git@github.com:otaon/web.git</code></pre></div>
+<h2 id="現在のローカルリポジトリのブランチをpush">現在のローカルリポジトリのブランチをpush</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git push <span class="o">[</span>-u<span class="p">|</span>--set-upstream<span class="o">]</span> リモートリポジトリの略称 ブランチ名
+<span class="c1"># 例</span>
+$ git push origin how-to-use-git</code></pre></div>
+<ul>
+<li><code>[-u|--set-upstream]</code> ローカルリポジトリ/現在ブランチの<strong>upstream</strong>をリモートリポジトリの略称/ブランチ名に設定する。<br />
+こうすると、次回からは<code>git push</code>で<strong>upstream</strong>にpushできるようになる。</li>
+</ul>
+
+<h2 id="リモートリポジトリのブランチをpull">リモートリポジトリのブランチをpull</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git pull リモートリポジトリの略称 ブランチ名
+<span class="c1"># 例</span>
+$ git pull origin how-to-use-git</code></pre></div>
+<hr />
+
+<h1 id="ブランチ操作">ブランチ操作</h1>
+
+<h2 id="ローカルブランチを作成する">ローカルブランチを作成する</h2>
+
+<p>現在のコミットに、ローカルブランチを作成する。<br />
+リモート追跡ブランチが作成されている場合は、それを元にローカルブランチを作成する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># ローカルブランチを作成</span>
+$ git branch ブランチ名
+<span class="c1"># ローカルブランチをチェックアウトする(ローカルブランチは自動的に作成される)</span>
+$ git checkout how-to-use-git</code></pre></div>
+<h2 id="ローカルブランチを作成する-切り替える">ローカルブランチを作成する/切り替える</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git checkout <span class="o">[</span>-b<span class="o">]</span> <span class="o">[</span>-f<span class="o">]</span> ブランチ名
+<span class="c1"># 例</span>
+$ git checkout master <span class="c1"># masterをチェックアウト</span>
+$ git checkout -b how-to-use-git <span class="c1"># hot-to-use-gitブランチを作成してチェックアウト</span></code></pre></div>
+<ul>
+<li><code>[-b]</code> このオプションは、<code>git branch ブランチ名; git checkout ブランチ名</code>のショートハンドとして動作する。</li>
+<li><code>[-f]</code> 作業ブランチやステージに変更があった場合でも、それを強制的に破棄してチェックアウトする。</li>
+</ul>
+
+<h3 id="リモートブランチを扱いたい場合">リモートブランチを扱いたい場合</h3>
+
+<p>リモートブランチは直接チェックアウトできない。<br />
+そこで、リモートブランチに対応する<strong>リモート追跡ブランチ</strong>を作成し、それからローカルブランチをチェックアウトする。<br />
+リモート追跡ブランチが存在する場合、そのブランチ名をチェックアウトすると、下記が自動的に行われる。</p>
+
+<ul>
+<li>ローカルブランチは自動的に作成される。</li>
+<li>作成されたローカルブランチの<strong>upstream</strong>ブランチに、リモートブランチが自動的に設定される。</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 例</span>
+<span class="c1">## 特定のリモート追跡ブランチを作成</span>
+$ git fetch origin how-to-use-git
+<span class="c1">## ローカルブランチをチェックアウトする(ローカルブランチは自動的に作成される)</span>
+$ git checkout how-to-use-git</code></pre></div>
+<h2 id="現在のブランチに-指定コミットの指定ファイルを展開する">現在のブランチに、指定コミットの指定ファイルを展開する</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git checkout <span class="o">[</span>コミットSHA<span class="o">]</span> ファイルパス
+
+<span class="c1"># 例</span>
+$ git checkout afpj73z index.html</code></pre></div>
+<ul>
+<li><code>[コミットSHA]</code> 展開対象のファイルがあるコミット。省略時は現在のindexのコミットを指す。</li>
+</ul>
+
+<h2 id="指定したブランチを現在のブランチにマージ">指定したブランチを現在のブランチにマージ</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git merge <span class="o">[</span>--no-ff<span class="o">]</span> ブランチ名
+
+<span class="c1"># 例</span>
+<span class="c1">## 現在masterにいるとして、how-to-use-gitブランチをmasterにマージ</span>
+$ git merge --no-ff how-to-use-git</code></pre></div>
+<p><strong>NOTE</strong> indexが変化するのはカレントブランチであり、引数で指定したindexは一切変化しない事を覚えておくこと。<br />
+つまり、<code>merge</code>実行時のカレントブランチは常に「変更を取り込む側」となる。</p>
+
+<ul>
+<li><p><code>master</code>ブランチにいるときに<code>git merge --no-ff</code></p>
+
+<ul>
+<li>featureブランチでの開発が完了してmasterブランチにマージしたい場合などに用いる。</li>
+<li><div class="mermaid" align="center">
+    
+graph LR;
+	ee[master] -.-> c
+	style ee fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
+	g>HEAD]
+	style g fill:#9f9,stroke:#333,stroke-width:4px
+	g -.-> ee
+	f[master] --> d((d))
+	style f fill:#f9f,stroke:#333,stroke-width:4px
+
+	g --> f
+	a((a)) --> b((b))
+	b --> c((c))
+	c --> d((d))
+	style a fill:#f99
+	style b fill:#f99
+	style c fill:#f99
+	style d fill:#f99
+
+	b --> ba((ba))
+	ba --> bb((bb))
+	bb ==>|git merge --no-ff how-to-use-git| d
+	i[how-to-use-git] --> bb
+	style i fill:#f9f,stroke:#333,stroke-width:4px
+
+</div>
+</li>
+</ul></li>
+
+<li><p><code>how-to-use-git</code>ブランチにいるときに<code>git merge [--ff] master</code></p>
+
+<ul>
+<li>featureブランチを作成したまま放置していたらmasterが進んでしまった場合などに用いる。</li>
+<li><div class="mermaid" align="center">
+    
+graph LR;
+	g>HEAD]
+	style g fill:#9f9,stroke:#333,stroke-width:4px
+	g -.-> d[how-to-use-git]
+	style d fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
+	d ==>|git merge master| f
+	g --> f[how-to-use-git]
+	style f fill:#f9f,stroke:#333,stroke-width:4px
+
+	e[master] --> c
+	style e fill:#f9f,stroke:#333,stroke-width:4px
+
+	a((a)) --> b((b))
+	b((b)) --> c((c))
+	style a fill:#f99
+	style b fill:#f99
+	style c fill:#f99
+
+	d -.-> b
+	f --> c
+
+</div>
+</li>
+</ul></li>
+</ul>
+
+<h2 id="コミット履歴を改竄する-rebase">コミット履歴を改竄する(rebase)</h2>
+
+<h3 id="ブランチの開始地点を変更する">ブランチの開始地点を変更する</h3>
+
+<p>ブランチ元にコミットが発生した時、それに追従するために、ブランチの開始地点を、ブランチ元の新しいHEADに変更する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git rebase <span class="o">[</span>ブランチ元<span class="o">]</span> <span class="o">[</span>現在のブランチ<span class="o">]</span>
+
+<span class="c1"># 例</span>
+$ git rebase master how-to-use-git</code></pre></div>
+<div class="mermaid" align="center">
+    
+graph LR;
+	e[master] --> c
+	style e fill:#f9f,stroke:#333,stroke-width:4px
+	a((a)) ==> b((b))
+	b((b)) ==> c((c))
+	style a fill:#f99
+	style b fill:#f99
+	style c fill:#f99
+	b --> x((x))
+	x --> y((y))
+	style x stroke-dasharray: 5, 5
+	style y stroke-dasharray: 5, 5
+
+	c --> x2((x'))
+	x2 --> y2((y'))
+
+	e2[how-to-use-git] -.-> y
+	style e2 fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
+
+	x ==>|git rebase master| x2
+	y ==>|git rebase master| y2
+
+	e3[how-to-use-git] --> y2
+	style e3 fill:#f9f,stroke:#333,stroke-width:4px
+	z3>HEAD]  -.-> e2
+	z3 --> e3
+	style z3 fill:#9f9,stroke:#333,stroke-width:4px
+
+</div>
+
+
+<h3 id="複数のコミットを一つにまとめる">複数のコミットを一つにまとめる</h3>
+
+<p>複数のコミットをまとめた、新しいコミットを作る。(つまりSHAが変わることに注意)</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git rebase -i 改竄対象の直前のコミット
+<span class="c1"># 例</span>
+$ git rebase -i HEAD~2
+
+<span class="c1"># エディタで、HEADを含めて2つまでのコミット履歴をpickからfixupに編集する</span>
+<span class="c1">### 編集前 ###(上の方が古い)</span>
+<span class="c1"># pick 7a34294 first commit</span>
+<span class="c1"># pick 6fba227 second commit</span>
+
+<span class="c1">### 編集後 ###(2つ目のコミットをfixupに変更)</span>
+<span class="c1"># pick 7a34294 first commit</span>
+<span class="c1"># fixup 6fba227 second commit</span></code></pre></div>
+<div class="mermaid" align="center">
+    
+graph LR;
+	a((a)) -.-> b((b))
+	style b stroke-dasharray: 5, 5
+	b((b)) -.-> c((c))
+	a --> d((b + c))
+
+	z>HEAD]  -.-> e
+	style z fill:#9f9,stroke:#333,stroke-width:4px
+	e[master] -.-> c
+	style c stroke-dasharray: 5, 5
+	style e fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
+
+	b ==>|git rebase| d
+	c ==>|git rebase| d
+	e2[master] --> d
+	style e2 fill:#f9f,stroke:#333,stroke-width:4px
+	z --> e2
+
+</div>
+
+
+<hr />
+
+<h1 id="ファイル操作">ファイル操作</h1>
+
+<h2 id="ファイルをステージングする">ファイルをステージングする</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git add <span class="o">[</span>--all<span class="p">|</span>ファイル<span class="o">]</span>
+<span class="c1"># 例</span>
+$ git pull index.html</code></pre></div>
+<ul>
+<li><code>--all</code> 変更が加えられたファイルと未追跡だったファイルをaddする</li>
+</ul>
+
+<h2 id="ステージング済みのファイルをリポジトリへコミット">ステージング済みのファイルをリポジトリへコミット</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git commit <span class="o">[</span>-m <span class="s2">&#34;コミットメッセージ&#34;</span><span class="o">]</span>
+<span class="c1"># 例</span>
+$ git commit -m <span class="s2">&#34;feature: edit index.html&#34;</span></code></pre></div>
+<h2 id="直前のコミットメッセージを修正">直前のコミットメッセージを修正</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git commit --amend <span class="c1"># -&gt; エディタでメッセージを修正</span>
+<span class="c1"># 例</span>
+$ git commit --amend <span class="c1"># -&gt; エディタでメッセージを修正</span></code></pre></div>
+<h2 id="変更をリセット">変更をリセット</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git reset <span class="o">[</span>--soft<span class="p">|</span>--mixed<span class="p">|</span>--hard<span class="o">]</span> <span class="o">[</span>HEAD<span class="p">|</span>HEAD^<span class="p">|</span>SHA<span class="p">|</span>ブランチ名<span class="o">]</span>
+<span class="c1"># 例</span>
+git reset --mixed HEAD <span class="c1"># addを取り消す</span>
+git reset --hard ORIG_HEAD <span class="c1"># git resetを取り消す</span></code></pre></div>
+<ul>
+<li><code>--soft</code> HEADの位置のみリセットする。(<code>commit</code>のみ取り消し)</li>
+<li><code>--mixed|指定なし</code> HEADの位置とindexをリセットする。(<code>add</code>と<code>commit</code>を取り消し)</li>
+<li><code>--hard</code> HEADの位置とindexとワークツリー内容をリセットする。(ワークツリーの編集内容と<code>add</code>と<code>commit</code>を取り消し)</li>
+</ul>
+
+<hr />
+
+<h1 id="差分確認">差分確認</h1>
+
+<h2 id="様々な差分-diff-を確認">様々な差分(diff)を確認</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+$ git diff
+  <span class="o">[</span>HEAD
+  <span class="p">|</span>HEAD^
+  <span class="p">|</span>HEAD..リモート名/ブランチ名
+  <span class="p">|</span>リモート名/ブランチ名..HEAD
+  <span class="p">|</span>--cached
+  <span class="p">|</span>変更前のSHA..変更後のSHA
+  <span class="p">|</span>確認したいコミットのSHA^..確認したいコミットのSHA
+  <span class="p">|</span>ブランチA..ブランチB<span class="o">]</span>
+  <span class="o">[</span>-- 対象ファイルパス<span class="o">]</span>
+  <span class="o">[</span>その他オプション<span class="o">]</span>
+<span class="c1"># 例</span>
+$ git diff -U5 how-to-use-git..origin/how-to-use-git -- index.html</code></pre></div>
+<p><strong><code>A..B</code>と書いた場合、左が古く、右が新しいとみなされる</strong></p>
+
+<ul>
+<li>比較対象の状態を指定する方法
+
+<ul>
+<li><code>指定なし</code> index(ステージ領域) → 現在のワークツリー</li>
+<li><code>HEAD</code> 最新コミット → 現在のワークツリー</li>
+<li><code>HEAD^|HEAD^..HEAD</code> 一つ前のコミット → 最新コミット</li>
+<li><code>HEAD..リモートリポジトリ名/ブランチ名</code> 最新コミット →指定リモートリポジトリ/指定ブランチ</li>
+<li><code>リモート名/ブランチ名..HEAD</code> 指定リモートリポジトリ/指定ブランチ →最新コミット</li>
+<li><code>--cached|--staged</code> 最新コミット →index(ステージ領域)</li>
+<li><code>SHA1..SHA2</code> 指定コミット(SHA1) → 指定コミット(SHA2)</li>
+<li><code>SHA1^..SHA1</code> 指定コミット(SHA1)の一つ前 → 指定コミット(SHA1)</li>
+<li><code>ブランチ名A..ブランチ名B</code> ブランチA → ブランチB</li>
+</ul></li>
+<li>比較対象のファイルを指定する方法
+
+<ul>
+<li><code>-- 対象ファイルパス+</code> 指定ファイルパスのみを対象とする
+
+<ul>
+<li><code>git diff -- ファイルパスA ファイルパスB</code> 指定ファイルパスAと、指定ファイルパスB</li>
+</ul></li>
+</ul></li>
+<li>表示形式を指定する方法
+
+<ul>
+<li><code>--stat</code> 変更点ではなく、ファイル毎の変更種別と変更量のみ表示する。</li>
+<li><code>--name-only</code> ファイル名のみ表示する。</li>
+<li><code>git add -n .; git diff --name-only</code> git add をdry-runして追加されたファイルも対象として、ファイル名のみ表示する。</li>
+<li><code>-U0</code> <code>-U10</code> 変更行の前後0行or10行を表示する。</li>
+<li><code>--color-words</code> 単語に色を付ける。</li>
+<li><code>--compaction-heuristic</code> 上方向への差分比較も実施した上で差分表示する。環境によっては使用不可の模様。</li>
+</ul></li>
+</ul>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:git"><code>.git</code>フォルダの場所を指す環境変数。指定されていない場合、Gitはディレクトリツリーを<code>~</code>または<code>/</code>にたどり着くまで上っていき、各ディレクトリで<code>.git</code>ディレクトリを探す。<a href="https://git-scm.com/book/ja/v2/Git%E3%81%AE%E5%86%85%E5%81%B4-%E7%92%B0%E5%A2%83%E5%A4%89%E6%95%B0">10.8_Gitの内側-環境変数</a>
+ <a class="footnote-return" href="#fnref:git"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="/web/asset/mermaid/mermaid.js"></script>
+
+</body>
+</html>

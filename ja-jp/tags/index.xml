@@ -6,10 +6,19 @@
     <description>Recent content in Tags on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sun, 03 Mar 2019 16:23:58 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 13 Mar 2019 01:00:00 +0900</lastBuildDate>
     
 	<atom:link href="https://otaon.github.io/web/ja-jp/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Git</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/git/</link>
+      <pubDate>Wed, 13 Mar 2019 01:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/git/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>GitHub Pages</title>
