@@ -1,7 +1,7 @@
 ---
 title: "Gitの使い方"
-date:    2019-03-08T01:00:00+09:00
-lastmod: 2019-03-08T01:00:00+09:00
+date:    2019-03-13T01:00:00+09:00
+lastmod: 2019-03-13T01:00:00+09:00
 draft: false
 tags: ["Git"]
 categories: ["Notes"]
@@ -29,8 +29,11 @@ Gitを端末上で使用するため、操作とそのコマンドを記す。
 ```bash
 # シンタックス
 $ git fetch [リポジトリ略称 ブランチ名]
+
 # 例
 $ git fetch origin how-to-use-git
+From github.com:otaon/web
+ * branch            how-to-use-git -> FETCH_HEAD
 ```
 
 - `[ブランチ名]` 作成対象となるリモート追跡ブランチ。省略すると全てのリモート追跡ブランチを作成する。
@@ -39,8 +42,20 @@ $ git fetch origin how-to-use-git
 ```bash
 # シンタックス
 $ git branch [-a]
+
 # 例
 $ git branch -a
+  how-to-make-web-page-with-hugo
+* how-to-use-git
+  how-to-use-mermaid-in-hugo
+  master
+  migrate-from-gist-to-githubio
+  remotes/origin/gh-pages
+  remotes/origin/how-to-make-web-page-with-hugo
+  remotes/origin/how-to-use-git
+  remotes/origin/how-to-use-mermaid-in-hugo
+  remotes/origin/master
+  remotes/origin/migrate-from-gist-to-githubio
 ```
 
 - `[-a]` ローカルとリモートの全てのリポジトリ情報。省略した場合はローカルのみ。
@@ -51,36 +66,59 @@ $ git branch -a
 ```bash
 # シンタックス
 $ git status
+
 # 例
 $ git status
+On branch how-to-use-git
+Your branch is up to date with 'origin/how-to-use-git'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+        modified:   content/ja-jp/posts/0027_how_to_use_git/index.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
 ## コミットログを表示
 ```bash
 # シンタックス
-$ git log [--pretty=short] [--graph] [-数字] [--decorate] [ディレクトリ名|ファイル名*]
+$ git log [--pretty=short] [--graph] [-数字] [-p|-u|--patch 対象ファイルパス*] [--decorate]
+
 # 例
-$ git log 
+$ git log -2 --graph
+* commit d37e53c8f12bfba66c1bd1accce89ca6bcbc33a0 (HEAD -> how-to-use-git, origin/how-to-use-git)
+| Author: otaon <******@github.com>
+| Date:   Tue Mar 12 03:24:19 2019 +0900
+|
+|     feature: add figure of `merge`
+|
+* commit de2baba4ddb3f7469aba02f88190a790523312cd
+| Author: otaon <******@github.com>
+| Date:   Mon Mar 11 02:28:11 2019 +0900
+|
+|     feature: edit an article
 ```
 
 - `[--pretty=short]` 表示メッセージを短くする。
 - `[--graph]` ブランチをグラフ表示する。
-- `-数字` 指定した通じの数だけログを表示する。
-- `-p|-u|--patch [ディレクトリ名|ファイル名*]` 指定ファイルの差分をパッチ形式で表示する。
-- `--decorate` 現在のHEAD、ブランチ名、タグ名を表示する。
+- `[-数字]` 指定した通じの数だけログを表示する。
+- `[-p|-u|--patch 対象ファイルパス*]` 指定ファイルの差分をパッチ形式で表示する。
+- `[--decorate]` 現在のHEAD、ブランチ名、タグ名を表示する。
 
 ----
 
 # リポジトリ操作
 ## リポジトリを新規作成する
 ```bash
-## ローカルリポジトリを作成する
+# -*- ローカルリポジトリを作成する -*-
 # シンタックス
 $ git init [ディレクトリ]
 # 例
 $ git init web
 
-## リモートリポジトリを作成する
+# -*- リモートリポジトリを作成する -*-
 # シンタックス
 $ git init --bare --shared [ディレクトリ]
 # 例
@@ -171,9 +209,9 @@ $ git checkout -b how-to-use-git # hot-to-use-gitブランチを作成してチ�
 
 ```bash
 # 例
-# 特定のリモート追跡ブランチを作成
+## 特定のリモート追跡ブランチを作成
 $ git fetch origin how-to-use-git
-# ローカルブランチをチェックアウトする(ローカルブランチは自動的に作成される)
+## ローカルブランチをチェックアウトする(ローカルブランチは自動的に作成される)
 $ git checkout how-to-use-git
 ```
 
@@ -181,6 +219,7 @@ $ git checkout how-to-use-git
 ```bash
 # シンタックス
 $ git checkout [コミットSHA] ファイルパス
+
 # 例
 $ git checkout afpj73z index.html
 ```
@@ -191,6 +230,7 @@ $ git checkout afpj73z index.html
 ```bash
 # シンタックス
 $ git merge [--no-ff] ブランチ名
+
 # 例
 ## 現在masterにいるとして、how-to-use-gitブランチをmasterにマージ
 $ git merge --no-ff how-to-use-git
@@ -215,6 +255,11 @@ graph LR;
 	a((a)) --> b((b))
 	b --> c((c))
 	c --> d((d))
+	style a fill:#f99
+	style b fill:#f99
+	style c fill:#f99
+	style d fill:#f99
+
 	b --> ba((ba))
 	ba --> bb((bb))
 	bb ==>|git merge --no-ff how-to-use-git| d
@@ -239,25 +284,94 @@ graph LR;
 
 	a((a)) --> b((b))
 	b((b)) --> c((c))
+	style a fill:#f99
+	style b fill:#f99
+	style c fill:#f99
 
 	d -.-> b
 	f --> c
 {{</mermaid>}}
 
 ## コミット履歴を改竄する(rebase)
+### ブランチの開始地点を変更する
+ブランチ元にコミットが発生した時、それに追従するために、ブランチの開始地点を、ブランチ元の新しいHEADに変更する。
+
+```bash
+# シンタックス
+$ git rebase [ブランチ元] [現在のブランチ]
+
+# 例
+$ git rebase master how-to-use-git
+```
+
+{{<mermaid align="center">}}
+graph LR;
+	e[master] --> c
+	style e fill:#f9f,stroke:#333,stroke-width:4px
+	a((a)) ==> b((b))
+	b((b)) ==> c((c))
+	style a fill:#f99
+	style b fill:#f99
+	style c fill:#f99
+	b --> x((x))
+	x --> y((y))
+	style x stroke-dasharray: 5, 5
+	style y stroke-dasharray: 5, 5
+
+	c --> x2((x'))
+	x2 --> y2((y'))
+
+	e2[how-to-use-git] -.-> y
+	style e2 fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
+
+	x ==>|git rebase master| x2
+	y ==>|git rebase master| y2
+
+	e3[how-to-use-git] --> y2
+	style e3 fill:#f9f,stroke:#333,stroke-width:4px
+	z3>HEAD]  -.-> e2
+	z3 --> e3
+	style z3 fill:#9f9,stroke:#333,stroke-width:4px
+{{</mermaid>}}
+
+### 複数のコミットを一つにまとめる
+複数のコミットをまとめた、新しいコミットを作る。(つまりSHAが変わることに注意)
+
 ```bash
 # シンタックス
 $ git rebase -i 改竄対象の直前のコミット
 # 例
 $ git rebase -i HEAD~2
-## エディタで、HEADを含めて2つまでのコミット履歴をpickからfixupに編集する
-### 編集前 ###
-# pick 7a34294 fix bug
-# pick 6fba227 merge how-to-use-git
-### 編集後 ###
-# pick 7a34294 fix bug
-# fixup 6fba227 merge how-to-use-git
+
+# エディタで、HEADを含めて2つまでのコミット履歴をpickからfixupに編集する
+### 編集前 ###(上の方が古い)
+# pick 7a34294 first commit
+# pick 6fba227 second commit
+
+### 編集後 ###(2つ目のコミットをfixupに変更)
+# pick 7a34294 first commit
+# fixup 6fba227 second commit
 ```
+
+{{<mermaid align="center">}}
+graph LR;
+	a((a)) -.-> b((b))
+	style b stroke-dasharray: 5, 5
+	b((b)) -.-> c((c))
+	a --> d((b + c))
+
+	z>HEAD]  -.-> e
+	style z fill:#9f9,stroke:#333,stroke-width:4px
+	e[master] -.-> c
+	style c stroke-dasharray: 5, 5
+	style e fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
+
+	b ==>|git rebase| d
+	c ==>|git rebase| d
+	e2[master] --> d
+	style e2 fill:#f9f,stroke:#333,stroke-width:4px
+	z --> e2
+{{</mermaid>}}
 
 ----
 
@@ -319,7 +433,7 @@ $ git diff
   [-- 対象ファイルパス]
   [その他オプション]
 # 例
-$ git diff master..other-web/master -U10 --compaction-heuristic
+$ git diff -U5 how-to-use-git..origin/how-to-use-git -- index.html
 ```
 
 **`A..B`と書いた場合、左が古く、右が新しいとみなされる**
@@ -335,13 +449,13 @@ $ git diff master..other-web/master -U10 --compaction-heuristic
   - `SHA1^..SHA1` 指定コミット(SHA1)の一つ前 → 指定コミット(SHA1)
   - `ブランチ名A..ブランチ名B` ブランチA → ブランチB
 - 比較対象のファイルを指定する方法
-  - `-- 対象ファイルパス` 指定ファイルパスのみを対象とする
-  - `git diff -- ファイルパスA ファイルパスB` 指定ファイルパスAと、指定ファイルパスB
+  - `-- 対象ファイルパス+` 指定ファイルパスのみを対象とする
+     - `git diff -- ファイルパスA ファイルパスB` 指定ファイルパスAと、指定ファイルパスB
 - 表示形式を指定する方法
   - `--stat` 変更点ではなく、ファイル毎の変更種別と変更量のみ表示する。
   - `--name-only` ファイル名のみ表示する。
   - `git add -n .; git diff --name-only` git add をdry-runして追加されたファイルも対象として、ファイル名のみ表示する。
   - `-U0` `-U10` 変更行の前後0行or10行を表示する。
   - `--color-words` 単語に色を付ける。
-  - `--compaction-heuristic` 上方向への差分比較も実施した上で差分表示する。
+  - `--compaction-heuristic` 上方向への差分比較も実施した上で差分表示する。環境によっては使用不可の模様。
 
