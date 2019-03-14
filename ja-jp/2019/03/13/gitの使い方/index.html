@@ -31,7 +31,7 @@
 
 <meta itemprop="datePublished" content="2019-03-13T01:00:00&#43;09:00" />
 <meta itemprop="dateModified" content="2019-03-13T01:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="4271">
+<meta itemprop="wordCount" content="4828">
 
 
 
@@ -158,7 +158,7 @@
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git fetch <span class="o">[</span>リポジトリ略称 ブランチ名<span class="o">]</span>
 
-<span class="c1"># 例</span>
+<span class="c1"># 例:リモートブランチhow-to-use-gitのリモート追跡ブランチを作成</span>
 $ git fetch origin how-to-use-git
 From github.com:otaon/web
  * branch            how-to-use-git -&gt; FETCH_HEAD</code></pre></div>
@@ -170,7 +170,7 @@ From github.com:otaon/web
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git branch <span class="o">[</span>-a<span class="o">]</span>
 
-<span class="c1"># 例</span>
+<span class="c1"># 例:ローカルとリモートのブランチを全て一覧表示</span>
 $ git branch -a
   how-to-make-web-page-with-hugo
 * how-to-use-git
@@ -187,13 +187,13 @@ $ git branch -a
 <li><code>[-a]</code> ローカルとリモートの全てのリポジトリ情報。省略した場合はローカルのみ。</li>
 </ul>
 
-<h2 id="ローカルリポジトリ状態を表示">ローカルリポジトリ状態を表示</h2>
+<h2 id="現在のブランチ状態を表示">現在のブランチ状態を表示</h2>
 
 <p>現在いるブランチ、そのupstream、ファイルのステージング状況を表示する。</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git status
 
-<span class="c1"># 例</span>
+<span class="c1"># 例:現在のブランチ状態を表示</span>
 $ git status
 On branch how-to-use-git
 Your branch is up to date with <span class="s1">&#39;origin/how-to-use-git&#39;</span>.
@@ -209,7 +209,7 @@ no changes added to commit <span class="o">(</span>use <span class="s2">&#34;git
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git log <span class="o">[</span>--pretty<span class="o">=</span>short<span class="o">]</span> <span class="o">[</span>--graph<span class="o">]</span> <span class="o">[</span>-数字<span class="o">]</span> <span class="o">[</span>-p<span class="p">|</span>-u<span class="p">|</span>--patch 対象ファイルパス*<span class="o">]</span> <span class="o">[</span>--decorate<span class="o">]</span>
 
-<span class="c1"># 例</span>
+<span class="c1"># 例:コミットログ直近2件分をグラフ形式で表示</span>
 $ git log -2 --graph
 * commit d37e53c8f12bfba66c1bd1accce89ca6bcbc33a0 <span class="o">(</span>HEAD -&gt; how-to-use-git, origin/how-to-use-git<span class="o">)</span>
 <span class="p">|</span> Author: otaon &lt;******@github.com&gt;
@@ -238,13 +238,13 @@ $ git log -2 --graph
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># -*- ローカルリポジトリを作成する -*-</span>
 <span class="c1"># シンタックス</span>
 $ git init <span class="o">[</span>ディレクトリ<span class="o">]</span>
-<span class="c1"># 例</span>
+<span class="c1"># 例:ローカルリポジトリwebを作成する</span>
 $ git init web
 
 <span class="c1"># -*- リモートリポジトリを作成する -*-</span>
 <span class="c1"># シンタックス</span>
 $ git init --bare --shared <span class="o">[</span>ディレクトリ<span class="o">]</span>
-<span class="c1"># 例</span>
+<span class="c1"># 例:リモートリポジトリwebを作成する</span>
 $ git init --bare --shared web</code></pre></div>
 <ul>
 <li><code>[ディレクトリ]</code> 指定したディレクトリに<code>.git</code>というサブディレクトリが作成される。省略時はカレントディレクトリ。</li>
@@ -257,7 +257,7 @@ $ git init --bare --shared web</code></pre></div>
 <p>既にリモートリポジトリが存在する時、それを元にローカルリポジトリをクローンする。</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git clone リモートリポジトリ名 <span class="o">[</span>ディレクトリ<span class="o">]</span>
-<span class="c1"># 例</span>
+<span class="c1"># 例:リモートリポジトリgit@github.com:otaon/web.gitをローカルリポジトリwebとしてクローンする</span>
 $ git clone git@github.com:otaon/web.git web</code></pre></div>
 <ul>
 <li><code>[ディレクトリ]</code> 指定したディレクトリを作成してリモートリポジトリ内のデータを置く。<br />
@@ -269,12 +269,12 @@ $ git clone git@github.com:otaon/web.git web</code></pre></div>
 <p>既にローカルリポジトリとリモートリポジトリが存在する時、それをリモートリポジトリに関連付ける。</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git remote add リモートリポジトリの略称 リモートリポジトリのURL
-<span class="c1"># 例</span>
+<span class="c1"># 例:リモートリポジトリgit@github.com:otaon/web.gitを略称originとしてローカルリポジトリwebに関連付ける</span>
 $ git remote add origin git@github.com:otaon/web.git</code></pre></div>
 <h2 id="現在のローカルリポジトリのブランチをpush">現在のローカルリポジトリのブランチをpush</h2>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git push <span class="o">[</span>-u<span class="p">|</span>--set-upstream<span class="o">]</span> リモートリポジトリの略称 ブランチ名
-<span class="c1"># 例</span>
+<span class="c1"># 例:現在のHEADをoriginのhow-to-use-gitブランチにpush</span>
 $ git push origin how-to-use-git</code></pre></div>
 <ul>
 <li><code>[-u|--set-upstream]</code> ローカルリポジトリ/現在ブランチの<strong>upstream</strong>をリモートリポジトリの略称/ブランチ名に設定する。<br />
@@ -284,7 +284,7 @@ $ git push origin how-to-use-git</code></pre></div>
 <h2 id="リモートリポジトリのブランチをpull">リモートリポジトリのブランチをpull</h2>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git pull リモートリポジトリの略称 ブランチ名
-<span class="c1"># 例</span>
+<span class="c1"># 例:originのhow-to-use-gitを、対応するローカルブランチにpull</span>
 $ git pull origin how-to-use-git</code></pre></div>
 <hr />
 
@@ -296,13 +296,13 @@ $ git pull origin how-to-use-git</code></pre></div>
 リモート追跡ブランチが作成されている場合は、それを元にローカルブランチを作成する。</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># ローカルブランチを作成</span>
 $ git branch ブランチ名
-<span class="c1"># ローカルブランチをチェックアウトする(ローカルブランチは自動的に作成される)</span>
+<span class="c1"># 例:ローカルブランチをチェックアウトする(リモート追跡ブランチがあれば、ローカルブランチが自動的に作成される)</span>
 $ git checkout how-to-use-git</code></pre></div>
 <h2 id="ローカルブランチを作成する-切り替える">ローカルブランチを作成する/切り替える</h2>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git checkout <span class="o">[</span>-b<span class="o">]</span> <span class="o">[</span>-f<span class="o">]</span> ブランチ名
-<span class="c1"># 例</span>
-$ git checkout master <span class="c1"># masterをチェックアウト</span>
+<span class="c1"># 例:ローカルブランチをチェックアウトする</span>
+$ git checkout master <span class="c1"># masterをチェックアウト(作成はしない)</span>
 $ git checkout -b how-to-use-git <span class="c1"># hot-to-use-gitブランチを作成してチェックアウト</span></code></pre></div>
 <ul>
 <li><code>[-b]</code> このオプションは、<code>git branch ブランチ名; git checkout ブランチ名</code>のショートハンドとして動作する。</li>
@@ -316,10 +316,13 @@ $ git checkout -b how-to-use-git <span class="c1"># hot-to-use-gitブランチ�
 リモート追跡ブランチが存在する場合、そのブランチ名をチェックアウトすると、下記が自動的に行われる。</p>
 
 <ul>
-<li>ローカルブランチは自動的に作成される。</li>
+<li><code>git checkout リモート追跡ブランチ名</code> で、ローカルブランチが自動的に作成される。</li>
 <li>作成されたローカルブランチの<strong>upstream</strong>ブランチに、リモートブランチが自動的に設定される。</li>
+<li>この方法は効率が悪い。<br />
+<code>git pull origin how-to-use-git &amp;&amp; git checkout how-to-use-git</code> として、<br />
+リモート追跡ブランチ作成、ローカルブランチ更新を同時に行った方が効率が良い。</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 例</span>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># 例:リモートで作られたブランチを、ローカルにチェックアウトする</span>
 <span class="c1">## 特定のリモート追跡ブランチを作成</span>
 $ git fetch origin how-to-use-git
 <span class="c1">## ローカルブランチをチェックアウトする(ローカルブランチは自動的に作成される)</span>
@@ -328,7 +331,7 @@ $ git checkout how-to-use-git</code></pre></div>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git checkout <span class="o">[</span>コミットSHA<span class="o">]</span> ファイルパス
 
-<span class="c1"># 例</span>
+<span class="c1"># 例:コミットafpj73zのindex.htmlを現在のブランチに展開する</span>
 $ git checkout afpj73z index.html</code></pre></div>
 <ul>
 <li><code>[コミットSHA]</code> 展開対象のファイルがあるコミット。省略時は現在のindexのコミットを指す。</li>
@@ -338,8 +341,7 @@ $ git checkout afpj73z index.html</code></pre></div>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git merge <span class="o">[</span>--no-ff<span class="o">]</span> ブランチ名
 
-<span class="c1"># 例</span>
-<span class="c1">## 現在masterにいるとして、how-to-use-gitブランチをmasterにマージ</span>
+<span class="c1"># 例:how-to-use-gitブランチを現在のブランチにマージ</span>
 $ git merge --no-ff how-to-use-git</code></pre></div>
 <p><strong>NOTE</strong> indexが変化するのはカレントブランチであり、引数で指定したindexは一切変化しない事を覚えておくこと。<br />
 つまり、<code>merge</code>実行時のカレントブランチは常に「変更を取り込む側」となる。</p>
@@ -349,65 +351,14 @@ $ git merge --no-ff how-to-use-git</code></pre></div>
 
 <ul>
 <li>featureブランチでの開発が完了してmasterブランチにマージしたい場合などに用いる。</li>
-<li><div class="mermaid" align="center">
-    
-graph LR;
-	ee[master] -.-> c
-	style ee fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
-	g>HEAD]
-	style g fill:#9f9,stroke:#333,stroke-width:4px
-	g -.-> ee
-	f[master] --> d((d))
-	style f fill:#f9f,stroke:#333,stroke-width:4px
-
-	g --> f
-	a((a)) --> b((b))
-	b --> c((c))
-	c --> d((d))
-	style a fill:#f99
-	style b fill:#f99
-	style c fill:#f99
-	style d fill:#f99
-
-	b --> ba((ba))
-	ba --> bb((bb))
-	bb ==>|git merge --no-ff how-to-use-git| d
-	i[how-to-use-git] --> bb
-	style i fill:#f9f,stroke:#333,stroke-width:4px
-
-</div>
-</li>
+<li><img src="git_merge_noff.svg" alt="git-merge-no-ff" /></li>
 </ul></li>
 
 <li><p><code>how-to-use-git</code>ブランチにいるときに<code>git merge [--ff] master</code></p>
 
 <ul>
 <li>featureブランチを作成したまま放置していたらmasterが進んでしまった場合などに用いる。</li>
-<li><div class="mermaid" align="center">
-    
-graph LR;
-	g>HEAD]
-	style g fill:#9f9,stroke:#333,stroke-width:4px
-	g -.-> d[how-to-use-git]
-	style d fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
-	d ==>|git merge master| f
-	g --> f[how-to-use-git]
-	style f fill:#f9f,stroke:#333,stroke-width:4px
-
-	e[master] --> c
-	style e fill:#f9f,stroke:#333,stroke-width:4px
-
-	a((a)) --> b((b))
-	b((b)) --> c((c))
-	style a fill:#f99
-	style b fill:#f99
-	style c fill:#f99
-
-	d -.-> b
-	f --> c
-
-</div>
-</li>
+<li><img src="git_merge_ff.svg" alt="git-merge-ff" /></li>
 </ul></li>
 </ul>
 
@@ -418,48 +369,16 @@ graph LR;
 <p>ブランチ元にコミットが発生した時、それに追従するために、ブランチの開始地点を、ブランチ元の新しいHEADに変更する。</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git rebase <span class="o">[</span>ブランチ元<span class="o">]</span> <span class="o">[</span>現在のブランチ<span class="o">]</span>
-
-<span class="c1"># 例</span>
+<span class="c1"># 例:how-to-use-gitブランチの付け根(base)をmasterのHEADの位置にrebaseする</span>
 $ git rebase master how-to-use-git</code></pre></div>
-<div class="mermaid" align="center">
-    
-graph LR;
-	e[master] --> c
-	style e fill:#f9f,stroke:#333,stroke-width:4px
-	a((a)) ==> b((b))
-	b((b)) ==> c((c))
-	style a fill:#f99
-	style b fill:#f99
-	style c fill:#f99
-	b --> x((x))
-	x --> y((y))
-	style x stroke-dasharray: 5, 5
-	style y stroke-dasharray: 5, 5
-
-	c --> x2((x'))
-	x2 --> y2((y'))
-
-	e2[how-to-use-git] -.-> y
-	style e2 fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
-
-	x ==>|git rebase master| x2
-	y ==>|git rebase master| y2
-
-	e3[how-to-use-git] --> y2
-	style e3 fill:#f9f,stroke:#333,stroke-width:4px
-	z3>HEAD]  -.-> e2
-	z3 --> e3
-	style z3 fill:#9f9,stroke:#333,stroke-width:4px
-
-</div>
-
+<p><img src="git_rebase_master.svg" alt="git-rebase-master" /></p>
 
 <h3 id="複数のコミットを一つにまとめる">複数のコミットを一つにまとめる</h3>
 
 <p>複数のコミットをまとめた、新しいコミットを作る。(つまりSHAが変わることに注意)</p>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git rebase -i 改竄対象の直前のコミット
-<span class="c1"># 例</span>
+<span class="c1"># 例:現在のブランチの直近2件を1件にまとめ上げる。SHAは変わってしまう。</span>
 $ git rebase -i HEAD~2
 
 <span class="c1"># エディタで、HEADを含めて2つまでのコミット履歴をpickからfixupに編集する</span>
@@ -470,28 +389,7 @@ $ git rebase -i HEAD~2
 <span class="c1">### 編集後 ###(2つ目のコミットをfixupに変更)</span>
 <span class="c1"># pick 7a34294 first commit</span>
 <span class="c1"># fixup 6fba227 second commit</span></code></pre></div>
-<div class="mermaid" align="center">
-    
-graph LR;
-	a((a)) -.-> b((b))
-	style b stroke-dasharray: 5, 5
-	b((b)) -.-> c((c))
-	a --> d((b + c))
-
-	z>HEAD]  -.-> e
-	style z fill:#9f9,stroke:#333,stroke-width:4px
-	e[master] -.-> c
-	style c stroke-dasharray: 5, 5
-	style e fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
-
-	b ==>|git rebase| d
-	c ==>|git rebase| d
-	e2[master] --> d
-	style e2 fill:#f9f,stroke:#333,stroke-width:4px
-	z --> e2
-
-</div>
-
+<p><img src="git_rebase-i.svg" alt="git-rebase-i" /></p>
 
 <hr />
 
@@ -499,9 +397,9 @@ graph LR;
 
 <h2 id="ファイルをステージングする">ファイルをステージングする</h2>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
-$ git add <span class="o">[</span>--all<span class="p">|</span>ファイル<span class="o">]</span>
-<span class="c1"># 例</span>
-$ git pull index.html</code></pre></div>
+$ git add <span class="o">[</span>--all<span class="p">|</span>ファイル+<span class="o">]</span>
+<span class="c1"># 例:index.htmlをステージングする(indexに登録する、とも言う)</span>
+$ git add index.html</code></pre></div>
 <ul>
 <li><code>--all</code> 変更が加えられたファイルと未追跡だったファイルをaddする</li>
 </ul>
@@ -509,17 +407,24 @@ $ git pull index.html</code></pre></div>
 <h2 id="ステージング済みのファイルをリポジトリへコミット">ステージング済みのファイルをリポジトリへコミット</h2>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git commit <span class="o">[</span>-m <span class="s2">&#34;コミットメッセージ&#34;</span><span class="o">]</span>
-<span class="c1"># 例</span>
+<span class="c1"># 例:ステージング済みのファイルをコミットする</span>
 $ git commit -m <span class="s2">&#34;feature: edit index.html&#34;</span></code></pre></div>
-<h2 id="直前のコミットメッセージを修正">直前のコミットメッセージを修正</h2>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
+<h2 id="直前のコミットを修正">直前のコミットを修正</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス:直前のコミットを修正</span>
+<span class="c1">## コミットメッセージも修正</span>
 $ git commit --amend <span class="c1"># -&gt; エディタでメッセージを修正</span>
-<span class="c1"># 例</span>
-$ git commit --amend <span class="c1"># -&gt; エディタでメッセージを修正</span></code></pre></div>
+<span class="c1">## コミットメッセージは修正しない</span>
+$ git --amend --no-edit
+
+<span class="c1"># 例:直近のコミットのメッセージだけを変更する</span>
+$ git commit --amend <span class="c1"># -&gt; エディタでメッセージを修正</span>
+<span class="c1"># 例:直近のコミットだけを修正する</span>
+$ git add --all <span class="c1">## 何らかの修正をステージング</span>
+$ git commit --amend --no-edit <span class="c1">## 直前のコミットにまとめる(メッセージは変えない)</span></code></pre></div>
 <h2 id="変更をリセット">変更をリセット</h2>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git reset <span class="o">[</span>--soft<span class="p">|</span>--mixed<span class="p">|</span>--hard<span class="o">]</span> <span class="o">[</span>HEAD<span class="p">|</span>HEAD^<span class="p">|</span>SHA<span class="p">|</span>ブランチ名<span class="o">]</span>
-<span class="c1"># 例</span>
+<span class="c1"># 例:変更をリセットする &amp; リセットをリセットする</span>
 git reset --mixed HEAD <span class="c1"># addを取り消す</span>
 git reset --hard ORIG_HEAD <span class="c1"># git resetを取り消す</span></code></pre></div>
 <ul>
@@ -545,7 +450,7 @@ $ git diff
   <span class="p">|</span>ブランチA..ブランチB<span class="o">]</span>
   <span class="o">[</span>-- 対象ファイルパス<span class="o">]</span>
   <span class="o">[</span>その他オプション<span class="o">]</span>
-<span class="c1"># 例</span>
+<span class="c1"># 例:差分を表示する</span>
 $ git diff -U5 how-to-use-git..origin/how-to-use-git -- index.html</code></pre></div>
 <p><strong><code>A..B</code>と書いた場合、左が古く、右が新しいとみなされる</strong></p>
 
