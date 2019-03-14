@@ -30,7 +30,7 @@ Gitを端末上で使用するため、操作とそのコマンドを記す。
 # シンタックス
 $ git fetch [リポジトリ略称 ブランチ名]
 
-# 例
+# 例:リモートブランチhow-to-use-gitのリモート追跡ブランチを作成
 $ git fetch origin how-to-use-git
 From github.com:otaon/web
  * branch            how-to-use-git -> FETCH_HEAD
@@ -43,7 +43,7 @@ From github.com:otaon/web
 # シンタックス
 $ git branch [-a]
 
-# 例
+# 例:ローカルとリモートのブランチを全て一覧表示
 $ git branch -a
   how-to-make-web-page-with-hugo
 * how-to-use-git
@@ -60,14 +60,14 @@ $ git branch -a
 
 - `[-a]` ローカルとリモートの全てのリポジトリ情報。省略した場合はローカルのみ。
 
-## ローカルリポジトリ状態を表示
+## 現在のブランチ状態を表示
 現在いるブランチ、そのupstream、ファイルのステージング状況を表示する。
 
 ```bash
 # シンタックス
 $ git status
 
-# 例
+# 例:現在のブランチ状態を表示
 $ git status
 On branch how-to-use-git
 Your branch is up to date with 'origin/how-to-use-git'.
@@ -86,7 +86,7 @@ no changes added to commit (use "git add" and/or "git commit -a")
 # シンタックス
 $ git log [--pretty=short] [--graph] [-数字] [-p|-u|--patch 対象ファイルパス*] [--decorate]
 
-# 例
+# 例:コミットログ直近2件分をグラフ形式で表示
 $ git log -2 --graph
 * commit d37e53c8f12bfba66c1bd1accce89ca6bcbc33a0 (HEAD -> how-to-use-git, origin/how-to-use-git)
 | Author: otaon <******@github.com>
@@ -115,13 +115,13 @@ $ git log -2 --graph
 # -*- ローカルリポジトリを作成する -*-
 # シンタックス
 $ git init [ディレクトリ]
-# 例
+# 例:ローカルリポジトリwebを作成する
 $ git init web
 
 # -*- リモートリポジトリを作成する -*-
 # シンタックス
 $ git init --bare --shared [ディレクトリ]
-# 例
+# 例:リモートリポジトリwebを作成する
 $ git init --bare --shared web
 ```
 
@@ -137,7 +137,7 @@ $ git init --bare --shared web
 ```bash
 # シンタックス
 $ git clone リモートリポジトリ名 [ディレクトリ]
-# 例
+# 例:リモートリポジトリgit@github.com:otaon/web.gitをローカルリポジトリwebとしてクローンする
 $ git clone git@github.com:otaon/web.git web
 ```
 
@@ -150,7 +150,7 @@ $ git clone git@github.com:otaon/web.git web
 ```bash
 # シンタックス
 $ git remote add リモートリポジトリの略称 リモートリポジトリのURL
-# 例
+# 例:リモートリポジトリgit@github.com:otaon/web.gitを略称originとしてローカルリポジトリwebに関連付ける
 $ git remote add origin git@github.com:otaon/web.git
 ```
 
@@ -158,7 +158,7 @@ $ git remote add origin git@github.com:otaon/web.git
 ```bash
 # シンタックス
 $ git push [-u|--set-upstream] リモートリポジトリの略称 ブランチ名
-# 例
+# 例:現在のHEADをoriginのhow-to-use-gitブランチにpush
 $ git push origin how-to-use-git
 ```
 
@@ -169,7 +169,7 @@ $ git push origin how-to-use-git
 ```bash
 # シンタックス
 $ git pull リモートリポジトリの略称 ブランチ名
-# 例
+# 例:originのhow-to-use-gitを、対応するローカルブランチにpull
 $ git pull origin how-to-use-git
 ```
 
@@ -183,7 +183,7 @@ $ git pull origin how-to-use-git
 ```bash
 # ローカルブランチを作成
 $ git branch ブランチ名
-# ローカルブランチをチェックアウトする(ローカルブランチは自動的に作成される)
+# 例:ローカルブランチをチェックアウトする(リモート追跡ブランチがあれば、ローカルブランチが自動的に作成される)
 $ git checkout how-to-use-git
 ```
 
@@ -191,8 +191,8 @@ $ git checkout how-to-use-git
 ```bash
 # シンタックス
 $ git checkout [-b] [-f] ブランチ名
-# 例
-$ git checkout master # masterをチェックアウト
+# 例:ローカルブランチをチェックアウトする
+$ git checkout master # masterをチェックアウト(作成はしない)
 $ git checkout -b how-to-use-git # hot-to-use-gitブランチを作成してチェックアウト
 ```
 
@@ -204,11 +204,14 @@ $ git checkout -b how-to-use-git # hot-to-use-gitブランチを作成してチ�
 そこで、リモートブランチに対応する**リモート追跡ブランチ**を作成し、それからローカルブランチをチェックアウトする。  
 リモート追跡ブランチが存在する場合、そのブランチ名をチェックアウトすると、下記が自動的に行われる。
 
-- ローカルブランチは自動的に作成される。
+- `git checkout リモート追跡ブランチ名` で、ローカルブランチが自動的に作成される。
 - 作成されたローカルブランチの**upstream**ブランチに、リモートブランチが自動的に設定される。
+- この方法は効率が悪い。  
+`git pull origin how-to-use-git && git checkout how-to-use-git` として、  
+リモート追跡ブランチ作成、ローカルブランチ更新を同時に行った方が効率が良い。
 
 ```bash
-# 例
+# 例:リモートで作られたブランチを、ローカルにチェックアウトする
 ## 特定のリモート追跡ブランチを作成
 $ git fetch origin how-to-use-git
 ## ローカルブランチをチェックアウトする(ローカルブランチは自動的に作成される)
@@ -220,7 +223,7 @@ $ git checkout how-to-use-git
 # シンタックス
 $ git checkout [コミットSHA] ファイルパス
 
-# 例
+# 例:コミットafpj73zのindex.htmlを現在のブランチに展開する
 $ git checkout afpj73z index.html
 ```
 
@@ -231,8 +234,7 @@ $ git checkout afpj73z index.html
 # シンタックス
 $ git merge [--no-ff] ブランチ名
 
-# 例
-## 現在masterにいるとして、how-to-use-gitブランチをmasterにマージ
+# 例:how-to-use-gitブランチを現在のブランチにマージ
 $ git merge --no-ff how-to-use-git
 ```
 
@@ -241,56 +243,11 @@ $ git merge --no-ff how-to-use-git
 
 - `master`ブランチにいるときに`git merge --no-ff `
   - featureブランチでの開発が完了してmasterブランチにマージしたい場合などに用いる。
-  - {{<mermaid align="center">}}
-graph LR;
-	ee[master] -.-> c
-	style ee fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
-	g>HEAD]
-	style g fill:#9f9,stroke:#333,stroke-width:4px
-	g -.-> ee
-	f[master] --> d((d))
-	style f fill:#f9f,stroke:#333,stroke-width:4px
-
-	g --> f
-	a((a)) --> b((b))
-	b --> c((c))
-	c --> d((d))
-	style a fill:#f99
-	style b fill:#f99
-	style c fill:#f99
-	style d fill:#f99
-
-	b --> ba((ba))
-	ba --> bb((bb))
-	bb ==>|git merge --no-ff how-to-use-git| d
-	i[how-to-use-git] --> bb
-	style i fill:#f9f,stroke:#333,stroke-width:4px
-{{</mermaid>}}
+  - ![git-merge-no-ff](git_merge_noff.svg)
 
 - `how-to-use-git`ブランチにいるときに`git merge [--ff] master`
   - featureブランチを作成したまま放置していたらmasterが進んでしまった場合などに用いる。
-  - {{<mermaid align="center">}}
-graph LR;
-	g>HEAD]
-	style g fill:#9f9,stroke:#333,stroke-width:4px
-	g -.-> d[how-to-use-git]
-	style d fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
-	d ==>|git merge master| f
-	g --> f[how-to-use-git]
-	style f fill:#f9f,stroke:#333,stroke-width:4px
-
-	e[master] --> c
-	style e fill:#f9f,stroke:#333,stroke-width:4px
-
-	a((a)) --> b((b))
-	b((b)) --> c((c))
-	style a fill:#f99
-	style b fill:#f99
-	style c fill:#f99
-
-	d -.-> b
-	f --> c
-{{</mermaid>}}
+  - ![git-merge-ff](git_merge_ff.svg)
 
 ## コミット履歴を改竄する(rebase)
 ### ブランチの開始地点を変更する
@@ -299,40 +256,11 @@ graph LR;
 ```bash
 # シンタックス
 $ git rebase [ブランチ元] [現在のブランチ]
-
-# 例
+# 例:how-to-use-gitブランチの付け根(base)をmasterのHEADの位置にrebaseする
 $ git rebase master how-to-use-git
 ```
 
-{{<mermaid align="center">}}
-graph LR;
-	e[master] --> c
-	style e fill:#f9f,stroke:#333,stroke-width:4px
-	a((a)) ==> b((b))
-	b((b)) ==> c((c))
-	style a fill:#f99
-	style b fill:#f99
-	style c fill:#f99
-	b --> x((x))
-	x --> y((y))
-	style x stroke-dasharray: 5, 5
-	style y stroke-dasharray: 5, 5
-
-	c --> x2((x'))
-	x2 --> y2((y'))
-
-	e2[how-to-use-git] -.-> y
-	style e2 fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
-
-	x ==>|git rebase master| x2
-	y ==>|git rebase master| y2
-
-	e3[how-to-use-git] --> y2
-	style e3 fill:#f9f,stroke:#333,stroke-width:4px
-	z3>HEAD]  -.-> e2
-	z3 --> e3
-	style z3 fill:#9f9,stroke:#333,stroke-width:4px
-{{</mermaid>}}
+![git-rebase-master](git_rebase_master.svg)
 
 ### 複数のコミットを一つにまとめる
 複数のコミットをまとめた、新しいコミットを作る。(つまりSHAが変わることに注意)
@@ -340,7 +268,7 @@ graph LR;
 ```bash
 # シンタックス
 $ git rebase -i 改竄対象の直前のコミット
-# 例
+# 例:現在のブランチの直近2件を1件にまとめ上げる。SHAは変わってしまう。
 $ git rebase -i HEAD~2
 
 # エディタで、HEADを含めて2つまでのコミット履歴をpickからfixupに編集する
@@ -353,25 +281,7 @@ $ git rebase -i HEAD~2
 # fixup 6fba227 second commit
 ```
 
-{{<mermaid align="center">}}
-graph LR;
-	a((a)) -.-> b((b))
-	style b stroke-dasharray: 5, 5
-	b((b)) -.-> c((c))
-	a --> d((b + c))
-
-	z>HEAD]  -.-> e
-	style z fill:#9f9,stroke:#333,stroke-width:4px
-	e[master] -.-> c
-	style c stroke-dasharray: 5, 5
-	style e fill:#f9f,stroke:#333,stroke-width:4px, stroke-dasharray: 5, 5
-
-	b ==>|git rebase| d
-	c ==>|git rebase| d
-	e2[master] --> d
-	style e2 fill:#f9f,stroke:#333,stroke-width:4px
-	z --> e2
-{{</mermaid>}}
+![git-rebase-i](git_rebase-i.svg)
 
 ----
 
@@ -379,9 +289,9 @@ graph LR;
 ## ファイルをステージングする
 ```bash
 # シンタックス
-$ git add [--all|ファイル]
-# 例
-$ git pull index.html
+$ git add [--all|ファイル+]
+# 例:index.htmlをステージングする(indexに登録する、とも言う)
+$ git add index.html
 ```
 
 - `--all` 変更が加えられたファイルと未追跡だったファイルをaddする
@@ -390,23 +300,30 @@ $ git pull index.html
 ```bash
 # シンタックス
 $ git commit [-m "コミットメッセージ"]
-# 例
+# 例:ステージング済みのファイルをコミットする
 $ git commit -m "feature: edit index.html"
 ```
 
-## 直前のコミットメッセージを修正
+## 直前のコミットを修正
 ```bash
-# シンタックス
+# シンタックス:直前のコミットを修正
+## コミットメッセージも修正
 $ git commit --amend # -> エディタでメッセージを修正
-# 例
+## コミットメッセージは修正しない
+$ git --amend --no-edit
+
+# 例:直近のコミットのメッセージだけを変更する
 $ git commit --amend # -> エディタでメッセージを修正
+# 例:直近のコミットだけを修正する
+$ git add --all ## 何らかの修正をステージング
+$ git commit --amend --no-edit ## 直前のコミットにまとめる(メッセージは変えない)
 ```
 
 ## 変更をリセット
 ```bash
 # シンタックス
 $ git reset [--soft|--mixed|--hard] [HEAD|HEAD^|SHA|ブランチ名]
-# 例
+# 例:変更をリセットする & リセットをリセットする
 git reset --mixed HEAD # addを取り消す
 git reset --hard ORIG_HEAD # git resetを取り消す
 ```
@@ -432,7 +349,7 @@ $ git diff
   |ブランチA..ブランチB]
   [-- 対象ファイルパス]
   [その他オプション]
-# 例
+# 例:差分を表示する
 $ git diff -U5 how-to-use-git..origin/how-to-use-git -- index.html
 ```
 
