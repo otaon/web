@@ -14,11 +14,34 @@ Gitを端末上で使用するため、操作とそのコマンドを記す。
 
 # 操作の種類一覧
 1. 情報更新/情報表示
+  1. リモートリポジトリの情報をローカルリポジトリに反映する(フェッチ)
+  1. ローカルブランチ&リモートブランチを一覧表示
+  1. 現在のブランチ状態を表示
+  1. コミットログを表示
 1. リポジトリ操作
+  1. リポジトリを新規作成する
+  1. リモートリポジトリからローカルリポジトリをクローンする
+  1. リモートリポジトリをローカルリポジトリに関連付ける
+  1. 現在のローカルリポジトリのブランチを`push`
+  1. リモートリポジトリのブランチを`pull`
 1. ブランチ操作
+  1. ローカルブランチを作成/削除する
+  1. ローカルブランチを切り替える(`checkout`する)
+  1. 現在のブランチに、指定コミットの指定ファイルを展開する
+  1. 指定したブランチを現在のブランチにマージ
+  1. マージ時のコンフリクトを解消する
+  1. コミット履歴を改竄する(`rebase`)
 1. ファイル操作
-1. 差分(diff)確認
-
+  1. ファイルをステージングする
+  1. ステージング済みのファイルをリポジトリへコミット
+  1. 直前のコミットを修正
+  1. 変更をリセット
+  1. ファイル内容確認(`grep`)
+  1. ファイルを移動する/ファイルを削除する/ファイルをリネームする
+1. 差分(`diff`)確認
+  1. 様々な差分(`diff`)を確認
+1. 問題を特定する
+  1. 二分探索で問題を特定する
 
 ----
 
@@ -29,7 +52,6 @@ Gitを端末上で使用するため、操作とそのコマンドを記す。
 ```bash
 # シンタックス
 $ git fetch [リポジトリ略称 ブランチ名]
-
 # 例:リモートブランチhow-to-use-gitのリモート追跡ブランチを作成
 $ git fetch origin how-to-use-git
 From github.com:otaon/web
@@ -41,8 +63,7 @@ From github.com:otaon/web
 ## ローカルブランチ&リモートブランチを一覧表示
 ```bash
 # シンタックス
-$ git branch [-a]
-
+$ git branch [-a|-r|--merged|--no-merged] [--color|--no-color] 
 # 例:ローカルとリモートのブランチを全て一覧表示
 $ git branch -a
   how-to-make-web-page-with-hugo
@@ -58,7 +79,12 @@ $ git branch -a
   remotes/origin/migrate-from-gist-to-githubio
 ```
 
-- `[-a]` ローカルとリモートの全てのリポジトリ情報。省略した場合はローカルのみ。
+- `[-a]` ローカルとリモートの全てのブランチ情報表示。省略した場合はローカルのみ。
+- `[-r]` リモートの全てのブランチ情報表示。
+- `[-merged]` HEADにマージ済みのブランチ情報表示。
+- `[-no-merged]` HEADにマージされていないブランチ情報表示。
+- `[-color]` ブランチ情報に色を付けて表示。
+- `[-no-color]` ブランチ情報に色を付けずに表示。
 
 ## 現在のブランチ状態を表示
 現在いるブランチ、そのupstream、ファイルのステージング状況を表示する。
@@ -66,7 +92,6 @@ $ git branch -a
 ```bash
 # シンタックス
 $ git status
-
 # 例:現在のブランチ状態を表示
 $ git status
 On branch how-to-use-git
@@ -85,7 +110,6 @@ no changes added to commit (use "git add" and/or "git commit -a")
 ```bash
 # シンタックス
 $ git log [--pretty=short] [--graph] [-数字] [-p|-u|--patch 対象ファイルパス*] [--decorate]
-
 # 例:コミットログ直近2件分をグラフ形式で表示
 $ git log -2 --graph
 * commit d37e53c8f12bfba66c1bd1accce89ca6bcbc33a0 (HEAD -> how-to-use-git, origin/how-to-use-git)
@@ -154,7 +178,7 @@ $ git remote add リモートリポジトリの略称 リモートリポジト�
 $ git remote add origin git@github.com:otaon/web.git
 ```
 
-## 現在のローカルリポジトリのブランチをpush
+## 現在のローカルリポジトリのブランチを`push`
 ```bash
 # シンタックス
 $ git push [-u|--set-upstream] リモートリポジトリの略称 ブランチ名
@@ -165,7 +189,7 @@ $ git push origin how-to-use-git
 - `[-u|--set-upstream]` ローカルリポジトリ/現在ブランチの**upstream**をリモートリポジトリの略称/ブランチ名に設定する。  
   こうすると、次回からは`git push`で**upstream**にpushできるようになる。
 
-## リモートリポジトリのブランチをpull
+## リモートリポジトリのブランチを`pull`
 ```bash
 # シンタックス
 $ git pull リモートリポジトリの略称 ブランチ名
@@ -176,18 +200,48 @@ $ git pull origin how-to-use-git
 ----
 
 # ブランチ操作
-## ローカルブランチを作成する
-現在のコミットに、ローカルブランチを作成する。  
+## ローカルブランチを作成/削除/名称変更/リモート追跡ブランチ変更する
+### ローカルブランチを作成する
+ローカルブランチを作成する。  
 リモート追跡ブランチが作成されている場合は、それを元にローカルブランチを作成する。
 
 ```bash
-# ローカルブランチを作成
-$ git branch ブランチ名
-# 例:ローカルブランチをチェックアウトする(リモート追跡ブランチがあれば、ローカルブランチが自動的に作成される)
-$ git checkout how-to-use-git
+# シンタックス
+## ブランチ作成
+$ git branch ブランチ名 [リモート追跡ブランチ名]
+
+# 例:ローカルブランチhow-to-use-gitを作成する
+$ git branch how-to-use-git
+
+# 例:ローカルブランチhow-to-use-gitをorigin/how-to-use-gitに関連付けて作成する
+$ git branch how-to-use-git origin/how-to-use-git
 ```
 
-## ローカルブランチを作成する/切り替える
+### ローカルブランチを削除する
+```bash
+## ブランチ作成
+$ git branch (-d|-D) ブランチ名 [リモート追跡ブランチ名]
+```
+
+### ローカルブランチ名を変更する
+```bash
+## ブランチ名変更
+$ git branch -m [古いブランチ名] 新しいブランチ名
+```
+
+### リモート追跡ブランチを設定する
+```bash
+## リモート追跡ブランチを設定
+$ git branch -u 追跡対象のリモートブランチ名 [ローカルブランチ名]
+```
+
+### リモート追跡ブランチの設定を解除する
+```bash
+## リモート追跡ブランチの設定を解除
+$ git branch --unset-upstream [ローカルブランチ名]
+```
+
+## ローカルブランチを切り替える(`checkout`する)
 ```bash
 # シンタックス
 $ git checkout [-b] [-f] ブランチ名
@@ -196,7 +250,14 @@ $ git checkout master # masterをチェックアウト(作成はしない)
 $ git checkout -b how-to-use-git # hot-to-use-gitブランチを作成してチェックアウト
 ```
 
-- `[-b]` このオプションは、`git branch ブランチ名; git checkout ブランチ名`のショートハンドとして動作する。
+## ローカルブランチに対応するリモート追跡ブランチを確認する
+```bash
+$ git branch -vv
+```
+
+
+- `[-b]` リモートに対応付けてブランチを作成&チェックアウト。  
+**NOTE:** `-b`は`git branch ブランチ名; git checkout ブランチ名`のショートハンド。
 - `[-f]` 作業ブランチやステージに変更があった場合でも、それを強制的に破棄してチェックアウトする。
 
 ### リモートブランチを扱いたい場合
@@ -212,17 +273,18 @@ $ git checkout -b how-to-use-git # hot-to-use-gitブランチを作成してチ�
 
 ```bash
 # 例:リモートで作られたブランチを、ローカルにチェックアウトする
-## 特定のリモート追跡ブランチを作成
+# 1.特定のリモート追跡ブランチを作成
 $ git fetch origin how-to-use-git
-## ローカルブランチをチェックアウトする(ローカルブランチは自動的に作成される)
+# 2.ローカルブランチをチェックアウトする
 $ git checkout how-to-use-git
+
+## NOTE:ローカルブランチは自動的に作成される
 ```
 
 ## 現在のブランチに、指定コミットの指定ファイルを展開する
 ```bash
 # シンタックス
 $ git checkout [コミットSHA] ファイルパス
-
 # 例:コミットafpj73zのindex.htmlを現在のブランチに展開する
 $ git checkout afpj73z index.html
 ```
@@ -233,9 +295,29 @@ $ git checkout afpj73z index.html
 ```bash
 # シンタックス
 $ git merge [--no-ff] ブランチ名
-
 # 例:how-to-use-gitブランチを現在のブランチにマージ
 $ git merge --no-ff how-to-use-git
+```
+
+## マージ時のコンフリクトを解消する
+### コンフリクト時のファイル表記の意味
+```gitdiff
+\<<<<<<< HEAD
+AAAA
+=======
+BBBB
+\>>>>>>> master
+```
+
+`HEAD`では'AAAA'に変更しているが、`master`では'BBBB'に変更している。
+
+### 片方のコミット内容を全て採用する
+```bash
+# HEAD側を優先する
+$ git checkout --ours how-to-use-git.md
+
+# HEADと反対側を優先する
+$ git checkout --theirs how-to-use-git.md
 ```
 
 **NOTE** indexが変化するのはカレントブランチであり、引数で指定したindexは一切変化しない事を覚えておくこと。  
@@ -249,7 +331,7 @@ $ git merge --no-ff how-to-use-git
   - featureブランチを作成したまま放置していたらmasterが進んでしまった場合などに用いる。
   - ![git-merge-ff](git_merge_ff.svg)
 
-## コミット履歴を改竄する(rebase)
+## コミット履歴を改竄する(`rebase`)
 ### ブランチの開始地点を変更する
 ブランチ元にコミットが発生した時、それに追従するために、ブランチの開始地点を、ブランチ元の新しいHEADに変更する。
 
@@ -332,10 +414,47 @@ git reset --hard ORIG_HEAD # git resetを取り消す
 - `--mixed|指定なし` HEADの位置とindexをリセットする。(`add`と`commit`を取り消し)
 - `--hard` HEADの位置とindexとワークツリー内容をリセットする。(ワークツリーの編集内容と`add`と`commit`を取り消し)
 
+## ファイル確認(`grep`)
+```bash
+$ git grep [-w] [-i] (単語|[--not] -e '正規表現' [(--and|--or [--not]) -e ...*]) [対象パス]
+```
+
+- `-e '正規表現'` 正規表現にマッチしたものにヒットする。`'\(foo\|bar\)'`でfoo**か**barを含む行にヒットする。
+- `[--not] ...` 正規表現にマッチしたものを除外する。
+- `[--and ...]` 複数の正規表現のandを取る。`-e 'foo' --and -e 'bar'`でfoo**と**barを含む行にヒットする。
+- `[--or ...]` 複数の正規表現のorを取る。`-e 'foo' --or -e 'bar'`でfoo**か**barを含む行にヒットする。
+- `[-w]` 単語を検索する。`git grep -w user`で、`user`のみ(つまり`users`などは除く)を検索する。
+- `[-i]` 大文字小文字を無視する。
+
+## ファイルを移動する/ファイルを削除する/ファイルをリネームする
+### gitで追跡させつつファイルを移動/リネームする
+```bash
+# シンタックス
+$ git mv ファイル名 (移動先パス|リネーム後ファイル名)
+# 例:ファイルを移動する
+$ git mv how-to-use-git.md path/to/move/
+```
+
+### gitで追跡させつつファイルを削除する
+```bash
+# シンタックス
+$ git rm ファイル名
+# 例:ファイルを削除する
+$ git rm  ファイル名
+```
+
+## ファイルをgit管理下から外す
+```bash
+# シンタックス
+$ git rm -cached ファイル名
+# 例:ファイルをgit管理下から外す
+$ git rm -cached how-to-use-git.md
+```
+
 ----
 
-# 差分確認
-## 様々な差分(diff)を確認
+# 差分(`diff`)確認
+## 様々な差分(`diff`)を確認
 ```bash
 # シンタックス
 $ git diff
@@ -347,7 +466,7 @@ $ git diff
   |変更前のSHA..変更後のSHA
   |確認したいコミットのSHA^..確認したいコミットのSHA
   |ブランチA..ブランチB]
-  [-- 対象ファイルパス]
+  [-- 対象ファイルパス+]
   [その他オプション]
 # 例:差分を表示する
 $ git diff -U5 how-to-use-git..origin/how-to-use-git -- index.html
@@ -376,3 +495,53 @@ $ git diff -U5 how-to-use-git..origin/how-to-use-git -- index.html
   - `--color-words` 単語に色を付ける。
   - `--compaction-heuristic` 上方向への差分比較も実施した上で差分表示する。環境によっては使用不可の模様。
 
+----
+
+# 問題を特定する
+## 二分探索で問題を特定する
+### 1. 問題が有るコミットと問題が無いコミットの中間バージョンをチェックアウトする
+```bash
+# シンタックス
+$ git bisect start 問題が有るコミット 問題が無いコミット
+# 例:問題が有るコミット=HEAD,問題が無いコミット=v1.0
+$ git bisect srart HEAD v1.0
+```
+
+### 2-A. テストスクリプトで問題混入したコミットをチェックアウトする
+以下のコマンドを実行すると、gitがテスト実行と中間バージョンのチェックアウトを繰り返して、問題が混入したコミットをチェックアウトする。
+
+```bash
+$ git bisect run テストスクリプトパス
+```
+
+### 2-B. 手動でgood,badを指定して問題を混入したコミットをチェックアウトする
+テストスクリプトを用いなくとも、以下のいずれかのコマンドを実行すると、badとgoodの中間バージョンがチェックアウトされる。
+```bash
+# 現在のコミットが問題無いことを表明する=>次の中間バージョンがチェックアウトされる
+$ git bisect good
+# 現在のコミットが問題有ることを表明する=>次の中間バージョンがチェックアウトされる
+$ git bisect bad
+```
+
+### xxx. 現在チェックアウトしているコミットを確認する
+現在チェックアウトしているコミットを見る。デフォルトではgikで表示する。
+
+```bash
+$ git bisect view [-p]
+```
+
+- `[-p]` パッチ形式でコンソールに出力する。
+
+### xxx. 二分探索の過程を確認する
+git bisectのログを表示する。
+
+```bash
+$ git bisect log
+```
+
+### xxx. `git bisect`実行前の状態に戻す
+git bisectを実行する前の状態に戻す。
+
+```bash
+$ git bisect reset
+```
