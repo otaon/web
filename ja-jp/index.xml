@@ -39,11 +39,53 @@
 &lt;h1 id=&#34;操作の種類一覧&#34;&gt;操作の種類一覧&lt;/h1&gt;
 
 &lt;ol&gt;
-&lt;li&gt;情報更新/情報表示&lt;/li&gt;
-&lt;li&gt;リポジトリ操作&lt;/li&gt;
-&lt;li&gt;ブランチ操作&lt;/li&gt;
-&lt;li&gt;ファイル操作&lt;/li&gt;
-&lt;li&gt;差分(diff)確認&lt;/li&gt;
+&lt;li&gt;情報更新/情報表示
+
+&lt;ol&gt;
+&lt;li&gt;リモートリポジトリの情報をローカルリポジトリに反映する(フェッチ)&lt;/li&gt;
+&lt;li&gt;ローカルブランチ&amp;amp;リモートブランチを一覧表示&lt;/li&gt;
+&lt;li&gt;現在のブランチ状態を表示&lt;/li&gt;
+&lt;li&gt;コミットログを表示&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;リポジトリ操作
+
+&lt;ol&gt;
+&lt;li&gt;リポジトリを新規作成する&lt;/li&gt;
+&lt;li&gt;リモートリポジトリからローカルリポジトリをクローンする&lt;/li&gt;
+&lt;li&gt;リモートリポジトリをローカルリポジトリに関連付ける&lt;/li&gt;
+&lt;li&gt;現在のローカルリポジトリのブランチを&lt;code&gt;push&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;リモートリポジトリのブランチを&lt;code&gt;pull&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;ブランチ操作
+
+&lt;ol&gt;
+&lt;li&gt;ローカルブランチを作成/削除する&lt;/li&gt;
+&lt;li&gt;ローカルブランチを切り替える(&lt;code&gt;checkout&lt;/code&gt;する)&lt;/li&gt;
+&lt;li&gt;現在のブランチに、指定コミットの指定ファイルを展開する&lt;/li&gt;
+&lt;li&gt;指定したブランチを現在のブランチにマージ&lt;/li&gt;
+&lt;li&gt;マージ時のコンフリクトを解消する&lt;/li&gt;
+&lt;li&gt;コミット履歴を改竄する(&lt;code&gt;rebase&lt;/code&gt;)&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;ファイル操作
+
+&lt;ol&gt;
+&lt;li&gt;ファイルをステージングする&lt;/li&gt;
+&lt;li&gt;ステージング済みのファイルをリポジトリへコミット&lt;/li&gt;
+&lt;li&gt;直前のコミットを修正&lt;/li&gt;
+&lt;li&gt;変更をリセット&lt;/li&gt;
+&lt;li&gt;ファイル内容確認(&lt;code&gt;grep&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;ファイルを移動する/ファイルを削除する/ファイルをリネームする&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;差分(&lt;code&gt;diff&lt;/code&gt;)確認
+
+&lt;ol&gt;
+&lt;li&gt;様々な差分(&lt;code&gt;diff&lt;/code&gt;)を確認&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;li&gt;問題を特定する
+
+&lt;ol&gt;
+&lt;li&gt;二分探索で問題を特定する&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;hr /&gt;
@@ -55,7 +97,6 @@
 &lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; &lt;code&gt;fetch&lt;/code&gt;が実際にやっているのは、リモート追跡ブランチの作成。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
 $ git fetch &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;リポジトリ略称 ブランチ名&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
-
 &lt;span class=&#34;c1&#34;&gt;# 例:リモートブランチhow-to-use-gitのリモート追跡ブランチを作成&lt;/span&gt;
 $ git fetch origin how-to-use-git
 From github.com:otaon/web
@@ -66,8 +107,7 @@ From github.com:otaon/web
 
 &lt;h2 id=&#34;ローカルブランチ-リモートブランチを一覧表示&#34;&gt;ローカルブランチ&amp;amp;リモートブランチを一覧表示&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
-$ git branch &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-a&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
-
+$ git branch &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-a&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;-r&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;--merged&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;--no-merged&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--color&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;--no-color&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; 
 &lt;span class=&#34;c1&#34;&gt;# 例:ローカルとリモートのブランチを全て一覧表示&lt;/span&gt;
 $ git branch -a
   how-to-make-web-page-with-hugo
@@ -82,7 +122,12 @@ $ git branch -a
   remotes/origin/master
   remotes/origin/migrate-from-gist-to-githubio&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;[-a]&lt;/code&gt; ローカルとリモートの全てのリポジトリ情報。省略した場合はローカルのみ。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[-a]&lt;/code&gt; ローカルとリモートの全てのブランチ情報表示。省略した場合はローカルのみ。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[-r]&lt;/code&gt; リモートの全てのブランチ情報表示。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[-merged]&lt;/code&gt; HEADにマージ済みのブランチ情報表示。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[-no-merged]&lt;/code&gt; HEADにマージされていないブランチ情報表示。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[-color]&lt;/code&gt; ブランチ情報に色を付けて表示。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[-no-color]&lt;/code&gt; ブランチ情報に色を付けずに表示。&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&#34;現在のブランチ状態を表示&#34;&gt;現在のブランチ状態を表示&lt;/h2&gt;
@@ -90,7 +135,6 @@ $ git branch -a
 &lt;p&gt;現在いるブランチ、そのupstream、ファイルのステージング状況を表示する。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
 $ git status
-
 &lt;span class=&#34;c1&#34;&gt;# 例:現在のブランチ状態を表示&lt;/span&gt;
 $ git status
 On branch how-to-use-git
@@ -106,7 +150,6 @@ no changes added to commit &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;use &lt;s
 &lt;h2 id=&#34;コミットログを表示&#34;&gt;コミットログを表示&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
 $ git log &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--pretty&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;short&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--graph&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-数字&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-p&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;-u&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;--patch 対象ファイルパス*&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--decorate&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
-
 &lt;span class=&#34;c1&#34;&gt;# 例:コミットログ直近2件分をグラフ形式で表示&lt;/span&gt;
 $ git log -2 --graph
 * commit d37e53c8f12bfba66c1bd1accce89ca6bcbc33a0 &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;HEAD -&amp;gt; how-to-use-git, origin/how-to-use-git&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
@@ -169,7 +212,7 @@ $ git clone git@github.com:otaon/web.git web&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt
 $ git remote add リモートリポジトリの略称 リモートリポジトリのURL
 &lt;span class=&#34;c1&#34;&gt;# 例:リモートリポジトリgit@github.com:otaon/web.gitを略称originとしてローカルリポジトリwebに関連付ける&lt;/span&gt;
 $ git remote add origin git@github.com:otaon/web.git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&#34;現在のローカルリポジトリのブランチをpush&#34;&gt;現在のローカルリポジトリのブランチをpush&lt;/h2&gt;
+&lt;h2 id=&#34;現在のローカルリポジトリのブランチを-push&#34;&gt;現在のローカルリポジトリのブランチを&lt;code&gt;push&lt;/code&gt;&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
 $ git push &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-u&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;--set-upstream&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; リモートリポジトリの略称 ブランチ名
 &lt;span class=&#34;c1&#34;&gt;# 例:現在のHEADをoriginのhow-to-use-gitブランチにpush&lt;/span&gt;
@@ -179,7 +222,7 @@ $ git push origin how-to-use-git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 こうすると、次回からは&lt;code&gt;git push&lt;/code&gt;で&lt;strong&gt;upstream&lt;/strong&gt;にpushできるようになる。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;リモートリポジトリのブランチをpull&#34;&gt;リモートリポジトリのブランチをpull&lt;/h2&gt;
+&lt;h2 id=&#34;リモートリポジトリのブランチを-pull&#34;&gt;リモートリポジトリのブランチを&lt;code&gt;pull&lt;/code&gt;&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
 $ git pull リモートリポジトリの略称 ブランチ名
 &lt;span class=&#34;c1&#34;&gt;# 例:originのhow-to-use-gitを、対応するローカルブランチにpull&lt;/span&gt;
@@ -188,22 +231,44 @@ $ git pull origin how-to-use-git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h1 id=&#34;ブランチ操作&#34;&gt;ブランチ操作&lt;/h1&gt;
 
-&lt;h2 id=&#34;ローカルブランチを作成する&#34;&gt;ローカルブランチを作成する&lt;/h2&gt;
+&lt;h2 id=&#34;ローカルブランチを作成-削除-名称変更-リモート追跡ブランチ変更する&#34;&gt;ローカルブランチを作成/削除/名称変更/リモート追跡ブランチ変更する&lt;/h2&gt;
 
-&lt;p&gt;現在のコミットに、ローカルブランチを作成する。&lt;br /&gt;
+&lt;h3 id=&#34;ローカルブランチを作成する&#34;&gt;ローカルブランチを作成する&lt;/h3&gt;
+
+&lt;p&gt;ローカルブランチを作成する。&lt;br /&gt;
 リモート追跡ブランチが作成されている場合は、それを元にローカルブランチを作成する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# ローカルブランチを作成&lt;/span&gt;
-$ git branch ブランチ名
-&lt;span class=&#34;c1&#34;&gt;# 例:ローカルブランチをチェックアウトする(リモート追跡ブランチがあれば、ローカルブランチが自動的に作成される)&lt;/span&gt;
-$ git checkout how-to-use-git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&#34;ローカルブランチを作成する-切り替える&#34;&gt;ローカルブランチを作成する/切り替える&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;## ブランチ作成&lt;/span&gt;
+$ git branch ブランチ名 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;リモート追跡ブランチ名&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+
+&lt;span class=&#34;c1&#34;&gt;# 例:ローカルブランチhow-to-use-gitを作成する&lt;/span&gt;
+$ git branch how-to-use-git
+
+&lt;span class=&#34;c1&#34;&gt;# 例:ローカルブランチhow-to-use-gitをorigin/how-to-use-gitに関連付けて作成する&lt;/span&gt;
+$ git branch how-to-use-git origin/how-to-use-git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;ローカルブランチを削除する&#34;&gt;ローカルブランチを削除する&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;## ブランチ作成&lt;/span&gt;
+$ git branch &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;-d&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;-D&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; ブランチ名 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;リモート追跡ブランチ名&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;ローカルブランチ名を変更する&#34;&gt;ローカルブランチ名を変更する&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;## ブランチ名変更&lt;/span&gt;
+$ git branch -m &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;古いブランチ名&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; 新しいブランチ名&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;リモート追跡ブランチを設定する&#34;&gt;リモート追跡ブランチを設定する&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;## リモート追跡ブランチを設定&lt;/span&gt;
+$ git branch -u 追跡対象のリモートブランチ名 &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;ローカルブランチ名&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;リモート追跡ブランチの設定を解除する&#34;&gt;リモート追跡ブランチの設定を解除する&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;## リモート追跡ブランチの設定を解除&lt;/span&gt;
+$ git branch --unset-upstream &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;ローカルブランチ名&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;ローカルブランチを切り替える-checkout-する&#34;&gt;ローカルブランチを切り替える(&lt;code&gt;checkout&lt;/code&gt;する)&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
 $ git checkout &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-b&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-f&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ブランチ名
 &lt;span class=&#34;c1&#34;&gt;# 例:ローカルブランチをチェックアウトする&lt;/span&gt;
 $ git checkout master &lt;span class=&#34;c1&#34;&gt;# masterをチェックアウト(作成はしない)&lt;/span&gt;
 $ git checkout -b how-to-use-git &lt;span class=&#34;c1&#34;&gt;# hot-to-use-gitブランチを作成してチェックアウト&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;ローカルブランチに対応するリモート追跡ブランチを確認する&#34;&gt;ローカルブランチに対応するリモート追跡ブランチを確認する&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git branch -vv&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;[-b]&lt;/code&gt; このオプションは、&lt;code&gt;git branch ブランチ名; git checkout ブランチ名&lt;/code&gt;のショートハンドとして動作する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[-b]&lt;/code&gt; リモートに対応付けてブランチを作成&amp;amp;チェックアウト。&lt;br /&gt;
+&lt;strong&gt;NOTE:&lt;/strong&gt; &lt;code&gt;-b&lt;/code&gt;は&lt;code&gt;git branch ブランチ名; git checkout ブランチ名&lt;/code&gt;のショートハンド。&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;[-f]&lt;/code&gt; 作業ブランチやステージに変更があった場合でも、それを強制的に破棄してチェックアウトする。&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -221,14 +286,15 @@ $ git checkout -b how-to-use-git &lt;span class=&#34;c1&#34;&gt;# hot-to-use-git
 リモート追跡ブランチ作成、ローカルブランチ更新を同時に行った方が効率が良い。&lt;/li&gt;
 &lt;/ul&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 例:リモートで作られたブランチを、ローカルにチェックアウトする&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;## 特定のリモート追跡ブランチを作成&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# 1.特定のリモート追跡ブランチを作成&lt;/span&gt;
 $ git fetch origin how-to-use-git
-&lt;span class=&#34;c1&#34;&gt;## ローカルブランチをチェックアウトする(ローカルブランチは自動的に作成される)&lt;/span&gt;
-$ git checkout how-to-use-git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;span class=&#34;c1&#34;&gt;# 2.ローカルブランチをチェックアウトする&lt;/span&gt;
+$ git checkout how-to-use-git
+
+&lt;span class=&#34;c1&#34;&gt;## NOTE:ローカルブランチは自動的に作成される&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;現在のブランチに-指定コミットの指定ファイルを展開する&#34;&gt;現在のブランチに、指定コミットの指定ファイルを展開する&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
 $ git checkout &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;コミットSHA&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ファイルパス
-
 &lt;span class=&#34;c1&#34;&gt;# 例:コミットafpj73zのindex.htmlを現在のブランチに展開する&lt;/span&gt;
 $ git checkout afpj73z index.html&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;ul&gt;
@@ -238,9 +304,24 @@ $ git checkout afpj73z index.html&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;指定したブランチを現在のブランチにマージ&#34;&gt;指定したブランチを現在のブランチにマージ&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
 $ git merge &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--no-ff&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ブランチ名
-
 &lt;span class=&#34;c1&#34;&gt;# 例:how-to-use-gitブランチを現在のブランチにマージ&lt;/span&gt;
 $ git merge --no-ff how-to-use-git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;マージ時のコンフリクトを解消する&#34;&gt;マージ時のコンフリクトを解消する&lt;/h2&gt;
+
+&lt;h3 id=&#34;コンフリクト時のファイル表記の意味&#34;&gt;コンフリクト時のファイル表記の意味&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-gitdiff&#34; data-lang=&#34;gitdiff&#34;&gt;\&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt; HEAD
+AAAA
+=======
+BBBB
+\&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt; master&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;HEAD&lt;/code&gt;では&amp;rsquo;AAAA&amp;rsquo;に変更しているが、&lt;code&gt;master&lt;/code&gt;では&amp;rsquo;BBBB&amp;rsquo;に変更している。&lt;/p&gt;
+
+&lt;h3 id=&#34;片方のコミット内容を全て採用する&#34;&gt;片方のコミット内容を全て採用する&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# HEAD側を優先する&lt;/span&gt;
+$ git checkout --ours how-to-use-git.md
+
+&lt;span class=&#34;c1&#34;&gt;# HEADと反対側を優先する&lt;/span&gt;
+$ git checkout --theirs how-to-use-git.md&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt; indexが変化するのはカレントブランチであり、引数で指定したindexは一切変化しない事を覚えておくこと。&lt;br /&gt;
 つまり、&lt;code&gt;merge&lt;/code&gt;実行時のカレントブランチは常に「変更を取り込む側」となる。&lt;/p&gt;
 
@@ -260,7 +341,7 @@ $ git merge --no-ff how-to-use-git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;コミット履歴を改竄する-rebase&#34;&gt;コミット履歴を改竄する(rebase)&lt;/h2&gt;
+&lt;h2 id=&#34;コミット履歴を改竄する-rebase&#34;&gt;コミット履歴を改竄する(&lt;code&gt;rebase&lt;/code&gt;)&lt;/h2&gt;
 
 &lt;h3 id=&#34;ブランチの開始地点を変更する&#34;&gt;ブランチの開始地点を変更する&lt;/h3&gt;
 
@@ -331,11 +412,39 @@ git reset --hard ORIG_HEAD &lt;span class=&#34;c1&#34;&gt;# git resetを取り�
 &lt;li&gt;&lt;code&gt;--hard&lt;/code&gt; HEADの位置とindexとワークツリー内容をリセットする。(ワークツリーの編集内容と&lt;code&gt;add&lt;/code&gt;と&lt;code&gt;commit&lt;/code&gt;を取り消し)&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;h2 id=&#34;ファイル確認-grep&#34;&gt;ファイル確認(&lt;code&gt;grep&lt;/code&gt;)&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git grep &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-w&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-i&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;単語&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--not&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; -e &lt;span class=&#34;s1&#34;&gt;&amp;#39;正規表現&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[(&lt;/span&gt;--and&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;--or &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;--not&lt;span class=&#34;o&#34;&gt;])&lt;/span&gt; -e ...*&lt;span class=&#34;o&#34;&gt;])&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;対象パス&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-e &#39;正規表現&#39;&lt;/code&gt; 正規表現にマッチしたものにヒットする。&lt;code&gt;&#39;\(foo\|bar\)&#39;&lt;/code&gt;でfoo&lt;strong&gt;か&lt;/strong&gt;barを含む行にヒットする。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[--not] ...&lt;/code&gt; 正規表現にマッチしたものを除外する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[--and ...]&lt;/code&gt; 複数の正規表現のandを取る。&lt;code&gt;-e &#39;foo&#39; --and -e &#39;bar&#39;&lt;/code&gt;でfoo&lt;strong&gt;と&lt;/strong&gt;barを含む行にヒットする。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[--or ...]&lt;/code&gt; 複数の正規表現のorを取る。&lt;code&gt;-e &#39;foo&#39; --or -e &#39;bar&#39;&lt;/code&gt;でfoo&lt;strong&gt;か&lt;/strong&gt;barを含む行にヒットする。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[-w]&lt;/code&gt; 単語を検索する。&lt;code&gt;git grep -w user&lt;/code&gt;で、&lt;code&gt;user&lt;/code&gt;のみ(つまり&lt;code&gt;users&lt;/code&gt;などは除く)を検索する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[-i]&lt;/code&gt; 大文字小文字を無視する。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;ファイルを移動する-ファイルを削除する-ファイルをリネームする&#34;&gt;ファイルを移動する/ファイルを削除する/ファイルをリネームする&lt;/h2&gt;
+
+&lt;h3 id=&#34;gitで追跡させつつファイルを移動-リネームする&#34;&gt;gitで追跡させつつファイルを移動/リネームする&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git mv ファイル名 &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;移動先パス&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;リネーム後ファイル名&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;c1&#34;&gt;# 例:ファイルを移動する&lt;/span&gt;
+$ git mv how-to-use-git.md path/to/move/&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;gitで追跡させつつファイルを削除する&#34;&gt;gitで追跡させつつファイルを削除する&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git rm ファイル名
+&lt;span class=&#34;c1&#34;&gt;# 例:ファイルを削除する&lt;/span&gt;
+$ git rm  ファイル名&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;ファイルをgit管理下から外す&#34;&gt;ファイルをgit管理下から外す&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git rm -cached ファイル名
+&lt;span class=&#34;c1&#34;&gt;# 例:ファイルをgit管理下から外す&lt;/span&gt;
+$ git rm -cached how-to-use-git.md&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;hr /&gt;
 
-&lt;h1 id=&#34;差分確認&#34;&gt;差分確認&lt;/h1&gt;
+&lt;h1 id=&#34;差分-diff-確認&#34;&gt;差分(&lt;code&gt;diff&lt;/code&gt;)確認&lt;/h1&gt;
 
-&lt;h2 id=&#34;様々な差分-diff-を確認&#34;&gt;様々な差分(diff)を確認&lt;/h2&gt;
+&lt;h2 id=&#34;様々な差分-diff-を確認&#34;&gt;様々な差分(&lt;code&gt;diff&lt;/code&gt;)を確認&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
 $ git diff
   &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;HEAD
@@ -346,7 +455,7 @@ $ git diff
   &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;変更前のSHA..変更後のSHA
   &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;確認したいコミットのSHA^..確認したいコミットのSHA
   &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;ブランチA..ブランチB&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
-  &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-- 対象ファイルパス&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+  &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-- 対象ファイルパス+&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
   &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;その他オプション&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
 &lt;span class=&#34;c1&#34;&gt;# 例:差分を表示する&lt;/span&gt;
 $ git diff -U5 how-to-use-git..origin/how-to-use-git -- index.html&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
@@ -386,7 +495,45 @@ $ git diff -U5 how-to-use-git..origin/how-to-use-git -- index.html&lt;/code&gt;&
 &lt;li&gt;&lt;code&gt;--compaction-heuristic&lt;/code&gt; 上方向への差分比較も実施した上で差分表示する。環境によっては使用不可の模様。&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;div class=&#34;footnotes&#34;&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;問題を特定する&#34;&gt;問題を特定する&lt;/h1&gt;
+
+&lt;h2 id=&#34;二分探索で問題を特定する&#34;&gt;二分探索で問題を特定する&lt;/h2&gt;
+
+&lt;h3 id=&#34;1-問題が有るコミットと問題が無いコミットの中間バージョンをチェックアウトする&#34;&gt;1. 問題が有るコミットと問題が無いコミットの中間バージョンをチェックアウトする&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
+$ git bisect start 問題が有るコミット 問題が無いコミット
+&lt;span class=&#34;c1&#34;&gt;# 例:問題が有るコミット=HEAD,問題が無いコミット=v1.0&lt;/span&gt;
+$ git bisect srart HEAD v1.0&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;2-a-テストスクリプトで問題混入したコミットをチェックアウトする&#34;&gt;2-A. テストスクリプトで問題混入したコミットをチェックアウトする&lt;/h3&gt;
+
+&lt;p&gt;以下のコマンドを実行すると、gitがテスト実行と中間バージョンのチェックアウトを繰り返して、問題が混入したコミットをチェックアウトする。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git bisect run テストスクリプトパス&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;2-b-手動でgood-badを指定して問題を混入したコミットをチェックアウトする&#34;&gt;2-B. 手動でgood,badを指定して問題を混入したコミットをチェックアウトする&lt;/h3&gt;
+
+&lt;p&gt;テストスクリプトを用いなくとも、以下のいずれかのコマンドを実行すると、badとgoodの中間バージョンがチェックアウトされる。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# 現在のコミットが問題無いことを表明する=&amp;gt;次の中間バージョンがチェックアウトされる&lt;/span&gt;
+$ git bisect good
+&lt;span class=&#34;c1&#34;&gt;# 現在のコミットが問題有ることを表明する=&amp;gt;次の中間バージョンがチェックアウトされる&lt;/span&gt;
+$ git bisect bad&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;xxx-現在チェックアウトしているコミットを確認する&#34;&gt;xxx. 現在チェックアウトしているコミットを確認する&lt;/h3&gt;
+
+&lt;p&gt;現在チェックアウトしているコミットを見る。デフォルトではgikで表示する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git bisect view &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-p&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;[-p]&lt;/code&gt; パッチ形式でコンソールに出力する。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;xxx-二分探索の過程を確認する&#34;&gt;xxx. 二分探索の過程を確認する&lt;/h3&gt;
+
+&lt;p&gt;git bisectのログを表示する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git bisect log&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;xxx-git-bisect-実行前の状態に戻す&#34;&gt;xxx. &lt;code&gt;git bisect&lt;/code&gt;実行前の状態に戻す&lt;/h3&gt;
+
+&lt;p&gt;git bisectを実行する前の状態に戻す。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git bisect reset&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;footnotes&#34;&gt;
 
 &lt;hr /&gt;
 

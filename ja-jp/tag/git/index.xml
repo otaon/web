@@ -17,7 +17,7 @@
       <pubDate>Wed, 13 Mar 2019 01:00:00 +0900</pubDate>
       
       <guid>https://otaon.github.io/web/ja-jp/2019/03/13/git%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9/</guid>
-      <description>目的 Gitを端末上で使用するため、操作とそのコマンドを記す。 操作の種類一覧 情報更新/情報表示 リポジトリ操作 ブランチ操作 ファイル操作 差分(di</description>
+      <description>目的 Gitを端末上で使用するため、操作とそのコマンドを記す。 操作の種類一覧 情報更新/情報表示 リモートリポジトリの情報をローカルリポジトリに反</description>
     </item>
     
   </channel>
