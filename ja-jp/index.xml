@@ -61,6 +61,9 @@
 &lt;ol&gt;
 &lt;li&gt;ローカルブランチを作成/削除する&lt;/li&gt;
 &lt;li&gt;ローカルブランチを切り替える(&lt;code&gt;checkout&lt;/code&gt;する)&lt;/li&gt;
+&lt;li&gt;ローカルブランチに対応するリモート追跡ブランチを確認する&lt;/li&gt;
+&lt;li&gt;既存のリモートブランチに対応するローカルブランチを作成する&lt;/li&gt;
+&lt;li&gt;ローカルブランチを作成し、リモートブランチを対応付けて作成する&lt;/li&gt;
 &lt;li&gt;現在のブランチに、指定コミットの指定ファイルを展開する&lt;/li&gt;
 &lt;li&gt;指定したブランチを現在のブランチにマージ&lt;/li&gt;
 &lt;li&gt;マージ時のコンフリクトを解消する&lt;/li&gt;
@@ -264,15 +267,15 @@ $ git checkout &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;-b&lt;span class=&#34
 &lt;span class=&#34;c1&#34;&gt;# 例:ローカルブランチをチェックアウトする&lt;/span&gt;
 $ git checkout master &lt;span class=&#34;c1&#34;&gt;# masterをチェックアウト(作成はしない)&lt;/span&gt;
 $ git checkout -b how-to-use-git &lt;span class=&#34;c1&#34;&gt;# hot-to-use-gitブランチを作成してチェックアウト&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&#34;ローカルブランチに対応するリモート追跡ブランチを確認する&#34;&gt;ローカルブランチに対応するリモート追跡ブランチを確認する&lt;/h2&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git branch -vv&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;[-b]&lt;/code&gt; リモートに対応付けてブランチを作成&amp;amp;チェックアウト。&lt;br /&gt;
 &lt;strong&gt;NOTE:&lt;/strong&gt; &lt;code&gt;-b&lt;/code&gt;は&lt;code&gt;git branch ブランチ名; git checkout ブランチ名&lt;/code&gt;のショートハンド。&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;[-f]&lt;/code&gt; 作業ブランチやステージに変更があった場合でも、それを強制的に破棄してチェックアウトする。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;リモートブランチを扱いたい場合&#34;&gt;リモートブランチを扱いたい場合&lt;/h3&gt;
+&lt;h2 id=&#34;ローカルブランチに対応するリモート追跡ブランチを確認する&#34;&gt;ローカルブランチに対応するリモート追跡ブランチを確認する&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;$ git branch -vv&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;既存のリモートブランチに対応するローカルブランチを作成する&#34;&gt;既存のリモートブランチに対応するローカルブランチを作成する&lt;/h2&gt;
 
 &lt;p&gt;リモートブランチは直接チェックアウトできない。&lt;br /&gt;
 そこで、リモートブランチに対応する&lt;strong&gt;リモート追跡ブランチ&lt;/strong&gt;を作成し、それからローカルブランチをチェックアウトする。&lt;br /&gt;
@@ -292,6 +295,12 @@ $ git fetch origin how-to-use-git
 $ git checkout how-to-use-git
 
 &lt;span class=&#34;c1&#34;&gt;## NOTE:ローカルブランチは自動的に作成される&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;ローカルブランチを作成し-リモートブランチを対応付けて作成する&#34;&gt;ローカルブランチを作成し、リモートブランチを対応付けて作成する&lt;/h2&gt;
+
+&lt;p&gt;ローカルブランチ &lt;code&gt;file-system&lt;/code&gt; を作成する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git branch -b file-system&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;ローカルブランチに対応するリモートブランチを作成する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;git push -u origin file-system&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;現在のブランチに-指定コミットの指定ファイルを展開する&#34;&gt;現在のブランチに、指定コミットの指定ファイルを展開する&lt;/h2&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# シンタックス&lt;/span&gt;
 $ git checkout &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;コミットSHA&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt; ファイルパス

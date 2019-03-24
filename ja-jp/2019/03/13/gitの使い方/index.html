@@ -31,7 +31,7 @@
 
 <meta itemprop="datePublished" content="2019-03-13T01:00:00&#43;09:00" />
 <meta itemprop="dateModified" content="2019-03-13T01:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="6954">
+<meta itemprop="wordCount" content="7138">
 
 
 
@@ -163,6 +163,9 @@
 <ol>
 <li>ローカルブランチを作成/削除する</li>
 <li>ローカルブランチを切り替える(<code>checkout</code>する)</li>
+<li>ローカルブランチに対応するリモート追跡ブランチを確認する</li>
+<li>既存のリモートブランチに対応するローカルブランチを作成する</li>
+<li>ローカルブランチを作成し、リモートブランチを対応付けて作成する</li>
 <li>現在のブランチに、指定コミットの指定ファイルを展開する</li>
 <li>指定したブランチを現在のブランチにマージ</li>
 <li>マージ時のコンフリクトを解消する</li>
@@ -366,15 +369,15 @@ $ git checkout <span class="o">[</span>-b<span class="o">]</span> <span class="o
 <span class="c1"># 例:ローカルブランチをチェックアウトする</span>
 $ git checkout master <span class="c1"># masterをチェックアウト(作成はしない)</span>
 $ git checkout -b how-to-use-git <span class="c1"># hot-to-use-gitブランチを作成してチェックアウト</span></code></pre></div>
-<h2 id="ローカルブランチに対応するリモート追跡ブランチを確認する">ローカルブランチに対応するリモート追跡ブランチを確認する</h2>
-<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ git branch -vv</code></pre></div>
 <ul>
 <li><code>[-b]</code> リモートに対応付けてブランチを作成&amp;チェックアウト。<br />
 <strong>NOTE:</strong> <code>-b</code>は<code>git branch ブランチ名; git checkout ブランチ名</code>のショートハンド。</li>
 <li><code>[-f]</code> 作業ブランチやステージに変更があった場合でも、それを強制的に破棄してチェックアウトする。</li>
 </ul>
 
-<h3 id="リモートブランチを扱いたい場合">リモートブランチを扱いたい場合</h3>
+<h2 id="ローカルブランチに対応するリモート追跡ブランチを確認する">ローカルブランチに対応するリモート追跡ブランチを確認する</h2>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">$ git branch -vv</code></pre></div>
+<h2 id="既存のリモートブランチに対応するローカルブランチを作成する">既存のリモートブランチに対応するローカルブランチを作成する</h2>
 
 <p>リモートブランチは直接チェックアウトできない。<br />
 そこで、リモートブランチに対応する<strong>リモート追跡ブランチ</strong>を作成し、それからローカルブランチをチェックアウトする。<br />
@@ -394,6 +397,12 @@ $ git fetch origin how-to-use-git
 $ git checkout how-to-use-git
 
 <span class="c1">## NOTE:ローカルブランチは自動的に作成される</span></code></pre></div>
+<h2 id="ローカルブランチを作成し-リモートブランチを対応付けて作成する">ローカルブランチを作成し、リモートブランチを対応付けて作成する</h2>
+
+<p>ローカルブランチ <code>file-system</code> を作成する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">git branch -b file-system</code></pre></div>
+<p>ローカルブランチに対応するリモートブランチを作成する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">git push -u origin file-system</code></pre></div>
 <h2 id="現在のブランチに-指定コミットの指定ファイルを展開する">現在のブランチに、指定コミットの指定ファイルを展開する</h2>
 <div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash"><span class="c1"># シンタックス</span>
 $ git checkout <span class="o">[</span>コミットSHA<span class="o">]</span> ファイルパス
