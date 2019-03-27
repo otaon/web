@@ -142,8 +142,8 @@ OSは、ブロック(セクタサイズの整数倍)単位で読み書きする�
   - システムに依存（代表的サイズ:512B）
 - ブロック
   - ＯＳがハードディスクを読み書きする際のデータ単位
-- ブロックサイズ
-  - ＯＳに依存。ただし、512B、1024B、2048B、4096B、8192Bなど
+  - ブロックサイズ
+     - ＯＳに依存。512B、1024B、2048B、4096B、8192Bなど
 - **注意** ブロックサイズが大きいと
   - ○ まとめて入出力処理が可能なため高速化
   - × ファイルサイズがブロックサイズより小さいと無駄が多い
@@ -153,16 +153,115 @@ OSは、ブロック(セクタサイズの整数倍)単位で読み書きする�
 
 
 # ボリューム
+- 記憶媒体のことを、ＯＳではボリュームと呼ぶ
+  - 磁気ディスクや光ディスク、磁気テープなどの記憶する媒体
+
+- ボリュームの構成
+  - 初期プログラムローダ(IPL)
+     - システム起動時に自動的に読み込まれるプログラムのこと
+- ボリュームの管理情報
+  - ボリュームの名前、領域割り当てサイズなどのボリューム管理に必要な情報のこと
+- ファイル
+  - ファイル管理情報とファイル内容自体のこと
+
+- UNIXのボリューム構成例
+
+```
++------------------+
+|  ブートブロック  |
++------------------+
+| スーパーブロック |
++------------------+
+| シリンダブロック |
++------------------+
+|  iノードリスト   |
++------------------+
+|                  |
+|    データ領域    |
+|                  |
++------------------+
+```
+
+{{<figure src="typical_UNIX_filesystem.png" alt="典型的なUNIXファイルシステム(Wikipedia)" align="aligncenter" width="300" caption="典型的なUNIXファイルシステム(Wikipedia)">}}
 
 
 # ファイルの割り当て方式
-## 連続方式(contiguous)
+## 連続割り当て方式(contiguous)
+ファイルをディスク上に連続して格納する。
 
+- :white_check_mark: 必要ブロック数と開始ブロック番号だけでファイルの格納場所を特定できる。
+- :white_check_mark: 連続ブロックのため、シーケンシャルアクセス、ランダムアクセス共に高速。
+- :x: ファイルサイズが固定になる。ファイルサイズ変更するには、保存し直す必要がある。
+- :x: 断片化（フラグメンテーション）により無駄な領域が発生しやすい。
 
-## 連結リスト方式(list)
+{{<figure src="contiguous-allocation.jpg" alt="連続割り当て方式" align="aligncenter" width="300" caption="連続割り当て方式">}}
 
+## 連結リスト割り当て方式(linked-list)
+ファイルを構成するブロックを先頭から順にリンクで連結する。
 
-## リスト検索表方式(list)
+- :white_check_mark: ファイルサイズ（必要ブロック数）を変更が容易
+- :white_check_mark: 断片化による無駄な領域が発生しない
+- :x: リンク不良によりファイルアクセスが不可能になる  
+   - 一つでもブロックが壊れると、それ以降のブロックも読めなくなる
+- :x: ランダムアクセスの効率が悪い
 
+{{<figure src="linked-allocation.jpg" alt="連結リスト割り当て方式" align="aligncenter" width="300" caption="連結リスト割り当て方式">}}
 
-## 索引方式(index)
+## リスト検索表割り当て方式(FAT:file-allocation-table)
+ファイルを構成するブロックを先頭から順にリンクで連結する。  
+リンク情報を取り出して、検索（FAT）として**メモリ**上に展開する。
+
+- :white_check_mark: シーケンシャルアクセスが高速
+- :x: 検索情報（リンク表）が大量のメモリを消費する
+
+{{<figure src="Fat32_structure.png" alt="リスト検索表割り当て方式" align="aligncenter" width="400" caption="リスト検索表割り当て方式">}}
+
+```c
+typedef struct DirEntry_t {
+    Byte    name[8];            /* file name */
+    Byte    extension[3];       /* file name extension */
+    Byte    attribute;          /* file attribute
+                                     bit 4    directory flag
+                                     bit 3    volume flag
+                                     bit 2    hidden flag
+                                     bit 1    system flag
+                                     bit 0    read only flag */
+    Byte    reserved;           /* use NT or same OS */
+    Byte    createTimeMs;       /* VFAT で使用するファイル作成時刻の10ミリ秒 (0 ～ 199) */
+    Byte    createTime[2];      /* VFAT で使用するファイル作成時間 */
+    Byte    createDate[2];      /* VFAT で使用するファイル作成日付 */
+    Byte    accessDate[2];      /* VFAT で使用するファイル・アクセス日付 */
+    Byte    clusterHighWord[2]; /* クラスタ番号の上位(FAT32用)16 bits(First cluster,MSB) */
+    Byte    updateTime[2];
+    Byte    updateDate[2];
+    Byte    cluster[2];         /* start cluster number(First cluster,LSB) */
+    Byte    fileSize[4];        /* file size in bytes (directory is always zero) */
+}   DirEntry;
+```
+
+[FAT FS フォーマットの実装についての覚え書き](http://www.geocities.co.jp/SiliconValley-PaloAlto/2038/fat.html)
+
+## 索引割り当て方式(index)
+ファイル構成するブロック番号を表形式で索引ブロック(index block)内に格納する。
+
+- :white_check_mark: 断片化による無駄な領域が発生しない
+- :small_red_triangle: ファイルサイズ（必要ブロック数）の変更が比較的容易
+  - ただし、ファイルサイズが増加して索引ブロックに収まらないときは索引ブロックの追加が必要
+- :small_red_triangle_down: 最少２回のディスクアクセスが必要
+
+{{<figure src="index-allocation.jpg" alt="索引割り当て方式" align="aligncenter" width="400" caption="索引割り当て方式">}}
+
+## iノード方式(i-node)
+索引割り当て方式では大容量用ファイルは一つの索引ブロックでは収まらない。  
+→「索引ブロックの索引ブロック」（間接ブロック）を導入する。
+
+- 索引ブロック(i-node block)・・・間接ブロック、または、データブロックへの参照を持つ
+- 間接ブロック・・・1段、2段、3段の間接ブロックが存在する(下図は1段と2段)
+  - **ext2**では、iノード構造体が持つデータブロック参照用の配列は15個。
+     - そのうち12個を「直接参照」、残りの3つをそれぞれ「一段間接参照」「二段間接参照」「三段間接参照」用に使用することで、複数のデータブロックを必要とする大きめのファイルを効率的に扱うようにしている。
+  - **ext4**では、extent機能というものを使用できる。この場合、ここで述べたような間接ブロックは使用しない。(下記slideshareの37ページあたり参照)
+
+{{<figure src="inode.png" alt="iノード方式" align="aligncenter" width="400" caption="iノード方式">}}
+
+- [ブロックアルゴリズムとB-Treeアルゴリズム (2/3)](https://www.atmarkit.co.jp/ait/articles/0306/24/news002_2.html)
+- [slideshare - ファイルシステム](https://www.slideshare.net/YoshihiroYunomae/f-36905134)
