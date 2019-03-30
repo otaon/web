@@ -31,7 +31,7 @@ Hugoで`mermaid.js`を使用できるようにする設定手順を示す。
 本サイトの場合、下記に格納した。[^ディレクトリ構成]  
 `<git-top>/web/web/themes/hugo-theme-den/static/asset/mermaid/mermaid.js`
 
-[^ディレクトリ構成]:本サイトのディレクトリ構成は[ここ]({{<relref "posts/0003_how_to_build_web_page_with_Hugo/index.md" >}})を参照すること。
+[^ディレクトリ構成]:本サイトのディレクトリ構成は[ここ]({{<ref "/posts/0003_how_to_build_web_page_with_Hugo/index.md">}})を参照すること。
 
 
 ## `mermaid.js`用の`div`に置換するためショートコードを作成する
