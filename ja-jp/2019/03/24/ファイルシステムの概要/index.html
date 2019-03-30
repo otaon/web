@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>ファイルシステムの概要 · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="目的 極単純なファイルシステムを自作できる程度の知識を、初歩的な事柄をまとめる。 参考文献 ファイルシステム ファイルシステムとは ファイルシステムは" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/03/24/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AE%E6%A6%82%E8%A6%81/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="ファイルシステムの概要" />
+<meta property="og:description" content="目的 極単純なファイルシステムを自作できる程度の知識を、初歩的な事柄をまとめる。 参考文献 ファイルシステム ファイルシステムとは ファイルシステムは" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/24/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AE%E6%A6%82%E8%A6%81/" />
+<meta property="article:published_time" content="2019-03-24T00:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-03-24T00:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="ファイルシステムの概要">
+<meta itemprop="description" content="目的 極単純なファイルシステムを自作できる程度の知識を、初歩的な事柄をまとめる。 参考文献 ファイルシステム ファイルシステムとは ファイルシステムは">
+
+
+<meta itemprop="datePublished" content="2019-03-24T00:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-03-24T00:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="4640">
+
+
+
+<meta itemprop="keywords" content="file system," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="ファイルシステムの概要"/>
+<meta name="twitter:description" content="目的 極単純なファイルシステムを自作できる程度の知識を、初歩的な事柄をまとめる。 参考文献 ファイルシステム ファイルシステムとは ファイルシステムは"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">ファイルシステムの概要</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-03-24
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/file-system/">file system</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h1 id="目的">目的</h1>
+
+<p>極単純なファイルシステムを自作できる程度の知識を、初歩的な事柄をまとめる。</p>
+
+<h1 id="参考文献">参考文献</h1>
+
+<ul>
+<li><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=2ahUKEwix1PLmnKDhAhUKO3AKHShZBOMQFjAAegQIBBAC&amp;url=http%3A%2F%2Fresearch.nii.ac.jp%2F~ichiro%2Flecture%2Fos2001%2Fnotes%2FOS2001-file.pdf&amp;usg=AOvVaw15ZC6zFCuZreyMzU2s0TAA">ファイルシステム</a></li>
+</ul>
+
+<h1 id="ファイルシステムとは">ファイルシステムとは</h1>
+
+<blockquote>
+<p>ファイルシステムは、コンピュータのリソースを操作するための、オペレーティングシステム (OS) が持つ機能の一つ。<br />
+ファイルとは、主に補助記憶装置に格納されたデータを指すが、デバイスやプロセス、カーネル内の情報といったものもファイルとして提供するファイルシステムもある。<br />
+より正確に定義すれば、ファイルシステムは抽象データ型の集まりであり、ストレージ、階層構造、データの操作/アクセス/検索のために実装されたものである。</p>
+</blockquote>
+
+<p><a href="https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0">Wikipedia - ファイルシステム</a></p>
+
+<p><strong>NOTE:</strong> ファイルシステムを操作するためには、OSが提供する機能を利用することになる。</p>
+
+<h1 id="ディスクファイルシステムとは">ディスクファイルシステムとは</h1>
+
+<blockquote>
+<p>「ディスクファイルシステム」は、直接的か間接的かに関わらずコンピュータシステムに接続された補助記憶装置、特にハードディスク上にファイルを格納するためのものである。
+ディスクファイルシステムとしては、FAT、NTFS、HFS、ext2、ext3、ext4、WAFL（英語版）、ISO 9660、ODS-5（英語版）、UDF、HPFS、JFS、UFS、VTOC、XFSなどがある。
+ディスクファイルシステムの一部はジャーナルファイルシステムまたはバージョニングファイルシステムでもある。</p>
+</blockquote>
+
+<p><a href="https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0">Wikipedia - ファイルシステム</a></p>
+
+<h1 id="ファイルシステムへの要求">ファイルシステムへの要求</h1>
+
+<p>ファイルシステム、特にディスクファイルシステムへの要求</p>
+
+<ul>
+<li>メモリと比較して低速な読み書き速度に対応できる</li>
+<li>記憶装置の容量を無駄無く利用できる</li>
+<li>信頼性・耐障害性が高い</li>
+<li>記憶装置の容量拡大に容易に対応できる</li>
+<li>記憶装置の物理的な差異を吸収する論理インターフェースを提供できる</li>
+</ul>
+
+<h1 id="ファイルシステムの構成要素">ファイルシステムの構成要素</h1>
+
+<p>ファイルシステムの典型例をクラス図風に示す。<sup class="footnote-ref" id="fnref:PlantUML-Previewer"><a href="#fn:PlantUML-Previewer">1</a></sup></p>
+
+
+<link rel="stylesheet" href="https://otaon.github.io/css/hugo-easy-gallery.css" />
+<div class="box aligncenter" style="max-width:700px;">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img  itemprop="thumbnail" src="disk-structure.png" alt="ファイルシステムの構成要素" />
+    </div>
+    
+      <figcaption>
+          <p>ファイルシステムの構成要素
+              
+          </p>
+      </figcaption>
+  </figure>
+</div>
+
+
+<h2 id="ブロック">ブロック</h2>
+
+<p>多くのOSにおいては、ディスクを、(トラック)セクタを要素とする1次元配列として管理する。</p>
+
+<p>多くのＯＳがディスクをセクタを要素とする１次元配列として管理</p>
+
+<ul>
+<li>セクタの指定方法</li>
+<li>シリンダ番号、ヘッド番号（ディスク番号）、セクタ番号の３項組</li>
+<li>セクタサイズ
+
+<ul>
+<li>システムに依存（代表的サイズ:512B）</li>
+</ul></li>
+<li>ブロック
+
+<ul>
+<li>ＯＳがハードディスクを読み書きする際のデータ単位</li>
+<li>ブロックサイズ
+
+<ul>
+<li>ＯＳに依存。512B、1024B、2048B、4096B、8192Bなど</li>
+</ul></li>
+</ul></li>
+<li><strong>注意</strong> ブロックサイズが大きいと
+
+<ul>
+<li>○ まとめて入出力処理が可能なため高速化</li>
+<li>× ファイルサイズがブロックサイズより小さいと無駄が多い</li>
+</ul></li>
+</ul>
+
+
+
+<div class="box aligncenter" style="max-width:200px;">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img  itemprop="thumbnail" src="Disk-structure2.svg" alt="ディスクセクタ" />
+    </div>
+    
+      <figcaption>
+          <p>A トラック<br/>B 幾何学的セクタ<br/>C (トラック)セクタ<br/>D クラスタ
+              
+          </p>
+      </figcaption>
+  </figure>
+</div>
+
+
+<h2 id="ボリューム">ボリューム</h2>
+
+<ul>
+<li><p>記憶媒体のことを、ＯＳではボリュームと呼ぶ</p>
+
+<ul>
+<li>磁気ディスクや光ディスク、磁気テープなどの記憶する媒体</li>
+</ul></li>
+
+<li><p>ボリュームの構成</p>
+
+<ul>
+<li>初期プログラムローダ(IPL)
+
+<ul>
+<li>システム起動時に自動的に読み込まれるプログラムのこと</li>
+</ul></li>
+</ul></li>
+
+<li><p>ボリュームの管理情報</p>
+
+<ul>
+<li>ボリュームの名前、領域割り当てサイズなどのボリューム管理に必要な情報のこと</li>
+</ul></li>
+
+<li><p>ファイル</p>
+
+<ul>
+<li>ファイル管理情報とファイル内容自体のこと</li>
+</ul></li>
+
+<li><p>UNIXのボリューム構成例</p></li>
+</ul>
+
+
+
+<div class="box aligncenter" style="max-width:200px;">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img  itemprop="thumbnail" src="blocks.svg" alt="UNIXのボリューム構成例" />
+    </div>
+    
+      <figcaption>
+          <p>UNIXのボリューム構成例
+              
+          </p>
+      </figcaption>
+  </figure>
+</div>
+
+
+
+
+<div class="box aligncenter" style="max-width:300px;">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img  itemprop="thumbnail" src="typical_UNIX_filesystem.png" alt="典型的なUNIXファイルシステム(Wikipedia)" />
+    </div>
+    
+      <figcaption>
+          <p>典型的なUNIXファイルシステム(Wikipedia)
+              
+          </p>
+      </figcaption>
+  </figure>
+</div>
+
+
+<h1 id="ファイルへのアクセス方法">ファイルへのアクセス方法</h1>
+
+<h2 id="ファイルのアクセス-読み出し-書き込み-の方法">ファイルのアクセス（読み出し・書き込み）の方法</h2>
+
+<ul>
+<li>順アクセス
+
+<ul>
+<li>ファイルの先頭から末尾に向かってアクセス（<code>read</code>、<code>write</code>を使用)</li>
+</ul></li>
+<li>直接アクセス
+
+<ul>
+<li>ファイル上の任意の位置をアクセス（<code>seek</code>、<code>read</code>、<code>write</code>を使用)</li>
+</ul></li>
+<li>検索付き直接アクセス
+
+<ul>
+<li>キー値からアクセス対象となるレコードを取得・アクセス</li>
+</ul></li>
+</ul>
+
+<h1 id="ファイルの操作">ファイルの操作</h1>
+
+<p>OSが提供するシステムコール、または、APIによってファイルを操作する。</p>
+
+
+
+<div class="box aligncenter" style="max-width:500px;">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img  itemprop="thumbnail" src="file-io-api.svg" alt="ファイルの操作" />
+    </div>
+    
+      <figcaption>
+          <p>ファイルの操作
+              
+          </p>
+      </figcaption>
+  </figure>
+</div>
+
+
+<dl>
+<dt><code>OPEN</code></dt>
+<dd>ファイルアクセスに先立ち、ディスク上のファイルの位置を調べる。また、バッファ領域を含むファイル入出力に必要な情報領域(テーブル)を作成する。</dd>
+<dt><code>CLOSE</code></dt>
+<dd>ファイル入出力にテーブルの領域を解放する。</dd>
+<dt><code>READ</code></dt>
+<dd>ファイルからメモリにデータを読み出す</dd>
+<dt><code>WRITE</code></dt>
+<dd>メモリからファイルにデータを書き込む</dd>
+<dt><code>SEEK</code></dt>
+<dd>ファイルのアクセス位置を変更する</dd>
+</dl>
+
+<h2 id="open-ファイルをオープンする"><code>open()</code> ファイルをオープンする</h2>
+
+<table>
+<thead>
+<tr>
+<th align="left"><code>open()</code>の情報</th>
+<th>ファイルをオープンする</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left"><strong>ヘッダ</strong></td>
+<td><code>fcntl.h</code>, <code>sys/types.h</code>, <code>sys/stat.h</code></td>
+</tr>
+
+<tr>
+<td align="left"><strong>書式</strong></td>
+<td><code>int open(const char *path, int mode, [mode_t creat_mode])</code></td>
+</tr>
+
+<tr>
+<td align="left"><strong>引数</strong></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left"><code>path</code></td>
+<td>ファイル名</td>
+</tr>
+
+<tr>
+<td align="left"><code>mode</code></td>
+<td>オープンするファイルに許可を与えるモード</td>
+</tr>
+
+<tr>
+<td align="left"><code>creat_mode</code></td>
+<td><code>mode</code>に<code>O_CREAT</code>指定時に設定できる、オープンするファイルのモード（省略可能）。</td>
+</tr>
+
+<tr>
+<td align="left"></td>
+<td><code>mode</code>で設定できる値は、下記※１の3つのいずれか1つと、<br/>※２の任意の値を「|(論理和)」で結んだものとなる。</td>
+</tr>
+
+<tr>
+<td align="left"><strong>※1</strong></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left"><code>O_RDONLY</code></td>
+<td>読み込み可</td>
+</tr>
+
+<tr>
+<td align="left"><code>O_WRONLY</code></td>
+<td>書き込み可</td>
+</tr>
+
+<tr>
+<td align="left"><code>O_RDWR</code></td>
+<td>読み書き可</td>
+</tr>
+
+<tr>
+<td align="left"><strong>※2</strong></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left"><code>O_APPEND</code></td>
+<td>ファイルポインタをファイルの最後に移動する</td>
+</tr>
+
+<tr>
+<td align="left"><code>O_CREAT</code></td>
+<td>ファイルを生成する</td>
+</tr>
+
+<tr>
+<td align="left"><code>O_TRUNC</code></td>
+<td>ファイルが存在する場合、サイズを0にする</td>
+</tr>
+
+<tr>
+<td align="left"><code>O_BINARY</code></td>
+<td>バイナリモード</td>
+</tr>
+
+<tr>
+<td align="left"><code>O_TEXT</code></td>
+<td>テキストモード</td>
+</tr>
+
+<tr>
+<td align="left"></td>
+<td>modeにO_CREATを指定した場合、第3引数で※３の<code>creat_mode</code>を指定できる。</td>
+</tr>
+
+<tr>
+<td align="left"></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left"><strong>※3</strong></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left"><code>S_IWRITE</code></td>
+<td>読み書き可</td>
+</tr>
+
+<tr>
+<td align="left"><code>S_IREAD</code></td>
+<td>読み込み可</td>
+</tr>
+
+<tr>
+<td align="left"><code>S_IREAD \| S_IWRITE</code></td>
+<td>読み書き可</td>
+</tr>
+
+<tr>
+<td align="left"></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left"><strong>戻り値</strong></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left">成功</td>
+<td>ファイルデスクリプタ（そのファイルを一意に識別できる数値）</td>
+</tr>
+
+<tr>
+<td align="left">失敗</td>
+<td><code>-1</code></td>
+</tr>
+
+<tr>
+<td align="left"></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left"><strong>解説</strong></td>
+<td>ファイルをオープンし、ファイルデスクリプタを返却する低水準入出力関数。</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="write-ファイルデスクリプタへ書き込む"><code>write()</code> ファイルデスクリプタへ書き込む</h2>
+
+<table>
+<thead>
+<tr>
+<th align="left"><code>write()</code>の情報</th>
+<th>ファイルデスクリプタへ書き込む</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left"><strong>ヘッダ</strong></td>
+<td><code>unistd.h</code></td>
+</tr>
+
+<tr>
+<td align="left"><strong>書式</strong></td>
+<td><code>int write(int fd, void *buf, unsigned int byte)</code></td>
+</tr>
+
+<tr>
+<td align="left"><strong>引数</strong></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left"><code>fd</code></td>
+<td>ファイルデスクリプタ</td>
+</tr>
+
+<tr>
+<td align="left"><code>buf</code></td>
+<td>ファイルに書き込むデータが格納されている領域のポインタ</td>
+</tr>
+
+<tr>
+<td align="left"><code>byte</code></td>
+<td>ファイルへ書き込むバイト数</td>
+</tr>
+
+<tr>
+<td align="left"><strong>戻り値</strong></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left">成功</td>
+<td>書き込んだバイト数</td>
+</tr>
+
+<tr>
+<td align="left">失敗</td>
+<td><code>-1</code></td>
+</tr>
+
+<tr>
+<td align="left"><strong>解説</strong></td>
+<td>ファイルデスクリプタ(<code>fd</code>)へ<code>buf</code>に格納されているbyteバイト分のデータを書き込む。</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="read-ファイルデスクリプタから読み込む"><code>read()</code> ファイルデスクリプタから読み込む</h2>
+
+<table>
+<thead>
+<tr>
+<th align="left"><code>read()</code>の情報</th>
+<th>ファイルデスクリプタから読み込む</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left"><strong>ヘッダ</strong></td>
+<td><code>unistd.h</code></td>
+</tr>
+
+<tr>
+<td align="left"><strong>書式</strong></td>
+<td><code>ssize_t read(int fd, void *buf, size_t byte)</code></td>
+</tr>
+
+<tr>
+<td align="left"><strong>引数</strong></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left"><code>fd</code></td>
+<td>ファイルデスクリプタ</td>
+</tr>
+
+<tr>
+<td align="left"><code>buf</code></td>
+<td>読み込んだデータを保存する領域のポインタ</td>
+</tr>
+
+<tr>
+<td align="left"><code>byte</code></td>
+<td>ファイルから読み込むバイト数</td>
+</tr>
+
+<tr>
+<td align="left"><strong>戻り値</strong></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left"><strong>成功</strong></td>
+<td>読み込んだバイト数（ファイルの終端に達した場合は0）。</td>
+</tr>
+
+<tr>
+<td align="left"><strong>失敗</strong></td>
+<td><code>-1</code></td>
+</tr>
+
+<tr>
+<td align="left"><strong>解説</strong></td>
+<td>ファイルデスクリプタ(<code>fd</code>)から、<code>byte</code>分のデータを読み込み、bufへ格納する。</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="close-ファイルをクローズする"><code>close()</code> ファイルをクローズする</h2>
+
+<table>
+<thead>
+<tr>
+<th align="left"><code>close()</code>の情報</th>
+<th>ファイルをクローズする</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left"><strong>ヘッダ</strong></td>
+<td><code>unistd.h</code></td>
+</tr>
+
+<tr>
+<td align="left"><strong>書式</strong></td>
+<td><code>int close(int fd)</code></td>
+</tr>
+
+<tr>
+<td align="left"><strong>引数</strong></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left"><code>fd</code></td>
+<td>ファイルデスクリプタ</td>
+</tr>
+
+<tr>
+<td align="left"><strong>戻り値</strong></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left">成功</td>
+<td><code>0</code></td>
+</tr>
+
+<tr>
+<td align="left">失敗</td>
+<td><code>-1</code></td>
+</tr>
+
+<tr>
+<td align="left"><strong>解説</strong></td>
+<td>ファイルをクローズする低水準入出力関数。</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="fseek-ファイルポインタの位置を設定する"><code>fseek()</code> ファイルポインタの位置を設定する</h2>
+
+<table>
+<thead>
+<tr>
+<th align="left"><code>fseek()</code>の情報</th>
+<th>ファイルポインタの位置を設定する</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="left"><strong>ヘッダ</strong></td>
+<td><code>stdio.h</code></td>
+</tr>
+
+<tr>
+<td align="left"><strong>書式</strong></td>
+<td><code>int fseek(FILE *fp, long offset, int origin);</code></td>
+</tr>
+
+<tr>
+<td align="left"><strong>引数</strong></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left"><code>fp</code></td>
+<td>ファイルポインタ</td>
+</tr>
+
+<tr>
+<td align="left"><code>offset</code></td>
+<td><code>origin</code>で指定した位置からファイルポインタを移動するバイト数</td>
+</tr>
+
+<tr>
+<td align="left"><code>origin</code></td>
+<td>ファイルポインタの初期設定値</td>
+</tr>
+
+<tr>
+<td align="left"></td>
+<td>origenで指定できる値は※1の通り。</td>
+</tr>
+
+<tr>
+<td align="left"><strong>※1</strong></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left"><code>SEEK_CUR</code></td>
+<td>現在のファイルポインタの位置</td>
+</tr>
+
+<tr>
+<td align="left"><code>SEEK_END</code></td>
+<td>ファイルの終端</td>
+</tr>
+
+<tr>
+<td align="left"><code>SEEK_SET</code></td>
+<td>ファイルの先頭</td>
+</tr>
+
+<tr>
+<td align="left"><strong>戻り値</strong></td>
+<td></td>
+</tr>
+
+<tr>
+<td align="left">成功</td>
+<td><code>0</code></td>
+</tr>
+
+<tr>
+<td align="left">失敗</td>
+<td><code>-1</code></td>
+</tr>
+
+<tr>
+<td align="left"><strong>解説</strong></td>
+<td>現在のファイルポインタを、<code>origin</code>で指定した位置から、<code>offset</code>バイト分移動した位置に設定する。<br/><code>offset</code>には負の値を設定することが可能で、負の値を入力するとファイルポインタは前に移動する。</td>
+</tr>
+</tbody>
+</table>
+
+<p><br/></p>
+
+<p>参考サイト: <a href="http://www.geocities.jp/p_lan_c/index.html">C言語例文集</a></p>
+
+<h1 id="ファイルの管理情報">ファイルの管理情報</h1>
+
+<p>ファイルを管理するための代表的な情報を下記に示す。</p>
+
+<ul>
+<li>名前</li>
+<li>属性</li>
+<li>物理的位置（ブロック）</li>
+<li>大きさ（サイズ）</li>
+<li>保護情報（アクセス権）</li>
+<li>参照時間、生成時間</li>
+</ul>
+
+<p><strong>NOTE</strong><br />
+ファイルの管理情報とファイル本体を結ぶ部分をディレクトリと呼ぶ。<br />
+ディレクトリに管理情報そのものを保持、または、ディレクトリに管理情報のある領域（ブロック）のポインタを保持する。</p>
+
+<h1 id="ディレクトリ構造">ディレクトリ構造</h1>
+
+<p>1階層のみのファイルシステムだと同一ファイル名を扱えない。<br />
+そこで、多階層のディレクトリ構造を導入する。</p>
+
+<ul>
+<li>1階層のみのファイルシステム・・・同一の名前空間となり、名前が衝突する。</li>
+</ul>
+
+<div class="mermaid" align="center">
+    
+graph TD;
+	root[root];
+	root-->a((file a));
+	root-->b((file b));
+	root-->c((file c));
+	root-->d((file d));
+
+</div>
+
+
+<ul>
+<li>多階層のファイルシステム・・・異なるディレクトリでは異なる名前空間となる。</li>
+</ul>
+
+<div class="mermaid" align="center">
+    
+graph TD;
+	root[root];
+	root-->a((file a));
+	root-->b((file b));
+	root-->dir1[dir 1];
+	root-->dir2[dir 2];
+	dir1-->c((file a));
+	dir1-->d((file b));
+	dir2-->dir2_1[dir 2-1];
+	dir2_1-->e((file a));
+	dir2_1-->f((file b));
+	dir2-->dir2_2[dir 2-2];
+	dir2_2-->g((file a));
+	dir2_2-->h((file b));
+
+</div>
+
+
+<h1 id="ファイルの実装">ファイルの実装</h1>
+
+<ul>
+<li>磁気テープの場合は、先頭から末尾まで、順番にヘッドを走査するしかない。<br /></li>
+<li>磁気ディスクの場合は、ランダムアクセス可能。→記憶媒体へのファイル配置方法は多様。
+
+<ol>
+<li>連続方式</li>
+<li>連結リスト方式</li>
+<li>索引方式</li>
+</ol></li>
+</ul>
+
+<p><strong>NOTE</strong><br />
+OSは、ブロック(セクタサイズの整数倍)単位で読み書きする。</p>
+
+<h1 id="ファイルの割り当て方式">ファイルの割り当て方式</h1>
+
+<h2 id="連続割り当て方式-contiguous">連続割り当て方式(contiguous)</h2>
+
+<p>ファイルをディスク上に連続して格納する。</p>
+
+<ul>
+<li>✅ 必要ブロック数と開始ブロック番号だけでファイルの格納場所を特定できる。</li>
+<li>✅ 連続ブロックのため、シーケンシャルアクセス、ランダムアクセス共に高速。</li>
+<li>❌ ファイルサイズが固定になる。ファイルサイズ変更するには、保存し直す必要がある。</li>
+<li>❌ 断片化（フラグメンテーション）により無駄な領域が発生しやすい。</li>
+</ul>
+
+
+
+<div class="box aligncenter" style="max-width:300px;">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img  itemprop="thumbnail" src="contiguous-allocation.jpg" alt="連続割り当て方式" />
+    </div>
+    
+      <figcaption>
+          <p>連続割り当て方式
+              
+          </p>
+      </figcaption>
+  </figure>
+</div>
+
+
+<h2 id="連結リスト割り当て方式-linked-list">連結リスト割り当て方式(linked-list)</h2>
+
+<p>ファイルを構成するブロックを先頭から順にリンクで連結する。</p>
+
+<ul>
+<li>✅ ファイルサイズ（必要ブロック数）を変更が容易</li>
+<li>✅ 断片化による無駄な領域が発生しない</li>
+<li>❌ リンク不良によりファイルアクセスが不可能になる<br />
+
+<ul>
+<li>一つでもブロックが壊れると、それ以降のブロックも読めなくなる</li>
+</ul></li>
+<li>❌ ランダムアクセスの効率が悪い</li>
+</ul>
+
+
+
+<div class="box aligncenter" style="max-width:300px;">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img  itemprop="thumbnail" src="linked-allocation.jpg" alt="連結リスト割り当て方式" />
+    </div>
+    
+      <figcaption>
+          <p>連結リスト割り当て方式
+              
+          </p>
+      </figcaption>
+  </figure>
+</div>
+
+
+<h2 id="リスト検索表割り当て方式-fat-file-allocation-table">リスト検索表割り当て方式(FAT:file-allocation-table)</h2>
+
+<p>ファイルを構成するブロックを先頭から順にリンクで連結する。<br />
+リンク情報を取り出して、検索（FAT）として<strong>メモリ</strong>上に展開する。</p>
+
+<ul>
+<li>✅ シーケンシャルアクセスが高速</li>
+<li>❌ 検索情報（リンク表）が大量のメモリを消費する</li>
+</ul>
+
+
+
+<div class="box aligncenter" style="max-width:400px;">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img  itemprop="thumbnail" src="Fat32_structure.png" alt="リスト検索表割り当て方式" />
+    </div>
+    
+      <figcaption>
+          <p>リスト検索表割り当て方式
+              
+          </p>
+      </figcaption>
+  </figure>
+</div>
+
+<div class="highlight"><pre class="chroma"><code class="language-c" data-lang="c"><span class="k">typedef</span> <span class="k">struct</span> <span class="n">DirEntry_t</span> <span class="p">{</span>
+    <span class="n">Byte</span>    <span class="n">name</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>            <span class="cm">/* file name */</span>
+    <span class="n">Byte</span>    <span class="n">extension</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>       <span class="cm">/* file name extension */</span>
+    <span class="n">Byte</span>    <span class="n">attribute</span><span class="p">;</span>          <span class="cm">/* file attribute
+</span><span class="cm">                                     bit 4    directory flag
+</span><span class="cm">                                     bit 3    volume flag
+</span><span class="cm">                                     bit 2    hidden flag
+</span><span class="cm">                                     bit 1    system flag
+</span><span class="cm">                                     bit 0    read only flag */</span>
+    <span class="n">Byte</span>    <span class="n">reserved</span><span class="p">;</span>           <span class="cm">/* use NT or same OS */</span>
+    <span class="n">Byte</span>    <span class="n">createTimeMs</span><span class="p">;</span>       <span class="cm">/* VFAT で使用するファイル作成時刻の10ミリ秒 (0 ～ 199) */</span>
+    <span class="n">Byte</span>    <span class="n">createTime</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>      <span class="cm">/* VFAT で使用するファイル作成時間 */</span>
+    <span class="n">Byte</span>    <span class="n">createDate</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>      <span class="cm">/* VFAT で使用するファイル作成日付 */</span>
+    <span class="n">Byte</span>    <span class="n">accessDate</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>      <span class="cm">/* VFAT で使用するファイル・アクセス日付 */</span>
+    <span class="n">Byte</span>    <span class="n">clusterHighWord</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span> <span class="cm">/* クラスタ番号の上位(FAT32用)16 bits(First cluster,MSB) */</span>
+    <span class="n">Byte</span>    <span class="n">updateTime</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+    <span class="n">Byte</span>    <span class="n">updateDate</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+    <span class="n">Byte</span>    <span class="n">cluster</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>         <span class="cm">/* start cluster number(First cluster,LSB) */</span>
+    <span class="n">Byte</span>    <span class="n">fileSize</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>        <span class="cm">/* file size in bytes (directory is always zero) */</span>
+<span class="p">}</span>   <span class="n">DirEntry</span><span class="p">;</span></code></pre></div>
+<p><a href="http://www.geocities.co.jp/SiliconValley-PaloAlto/2038/fat.html">FAT FS フォーマットの実装についての覚え書き</a></p>
+
+<h2 id="索引割り当て方式-index">索引割り当て方式(index)</h2>
+
+<p>ファイル構成するブロック番号を表形式で索引ブロック(index block)内に格納する。</p>
+
+<ul>
+<li>✅ 断片化による無駄な領域が発生しない</li>
+<li>🔺 ファイルサイズ（必要ブロック数）の変更が比較的容易
+
+<ul>
+<li>ただし、ファイルサイズが増加して索引ブロックに収まらないときは索引ブロックの追加が必要</li>
+</ul></li>
+<li>🔻 最少２回のディスクアクセスが必要</li>
+</ul>
+
+
+
+<div class="box aligncenter" style="max-width:400px;">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img  itemprop="thumbnail" src="index-allocation.jpg" alt="索引割り当て方式" />
+    </div>
+    
+      <figcaption>
+          <p>索引割り当て方式
+              
+          </p>
+      </figcaption>
+  </figure>
+</div>
+
+
+<h2 id="iノード方式-i-node">iノード方式(i-node)</h2>
+
+<p>索引割り当て方式では大容量用ファイルは一つの索引ブロックでは収まらない。<br />
+→「索引ブロックの索引ブロック」（間接ブロック）を導入する。</p>
+
+<ul>
+<li>索引ブロック(i-node block)・・・間接ブロック、または、データブロックへの参照を持つ</li>
+<li>間接ブロック・・・1段、2段、3段の間接ブロックが存在する(下図は1段と2段)
+
+<ul>
+<li><strong>ext2</strong>では、iノード構造体が持つデータブロック参照用の配列は15個。
+
+<ul>
+<li>そのうち12個を「直接参照」、残りの3つをそれぞれ「一段間接参照」「二段間接参照」「三段間接参照」用に使用することで、複数のデータブロックを必要とする大きめのファイルを効率的に扱うようにしている。</li>
+</ul></li>
+<li><strong>ext4</strong>では、extent機能というものを使用できる。この場合、ここで述べたような間接ブロックは使用しない。(下記slideshareの37ページあたり参照)</li>
+</ul></li>
+</ul>
+
+
+
+<div class="box aligncenter" style="max-width:400px;">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img  itemprop="thumbnail" src="inode.png" alt="iノード方式" />
+    </div>
+    
+      <figcaption>
+          <p>iノード方式
+              
+          </p>
+      </figcaption>
+  </figure>
+</div>
+
+
+<ul>
+<li><a href="https://www.atmarkit.co.jp/ait/articles/0306/24/news002_2.html">ブロックアルゴリズムとB-Treeアルゴリズム (<sup>2</sup>&frasl;<sub>3</sub>)</a></li>
+<li><a href="https://www.slideshare.net/YoshihiroYunomae/f-36905134">slideshare - ファイルシステム</a></li>
+</ul>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:PlantUML-Previewer">右記サイトでPlantUMLを使って作成した。(<a href="http://sujoyu.github.io/plantuml-previewer/">http://sujoyu.github.io/plantuml-previewer/</a>)
+ <a class="footnote-return" href="#fnref:PlantUML-Previewer"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="/web/asset/mermaid/mermaid.js"></script>
+
+</body>
+</html>

@@ -24,6 +24,954 @@
     </item>
     
     <item>
+      <title>ファイルシステムの概要</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/24/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AE%E6%A6%82%E8%A6%81/</link>
+      <pubDate>Sun, 24 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/24/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AE%E6%A6%82%E8%A6%81/</guid>
+      
+        <description>
+
+&lt;h1 id=&#34;目的&#34;&gt;目的&lt;/h1&gt;
+
+&lt;p&gt;極単純なファイルシステムを自作できる程度の知識を、初歩的な事柄をまとめる。&lt;/p&gt;
+
+&lt;h1 id=&#34;参考文献&#34;&gt;参考文献&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.google.com/url?sa=t&amp;amp;rct=j&amp;amp;q=&amp;amp;esrc=s&amp;amp;source=web&amp;amp;cd=1&amp;amp;cad=rja&amp;amp;uact=8&amp;amp;ved=2ahUKEwix1PLmnKDhAhUKO3AKHShZBOMQFjAAegQIBBAC&amp;amp;url=http%3A%2F%2Fresearch.nii.ac.jp%2F~ichiro%2Flecture%2Fos2001%2Fnotes%2FOS2001-file.pdf&amp;amp;usg=AOvVaw15ZC6zFCuZreyMzU2s0TAA&#34;&gt;ファイルシステム&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;ファイルシステムとは&#34;&gt;ファイルシステムとは&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;ファイルシステムは、コンピュータのリソースを操作するための、オペレーティングシステム (OS) が持つ機能の一つ。&lt;br /&gt;
+ファイルとは、主に補助記憶装置に格納されたデータを指すが、デバイスやプロセス、カーネル内の情報といったものもファイルとして提供するファイルシステムもある。&lt;br /&gt;
+より正確に定義すれば、ファイルシステムは抽象データ型の集まりであり、ストレージ、階層構造、データの操作/アクセス/検索のために実装されたものである。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0&#34;&gt;Wikipedia - ファイルシステム&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; ファイルシステムを操作するためには、OSが提供する機能を利用することになる。&lt;/p&gt;
+
+&lt;h1 id=&#34;ディスクファイルシステムとは&#34;&gt;ディスクファイルシステムとは&lt;/h1&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;「ディスクファイルシステム」は、直接的か間接的かに関わらずコンピュータシステムに接続された補助記憶装置、特にハードディスク上にファイルを格納するためのものである。
+ディスクファイルシステムとしては、FAT、NTFS、HFS、ext2、ext3、ext4、WAFL（英語版）、ISO 9660、ODS-5（英語版）、UDF、HPFS、JFS、UFS、VTOC、XFSなどがある。
+ディスクファイルシステムの一部はジャーナルファイルシステムまたはバージョニングファイルシステムでもある。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0&#34;&gt;Wikipedia - ファイルシステム&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;ファイルシステムへの要求&#34;&gt;ファイルシステムへの要求&lt;/h1&gt;
+
+&lt;p&gt;ファイルシステム、特にディスクファイルシステムへの要求&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;メモリと比較して低速な読み書き速度に対応できる&lt;/li&gt;
+&lt;li&gt;記憶装置の容量を無駄無く利用できる&lt;/li&gt;
+&lt;li&gt;信頼性・耐障害性が高い&lt;/li&gt;
+&lt;li&gt;記憶装置の容量拡大に容易に対応できる&lt;/li&gt;
+&lt;li&gt;記憶装置の物理的な差異を吸収する論理インターフェースを提供できる&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;ファイルシステムの構成要素&#34;&gt;ファイルシステムの構成要素&lt;/h1&gt;
+
+&lt;p&gt;ファイルシステムの典型例をクラス図風に示す。&lt;sup class=&#34;footnote-ref&#34; id=&#34;fnref:PlantUML-Previewer&#34;&gt;&lt;a href=&#34;#fn:PlantUML-Previewer&#34;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+
+&lt;link rel=&#34;stylesheet&#34; href=&#34;https://otaon.github.io/css/hugo-easy-gallery.css&#34; /&gt;
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:700px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;disk-structure.png&#34; alt=&#34;ファイルシステムの構成要素&#34; /&gt;
+    &lt;/div&gt;
+    
+      &lt;figcaption&gt;
+          &lt;p&gt;ファイルシステムの構成要素
+              
+          &lt;/p&gt;
+      &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;h2 id=&#34;ブロック&#34;&gt;ブロック&lt;/h2&gt;
+
+&lt;p&gt;多くのOSにおいては、ディスクを、(トラック)セクタを要素とする1次元配列として管理する。&lt;/p&gt;
+
+&lt;p&gt;多くのＯＳがディスクをセクタを要素とする１次元配列として管理&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;セクタの指定方法&lt;/li&gt;
+&lt;li&gt;シリンダ番号、ヘッド番号（ディスク番号）、セクタ番号の３項組&lt;/li&gt;
+&lt;li&gt;セクタサイズ
+
+&lt;ul&gt;
+&lt;li&gt;システムに依存（代表的サイズ:512B）&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;ブロック
+
+&lt;ul&gt;
+&lt;li&gt;ＯＳがハードディスクを読み書きする際のデータ単位&lt;/li&gt;
+&lt;li&gt;ブロックサイズ
+
+&lt;ul&gt;
+&lt;li&gt;ＯＳに依存。512B、1024B、2048B、4096B、8192Bなど&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;注意&lt;/strong&gt; ブロックサイズが大きいと
+
+&lt;ul&gt;
+&lt;li&gt;○ まとめて入出力処理が可能なため高速化&lt;/li&gt;
+&lt;li&gt;× ファイルサイズがブロックサイズより小さいと無駄が多い&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:200px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;Disk-structure2.svg&#34; alt=&#34;ディスクセクタ&#34; /&gt;
+    &lt;/div&gt;
+    
+      &lt;figcaption&gt;
+          &lt;p&gt;A トラック&lt;br/&gt;B 幾何学的セクタ&lt;br/&gt;C (トラック)セクタ&lt;br/&gt;D クラスタ
+              
+          &lt;/p&gt;
+      &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;h2 id=&#34;ボリューム&#34;&gt;ボリューム&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;記憶媒体のことを、ＯＳではボリュームと呼ぶ&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;磁気ディスクや光ディスク、磁気テープなどの記憶する媒体&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;ボリュームの構成&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;初期プログラムローダ(IPL)
+
+&lt;ul&gt;
+&lt;li&gt;システム起動時に自動的に読み込まれるプログラムのこと&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;ボリュームの管理情報&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ボリュームの名前、領域割り当てサイズなどのボリューム管理に必要な情報のこと&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;ファイル&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ファイル管理情報とファイル内容自体のこと&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;UNIXのボリューム構成例&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:200px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;blocks.svg&#34; alt=&#34;UNIXのボリューム構成例&#34; /&gt;
+    &lt;/div&gt;
+    
+      &lt;figcaption&gt;
+          &lt;p&gt;UNIXのボリューム構成例
+              
+          &lt;/p&gt;
+      &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+
+
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:300px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;typical_UNIX_filesystem.png&#34; alt=&#34;典型的なUNIXファイルシステム(Wikipedia)&#34; /&gt;
+    &lt;/div&gt;
+    
+      &lt;figcaption&gt;
+          &lt;p&gt;典型的なUNIXファイルシステム(Wikipedia)
+              
+          &lt;/p&gt;
+      &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;h1 id=&#34;ファイルへのアクセス方法&#34;&gt;ファイルへのアクセス方法&lt;/h1&gt;
+
+&lt;h2 id=&#34;ファイルのアクセス-読み出し-書き込み-の方法&#34;&gt;ファイルのアクセス（読み出し・書き込み）の方法&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;順アクセス
+
+&lt;ul&gt;
+&lt;li&gt;ファイルの先頭から末尾に向かってアクセス（&lt;code&gt;read&lt;/code&gt;、&lt;code&gt;write&lt;/code&gt;を使用)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;直接アクセス
+
+&lt;ul&gt;
+&lt;li&gt;ファイル上の任意の位置をアクセス（&lt;code&gt;seek&lt;/code&gt;、&lt;code&gt;read&lt;/code&gt;、&lt;code&gt;write&lt;/code&gt;を使用)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;検索付き直接アクセス
+
+&lt;ul&gt;
+&lt;li&gt;キー値からアクセス対象となるレコードを取得・アクセス&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;ファイルの操作&#34;&gt;ファイルの操作&lt;/h1&gt;
+
+&lt;p&gt;OSが提供するシステムコール、または、APIによってファイルを操作する。&lt;/p&gt;
+
+
+
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:500px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;file-io-api.svg&#34; alt=&#34;ファイルの操作&#34; /&gt;
+    &lt;/div&gt;
+    
+      &lt;figcaption&gt;
+          &lt;p&gt;ファイルの操作
+              
+          &lt;/p&gt;
+      &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;dl&gt;
+&lt;dt&gt;&lt;code&gt;OPEN&lt;/code&gt;&lt;/dt&gt;
+&lt;dd&gt;ファイルアクセスに先立ち、ディスク上のファイルの位置を調べる。また、バッファ領域を含むファイル入出力に必要な情報領域(テーブル)を作成する。&lt;/dd&gt;
+&lt;dt&gt;&lt;code&gt;CLOSE&lt;/code&gt;&lt;/dt&gt;
+&lt;dd&gt;ファイル入出力にテーブルの領域を解放する。&lt;/dd&gt;
+&lt;dt&gt;&lt;code&gt;READ&lt;/code&gt;&lt;/dt&gt;
+&lt;dd&gt;ファイルからメモリにデータを読み出す&lt;/dd&gt;
+&lt;dt&gt;&lt;code&gt;WRITE&lt;/code&gt;&lt;/dt&gt;
+&lt;dd&gt;メモリからファイルにデータを書き込む&lt;/dd&gt;
+&lt;dt&gt;&lt;code&gt;SEEK&lt;/code&gt;&lt;/dt&gt;
+&lt;dd&gt;ファイルのアクセス位置を変更する&lt;/dd&gt;
+&lt;/dl&gt;
+
+&lt;h2 id=&#34;open-ファイルをオープンする&#34;&gt;&lt;code&gt;open()&lt;/code&gt; ファイルをオープンする&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;left&#34;&gt;&lt;code&gt;open()&lt;/code&gt;の情報&lt;/th&gt;
+&lt;th&gt;ファイルをオープンする&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;ヘッダ&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;fcntl.h&lt;/code&gt;, &lt;code&gt;sys/types.h&lt;/code&gt;, &lt;code&gt;sys/stat.h&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;書式&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;int open(const char *path, int mode, [mode_t creat_mode])&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;引数&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;path&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ファイル名&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;mode&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;オープンするファイルに許可を与えるモード&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;creat_mode&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;mode&lt;/code&gt;に&lt;code&gt;O_CREAT&lt;/code&gt;指定時に設定できる、オープンするファイルのモード（省略可能）。&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;mode&lt;/code&gt;で設定できる値は、下記※１の3つのいずれか1つと、&lt;br/&gt;※２の任意の値を「|(論理和)」で結んだものとなる。&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;※1&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;O_RDONLY&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;読み込み可&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;O_WRONLY&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;書き込み可&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;O_RDWR&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;読み書き可&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;※2&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;O_APPEND&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ファイルポインタをファイルの最後に移動する&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;O_CREAT&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ファイルを生成する&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;O_TRUNC&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ファイルが存在する場合、サイズを0にする&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;O_BINARY&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;バイナリモード&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;O_TEXT&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;テキストモード&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;td&gt;modeにO_CREATを指定した場合、第3引数で※３の&lt;code&gt;creat_mode&lt;/code&gt;を指定できる。&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;※3&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;S_IWRITE&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;読み書き可&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;S_IREAD&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;読み込み可&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;S_IREAD \| S_IWRITE&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;読み書き可&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;戻り値&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;成功&lt;/td&gt;
+&lt;td&gt;ファイルデスクリプタ（そのファイルを一意に識別できる数値）&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;失敗&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;-1&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;解説&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ファイルをオープンし、ファイルデスクリプタを返却する低水準入出力関数。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;write-ファイルデスクリプタへ書き込む&#34;&gt;&lt;code&gt;write()&lt;/code&gt; ファイルデスクリプタへ書き込む&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;left&#34;&gt;&lt;code&gt;write()&lt;/code&gt;の情報&lt;/th&gt;
+&lt;th&gt;ファイルデスクリプタへ書き込む&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;ヘッダ&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;unistd.h&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;書式&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;int write(int fd, void *buf, unsigned int byte)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;引数&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;fd&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ファイルデスクリプタ&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;buf&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ファイルに書き込むデータが格納されている領域のポインタ&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;byte&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ファイルへ書き込むバイト数&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;戻り値&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;成功&lt;/td&gt;
+&lt;td&gt;書き込んだバイト数&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;失敗&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;-1&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;解説&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ファイルデスクリプタ(&lt;code&gt;fd&lt;/code&gt;)へ&lt;code&gt;buf&lt;/code&gt;に格納されているbyteバイト分のデータを書き込む。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;read-ファイルデスクリプタから読み込む&#34;&gt;&lt;code&gt;read()&lt;/code&gt; ファイルデスクリプタから読み込む&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;left&#34;&gt;&lt;code&gt;read()&lt;/code&gt;の情報&lt;/th&gt;
+&lt;th&gt;ファイルデスクリプタから読み込む&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;ヘッダ&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;unistd.h&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;書式&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ssize_t read(int fd, void *buf, size_t byte)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;引数&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;fd&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ファイルデスクリプタ&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;buf&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;読み込んだデータを保存する領域のポインタ&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;byte&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ファイルから読み込むバイト数&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;戻り値&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;成功&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;読み込んだバイト数（ファイルの終端に達した場合は0）。&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;失敗&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;-1&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;解説&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ファイルデスクリプタ(&lt;code&gt;fd&lt;/code&gt;)から、&lt;code&gt;byte&lt;/code&gt;分のデータを読み込み、bufへ格納する。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;close-ファイルをクローズする&#34;&gt;&lt;code&gt;close()&lt;/code&gt; ファイルをクローズする&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;left&#34;&gt;&lt;code&gt;close()&lt;/code&gt;の情報&lt;/th&gt;
+&lt;th&gt;ファイルをクローズする&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;ヘッダ&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;unistd.h&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;書式&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;int close(int fd)&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;引数&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;fd&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ファイルデスクリプタ&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;戻り値&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;成功&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;0&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;失敗&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;-1&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;解説&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;ファイルをクローズする低水準入出力関数。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;fseek-ファイルポインタの位置を設定する&#34;&gt;&lt;code&gt;fseek()&lt;/code&gt; ファイルポインタの位置を設定する&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th align=&#34;left&#34;&gt;&lt;code&gt;fseek()&lt;/code&gt;の情報&lt;/th&gt;
+&lt;th&gt;ファイルポインタの位置を設定する&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;ヘッダ&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;stdio.h&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;書式&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;int fseek(FILE *fp, long offset, int origin);&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;引数&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;fp&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ファイルポインタ&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;offset&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;origin&lt;/code&gt;で指定した位置からファイルポインタを移動するバイト数&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;origin&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ファイルポインタの初期設定値&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;/td&gt;
+&lt;td&gt;origenで指定できる値は※1の通り。&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;※1&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;SEEK_CUR&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;現在のファイルポインタの位置&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;SEEK_END&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ファイルの終端&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;code&gt;SEEK_SET&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;ファイルの先頭&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;戻り値&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;成功&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;0&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;失敗&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;-1&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td align=&#34;left&#34;&gt;&lt;strong&gt;解説&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;現在のファイルポインタを、&lt;code&gt;origin&lt;/code&gt;で指定した位置から、&lt;code&gt;offset&lt;/code&gt;バイト分移動した位置に設定する。&lt;br/&gt;&lt;code&gt;offset&lt;/code&gt;には負の値を設定することが可能で、負の値を入力するとファイルポインタは前に移動する。&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;br/&gt;&lt;/p&gt;
+
+&lt;p&gt;参考サイト: &lt;a href=&#34;http://www.geocities.jp/p_lan_c/index.html&#34;&gt;C言語例文集&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&#34;ファイルの管理情報&#34;&gt;ファイルの管理情報&lt;/h1&gt;
+
+&lt;p&gt;ファイルを管理するための代表的な情報を下記に示す。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;名前&lt;/li&gt;
+&lt;li&gt;属性&lt;/li&gt;
+&lt;li&gt;物理的位置（ブロック）&lt;/li&gt;
+&lt;li&gt;大きさ（サイズ）&lt;/li&gt;
+&lt;li&gt;保護情報（アクセス権）&lt;/li&gt;
+&lt;li&gt;参照時間、生成時間&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;&lt;br /&gt;
+ファイルの管理情報とファイル本体を結ぶ部分をディレクトリと呼ぶ。&lt;br /&gt;
+ディレクトリに管理情報そのものを保持、または、ディレクトリに管理情報のある領域（ブロック）のポインタを保持する。&lt;/p&gt;
+
+&lt;h1 id=&#34;ディレクトリ構造&#34;&gt;ディレクトリ構造&lt;/h1&gt;
+
+&lt;p&gt;1階層のみのファイルシステムだと同一ファイル名を扱えない。&lt;br /&gt;
+そこで、多階層のディレクトリ構造を導入する。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1階層のみのファイルシステム・・・同一の名前空間となり、名前が衝突する。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;mermaid&#34; align=&#34;center&#34;&gt;
+    
+graph TD;
+	root[root];
+	root--&gt;a((file a));
+	root--&gt;b((file b));
+	root--&gt;c((file c));
+	root--&gt;d((file d));
+
+&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;多階層のファイルシステム・・・異なるディレクトリでは異なる名前空間となる。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;mermaid&#34; align=&#34;center&#34;&gt;
+    
+graph TD;
+	root[root];
+	root--&gt;a((file a));
+	root--&gt;b((file b));
+	root--&gt;dir1[dir 1];
+	root--&gt;dir2[dir 2];
+	dir1--&gt;c((file a));
+	dir1--&gt;d((file b));
+	dir2--&gt;dir2_1[dir 2-1];
+	dir2_1--&gt;e((file a));
+	dir2_1--&gt;f((file b));
+	dir2--&gt;dir2_2[dir 2-2];
+	dir2_2--&gt;g((file a));
+	dir2_2--&gt;h((file b));
+
+&lt;/div&gt;
+
+
+&lt;h1 id=&#34;ファイルの実装&#34;&gt;ファイルの実装&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;磁気テープの場合は、先頭から末尾まで、順番にヘッドを走査するしかない。&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;磁気ディスクの場合は、ランダムアクセス可能。→記憶媒体へのファイル配置方法は多様。
+
+&lt;ol&gt;
+&lt;li&gt;連続方式&lt;/li&gt;
+&lt;li&gt;連結リスト方式&lt;/li&gt;
+&lt;li&gt;索引方式&lt;/li&gt;
+&lt;/ol&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;&lt;br /&gt;
+OSは、ブロック(セクタサイズの整数倍)単位で読み書きする。&lt;/p&gt;
+
+&lt;h1 id=&#34;ファイルの割り当て方式&#34;&gt;ファイルの割り当て方式&lt;/h1&gt;
+
+&lt;h2 id=&#34;連続割り当て方式-contiguous&#34;&gt;連続割り当て方式(contiguous)&lt;/h2&gt;
+
+&lt;p&gt;ファイルをディスク上に連続して格納する。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;✅ 必要ブロック数と開始ブロック番号だけでファイルの格納場所を特定できる。&lt;/li&gt;
+&lt;li&gt;✅ 連続ブロックのため、シーケンシャルアクセス、ランダムアクセス共に高速。&lt;/li&gt;
+&lt;li&gt;❌ ファイルサイズが固定になる。ファイルサイズ変更するには、保存し直す必要がある。&lt;/li&gt;
+&lt;li&gt;❌ 断片化（フラグメンテーション）により無駄な領域が発生しやすい。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:300px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;contiguous-allocation.jpg&#34; alt=&#34;連続割り当て方式&#34; /&gt;
+    &lt;/div&gt;
+    
+      &lt;figcaption&gt;
+          &lt;p&gt;連続割り当て方式
+              
+          &lt;/p&gt;
+      &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;h2 id=&#34;連結リスト割り当て方式-linked-list&#34;&gt;連結リスト割り当て方式(linked-list)&lt;/h2&gt;
+
+&lt;p&gt;ファイルを構成するブロックを先頭から順にリンクで連結する。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;✅ ファイルサイズ（必要ブロック数）を変更が容易&lt;/li&gt;
+&lt;li&gt;✅ 断片化による無駄な領域が発生しない&lt;/li&gt;
+&lt;li&gt;❌ リンク不良によりファイルアクセスが不可能になる&lt;br /&gt;
+
+&lt;ul&gt;
+&lt;li&gt;一つでもブロックが壊れると、それ以降のブロックも読めなくなる&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;❌ ランダムアクセスの効率が悪い&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:300px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;linked-allocation.jpg&#34; alt=&#34;連結リスト割り当て方式&#34; /&gt;
+    &lt;/div&gt;
+    
+      &lt;figcaption&gt;
+          &lt;p&gt;連結リスト割り当て方式
+              
+          &lt;/p&gt;
+      &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;h2 id=&#34;リスト検索表割り当て方式-fat-file-allocation-table&#34;&gt;リスト検索表割り当て方式(FAT:file-allocation-table)&lt;/h2&gt;
+
+&lt;p&gt;ファイルを構成するブロックを先頭から順にリンクで連結する。&lt;br /&gt;
+リンク情報を取り出して、検索（FAT）として&lt;strong&gt;メモリ&lt;/strong&gt;上に展開する。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;✅ シーケンシャルアクセスが高速&lt;/li&gt;
+&lt;li&gt;❌ 検索情報（リンク表）が大量のメモリを消費する&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:400px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;Fat32_structure.png&#34; alt=&#34;リスト検索表割り当て方式&#34; /&gt;
+    &lt;/div&gt;
+    
+      &lt;figcaption&gt;
+          &lt;p&gt;リスト検索表割り当て方式
+              
+          &lt;/p&gt;
+      &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-c&#34; data-lang=&#34;c&#34;&gt;&lt;span class=&#34;k&#34;&gt;typedef&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;struct&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DirEntry_t&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Byte&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;            &lt;span class=&#34;cm&#34;&gt;/* file name */&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Byte&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;extension&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;       &lt;span class=&#34;cm&#34;&gt;/* file name extension */&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Byte&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;attribute&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;          &lt;span class=&#34;cm&#34;&gt;/* file attribute
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt;                                     bit 4    directory flag
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt;                                     bit 3    volume flag
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt;                                     bit 2    hidden flag
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt;                                     bit 1    system flag
+&lt;/span&gt;&lt;span class=&#34;cm&#34;&gt;                                     bit 0    read only flag */&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Byte&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;reserved&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;           &lt;span class=&#34;cm&#34;&gt;/* use NT or same OS */&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Byte&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;createTimeMs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;       &lt;span class=&#34;cm&#34;&gt;/* VFAT で使用するファイル作成時刻の10ミリ秒 (0 ～ 199) */&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Byte&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;createTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;      &lt;span class=&#34;cm&#34;&gt;/* VFAT で使用するファイル作成時間 */&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Byte&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;createDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;      &lt;span class=&#34;cm&#34;&gt;/* VFAT で使用するファイル作成日付 */&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Byte&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;accessDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;      &lt;span class=&#34;cm&#34;&gt;/* VFAT で使用するファイル・アクセス日付 */&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Byte&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;clusterHighWord&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt; &lt;span class=&#34;cm&#34;&gt;/* クラスタ番号の上位(FAT32用)16 bits(First cluster,MSB) */&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Byte&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;updateTime&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Byte&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;updateDate&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Byte&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;cluster&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;         &lt;span class=&#34;cm&#34;&gt;/* start cluster number(First cluster,LSB) */&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Byte&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;fileSize&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;];&lt;/span&gt;        &lt;span class=&#34;cm&#34;&gt;/* file size in bytes (directory is always zero) */&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;   &lt;span class=&#34;n&#34;&gt;DirEntry&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.geocities.co.jp/SiliconValley-PaloAlto/2038/fat.html&#34;&gt;FAT FS フォーマットの実装についての覚え書き&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;索引割り当て方式-index&#34;&gt;索引割り当て方式(index)&lt;/h2&gt;
+
+&lt;p&gt;ファイル構成するブロック番号を表形式で索引ブロック(index block)内に格納する。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;✅ 断片化による無駄な領域が発生しない&lt;/li&gt;
+&lt;li&gt;🔺 ファイルサイズ（必要ブロック数）の変更が比較的容易
+
+&lt;ul&gt;
+&lt;li&gt;ただし、ファイルサイズが増加して索引ブロックに収まらないときは索引ブロックの追加が必要&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;🔻 最少２回のディスクアクセスが必要&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:400px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;index-allocation.jpg&#34; alt=&#34;索引割り当て方式&#34; /&gt;
+    &lt;/div&gt;
+    
+      &lt;figcaption&gt;
+          &lt;p&gt;索引割り当て方式
+              
+          &lt;/p&gt;
+      &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;h2 id=&#34;iノード方式-i-node&#34;&gt;iノード方式(i-node)&lt;/h2&gt;
+
+&lt;p&gt;索引割り当て方式では大容量用ファイルは一つの索引ブロックでは収まらない。&lt;br /&gt;
+→「索引ブロックの索引ブロック」（間接ブロック）を導入する。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;索引ブロック(i-node block)・・・間接ブロック、または、データブロックへの参照を持つ&lt;/li&gt;
+&lt;li&gt;間接ブロック・・・1段、2段、3段の間接ブロックが存在する(下図は1段と2段)
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;ext2&lt;/strong&gt;では、iノード構造体が持つデータブロック参照用の配列は15個。
+
+&lt;ul&gt;
+&lt;li&gt;そのうち12個を「直接参照」、残りの3つをそれぞれ「一段間接参照」「二段間接参照」「三段間接参照」用に使用することで、複数のデータブロックを必要とする大きめのファイルを効率的に扱うようにしている。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;ext4&lt;/strong&gt;では、extent機能というものを使用できる。この場合、ここで述べたような間接ブロックは使用しない。(下記slideshareの37ページあたり参照)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:400px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;inode.png&#34; alt=&#34;iノード方式&#34; /&gt;
+    &lt;/div&gt;
+    
+      &lt;figcaption&gt;
+          &lt;p&gt;iノード方式
+              
+          &lt;/p&gt;
+      &lt;/figcaption&gt;
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.atmarkit.co.jp/ait/articles/0306/24/news002_2.html&#34;&gt;ブロックアルゴリズムとB-Treeアルゴリズム (&lt;sup&gt;2&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt;)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.slideshare.net/YoshihiroYunomae/f-36905134&#34;&gt;slideshare - ファイルシステム&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;footnotes&#34;&gt;
+
+&lt;hr /&gt;
+
+&lt;ol&gt;
+&lt;li id=&#34;fn:PlantUML-Previewer&#34;&gt;右記サイトでPlantUMLを使って作成した。(&lt;a href=&#34;http://sujoyu.github.io/plantuml-previewer/&#34;&gt;http://sujoyu.github.io/plantuml-previewer/&lt;/a&gt;)
+ &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:PlantUML-Previewer&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+      
+    </item>
+    
+    <item>
       <title>Gitの使い方</title>
       <link>https://otaon.github.io/web/ja-jp/2019/03/13/git%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9/</link>
       <pubDate>Wed, 13 Mar 2019 01:00:00 +0900</pubDate>
@@ -669,7 +1617,7 @@ sequenceDiagram
 &lt;hr /&gt;
 
 &lt;ol&gt;
-&lt;li id=&#34;fn:-&#34;&gt;本サイトのディレクトリ構成は&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/03/03/github-hugo-travis-ci-%E3%81%A7%E9%9D%99%E7%9A%84%E3%82%B5%E3%82%A4%E3%83%88%E3%82%92-github-pages-%E3%81%AB%E5%85%AC%E9%96%8B%E3%81%99%E3%82%8B/&#34;&gt;ここ&lt;/a&gt;を参照すること。
+&lt;li id=&#34;fn:-&#34;&gt;本サイトのディレクトリ構成は&lt;a href=&#34;https://otaon.github.io/web/ja-jp/2019/03/03/github-hugo-travis-ci-%E3%81%A7%E9%9D%99%E7%9A%84%E3%82%B5%E3%82%A4%E3%83%88%E3%82%92-github-pages-%E3%81%AB%E5%85%AC%E9%96%8B%E3%81%99%E3%82%8B/&#34;&gt;ここ&lt;/a&gt;を参照すること。
  &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:-&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;li id=&#34;fn:-&#34;&gt;&lt;a href=&#34;https://mermaidjs.github.io/&#34;&gt;https://mermaidjs.github.io/&lt;/a&gt;
  &lt;a class=&#34;footnote-return&#34; href=&#34;#fnref:-&#34;&gt;&lt;sup&gt;[return]&lt;/sup&gt;&lt;/a&gt;&lt;/li&gt;
@@ -7916,329 +8864,6 @@ AIエンジンが右側の枝を見に行く際には、スコアが8以下に�
 &lt;p&gt;サーバ側で下記のコマンドを叩くことでゲームを起動できる。&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;serve&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dod-request-handler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;次に、クライアント側のwebブラウザで&lt;a href=&#34;http://localhost:8080/game.html&#34;&gt;ゲームページ&lt;/a&gt;にアクセスする。&lt;/p&gt;
-</description>
-      
-    </item>
-    
-    <item>
-      <title>書籍 Land of Lisp 20章 ダイスオブドゥームをさらに面白く</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-20%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%82%92%E3%81%95%E3%82%89%E3%81%AB%E9%9D%A2%E7%99%BD%E3%81%8F/</link>
-      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-20%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%82%92%E3%81%95%E3%82%89%E3%81%AB%E9%9D%A2%E7%99%BD%E3%81%8F/</guid>
-      
-        <description>
-
-&lt;h2 id=&#34;t-o-c&#34;&gt;T.O.C.&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;#201-プレイヤーの数を増やす&#34;&gt;20.1 プレイヤーの数を増やす&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#202-サイコロを降る&#34;&gt;20.2 サイコロを降る&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#203-ダイスオブドゥームの補給ルールの改善&#34;&gt;20.3 ダイスオブドゥームの補給ルールの改善&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#204-終わりに&#34;&gt;20.4 終わりに&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;ダイスオブドゥームのバージョン4を作る。&lt;br /&gt;
-今までのバージョンでは、プログラムを簡単にするため、重要なルールを省略していた。&lt;br /&gt;
-本章では、ゲームのプレイヤーを増やし、サイコロを振るようにし、さらにいくつかの改良をダイスオブドゥームに施す。&lt;/p&gt;
-
-&lt;p&gt;まず、前章で作ったコードをファイルに保存し、呼び出すだけで使用できるようにしておく。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;load&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;dice_of_doom_v3.lisp&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&#34;20-1-プレイヤーの数を増やす&#34;&gt;20.1 プレイヤーの数を増やす&lt;/h2&gt;
-
-&lt;p&gt;最初の変更では、プレイヤーを2人から4人に増やす。&lt;br /&gt;
-うち3人は、ゲームAIプレイヤーである。&lt;/p&gt;
-
-&lt;p&gt;まず、変数&lt;code&gt;*num-players*&lt;/code&gt;の値を4にし、新たなプレイヤーのためのサイコロの色を追加する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*num-players*&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*die-colors*&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;63&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;63&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;     &lt;span class=&#34;c1&#34;&gt;; 赤&lt;/span&gt;
-                             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;63&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;63&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;     &lt;span class=&#34;c1&#34;&gt;; 青&lt;/span&gt;
-                             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;63&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;63&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;     &lt;span class=&#34;c1&#34;&gt;; 緑&lt;/span&gt;
-                             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;63&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;; 紫&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;プレイヤーの数の定数を変更したため、他の定数も変えておく。&lt;br /&gt;
-サイコロの最大数を5個に増やし、そしてAIのレベルを4から2に減らした。&lt;br /&gt;
-ゲームAIが3人もいるため、対人としては賢さがそれほど必要ではなくなったわけである。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*max-dice*&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;; サイコロの最大数&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*ai-level*&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;; AIが思考するゲーム木の深さ&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;パラノイド戦略&#34;&gt;パラノイド戦略&lt;/h3&gt;
-
-&lt;p&gt;これまで作ってきたゲームAIプレイヤーは、いわゆる「パラノイド戦略」をとっている。
-すなわち、それぞれのAIプレイヤーは「他のプレイヤーはすべて敵で、他人を攻撃することしか眼中にない」と考えている。&lt;br /&gt;
-これは必ずしも悪い戦略ではないが、プレイヤーが3人以上になると、他の有効な戦略も存在することは覚えておきたい。
-例えば、負けているプレイヤー同士が結託して、トップのプレイヤーを攻撃する、などである。&lt;/p&gt;
-
-&lt;p&gt;しかしながら、本書のAIエンジンは、そういった協力プレイは一切計算できない。&lt;/p&gt;
-
-&lt;h2 id=&#34;20-2-サイコロを降る&#34;&gt;20.2 サイコロを降る&lt;/h2&gt;
-
-&lt;p&gt;これまでのゲームにおける重大な欠陥の1つは、サイコロを一切振っていない点である。
-これはつまりサイコロのランダム性を全く使っていないということである。&lt;/p&gt;
-
-&lt;p&gt;このバージョンにおいては、攻撃にあたって、攻撃元のマスのサイコロ、攻撃先のサイコロ、それぞれをまとめて振り、目の合計の多いほうが勝つ。
-目が同じだった場合は、防御側の勝ちとする。
-攻撃側が失敗した場合は、攻撃側のマスはサイコロを1つだけ残して、残りを防御側のプレイヤーに渡すルールとする。&lt;/p&gt;
-
-&lt;p&gt;上記のルールを実現するためには、AIプログラミング用語でいう&lt;strong&gt;確率ノード&lt;/strong&gt;(chance node)をゲーム木に足す必要がある。&lt;br /&gt;
-次に、実装を示す。&lt;/p&gt;
-
-&lt;h3 id=&#34;確率ノードを作る&#34;&gt;確率ノードを作る&lt;/h3&gt;
-
-&lt;p&gt;今まで、ゲーム木の次の手を表す遅延リストの要素は、下記の2つの項目を持つリストであった。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;car: 手の記述(攻撃の場合は、攻撃元と攻撃先のマス。手番終了)&lt;/li&gt;
-&lt;li&gt;cadr: 手が選ばれた場合の、次のゲーム木のノード&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;ここに、3つ目の項目として、攻撃が失敗した場合のゲーム木のノードを追加する。&lt;br /&gt;
-すなわち、ゲーム木のそれぞれの手から伸びる枝が、攻撃の成否によってさらに2つに分岐することになる。&lt;/p&gt;
-
-&lt;p&gt;では、&lt;code&gt;attacking-moves&lt;/code&gt;関数を拡張し、それぞれの手が確率ノードとして動作するように要素を付け足していく。&lt;br /&gt;
-ここでの変更における新しい変更は、ゲーム木に新たな手を付け加える時にもう一つの枝を足してやることである。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;attacking-moves&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;cur-player&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;spare-dice&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;labels&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;aref&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-           &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dice&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;aref&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lazy-mapcan&lt;/span&gt;
-      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lambda&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;eq&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;cur-player&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lazy-mapcan&lt;/span&gt;
-            &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lambda&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-              &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;and&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;eq&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;dst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;cur-player&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dice&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-lazy&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;list&lt;/span&gt;
-                               &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;list&lt;/span&gt;
-                                 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;list&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;src&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;dst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;game-tree&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;board-attack&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;cur-player&lt;/span&gt;
-                                                          &lt;span class=&#34;nv&#34;&gt;src&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;dst&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dice&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                                             &lt;span class=&#34;nv&#34;&gt;cur-player&lt;/span&gt;
-                                             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;spare-dice&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dice&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;dst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                                             &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;game-tree&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;board-attack-fail&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;cur-player&lt;/span&gt;
-                                                               &lt;span class=&#34;nv&#34;&gt;src&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;dst&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dice&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                                            &lt;span class=&#34;nv&#34;&gt;cur-player&lt;/span&gt;
-                                            &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;spare-dice&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dice&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;dst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                                            &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-                  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lazy-nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-            &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-lazy&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;neighbors&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lazy-nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-lazy&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;loop&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;n&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;below&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-hexnum*&lt;/span&gt;
-                   &lt;span class=&#34;nv&#34;&gt;collect&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;n&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;この確率ノードから伸びる追加の枝のゲーム盤を作るには、次に示す&lt;code&gt;board-attack-fail&lt;/code&gt;を呼び出してやる。&lt;br /&gt;
-&lt;code&gt;board-attack-fail&lt;/code&gt;は、ゲーム盤を受け取り、そして失敗した攻撃の攻撃元となったマスから、サイコロを1つだけ残して残りを取り上げた状態のゲーム盤を返す。&lt;br /&gt;
-この関数は、ゲーム盤をループして、各マスを単純にコピーしている。&lt;br /&gt;
-ただし、マスの番号が攻撃元と一致した場合に限り、そこに1個だけサイコロを残すようにする。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;board-attack-fail&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;src&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;dst&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;dice&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;board-array&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;loop&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;
-                     &lt;span class=&#34;nv&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;hex&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;across&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt;
-                     &lt;span class=&#34;nv&#34;&gt;collect&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;eq&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;list&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                 &lt;span class=&#34;nv&#34;&gt;hex&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;サイコロを実際に振る&#34;&gt;サイコロを実際に振る&lt;/h3&gt;
-
-&lt;p&gt;サイコロを振るロジックを実装する。&lt;br /&gt;
-次の関数では、引数で与えられた数のサイコロをまとめて振る。
-そして、サイコロを振った結果をメッセージに表示し、合計を返す。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;roll-dice&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dice-num&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;total&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;loop&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;repeat&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;dice-num&lt;/span&gt;
-                     &lt;span class=&#34;nv&#34;&gt;sum&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;1+&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;random&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))))&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;fresh-line&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;format&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;On ~a dice rolled ~a. &amp;#34;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;dice-num&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;total&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-    &lt;span class=&#34;nv&#34;&gt;total&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;サイコロは常に攻撃側と守備側それぞれで振ることになるため、それらをまとめて行う関数も定義する。&lt;br /&gt;
-この関数は単に&lt;code&gt;roll-dice&lt;/code&gt;を2回呼び、結果を比べるのみである。&lt;br /&gt;
-ゲーム木をたどる過程でプレイヤーがサイコロを降る手を選択したらこの関数を呼び出し、結果に応じて勝った場合の枝か、負けた場合の枝のどちらかを次のゲーム木にする。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;roll-against&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;src-dice&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;dst-dice&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;roll-dice&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;src-dice&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;rill-dice&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;dst-dice&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;ゲームエンジンからサイコロを振るコードを呼び出す&#34;&gt;ゲームエンジンからサイコロを振るコードを呼び出す&lt;/h3&gt;
-
-&lt;p&gt;ゲームエンジンにとっては、サイコロを振るのは人間かコンピュータのプレイヤーが手を選んだ時に確率ノードの枝のどちらかを選ぶときだけである。&lt;br /&gt;
-この動作は、&lt;code&gt;pick-chance-branch&lt;/code&gt;関数で実現される。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pick-chance-branch&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;branch&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;labels&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dice&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;aref&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;path&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;or&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-              &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;roll-against&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dice&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                            &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dice&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;caddr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;この関数は現在のゲーム盤と指し手のエントリを受け取り、指し手が確率ノードを持っていたら、そのどちらの枝を選ぶかを決定する。&lt;br /&gt;
-まず、指し手の&lt;code&gt;car&lt;/code&gt;を、すなわち&lt;code&gt;path&lt;/code&gt;を見て、これが&lt;code&gt;nil&lt;/code&gt;でなければこの指し手は攻撃なので、そこから攻撃元&lt;code&gt;(car path)&lt;/code&gt;と攻撃先&lt;code&gt;(cadr path)&lt;/code&gt;のマスを取り出し、それぞれのサイコロの個数を求めて&lt;code&gt;roll-against&lt;/code&gt;を呼び出す。&lt;br /&gt;
-&lt;code&gt;path&lt;/code&gt;が&lt;code&gt;nil&lt;/code&gt;ならこの手は「手番を終える」手であるため、サイコロを振る必要はない。&lt;/p&gt;
-
-&lt;p&gt;サイコロを振って攻撃が成功と出れば、確率ノードの最初のゲーム木を返す。
-攻撃が失敗に終われば、確率ノードの2番目のゲーム木を返す。&lt;/p&gt;
-
-&lt;p&gt;人間やコンピュータが指し手を選んだ時に、&lt;code&gt;pick-chance-branch&lt;/code&gt;が呼ばれるようにする。&lt;br /&gt;
-まず、人間側を実装する。以前の&lt;code&gt;web-handle-human&lt;/code&gt;からの変更点は、次のゲームの状態を表すゲーム木を返す箇所に&lt;code&gt;pick-chance-branch&lt;/code&gt;を足しただけである。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;web-handle-human&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cond&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Please choose a hex to move from:&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-        &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;eq&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;pass&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt;
-                              &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lazy-car&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;caddr&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-         &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Your reinforcements have been placed.&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-         &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;href&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-game-link&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-              &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;continue&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-        &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*from-tile*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*from-tile*&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-         &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Move cancelled.&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt;
-                 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;pick-chance-branch&lt;/span&gt;
-                   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lazy-find-if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lambda&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;equal&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;list&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*from-tile*&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                                 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;caddr&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*from-tile*&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;You may now &amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;href&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-game-link&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;pass&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;pass&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34; or make another move:&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;コンピュータ側の&lt;code&gt;handle-computer&lt;/code&gt;も同様に変更する。&lt;br /&gt;
-関数の最後に&lt;code&gt;pick-chance-branch&lt;/code&gt;を加えている。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;handle-computer&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;ratings&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;get-ratings&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;limit-tree-depth&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*ai-level*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;pick-chance-branch&lt;/span&gt;
-      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lazy-nth&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;position&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;apply&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;max&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;ratings&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;ratings&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;caddr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;ここまでの変更により、新しいダイスオブドゥームをプレイできるようになっているはずである。&lt;br /&gt;
-ただ、このコードでは、ゲームAIは確率ノードのことを考慮できておらず、全ての攻撃が成功すると思って手を計算してしまう。&lt;br /&gt;
-そこで、次章ではAIエンジンを改良して、サイコロのランダム要素を考慮できるようにする。&lt;/p&gt;
-
-&lt;h3 id=&#34;aiの改良&#34;&gt;AIの改良&lt;/h3&gt;
-
-&lt;p&gt;ゲームAIがサイコロについて考慮できるようにするためには、サイコロを振ったときの統計について知っておく必要がある。&lt;br /&gt;
-全ての可能なサイコロの個数の組み合わせについて、攻撃が成功する確率を計算したものを表で用意しておく。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*dice-probability*&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;#(#(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;0.84&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.97&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;1.0&lt;/span&gt;  &lt;span class=&#34;mf&#34;&gt;1.0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                   &lt;span class=&#34;o&#34;&gt;#(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;0.44&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.78&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.94&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.99&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                   &lt;span class=&#34;o&#34;&gt;#(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;0.15&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.45&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.74&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.91&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                   &lt;span class=&#34;o&#34;&gt;#(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;0.04&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.19&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.46&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.72&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                   &lt;span class=&#34;o&#34;&gt;#(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;0.01&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.06&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.22&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.46&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;この表は、各行が守備側のサイコロの個数(1個〜5個)、各列が攻撃側のサイコロの個数(2個〜5個)の確率を表す。&lt;br /&gt;
-例えば、攻撃側が2個、守備側が1個の時、攻撃が成功する確率は84%である。&lt;/p&gt;
-
-&lt;p&gt;AIのコードの中心となる関数は&lt;code&gt;get-ratings&lt;/code&gt;である。&lt;br /&gt;
-この関数は、可能な次の手それぞれに点数を与えるものであった。
-点数の計算にサイコロを振る成功確率を考慮に入れる変更を施すこととする。
-それぞれの攻撃について、成功した場合と失敗した場合それぞれの点数を、&lt;code&gt;*dice-probability*&lt;/code&gt;から分かる確率を使って結合する。&lt;br /&gt;
-この新しい&lt;code&gt;get-ratings&lt;/code&gt;関数では、攻撃の手について、その成功確率をテーブルから取り出し、攻撃が成功した場合の点数に乗算する。&lt;br /&gt;
-また、失敗確率(= 1 - 成功確率)を、失敗した場合の点数に乗算する。&lt;br /&gt;
-この両者の我が、攻撃手の点数である。&lt;br /&gt;
-これにより、&lt;code&gt;get-ratings&lt;/code&gt;関数は確率ノードを考慮した点数を返せるようになった。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;get-ratings&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;labels&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dice&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-               &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;aref&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;take-all&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lazy-mapcar&lt;/span&gt;
-                  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lambda&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;path&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;path&lt;/span&gt;
-                           &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;let*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;src&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                                  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dst&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                                  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;probability&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;aref&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;aref&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*dice-probability*&lt;/span&gt;
-                                                           &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;1-&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dice&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;dst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                                                     &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dice&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-                             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;probability&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;rate-position&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                                &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;probability&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;rate-position&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;caddr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                                                    &lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-                           &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;rate-position&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-                &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;caddr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;ゲームAIを確率ノードに完全に対応させるには、もう1つ小さな変更を行う。&lt;br /&gt;
-ゲーム木の大きさを制限する関数は、確率ノードから2つ枝が伸びていることを考慮する。
-そして、勝つ場合と負ける場合の両方の枝を刈り込む必要がある。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;limit-tree-depth&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;depth&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;list&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;zerop&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;depth&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-            &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lazy-nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-            &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lazy-mapcar&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lambda&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                           &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cons&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;mapcar&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lambda&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                           &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;limit-tree-depth&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;1-&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;depth&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                                   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cdr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-              &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;caddr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;各指し手のリスト&lt;code&gt;(move)&lt;/code&gt;の&lt;code&gt;cdr&lt;/code&gt;に気を刈り込む関数を&lt;code&gt;mapcar&lt;/code&gt;することで、確率ノードの両方の枝を刈り込める。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;&lt;br /&gt;
-ダイスオブドゥームのバージョン4では、アルファベータ法は使用しない。&lt;br /&gt;
-なぜなら、確率ノードがある場合のアルファベータ法は非常に複雑になるためである。&lt;/p&gt;
-
-&lt;h2 id=&#34;20-3-ダイスオブドゥームの補給ルールの改善&#34;&gt;20.3 ダイスオブドゥームの補給ルールの改善&lt;/h2&gt;
-
-&lt;p&gt;これまで、手番を終えた時に補給されるサイコロは、常に&lt;code&gt;その手番で得たサイコロの総数 - 1&lt;/code&gt;であった。&lt;br /&gt;
-この補給ルールは、ゲームが進むに連れて必ずサイコロの総数が減るため、ゲームが必ず終了し、ゲーム木が有限の大きさを持つことを保証できる。&lt;br /&gt;
-しかし、バージョン2からゲーム木は遅延ツリーになっているため、大きさが無限になっても全く問題ない。
-そこで、補給ルールを変更して、ゲームをより戦略的に面白くしてみよう。&lt;/p&gt;
-
-&lt;p&gt;新しいルールでは、補給サイコロの数は、プレイヤーが専有している連続した領域のうち最も大きいものの広さに等しいとする。&lt;br /&gt;
-こうすると、プレイヤーは、常に、領域が分断されるリスクを取れるかどうかの判断を迫れられる。あるいは、小さな領域を捨てて特攻攻撃を仕掛けるという手段もある。&lt;/p&gt;
-
-&lt;p&gt;新たな補給ルールを実現するため、まず、指定したマスを起点として、現在のプレイヤーが専有する連続した領域のマスのリストを返す&lt;code&gt;get-connected&lt;/code&gt;を定義する。&lt;br /&gt;
-この関数は、8章のGTWと同様のアルゴリズムを用いて、連続するマスを見つけ出す。
-すなわち、注目しているマスから隣接するマスへと再帰的に移動しながら、既に見たマスのリストを更新していくわけである。&lt;br /&gt;
-&lt;code&gt;get-connected&lt;/code&gt;関数では、2つのローカルな再帰関数を定義している。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;check-pos&lt;/code&gt;関数は現在見ているマスがプレイヤーの所有であり、かつまだ見たことがなければそれを&lt;code&gt;visited&lt;/code&gt;リストに追加する。&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;check-neighbors&lt;/code&gt;関数は隣接したマスのリストを受け取ってその全てをチェックする。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;この2つの関数は、相互に再帰して、連続したマスの一塊を見つけ出す。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;get-connected&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;labels&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;check-pos&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;visited&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;and&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;eq&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;aref&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;member&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;visited&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;check-neighbors&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;neighbors&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cons&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;visited&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                 &lt;span class=&#34;nv&#34;&gt;visited&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-           &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;check-neighbors&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lst&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;visited&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lst&lt;/span&gt;
-               &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;check-neighbors&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cdr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;check-pos&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;visited&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-               &lt;span class=&#34;nv&#34;&gt;visited&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;check-pos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;相互再帰の起点は、目標のマス1つと、空の&lt;code&gt;visited&lt;/code&gt;リストで&lt;code&gt;check-pos&lt;/code&gt;を呼び出すことである。
-この関数で連続するマスの1つの領域は見つけられるが、&lt;strong&gt;最大の領域&lt;/strong&gt;を見つけるために、&lt;code&gt;largest-cluster-size&lt;/code&gt;関数が必要となる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;largest-cluster-size&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;boardd&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;labels&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;visited&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;best&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-hexnum*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;and&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;eq&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;aref&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;member&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;visited&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                     &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;let*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cluster&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;get-connected&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                            &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;size&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;length&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;cluster&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;size&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;best&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                           &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;1+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;append&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;cluster&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;visited&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;size&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                           &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;1+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;append&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;cluster&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;visited&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;best&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                     &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;1+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;visited&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;best&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-               &lt;span class=&#34;nv&#34;&gt;best&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;最後に、この新しい補給ルールを反映するため、&lt;code&gt;add-new-dice&lt;/code&gt;を変更する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;add-new-dice&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;spare-dice&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;labels&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lst&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;n&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cond&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;zerop&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;n&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                   &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;null&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cur-player&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;caar&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                            &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cur-dice&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadar&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;and&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;eq&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;cur-player&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;cur-dice&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*max-dice*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                            &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cons&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;list&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;cur-player&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;1+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;cur-dice&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                                  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cdr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;1-&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;n&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                            &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cons&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cdr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;lst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;n&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))))))&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;board-array&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;coerce&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;list&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;largest-cluster-size&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;player&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;新しい&lt;code&gt;add-new-dice&lt;/code&gt;でも&lt;code&gt;spare-dice&lt;/code&gt;引数を受け取っているが、これは&lt;code&gt;add-new-dice&lt;/code&gt;を呼び出している箇所との互換性のためだけで、この引数は無視される。&lt;br /&gt;
-すなわち、追加される補給サイコロの数は最も大きな連続領域の大きさのみで決まる。&lt;br /&gt;
-&lt;code&gt;add-new-dice&lt;/code&gt;関数の変更箇所はここのみである。&lt;/p&gt;
-
-&lt;p&gt;これで、新たな補給ルールを有効にするための全てのコードが完成した。&lt;br /&gt;
-この設計では、ゲームAIのプレイヤーがゲーム木の全てにアクセスできるようになっている。
-ゲーム木はこの新たな補給を考慮したデータを持つので、ゲームAIは自動的に新たな補給ルールに合わせた最適な戦略を見つけるようになる。&lt;/p&gt;
-
-&lt;h2 id=&#34;20-4-終わりに&#34;&gt;20.4 終わりに&lt;/h2&gt;
-
-&lt;p&gt;ダイスオブドゥームのゲームは、これにて完成である。&lt;br /&gt;
-プレイするには、下記のとおりコマンドを実行する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;serve&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dod-request-handler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;そして、webブラウザで&lt;a href=&#34;http://localhost:8080/game.html&#34;&gt;ゲームページ&lt;/a&gt;を開く。&lt;/p&gt;
 </description>
       
     </item>
