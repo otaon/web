@@ -1,0 +1,47 @@
+class Device {
+  // HDD
+  disks : Disk[]
+}
+
+class Disk {
+  // ディスク
+  tracks : Track[]
+}
+
+class Track {
+  // ディスク一周分
+  clusters : Cluster[]
+}
+
+class Cluster {
+  // 複数セクタの集合
+  // ブロックの実体
+  // 物理的に連続しない場合もあり
+  sectors : Sector[64]
+}
+
+class Block {
+  // OSのAPI使用者が認識する単位
+  bytes : Byte[32Ki]
+}
+
+class Sector {
+  // トラックの一部
+  bytes : Byte[512]
+}
+
+class Byte {
+  bits : Bit[8]
+}
+
+Device *-right-- Disk
+Disk *-right-- Track
+Track *-right-- Cluster
+Cluster *-right-- Sector
+Sector *-right-- Byte
+
+Block "1" -up-> "1" Cluster
+
+Device -> "2^16=65536個" Cluster
+Device -> "2^16*64KiB=2GiB" Byte
+
