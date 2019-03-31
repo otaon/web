@@ -24,6 +24,307 @@
     </item>
     
     <item>
+      <title>Go言語入門(環境構築・プログラム作成・パッケージ作成・実行・テスト実行)</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/30/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0%E4%BD%9C%E6%88%90%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E4%BD%9C%E6%88%90%E5%AE%9F%E8%A1%8C%E3%83%86%E3%82%B9%E3%83%88%E5%AE%9F%E8%A1%8C/</link>
+      <pubDate>Sat, 30 Mar 2019 22:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/30/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0%E4%BD%9C%E6%88%90%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E4%BD%9C%E6%88%90%E5%AE%9F%E8%A1%8C%E3%83%86%E3%82%B9%E3%83%88%E5%AE%9F%E8%A1%8C/</guid>
+      
+        <description>
+
+&lt;h1 id=&#34;目的&#34;&gt;目的&lt;/h1&gt;
+
+&lt;p&gt;Go言語の学習記録として、基本的な文法などを残す。&lt;/p&gt;
+
+&lt;h1 id=&#34;参考文献&#34;&gt;参考文献&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.shoeisha.co.jp/book/detail/9784798142418&#34;&gt;スターティング Go言語&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;環境構築&#34;&gt;環境構築&lt;/h1&gt;
+
+&lt;h2 id=&#34;goをインストールする&#34;&gt;Goをインストールする&lt;/h2&gt;
+
+&lt;p&gt;GoはWindows, Mac, Linuxで使用できる。&lt;br /&gt;
+今回はWindowsでのインストール方法を記載する。他の２つでのインストールはパッケージ管理システムを使えばすぐできる。&lt;/p&gt;
+
+&lt;h3 id=&#34;chocolateyを使ってgoをインストールする&#34;&gt;Chocolateyを使ってGoをインストールする&lt;/h3&gt;
+
+&lt;p&gt;最近ではWindowsにもまともなパッケージ管理システムがある。Chocolateyというものだ。&lt;br /&gt;
+パッケージの登録基準が甘いとか風の噂で聞いたが、とにかくデファクトスタンダードになりつつある。&lt;br /&gt;
+まずはこれをインストールする。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://chocolatey.org/&#34;&gt;Chocolatey&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;インストールしたら、管理者権限でpowershellまたはコマンドプロンプトを起動する。&lt;br /&gt;
+下記のコマンドを実行して、Go言語をインストールする。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cmd&#34; data-lang=&#34;cmd&#34;&gt;choco install golang&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;既にインストール済みで、アップデートしたい場合は下記コマンドを実行する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cmd&#34; data-lang=&#34;cmd&#34;&gt;choco upgrade golang&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;環境変数を設定する&#34;&gt;環境変数を設定する&lt;/h3&gt;
+
+&lt;p&gt;chocolateyでのGo言語インストール後、下記のとおりに環境変数を設定する。&lt;br /&gt;
+各々の環境変数の役割を理解し、必要なら変更すること。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;GOROOT = C:\Go&lt;/code&gt;・・・Goのbinが格納されているフォルダの場所。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;GOPATH = C:\work\go&lt;/code&gt;・・・外部のライブラリが格納されているフォルダの場所。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;もちろん、&lt;code&gt;Path&lt;/code&gt;にはGOROOTと同じフォルダへのパスを通しておくこと。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Path = C:\Go\bin;....&lt;/code&gt; (または&lt;code&gt;%GOROOT%\bin&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;&lt;br /&gt;
+自分自身のプロジェクトと、外部パッケージを混在させたくない場合、下記の通り設定すると良い。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;GOPATH = C:\work\go;C:\Go&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;go get&lt;/code&gt;コマンドによって外部パッケージが&lt;code&gt;C:\work\go&lt;/code&gt;にダウンロードされる。&lt;/li&gt;
+&lt;li&gt;自分自身のプロジェクト&lt;code&gt;C:\Go&lt;/code&gt;が&lt;code&gt;go get&lt;/code&gt;管理下になる。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Path = C:\work\go\bin;C:\Go\bin;....&lt;/code&gt;
+
+&lt;ul&gt;
+&lt;li&gt;外部パッケージと自分自身のプロジェクト両方の&lt;code&gt;bin&lt;/code&gt;へのパスが通る。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;go言語のコマンドが使えることを確認する&#34;&gt;Go言語のコマンドが使えることを確認する&lt;/h3&gt;
+
+&lt;p&gt;コマンドプロンプト等で下記コマンドを実行してバージョンが表示されれば、Go言語が使用可能となっていることが分かる。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ go version
+go version go1.11.1 windows/amd64&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h1 id=&#34;goプログラム作成-実行-パッケージ管理-テスト実行&#34;&gt;Goプログラム作成・実行→パッケージ管理→テスト実行&lt;/h1&gt;
+
+&lt;h2 id=&#34;hello-world&#34;&gt;&lt;code&gt;Hello, World!&lt;/code&gt;&lt;/h2&gt;
+
+&lt;p&gt;何はともあれ、最初にHello, World!を実行する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;main&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+    &lt;span class=&#34;s&#34;&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Println&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Hello, World!&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;これをファイル&lt;code&gt;hello.go&lt;/code&gt;として保存し、下記コマンドを実行する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ go run hello.go
+Hello, World!&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;このように、Goプログラムのファイルパスを渡して&lt;code&gt;go run&lt;/code&gt;を実行するだけで、Goプログラムのビルドと実行を一緒に行ってくれる。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ go run &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;ファイルパス+&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;パッケージ-package&#34;&gt;パッケージ(&lt;code&gt;package&lt;/code&gt;)&lt;/h3&gt;
+
+&lt;p&gt;ここから、&lt;code&gt;Hello, World!&lt;/code&gt;のコードについて説明する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;main&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Goでは、&lt;strong&gt;プログラムの全ての要素&lt;/strong&gt;が何らかのパッケージ(&lt;code&gt;package&lt;/code&gt;)に属す必要がある。&lt;br /&gt;
+&lt;code&gt;package main&lt;/code&gt;は、「このファイルが&lt;code&gt;main&lt;/code&gt;パッケージに属す」という宣言だ。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;&lt;br /&gt;
+Goでは、&lt;u&gt;&lt;strong&gt;1つのファイルは必ず1つのパッケージにのみ属す&lt;/strong&gt;&lt;/u&gt;という決まりがある。&lt;br /&gt;
+複数の&lt;code&gt;package&lt;/code&gt;宣言があると、コンパイルエラーが発生する。&lt;/p&gt;
+
+&lt;h3 id=&#34;インポート-import&#34;&gt;インポート(&lt;code&gt;import&lt;/code&gt;)&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+    &lt;span class=&#34;s&#34;&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;import&lt;/code&gt;宣言で、ファイル内のプログラムで使用するパッケージを指定する。&lt;br /&gt;
+必要なパッケージが無ければ&lt;code&gt;import&lt;/code&gt;宣言は省略可能。&lt;br /&gt;
+上記では文字列の入出力に使用する&lt;code&gt;fmt&lt;/code&gt;パッケージをインポートしている。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;&lt;br /&gt;
+指定したパッケージは、通常は環境変数&lt;code&gt;GOPATH&lt;/code&gt;に指定したディレクトリ内のパッケージから探索される。&lt;br /&gt;
+&lt;u&gt;&lt;code&gt;&amp;quot;./animals&amp;quot;&lt;/code&gt;のように相対パスで記述することで、この&lt;code&gt;import&lt;/code&gt;が書かれているファイルから相対パス先のディレクトリを指定できる。&lt;/u&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;&lt;br /&gt;
+使用していないパッケージを&lt;code&gt;import&lt;/code&gt;すると、コンパイルエラーが発生する。&lt;br /&gt;
+&lt;u&gt;参照されていないパッケージを強制的にプログラム内に組み込む&lt;/u&gt;必要がある場合、&lt;code&gt;_&lt;/code&gt;を補うとコンパイルエラーを発生させない。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;main&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;_&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// _をつけると参照されないパッケージを取り込める
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// fmtを使用しない
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;エントリポイント-main&#34;&gt;エントリポイント&lt;code&gt;main()&lt;/code&gt;&lt;/h3&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Println&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Hello, World!&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Goプログラムのエントリポイントは、&lt;code&gt;main&lt;/code&gt;パッケージの&lt;code&gt;main()&lt;/code&gt;関数だと定められている。&lt;/p&gt;
+
+&lt;h2 id=&#34;プログラムのビルド&#34;&gt;プログラムのビルド&lt;/h2&gt;
+
+&lt;h3 id=&#34;ビルドコマンド-go-build&#34;&gt;ビルドコマンド&lt;code&gt;go build&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Goファイルを実行ファイル形式にコンパイルする。コンパイルすると、実行ファイルがGoプログラムと同じフォルダに生成される。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ go build -o hello.exe hello.go&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;ディレクトリを指定したい場合はwindowsであっても&lt;code&gt;/&lt;/code&gt;を区切り文字として使用する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ go build -o hello.exe hello/hello.go&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Goファイルを指定しないと、ディレクトリ内の全てのGoファイルを対象にビルドする。&lt;br /&gt;
+また、&lt;code&gt;-o&lt;/code&gt;で出力ファイル名を指定しないと、&lt;code&gt;ディレクトリ名.exe&lt;/code&gt;という実行ファイルを出力する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ &lt;span class=&#34;nb&#34;&gt;pwd&lt;/span&gt;
+/c/go-tutorial/hello/
+$ go build &lt;span class=&#34;c1&#34;&gt;# hello.exeが生成される&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;ビルド-実行コマンド-go-run&#34;&gt;ビルド&amp;amp;実行コマンド&lt;code&gt;go run&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;ビルドと実行を同時に行うには&lt;code&gt;go run&lt;/code&gt;コマンドを使う。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ go run hello.go&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;&lt;br /&gt;
+&lt;code&gt;go run&lt;/code&gt;コマンドを使うときは、ビルド対象ファイルを全て指定する必要がある。&lt;/p&gt;
+
+&lt;h2 id=&#34;パッケージ構成&#34;&gt;パッケージ構成&lt;/h2&gt;
+
+&lt;p&gt;複数のGoファイルでプログラムを構成する。&lt;br /&gt;
+下記のように&lt;code&gt;zoo&lt;/code&gt;というプログラムの構成を想定する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;zoo/    &lt;span class=&#34;c1&#34;&gt;# zooアプリケーション&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;- animals/ &lt;span class=&#34;c1&#34;&gt;# animalsパッケージのためのディレクトリ&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;- elephant.go
+&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;  &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;- monkey.go
+&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;  &lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;- rabbit.go
+&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt;- main.go  &lt;span class=&#34;c1&#34;&gt;# mainパッケージ&lt;/span&gt;
+&lt;span class=&#34;sb&#34;&gt;`&lt;/span&gt;- app.go   &lt;span class=&#34;c1&#34;&gt;# mainパッケージ&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;zoo/animals/elephant.go&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;animals&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;ElephantFeed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Grass&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;zoo/animals/monkey.go&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;animals&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;MonkeyFeed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Banana&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;zoo/animals/rabbit.go&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;animals&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;RabbitFeed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Carrot&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上記の&lt;code&gt;zoo/animals/*.go&lt;/code&gt;は、下記のように一つのファイルにまとめた場合と同等。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;animals&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;ElephantFeed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Grass&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;MonkeyFeed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Banana&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;RabbitFeed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Carrot&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;zoo/main.go&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;main&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+        &lt;span class=&#34;s&#34;&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
+        &lt;span class=&#34;s&#34;&gt;&amp;#34;./animals&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// 同一パッケージmain内の関数AppNameの呼び出しにはパッケージ指定が不要
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Println&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;AppName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
+
+        &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Println&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;animals&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;ElephantFeed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Println&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;animals&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;MonkeyFeed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Println&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;animals&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;RabbitFeed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;zoo/app.go&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;main&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;AppName&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Zoo Application&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上記ファイルをビルドするには、下記コマンドを実行する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ &lt;span class=&#34;nb&#34;&gt;pwd&lt;/span&gt;
+/c/go-tutorial/zoo/
+$ go build&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;&lt;br /&gt;
+1つのディレクトリには、1つのパッケージ定義のみ存在可能。&lt;br /&gt;
+つまり、&lt;code&gt;zoo/&lt;/code&gt;ディレクトリには&lt;code&gt;main&lt;/code&gt;パッケージのGoファイルのみ存在可能。&lt;br /&gt;
+異なるパッケージは、異なるフォルダに分けて格納する必要がある。&lt;/p&gt;
+
+&lt;h2 id=&#34;パッケージをテストする&#34;&gt;パッケージをテストする&lt;/h2&gt;
+
+&lt;p&gt;Goにはパッケージのテストを行うための機能が標準で備わっている。&lt;br /&gt;
+&lt;u&gt;Goでは、ファイル名が&lt;code&gt;_test.go&lt;/code&gt;で終わっているファイルをテストコードと認識する。&lt;/u&gt;&lt;br /&gt;
+&lt;u&gt;また、1つのパッケージに対して、複数のテストコードを作成可能。&lt;/u&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;テストコードを作成する&#34;&gt;テストコードを作成する&lt;/h3&gt;
+
+&lt;p&gt;上記で作成した&lt;code&gt;animals&lt;/code&gt;パッケージをテストする&lt;code&gt;animals_test.go&lt;/code&gt;ファイルの作成手順を説明する。&lt;/p&gt;
+
+&lt;p&gt;まず、テストに必要な標準パッケージ&lt;code&gt;testing&lt;/code&gt;をインポートする。&lt;br /&gt;
+先頭に&lt;code&gt;Test&lt;/code&gt;がつく関数がテスト関数となる。&lt;br /&gt;
+テスト関数内で、&lt;code&gt;t.Errorf(...)&lt;/code&gt;と記述する。これが実行された場合、関数はテスト失敗のエラーを発生させる。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;animals_test.go&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;animals&lt;/span&gt;
+
+&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+        &lt;span class=&#34;s&#34;&gt;&amp;#34;testing&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;TestElephantFeed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;testing&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;T&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;expect&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Grass&amp;#34;&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;actual&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;ElephantFeed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;expect&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;actual&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;nx&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Errorf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;%s != %s&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;expect&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;actual&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;TestMonkeyFeed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;testing&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;T&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;expect&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Banana&amp;#34;&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;actual&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;MonkeyFeed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;expect&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;actual&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;nx&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Errorf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;%s != %s&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;expect&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;actual&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;TestRabbitFeed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;testing&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;T&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;expect&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Carrot&amp;#34;&lt;/span&gt;
+        &lt;span class=&#34;nx&#34;&gt;actual&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;RabbitFeed&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;expect&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;actual&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+                &lt;span class=&#34;nx&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Errorf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;%s != %s&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;expect&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;actual&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;テストコードを実行する&#34;&gt;テストコードを実行する&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;go test&lt;/code&gt;コマンドに、テスト対象パッケージのディレクトリを指定し、テスト実行する。&lt;br /&gt;
+ディレクトリを指定しなければ、カレントディレクトリのパッケージを対象としてテスト実行する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ &lt;span class=&#34;nb&#34;&gt;pwd&lt;/span&gt;
+/c/go-tutorial/zoo/
+$ go &lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt; ./animals
+ok      /c/go-tutorial/zoo/animals   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;.127s&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code&gt;-v&lt;/code&gt;オプションを付けることで、より詳細なテスト結果を出力できる。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;$ go &lt;span class=&#34;nb&#34;&gt;test&lt;/span&gt; -v ./animals
+&lt;span class=&#34;o&#34;&gt;===&lt;/span&gt; RUN   TestElephantFeed
+--- PASS: TestElephantFeed &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;.00s&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;===&lt;/span&gt; RUN   TestMonkeyFeed
+--- PASS: TestMonkeyFeed &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;.00s&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;o&#34;&gt;===&lt;/span&gt; RUN   TestRabbitFeed
+--- PASS: TestRabbitFeed &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;.00s&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
+PASS
+ok      /c/go-tutorial/zoo/animals   &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;.124s&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+      
+    </item>
+    
+    <item>
       <title>ファイルシステムの概要</title>
       <link>https://otaon.github.io/web/ja-jp/2019/03/24/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AE%E6%A6%82%E8%A6%81/</link>
       <pubDate>Sun, 24 Mar 2019 00:00:00 +0900</pubDate>
@@ -8518,353 +8819,6 @@ AIエンジンが右側の枝を見に行く際には、スコアが8以下に�
 &lt;p&gt;&lt;strong&gt;5x5ゲーム盤でゲーム開始&lt;/strong&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-size*&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-hexnum*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-size*&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-size*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>書籍 Land of Lisp 19章 ダイスオブドゥームにグラフィカルなWebインターフェースをつける</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-19%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%81%AB%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%82%AB%E3%83%AB%E3%81%AAweb%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%82%92%E3%81%A4%E3%81%91%E3%82%8B/</link>
-      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-19%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%81%AB%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%82%AB%E3%83%AB%E3%81%AAweb%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%82%92%E3%81%A4%E3%81%91%E3%82%8B/</guid>
-      
-        <description>
-
-&lt;h2 id=&#34;t-o-c&#34;&gt;T.O.C.&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;#191-ゲーム盤をsvgフォーマットで描画する&#34;&gt;19.1 ゲーム盤をSVGフォーマットで描画する&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#192-webサーバインターフェースを作る&#34;&gt;19.2 Webサーバインターフェースを作る&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;#193-ダイスオブドゥームver3をプレイする&#34;&gt;19.3 ダイスオブドゥームVer3をプレイする&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;18章で作ったダイスオブドゥームVer2では、Ver1よりも大きなゲーム盤でプレイ可能となった。
-この規模だと、コンソールでの可視化には視認性に限界がある。&lt;br /&gt;
-そこで、この章では、ダイスオブドゥームにグラフィックをつけ、クリックして手が指せるように改造する。&lt;/p&gt;
-
-&lt;h2 id=&#34;19-1-ゲーム盤をsvgフォーマットで描画する&#34;&gt;19.1 ゲーム盤をSVGフォーマットで描画する&lt;/h2&gt;
-
-&lt;p&gt;13章でWebサーバを作成し、17章ではDSLを使ってSVGを描画した。
-これらを組み合わせれば、ブラウザ上でグラフィック表示を簡単に実現できる。&lt;/p&gt;
-
-&lt;p&gt;HTML5の規格では、SVG画像をHTMLドキュメント内に埋め込むことができるから、これを利用する方針とする。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt; ここからは、18章で作成した&lt;code&gt;dice of doom version.2&lt;/code&gt;と、13章で作成した&lt;code&gt;webserver&lt;/code&gt;と、16,17章で作成した&lt;code&gt;SVG&lt;/code&gt;レンダリングライブラリを使用する。&lt;/p&gt;
-
-&lt;p&gt;まず、ゲーム盤の各部の大きさを決める定数を定義する。&lt;br /&gt;
-ボードの幅と高さは900x500とする。&lt;br /&gt;
-&lt;code&gt;*board-scale*&lt;/code&gt;は1つの升の幅の半分の長さをピクセル数で表したものである。&lt;br /&gt;
-&lt;code&gt;*top-offset*&lt;/code&gt;は、盤の上に3マス分の空白を開けることを表す。&lt;br /&gt;
-&lt;code&gt;*dice-scale*&lt;/code&gt;は、1つのサイコロの大きさ(幅、高さ)を指定する。&lt;br /&gt;
-&lt;code&gt;*dot-size*&lt;/code&gt;はサイコロの目の点の大きさで、ここではサイコロ自体の大きさの0.05倍としている。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-width*&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;900&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;; ゲーム盤の横幅(pixel)&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-height*&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;500&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;; ゲーム盤の高さ(pixel)&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-scale*&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;64&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;; 1つのマスの幅の半分の長さ(pixel)&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*top-offset*&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;      &lt;span class=&#34;c1&#34;&gt;; ゲーム盤の上にあける空白の大きさ(何マス分か)&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*dice-scale*&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;40&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;     &lt;span class=&#34;c1&#34;&gt;; 1つのサイコロの大きさ(pixel)&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*dot-size*&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.05&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;     &lt;span class=&#34;c1&#34;&gt;; サイコロの目の大きさ(サイコロ自体の何倍か)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;サイコロを描く&#34;&gt;サイコロを描く&lt;/h3&gt;
-
-&lt;p&gt;サイコロを描くコードを示す。ここでは、サイコロを、SVGを使って全てコードとして記載する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;draw-die-svg&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;col&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;s&#34;&gt;&amp;#34;指定した座標にサイコロを1つ描画する
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   x: サイコロを描画するx座標(pixel)
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   y: サイコロを描画するy座標(pixel)
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   col: サイコロの色(RGB値)
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   ret: -&amp;#34;&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;labels&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;calc-pt&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;pt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-             &lt;span class=&#34;c1&#34;&gt;;; 描画対象の座標を補正する&lt;/span&gt;
-             &lt;span class=&#34;c1&#34;&gt;;; pt:  補正する前の座標コンスセル&lt;/span&gt;
-             &lt;span class=&#34;c1&#34;&gt;;; ret: 補正した後の座標コンスセル&lt;/span&gt;
-             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cons&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*dice-scale*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*dice-scale*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cdr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))))&lt;/span&gt;
-           &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;pol&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;col&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-             &lt;span class=&#34;c1&#34;&gt;;; 指定した頂点座標と色情報をもとにポリゴンを描画する&lt;/span&gt;
-             &lt;span class=&#34;c1&#34;&gt;;; pol: ポリゴンの頂点座標&lt;/span&gt;
-             &lt;span class=&#34;c1&#34;&gt;;; col: ポリゴンの色情報(RGB値)&lt;/span&gt;
-             &lt;span class=&#34;c1&#34;&gt;;; ret: ポリゴンのsvg記述&lt;/span&gt;
-             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;polygon&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;mapcar&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;calc-pt&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pol&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;col&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-
-    &lt;span class=&#34;c1&#34;&gt;;; サイコロの上面を描画する&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;-1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;-0.6&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.75&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;0.6&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.75&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;brightness&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;col&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;40&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-    &lt;span class=&#34;c1&#34;&gt;;; サイコロの左面を描画する&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;-0.6&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.75&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;-0.6&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.25&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-       &lt;span class=&#34;nv&#34;&gt;col&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-    &lt;span class=&#34;c1&#34;&gt;;; サイコロの右面を描画する&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;0.6&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.75&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;0.6&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.25&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;brightness&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;col&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;-40&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-    &lt;span class=&#34;c1&#34;&gt;;; サイコロの目を描画する(サイコロ1つの3面分を一気に)&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;mapc&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lambda&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;y&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-            &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;polygon&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;mapcar&lt;/span&gt;
-                       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lambda&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;xx&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;yy&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                         &lt;span class=&#34;c1&#34;&gt;;; サイコロの目を描画する&lt;/span&gt;
-                         &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;calc-pt&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cons&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;xx&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*dot-size*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                                        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;yy&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*dot-size*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))))&lt;/span&gt;
-                       &lt;span class=&#34;c1&#34;&gt;;; サイコロの目のx座標とy座標&lt;/span&gt;
-                       &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;-1&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;-1&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                       &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;-1&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;-1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                     &lt;span class=&#34;c1&#34;&gt;;; サイコロの目の色(白)&lt;/span&gt;
-                     &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-          &lt;span class=&#34;c1&#34;&gt;;; サイコロの目のx座標とy座標&lt;/span&gt;
-          &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;-0.05&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.125&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.3&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.3&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.125&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.05&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.2&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.2&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.45&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.45&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.45&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-          &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;-0.875&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.80&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.725&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.775&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.70&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.625&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.35&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.05&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.45&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.15&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.45&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.05&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;では、&lt;code&gt;x=50, y=50&lt;/code&gt;の位置に、RGB値&lt;code&gt;(255 0 0)&lt;/code&gt;(赤)のサイコロを描く。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;svg&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;100&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;100&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;draw-die-svg&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;50&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;50&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;; サイコロ1つ分のSVGコードが表示される&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;マスを描く&#34;&gt;マスを描く&lt;/h3&gt;
-
-&lt;p&gt;次に、6角マスとその上に積み上がったサイコロを描く関数を書こう。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;draw-tile-svg&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;hex&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;xx&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;yy&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;col&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;chosen-tile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;s&#34;&gt;&amp;#34;六角形のマスとその上に積み上がったサイコロを描く
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   x: マスのx座標(マス目)
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   y: マスのy座標(マス目)
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   pos: 描画対象のマス
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   hex: プレイヤーIDとサイコロ数のコンスセル
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   xx: マスの描画用x座標(pixel)
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   yy: マスの描画用y座標(pixel)
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   col: マスとサイコロの色
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   chosen-tile: 選択中のマスの番号
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   ret: -&amp;#34;&lt;/span&gt;
-  &lt;span class=&#34;c1&#34;&gt;;; マスを描く(厚みを持たせるため、縦をずらして2重に描く)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;loop&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;z&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;below&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;
-        &lt;span class=&#34;nv&#34;&gt;do&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;polygon&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;mapcar&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lambda&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;pt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                              &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cons&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;xx&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-scale*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                                    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;yy&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-scale*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cdr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;z&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))))&lt;/span&gt;
-                            &lt;span class=&#34;c1&#34;&gt;;; 六角形のマスの座標(上から時計回り)&lt;/span&gt;
-                            &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;-1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;-0.2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;-1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;.&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                    &lt;span class=&#34;c1&#34;&gt;;; 選択中のマスを明るくする&lt;/span&gt;
-                    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;eql&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;chosen-tile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;brightness&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;col&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;100&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                        &lt;span class=&#34;nv&#34;&gt;col&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-  &lt;span class=&#34;c1&#34;&gt;;; サイコロを描く&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;loop&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;z&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;below&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;second&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;hex&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-        &lt;span class=&#34;nv&#34;&gt;do&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;draw-die-svg&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;xx&lt;/span&gt;
-                            &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*dice-scale*&lt;/span&gt;
-                               &lt;span class=&#34;mf&#34;&gt;0.3&lt;/span&gt;
-                               &lt;span class=&#34;c1&#34;&gt;;; サイコロを左右にブレさせる&lt;/span&gt;
-                               &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;oddp&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;z&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                                   &lt;span class=&#34;mf&#34;&gt;-0.3&lt;/span&gt;
-                                   &lt;span class=&#34;mf&#34;&gt;0.3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                         &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;yy&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*dice-scale*&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;z&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.8&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                         &lt;span class=&#34;nv&#34;&gt;col&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;では、1マス分のタイルを描く。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;svg&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;300&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;300&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;draw-tile-svg&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;100&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;150&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;; サイコロ3つが載ったタイル1つ分のSVGコードが表示される&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;ゲーム盤を描く&#34;&gt;ゲーム盤を描く&lt;/h3&gt;
-
-&lt;p&gt;ゲーム盤全体をSVG画像として描く。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;c1&#34;&gt;;; サイコロの色(赤と青)&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*die-colors*&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;63&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;63&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;63&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;63&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;SVGには、webリンクを埋め込むことができる。&lt;br /&gt;
-これは、通常のHTMLにおける&lt;code&gt;&amp;lt;a href=&amp;quot;...&amp;quot;&amp;gt;&lt;/code&gt;によるハイパーリンクと同様に動作する。&lt;br /&gt;
-プレイヤーが次に選択できるマスについて、そのマスのSVGをリンクで囲んでやることにより、マスがクリック可能になる。&lt;/p&gt;
-
-&lt;p&gt;ゲーム盤は、斜めから見下ろした形で描画するため、真上からみた形の座標を変換している。&lt;br /&gt;
-また、奥に行くにつれてマスを暗くすることにより、奥行きを出している。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;draw-board-svg&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;chosen-tile&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;legal-tiles&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;s&#34;&gt;&amp;#34;ゲーム盤をsvg記述する
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   board: ゲーム盤情報
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   chosen-tile: 選択中のマス
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   legal-tiles: プレイヤーが次に選択可能なマスのリスト
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   ret: -&amp;#34;&lt;/span&gt;
-  &lt;span class=&#34;c1&#34;&gt;;; ゲーム盤の全マスを走査する&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;loop&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;below&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-size*&lt;/span&gt;
-        &lt;span class=&#34;nv&#34;&gt;do&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;loop&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;below&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-size*&lt;/span&gt;
-                 &lt;span class=&#34;c1&#34;&gt;;; 現在のマスの番号&lt;/span&gt;
-                 &lt;span class=&#34;nv&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-size*&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;y&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                 &lt;span class=&#34;c1&#34;&gt;;; 現在のマスの情報(プレイヤーIDとサイコロ数)&lt;/span&gt;
-                 &lt;span class=&#34;nv&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;hex&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;aref&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                 &lt;span class=&#34;c1&#34;&gt;;; 現在のマスの表示座標(x座標)&lt;/span&gt;
-                 &lt;span class=&#34;nv&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;xx&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-scale*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-size*&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;y&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                 &lt;span class=&#34;c1&#34;&gt;;; 現在のマスの表示座標(y座標)&lt;/span&gt;
-                 &lt;span class=&#34;nv&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;yy&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-scale*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.7&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*top-offset*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                 &lt;span class=&#34;c1&#34;&gt;;; マスとサイコロの色(上の行ほど暗く補正する)&lt;/span&gt;
-                 &lt;span class=&#34;nv&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;col&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;brightness&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;nth&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;first&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;hex&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*die-colors*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;-15&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-size*&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;y&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                 &lt;span class=&#34;c1&#34;&gt;;; 現在のマスが、プレイヤーが次に選択可能なマス、または、選択中のマスの場合、&lt;/span&gt;
-                 &lt;span class=&#34;c1&#34;&gt;;; リンクで囲ってクリック可能にする&lt;/span&gt;
-                 &lt;span class=&#34;c1&#34;&gt;;; 現在のマスが、それ以外の場合、そのまま選択される&lt;/span&gt;
-                 &lt;span class=&#34;nv&#34;&gt;do&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;or&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;member&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;legal-tiles&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;eql&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;chosen-tile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                        &lt;span class=&#34;c1&#34;&gt;;; リンクの場合は1マス分を&amp;lt;g&amp;gt;タグで囲んでグルーピングする&lt;/span&gt;
-                        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;g&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
-                             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;xlink:href&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-game-link&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                                  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;draw-tile-svg&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;hex&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;xx&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;yy&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;col&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;chosen-tile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;draw-tile-svg&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;hex&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;xx&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;yy&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;col&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;chosen-tile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;make-game-link&lt;/code&gt;は、適切なURLを作って返す関数である。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;make-game-link&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;s&#34;&gt;&amp;#34;リンクするURLを生成する
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   pos: リンク対象のマスの番号
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   ret: -&amp;#34;&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;format&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;/game.html?chosen=~a&amp;#34;&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;下記を実行した結果をファイルに保存してwebブラウザで表示すると、ゲーム盤が表示される。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;svg&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-width*&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-height*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;draw-board-svg&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;gen-board&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;; ゲーム盤のSVGコードが表示される&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&#34;19-2-webサーバインターフェースを作る&#34;&gt;19.2 Webサーバインターフェースを作る&lt;/h2&gt;
-
-&lt;h3 id=&#34;リクエストハンドラの作成&#34;&gt;リクエストハンドラの作成&lt;/h3&gt;
-
-&lt;p&gt;webサーバの中心となる関数は、&lt;code&gt;dod-request-handler&lt;/code&gt;である。
-この関数は、先に作ったwebブラウザからくる全てのリクエストを処理する役割を持つ。
-次に示すのが、&lt;code&gt;dod-request-handler&lt;/code&gt;のコードである。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;c1&#34;&gt;;; 現在のゲーム木&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defparameter&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*from-tile*&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;dod-request-handler&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;path&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;header&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;params&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;s&#34;&gt;&amp;#34;Webブラウザから来る全てのリクエストを処理する
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   path: URL
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   header: *未使用*
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   params: URLのパラメータ
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   ret: -&amp;#34;&lt;/span&gt;
-  &lt;span class=&#34;c1&#34;&gt;;; アクセスされたURLがgame.htmlならゲーム処理する&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;equal&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;path&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;game.html&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-      &lt;span class=&#34;c1&#34;&gt;;; doctypeを指定して、html5だと認識させる&lt;/span&gt;
-      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;progn&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;lt;!doctype html&amp;gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;center&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
-                  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Welcome to DICE OF DOOM!&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;br&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
-                  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;chosen&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;assoc&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;chosen&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;params&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                    &lt;span class=&#34;c1&#34;&gt;;; どのマスも選択されていないか、ゲーム木が空なら、&lt;/span&gt;
-                    &lt;span class=&#34;c1&#34;&gt;;; ゲームを初期化する&lt;/span&gt;
-                    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;when&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;or&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;chosen&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;chosen&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;web-initialize&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                    &lt;span class=&#34;c1&#34;&gt;;; ゲーム木における可能な手が空なら、ゲームを終了させる&lt;/span&gt;
-                    &lt;span class=&#34;c1&#34;&gt;;; 人間のプレイヤーの手番なら、パラメータから指し手を取得し、htmlを組み立てる&lt;/span&gt;
-                    &lt;span class=&#34;c1&#34;&gt;;; ゲームAIの手番なら、ゲームAIに指し手を選ばせ、htmlを組み立てる&lt;/span&gt;
-                    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cond&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lazy-null&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;caddr&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                           &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;web-announce-winner&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                          &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;zerop&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                           &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;web-handle-human&lt;/span&gt;
-                             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;when&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;chosen&lt;/span&gt;
-                               &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;read-from-string&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cdr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;chosen&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))))&lt;/span&gt;
-                          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;web-handle-computer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-                  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;br&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;())&lt;/span&gt;
-                  &lt;span class=&#34;c1&#34;&gt;;; ゲーム盤を描く&lt;/span&gt;
-                  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;draw-dod-page&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*from-tile*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-      &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Sorry... I don&amp;#39;t know that page.&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code&gt;dod-request-handler&lt;/code&gt;では、まず、リクエストされたページが&lt;code&gt;game.html&lt;/code&gt;であるかどうかをチェックする。&lt;br /&gt;
-このページが、webサーバ上でゲームを置いておくことにするページである。&lt;/p&gt;
-
-&lt;p&gt;ページの先頭では、まず*doctype*を指定する。
-これにより、webブラウザは返されたページがHTML5であると認識する。&lt;br /&gt;
-その後、オープニングメッセージを画面中央に表示するHTMLを出力する。&lt;/p&gt;
-
-&lt;h3 id=&#34;このゲームwebサーバの制限&#34;&gt;このゲームwebサーバの制限&lt;/h3&gt;
-
-&lt;p&gt;このwebサーバには、制限が存在する。&lt;br /&gt;
-まず、処理を簡単にするため、&lt;code&gt;dod-request-handler&lt;/code&gt;は誰からのwebリクエストが来たのかを一切チェックしていない。&lt;br /&gt;
-したがって、複数のプレイヤーが別々のゲームを同時にプレイしようとしたら、&lt;code&gt;dod-request-handler&lt;/code&gt;は正常に動作しない。&lt;br /&gt;
-マルチユーザ対応したいのであれば、セッション情報をキーとするハッシュテーブルに、グローバル変数の情報を格納してしまうことにより、ユーザごとのゲーム木を保持させることができる。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;dod-request-handler&lt;/code&gt;のもう一つの制限は、URLからの情報を読むために&lt;code&gt;read-from-string&lt;/code&gt;関数を使っていることである。&lt;br /&gt;
-この関数は、悪意のあるLispプログラマであれば、簡単に任意コードを実行されてしまう。&lt;br /&gt;
-したがって、このサーバをインターネット上に公開するのは強く非推奨である。&lt;/p&gt;
-
-&lt;h3 id=&#34;ゲームを初期化する&#34;&gt;ゲームを初期化する&lt;/h3&gt;
-
-&lt;p&gt;新規にダイスオブドゥームを始めるために、ゲームエンジンを初期化する&lt;code&gt;web-initialize&lt;/code&gt;のコードを次に示す。
-&lt;code&gt;dod-request-handler&lt;/code&gt;では、&lt;code&gt;param&lt;/code&gt;を見て、ゲーム木が空、あるいは、どのマスも選択されていない場合、&lt;code&gt;web-initialize&lt;/code&gt;関数を呼んでゲームを新規で開始する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;web-initialize&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
-  &lt;span class=&#34;s&#34;&gt;&amp;#34;ゲームエンジンを初期化する
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   ret: -&amp;#34;&lt;/span&gt;
-  &lt;span class=&#34;c1&#34;&gt;;; ランダムなゲーム盤を作成して保持する&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*from-tile*&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;game-tree&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;gen-board&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;t&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;勝者を表示する&#34;&gt;勝者を表示する&lt;/h3&gt;
-
-&lt;p&gt;webブラウザに勝者を表示する関数を示す。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;web-announce-winner&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;s&#34;&gt;&amp;#34;勝者を表示する&amp;#34;&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;fresh-line&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;let&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;w&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;winners&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;board&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;length&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;w&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;format&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;The game is a tie between ~a&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;mapcar&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;player-letter&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;w&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;format&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;The winner is ~a&amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;player-letter&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;w&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))))&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;href&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;game.html&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34; play again&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;人間のプレイヤーの処理&#34;&gt;人間のプレイヤーの処理&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;web-handle-human&lt;/code&gt;は、人間のプレイヤーの手番である場合のHTMLページの作成を行う。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;web-handle-human&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;s&#34;&gt;&amp;#34;人間のプレイヤーを処理する
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   pos: 選択したマスの番号&amp;#34;&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cond&lt;/span&gt;
-    &lt;span class=&#34;c1&#34;&gt;;; マスを未選択:&lt;/span&gt;
-    &lt;span class=&#34;c1&#34;&gt;;; 攻撃元のマス選択メッセージを表示&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Please choose a hex to move from:&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-    &lt;span class=&#34;c1&#34;&gt;;; パスを選択済み:&lt;/span&gt;
-    &lt;span class=&#34;c1&#34;&gt;;; プレイヤーの補給が完了したとメッセージを表示&lt;/span&gt;
-    &lt;span class=&#34;c1&#34;&gt;;; パラメータにnilを渡すcontinueリンクを表示&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;eq&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;pass&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt;
-                          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lazy-car&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;caddr&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-                    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Your reinforcements have been placed.&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;href&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-game-link&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                         &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;continue&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-    &lt;span class=&#34;c1&#34;&gt;;; マスを選択済み &amp;amp; 攻撃元のタイルがセットされていない:&lt;/span&gt;
-    &lt;span class=&#34;c1&#34;&gt;;; 今選ばれたマスを攻撃元としてセット&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;not&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*from-tile*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*from-tile*&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Now choose a destination:&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-    &lt;span class=&#34;c1&#34;&gt;;; 今選択したマスが攻撃元のタイルと同じ:&lt;/span&gt;
-    &lt;span class=&#34;c1&#34;&gt;;; 攻撃元のタイルをリセット&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;eq&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*from-tile*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*from-tile*&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Move cancelled.&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-    &lt;span class=&#34;c1&#34;&gt;;; 上記以外(=攻撃元と攻撃先を選択完了した):&lt;/span&gt;
-    &lt;span class=&#34;c1&#34;&gt;;; 攻撃元と攻撃先に対応するゲーム木に遷移する&lt;/span&gt;
-    &lt;span class=&#34;c1&#34;&gt;;; 次の手を指すかパスするかを選ばせる&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;no&#34;&gt;t&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt;
-             &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lazy-find-if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lambda&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                   &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;equal&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                          &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;list&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*from-tile*&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;pos&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                                 &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;caddr&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;
-       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*from-tile*&lt;/span&gt; &lt;span class=&#34;no&#34;&gt;nil&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;You may now &amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;href&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;make-game-link&lt;/span&gt; &lt;span class=&#34;ss&#34;&gt;&amp;#39;pass&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-            &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;pass&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34; or make another move:&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;コンピュータプレイヤの処理&#34;&gt;コンピュータプレイヤの処理&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;web-handle-computer&lt;/code&gt;は、ゲームAIプレイヤーの手番である場合のHTMLページの作成を行う。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;web-handle-computer&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
-  &lt;span class=&#34;s&#34;&gt;&amp;#34;ゲームAIプレイヤーを処理する&amp;#34;&lt;/span&gt;
-  &lt;span class=&#34;c1&#34;&gt;;; ゲームAIにゲーム木を遷移させる&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;setf&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;handle-computer&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*cur-game-tree*&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;The computer has moved. &amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;c1&#34;&gt;;; webブラウザを5秒毎にリロードさせる&lt;/span&gt;
-  &lt;span class=&#34;c1&#34;&gt;;; これによりリロードしたときにはコンピュータの手番とさせるために、chosen=NILとしている&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tag&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;script&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
-       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;princ&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;window.setTimeout(&amp;#39;window.location=\&amp;#34;game.html?chosen=NIL\&amp;#34;&amp;#39;,5000)&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;htmlの中にsvgゲーム盤を描く&#34;&gt;HTMLの中にSVGゲーム盤を描く&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;draw-dod-page&lt;/code&gt;関数は、ゲームサーバとSVG生成コードとをつなぎ、現在のゲーム盤を描く。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;defun&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;draw-dod-page&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;selected-tile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-  &lt;span class=&#34;s&#34;&gt;&amp;#34;HTMLの中にSVGゲーム盤を描く
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   tree: ゲーム木
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;   selected-tile: タイルを選択中か&amp;#34;&lt;/span&gt;
-  &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;svg&lt;/span&gt; &lt;span class=&#34;vg&#34;&gt;*board-width*&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;; ゲーム盤の幅&lt;/span&gt;
-       &lt;span class=&#34;vg&#34;&gt;*board-height*&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;; ゲーム盤の高さ&lt;/span&gt;
-       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;draw-board-svg&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                       &lt;span class=&#34;nv&#34;&gt;selected-tile&lt;/span&gt;
-                       &lt;span class=&#34;c1&#34;&gt;;; プレイヤーが選択可能なマスのリストを計算する&lt;/span&gt;
-                       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;take-all&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;selected-tile&lt;/span&gt;
-                                     &lt;span class=&#34;c1&#34;&gt;;; 攻撃元のタイルを選択中なら、&lt;/span&gt;
-                                     &lt;span class=&#34;c1&#34;&gt;;; 有効な攻撃先を全て収集する&lt;/span&gt;
-                                     &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lazy-mapcar&lt;/span&gt;
-                                       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lambda&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                         &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;when&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;eql&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;caar&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                                    &lt;span class=&#34;nv&#34;&gt;selected-tile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-                                           &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;cadar&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;move&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))&lt;/span&gt;
-                                       &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;caddr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
-                                     &lt;span class=&#34;c1&#34;&gt;;; 攻撃元のタイルを選択していなかったら、&lt;/span&gt;
-                                     &lt;span class=&#34;c1&#34;&gt;;; 有効な攻撃から、攻撃元を収集する&lt;/span&gt;
-                                     &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;lazy-mapcar&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;caar&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;caddr&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;tree&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)))))))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h2 id=&#34;19-3-ダイスオブドゥームver3をプレイする&#34;&gt;19.3 ダイスオブドゥームVer3をプレイする&lt;/h2&gt;
-
-&lt;p&gt;サーバ側で下記のコマンドを叩くことでゲームを起動できる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-lisp&#34; data-lang=&#34;lisp&#34;&gt;&lt;span class=&#34;nv&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;serve&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;#&amp;#39;&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;dod-request-handler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;次に、クライアント側のwebブラウザで&lt;a href=&#34;http://localhost:8080/game.html&#34;&gt;ゲームページ&lt;/a&gt;にアクセスする。&lt;/p&gt;
-</description>
       
     </item>
     

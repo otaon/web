@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>Go言語入門(環境構築・プログラム作成・パッケージ作成・実行・テスト実行) · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="目的 Go言語の学習記録として、基本的な文法などを残す。 参考文献 スターティング Go言語 環境構築 Goをインストールする GoはWindows, Mac, L" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/03/30/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0%E4%BD%9C%E6%88%90%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E4%BD%9C%E6%88%90%E5%AE%9F%E8%A1%8C%E3%83%86%E3%82%B9%E3%83%88%E5%AE%9F%E8%A1%8C/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="Go言語入門(環境構築・プログラム作成・パッケージ作成・実行・テスト実行)" />
+<meta property="og:description" content="目的 Go言語の学習記録として、基本的な文法などを残す。 参考文献 スターティング Go言語 環境構築 Goをインストールする GoはWindows, Mac, L" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/30/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E7%92%B0%E5%A2%83%E6%A7%8B%E7%AF%89%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%A0%E4%BD%9C%E6%88%90%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E4%BD%9C%E6%88%90%E5%AE%9F%E8%A1%8C%E3%83%86%E3%82%B9%E3%83%88%E5%AE%9F%E8%A1%8C/" />
+<meta property="article:published_time" content="2019-03-30T22:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-03-30T22:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="Go言語入門(環境構築・プログラム作成・パッケージ作成・実行・テスト実行)">
+<meta itemprop="description" content="目的 Go言語の学習記録として、基本的な文法などを残す。 参考文献 スターティング Go言語 環境構築 Goをインストールする GoはWindows, Mac, L">
+
+
+<meta itemprop="datePublished" content="2019-03-30T22:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-03-30T22:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="2952">
+
+
+
+<meta itemprop="keywords" content="Go,Golang," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go言語入門(環境構築・プログラム作成・パッケージ作成・実行・テスト実行)"/>
+<meta name="twitter:description" content="目的 Go言語の学習記録として、基本的な文法などを残す。 参考文献 スターティング Go言語 環境構築 Goをインストールする GoはWindows, Mac, L"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">Go言語入門(環境構築・プログラム作成・パッケージ作成・実行・テスト実行)</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-03-30
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/go/">Go</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/golang/">Golang</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h1 id="目的">目的</h1>
+
+<p>Go言語の学習記録として、基本的な文法などを残す。</p>
+
+<h1 id="参考文献">参考文献</h1>
+
+<ul>
+<li><a href="https://www.shoeisha.co.jp/book/detail/9784798142418">スターティング Go言語</a></li>
+</ul>
+
+<h1 id="環境構築">環境構築</h1>
+
+<h2 id="goをインストールする">Goをインストールする</h2>
+
+<p>GoはWindows, Mac, Linuxで使用できる。<br />
+今回はWindowsでのインストール方法を記載する。他の２つでのインストールはパッケージ管理システムを使えばすぐできる。</p>
+
+<h3 id="chocolateyを使ってgoをインストールする">Chocolateyを使ってGoをインストールする</h3>
+
+<p>最近ではWindowsにもまともなパッケージ管理システムがある。Chocolateyというものだ。<br />
+パッケージの登録基準が甘いとか風の噂で聞いたが、とにかくデファクトスタンダードになりつつある。<br />
+まずはこれをインストールする。</p>
+
+<ul>
+<li><a href="https://chocolatey.org/">Chocolatey</a></li>
+</ul>
+
+<p>インストールしたら、管理者権限でpowershellまたはコマンドプロンプトを起動する。<br />
+下記のコマンドを実行して、Go言語をインストールする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cmd" data-lang="cmd">choco install golang</code></pre></div>
+<p>既にインストール済みで、アップデートしたい場合は下記コマンドを実行する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cmd" data-lang="cmd">choco upgrade golang</code></pre></div>
+<h3 id="環境変数を設定する">環境変数を設定する</h3>
+
+<p>chocolateyでのGo言語インストール後、下記のとおりに環境変数を設定する。<br />
+各々の環境変数の役割を理解し、必要なら変更すること。</p>
+
+<ul>
+<li><code>GOROOT = C:\Go</code>・・・Goのbinが格納されているフォルダの場所。</li>
+<li><code>GOPATH = C:\work\go</code>・・・外部のライブラリが格納されているフォルダの場所。</li>
+</ul>
+
+<p>もちろん、<code>Path</code>にはGOROOTと同じフォルダへのパスを通しておくこと。</p>
+
+<ul>
+<li><code>Path = C:\Go\bin;....</code> (または<code>%GOROOT%\bin</code>)</li>
+</ul>
+
+<p><strong>NOTE</strong><br />
+自分自身のプロジェクトと、外部パッケージを混在させたくない場合、下記の通り設定すると良い。</p>
+
+<ul>
+<li><code>GOPATH = C:\work\go;C:\Go</code>
+
+<ul>
+<li><code>go get</code>コマンドによって外部パッケージが<code>C:\work\go</code>にダウンロードされる。</li>
+<li>自分自身のプロジェクト<code>C:\Go</code>が<code>go get</code>管理下になる。</li>
+</ul></li>
+<li><code>Path = C:\work\go\bin;C:\Go\bin;....</code>
+
+<ul>
+<li>外部パッケージと自分自身のプロジェクト両方の<code>bin</code>へのパスが通る。</li>
+</ul></li>
+</ul>
+
+<h3 id="go言語のコマンドが使えることを確認する">Go言語のコマンドが使えることを確認する</h3>
+
+<p>コマンドプロンプト等で下記コマンドを実行してバージョンが表示されれば、Go言語が使用可能となっていることが分かる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ go version
+go version go1.11.1 windows/amd64</code></pre></div>
+<h1 id="goプログラム作成-実行-パッケージ管理-テスト実行">Goプログラム作成・実行→パッケージ管理→テスト実行</h1>
+
+<h2 id="hello-world"><code>Hello, World!</code></h2>
+
+<p>何はともあれ、最初にHello, World!を実行する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Hello, World!&#34;</span><span class="p">)</span>
+<span class="p">}</span></code></pre></div>
+<p>これをファイル<code>hello.go</code>として保存し、下記コマンドを実行する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ go run hello.go
+Hello, World!</code></pre></div>
+<p>このように、Goプログラムのファイルパスを渡して<code>go run</code>を実行するだけで、Goプログラムのビルドと実行を一緒に行ってくれる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ go run <span class="o">[</span>ファイルパス+<span class="o">]</span></code></pre></div>
+<h3 id="パッケージ-package">パッケージ(<code>package</code>)</h3>
+
+<p>ここから、<code>Hello, World!</code>のコードについて説明する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span></code></pre></div>
+<p>Goでは、<strong>プログラムの全ての要素</strong>が何らかのパッケージ(<code>package</code>)に属す必要がある。<br />
+<code>package main</code>は、「このファイルが<code>main</code>パッケージに属す」という宣言だ。</p>
+
+<p><strong>NOTE</strong><br />
+Goでは、<u><strong>1つのファイルは必ず1つのパッケージにのみ属す</strong></u>という決まりがある。<br />
+複数の<code>package</code>宣言があると、コンパイルエラーが発生する。</p>
+
+<h3 id="インポート-import">インポート(<code>import</code>)</h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span></code></pre></div>
+<p><code>import</code>宣言で、ファイル内のプログラムで使用するパッケージを指定する。<br />
+必要なパッケージが無ければ<code>import</code>宣言は省略可能。<br />
+上記では文字列の入出力に使用する<code>fmt</code>パッケージをインポートしている。</p>
+
+<p><strong>NOTE</strong><br />
+指定したパッケージは、通常は環境変数<code>GOPATH</code>に指定したディレクトリ内のパッケージから探索される。<br />
+<u><code>&quot;./animals&quot;</code>のように相対パスで記述することで、この<code>import</code>が書かれているファイルから相対パス先のディレクトリを指定できる。</u></p>
+
+<p><strong>NOTE</strong><br />
+使用していないパッケージを<code>import</code>すると、コンパイルエラーが発生する。<br />
+<u>参照されていないパッケージを強制的にプログラム内に組み込む</u>必要がある場合、<code>_</code>を補うとコンパイルエラーを発生させない。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="nx">_</span> <span class="s">&#34;fmt&#34;</span> <span class="c1">// _をつけると参照されないパッケージを取り込める
+</span><span class="c1"></span><span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// fmtを使用しない
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<h3 id="エントリポイント-main">エントリポイント<code>main()</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Hello, World!&#34;</span><span class="p">)</span>
+<span class="p">}</span></code></pre></div>
+<p>Goプログラムのエントリポイントは、<code>main</code>パッケージの<code>main()</code>関数だと定められている。</p>
+
+<h2 id="プログラムのビルド">プログラムのビルド</h2>
+
+<h3 id="ビルドコマンド-go-build">ビルドコマンド<code>go build</code></h3>
+
+<p>Goファイルを実行ファイル形式にコンパイルする。コンパイルすると、実行ファイルがGoプログラムと同じフォルダに生成される。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ go build -o hello.exe hello.go</code></pre></div>
+<p>ディレクトリを指定したい場合はwindowsであっても<code>/</code>を区切り文字として使用する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ go build -o hello.exe hello/hello.go</code></pre></div>
+<p>Goファイルを指定しないと、ディレクトリ内の全てのGoファイルを対象にビルドする。<br />
+また、<code>-o</code>で出力ファイル名を指定しないと、<code>ディレクトリ名.exe</code>という実行ファイルを出力する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ <span class="nb">pwd</span>
+/c/go-tutorial/hello/
+$ go build <span class="c1"># hello.exeが生成される</span></code></pre></div>
+<h3 id="ビルド-実行コマンド-go-run">ビルド&amp;実行コマンド<code>go run</code></h3>
+
+<p>ビルドと実行を同時に行うには<code>go run</code>コマンドを使う。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ go run hello.go</code></pre></div>
+<p><strong>NOTE</strong><br />
+<code>go run</code>コマンドを使うときは、ビルド対象ファイルを全て指定する必要がある。</p>
+
+<h2 id="パッケージ構成">パッケージ構成</h2>
+
+<p>複数のGoファイルでプログラムを構成する。<br />
+下記のように<code>zoo</code>というプログラムの構成を想定する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">zoo/    <span class="c1"># zooアプリケーション</span>
+<span class="p">|</span>- animals/ <span class="c1"># animalsパッケージのためのディレクトリ</span>
+<span class="p">|</span>  <span class="p">|</span>- elephant.go
+<span class="p">|</span>  <span class="p">|</span>- monkey.go
+<span class="p">|</span>  <span class="sb">`</span>- rabbit.go
+<span class="p">|</span>- main.go  <span class="c1"># mainパッケージ</span>
+<span class="sb">`</span>- app.go   <span class="c1"># mainパッケージ</span></code></pre></div>
+<p><code>zoo/animals/elephant.go</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">animals</span>
+
+<span class="kd">func</span> <span class="nf">ElephantFeed</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&#34;Grass&#34;</span>
+<span class="p">}</span></code></pre></div>
+<p><code>zoo/animals/monkey.go</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">animals</span>
+
+<span class="kd">func</span> <span class="nf">MonkeyFeed</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&#34;Banana&#34;</span>
+<span class="p">}</span></code></pre></div>
+<p><code>zoo/animals/rabbit.go</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">animals</span>
+
+<span class="kd">func</span> <span class="nf">RabbitFeed</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&#34;Carrot&#34;</span>
+<span class="p">}</span></code></pre></div>
+<p>上記の<code>zoo/animals/*.go</code>は、下記のように一つのファイルにまとめた場合と同等。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">animals</span>
+
+<span class="kd">func</span> <span class="nf">ElephantFeed</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&#34;Grass&#34;</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">MonkeyFeed</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&#34;Banana&#34;</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">RabbitFeed</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&#34;Carrot&#34;</span>
+<span class="p">}</span></code></pre></div>
+<p><code>zoo/main.go</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span><span class="p">(</span>
+        <span class="s">&#34;fmt&#34;</span>
+        <span class="s">&#34;./animals&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// 同一パッケージmain内の関数AppNameの呼び出しにはパッケージ指定が不要
+</span><span class="c1"></span>        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nf">AppName</span><span class="p">())</span>
+
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">animals</span><span class="p">.</span><span class="nf">ElephantFeed</span><span class="p">())</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">animals</span><span class="p">.</span><span class="nf">MonkeyFeed</span><span class="p">())</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">animals</span><span class="p">.</span><span class="nf">RabbitFeed</span><span class="p">())</span>
+<span class="p">}</span></code></pre></div>
+<p><code>zoo/app.go</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kd">func</span> <span class="nf">AppName</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&#34;Zoo Application&#34;</span>
+<span class="p">}</span></code></pre></div>
+<p>上記ファイルをビルドするには、下記コマンドを実行する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ <span class="nb">pwd</span>
+/c/go-tutorial/zoo/
+$ go build</code></pre></div>
+<p><strong>NOTE</strong><br />
+1つのディレクトリには、1つのパッケージ定義のみ存在可能。<br />
+つまり、<code>zoo/</code>ディレクトリには<code>main</code>パッケージのGoファイルのみ存在可能。<br />
+異なるパッケージは、異なるフォルダに分けて格納する必要がある。</p>
+
+<h2 id="パッケージをテストする">パッケージをテストする</h2>
+
+<p>Goにはパッケージのテストを行うための機能が標準で備わっている。<br />
+<u>Goでは、ファイル名が<code>_test.go</code>で終わっているファイルをテストコードと認識する。</u><br />
+<u>また、1つのパッケージに対して、複数のテストコードを作成可能。</u></p>
+
+<h3 id="テストコードを作成する">テストコードを作成する</h3>
+
+<p>上記で作成した<code>animals</code>パッケージをテストする<code>animals_test.go</code>ファイルの作成手順を説明する。</p>
+
+<p>まず、テストに必要な標準パッケージ<code>testing</code>をインポートする。<br />
+先頭に<code>Test</code>がつく関数がテスト関数となる。<br />
+テスト関数内で、<code>t.Errorf(...)</code>と記述する。これが実行された場合、関数はテスト失敗のエラーを発生させる。</p>
+
+<p><code>animals_test.go</code></p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">animals</span>
+
+<span class="kn">import</span><span class="p">(</span>
+        <span class="s">&#34;testing&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">TestElephantFeed</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">expect</span> <span class="o">:=</span> <span class="s">&#34;Grass&#34;</span>
+        <span class="nx">actual</span> <span class="o">:=</span> <span class="nf">ElephantFeed</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nx">expect</span> <span class="o">!=</span> <span class="nx">actual</span> <span class="p">{</span>
+                <span class="nx">t</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;%s != %s&#34;</span><span class="p">,</span> <span class="nx">expect</span><span class="p">,</span> <span class="nx">actual</span><span class="p">)</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">TestMonkeyFeed</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">expect</span> <span class="o">:=</span> <span class="s">&#34;Banana&#34;</span>
+        <span class="nx">actual</span> <span class="o">:=</span> <span class="nf">MonkeyFeed</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nx">expect</span> <span class="o">!=</span> <span class="nx">actual</span> <span class="p">{</span>
+                <span class="nx">t</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;%s != %s&#34;</span><span class="p">,</span> <span class="nx">expect</span><span class="p">,</span> <span class="nx">actual</span><span class="p">)</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">TestRabbitFeed</span><span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">testing</span><span class="p">.</span><span class="nx">T</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">expect</span> <span class="o">:=</span> <span class="s">&#34;Carrot&#34;</span>
+        <span class="nx">actual</span> <span class="o">:=</span> <span class="nf">RabbitFeed</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nx">expect</span> <span class="o">!=</span> <span class="nx">actual</span> <span class="p">{</span>
+                <span class="nx">t</span><span class="p">.</span><span class="nf">Errorf</span><span class="p">(</span><span class="s">&#34;%s != %s&#34;</span><span class="p">,</span> <span class="nx">expect</span><span class="p">,</span> <span class="nx">actual</span><span class="p">)</span>
+        <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+<h3 id="テストコードを実行する">テストコードを実行する</h3>
+
+<p><code>go test</code>コマンドに、テスト対象パッケージのディレクトリを指定し、テスト実行する。<br />
+ディレクトリを指定しなければ、カレントディレクトリのパッケージを対象としてテスト実行する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ <span class="nb">pwd</span>
+/c/go-tutorial/zoo/
+$ go <span class="nb">test</span> ./animals
+ok      /c/go-tutorial/zoo/animals   <span class="m">0</span>.127s</code></pre></div>
+<p><code>-v</code>オプションを付けることで、より詳細なテスト結果を出力できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-sh" data-lang="sh">$ go <span class="nb">test</span> -v ./animals
+<span class="o">===</span> RUN   TestElephantFeed
+--- PASS: TestElephantFeed <span class="o">(</span><span class="m">0</span>.00s<span class="o">)</span>
+<span class="o">===</span> RUN   TestMonkeyFeed
+--- PASS: TestMonkeyFeed <span class="o">(</span><span class="m">0</span>.00s<span class="o">)</span>
+<span class="o">===</span> RUN   TestRabbitFeed
+--- PASS: TestRabbitFeed <span class="o">(</span><span class="m">0</span>.00s<span class="o">)</span>
+PASS
+ok      /c/go-tutorial/zoo/animals   <span class="m">0</span>.124s</code></pre></div>
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="/web/asset/mermaid/mermaid.js"></script>
+
+</body>
+</html>
