@@ -3063,8 +3063,195 @@ pt.X	// 0
 pt.Y	// 28
 ```
 
+### フィールド定義の詳細な仕様について
+構造体のフィールド名のルールは、変数や関数など他のGoの識別子と同様。  
+つまり、UTF-8エンコーディングであれば、日本語フィールド名も使用できる。  
+しかし、Goの慣例としては、**フィールド名は英大文字で始まりの英数字を用いるべき**。
+
+```go
+type Person struct {
+	ID uint
+	name string
+	部署 string
+}
+
+p := Person{ID: 17, name: "ヤマメくん", 部署: "四万十川"}
+```
+
+Goにおいては、フィールド名の省略ができる。  
+フィールド名を省略した場合は「`フィールド名=型名`」という定義であるとみなされる。  
+基本型に対しては、このような仕様は大して利点は無いが、構造体に別の構造体を埋め込む場合(後述)には有効な機能となる。
+
+```go
+type T struct {
+	int
+	float64
+	string
+}
+
+t := T{1, 3.14, "文字列"}
+t.int		// 1
+t.float64	// 3.14
+t.string	// "文字列"
+```
+
+Goの構造体には、「無名フィールド(blank field)」を定義できる。フィールド名「`_`」を与えると、そのフィールドは無名フィールドになる。  
+無名フィールドには名前のとおりフィールド名が存在しないため、参照や代入はできない。また、複合リテラルを使ったフィールド値の初期化もできない。  
+無名フィールドは、構造体のメモリ領域のアライメント調整に使用できるらしい。
+
+```go
+type T struct {
+	N uint	// 32bit確保
+	_ int16	// 16bit確保
+	S []string	// []string型の分のメモリ領域確保
+}
+
+t := T {
+	N: 12,
+	S: []string{"A", "B", "C"},
+}
+fmt.Println(t)	// "{12 0 [A B C]}"
+```
+
+### 構造体を含む構造体(構造体を入れ子にする)
+構造体のフィールドに構造体を持たせるには、2種類の方法がある。  
+それぞれの方法は使用目的が異なるため、仕組みを正しく理解するべき。
+
+- フィールド名をつけて構造体を埋め込む
+- フィールド名を省略して構造体を持たせる
+
+#### フィールド名をつけて構造体を埋め込む
+次の例では、`Feed`型の構造体を定義して、`Animal`型の構造体のフィールドに埋め込む定義を行っている。  
+`Animal`型に埋め込む`Feed`型のフィールド名を、型と同じ`Feed`にしているが、これは問題無い。むしろ、実際のGoの構造体の定義ではよく見られる。  
+このように、フィールド名を構造体名と同じにしておけば、複合リテラルによる初期化の際などに混乱せずに済む。
+
+```go
+type Feed struct {
+	Name string
+	Amount uint
+}
+
+type Animal struct {
+	Name string
+	Feed Feed	// Feed型の埋め込み
+}
+
+a := Animal {
+	Name: "Monkey",
+	Feed: Feed {
+		Name: "Banana",
+		Amount: 10,
+	},
+}
+
+a.Name			// "Monkey"
+a.Feed.Name		// "Banana"
+a.Feed.Amount	// 10
+
+a.Feed.Amount = 15
+a.Feef.Amount	// 15
+```
+
+#### フィールド名を省略して構造体を埋め込む
+次の例では前述とは違い、`Animal`型に埋め込む`Feed`型のフィールド名を省略して定義している。  
+このとき、`Feed`が持つ各フィールドにアクセスする方法が前述と異なり、あたかも`Animal`が持つフィールドのようにアクセスできる。  
+
+構造体内の構造体にも同名のフィールドが定義されている場合(この場合`Name`が同名)、そのフィールドは外側の構造体の側のものを指す。
+したがって、構造体内の構造体のフィールドにアクセスするには、前述のように`Animal.Feed.Name`として、構造体名を明示して指定する必要がある。
+
+```go
+type Feed struct {
+	Name string
+	Amount uint
+}
+
+type Animal struct {
+	Name string
+	Feed	// フィールド名を省略
+}
+
+a := Animal {
+	Name: "Monkey",
+	Feed: Feed {
+		Name: "Banana",
+		Amount: 10,
+	},
+}
+a.Amount	// 10
+a.Amount = 15
+a.Amount	// 15
+a.Feed.Amount	// 15 (== a.Amount)
+```
+
+**Note**  
+この、構造体を入れ子にする方法を単純に使用しても、部分型が表現できないため、オブジェクト指向における**継承**は表現できない。  
+これは、例えば、下記の場合を考えることによって分かる。  
+派生クラスの構造体`SubClass`の中に、基本クラスの構造体`BaseClass`をフィールド名を省略して定義したとする。このとき、確かに`SubClass.FieldName`とすることで、`BaseClass.FieldName`にアクセスできる。  
+しかし、この例において構造体`SubClass`は`BaseClass`の部分型ではないため、`BassClass`の`SubClass`への代入はコンパイルエラーとなってしまう。
+
+```go
+type BassClass struct {
+	Name string
+	Kind string
+}
+
+type SubClass struct {
+	Name string
+}
+
+sub := BassClass {
+	Name: "John",
+	BassClass: BassClass {
+		Name: "Ape",
+		Kind: "Mammals",
+	},
+}
+
+sub.Name			// "John"
+sub.BassClass.Name	// "Ape"
+sub.Kind			// "Mammals"
 
 
+var sub1 SubClass
+var bass1 BaseClass
+sub1 = bass1	// コンパイルエラー
+```
+
+##### 暗黙的なフィールド定義の注意点
+###### 定義されるフィールド名の決まり
+暗黙的にフィールド定義する際は、ポインタ型を埋め込む場合に注意する必要がある。  
+ポインタ型の修飾子やパッケージのプリフィックス部分を埋め込む場合の暗黙的なフィールド名は、それらの修飾を取り除いたものになる。
+
+- `T1`...T1型。
+- `*T2`...T2型。フィールド名から`*`が取り除かれる。
+- `packageFoo.T3`...別パッケージのT3型。フィールド名から`packageFoo.`が取り除かれる。
+- `*packageFoo.T4`...別パッケージのT4型のポインタ型。フィールド名から`*packageFoo`が取り除かれる。
+
+```go
+struct {
+	T1				// フィールド名は「T1」
+	*T2				// フィールド名は「T2」	// ポインタのデリファレンスは無視
+	packageFoo.T3	// フィールド名は「T3」	// パッケージのプリフィックスは無視
+	*packageFoo.T4	// フィールド名は「T4」	//  T2とT3の複合パターン
+}
+```
+
+###### 再帰的な定義は禁止
+構造体のフィールドに、自身の方を含むような再帰的な定義、または、相互再帰(循環する定義)は、コンパイルエラーとなる。
+
+```go
+type T struct {
+	T	// コンパイルエラー
+}
+
+type T0 struct {
+	T1
+}
+
+type T1 struct {
+	T0	// T0はこの構造体T1を持つためコンパイルエラー
+}
+```
 
 ## インターフェース
 
