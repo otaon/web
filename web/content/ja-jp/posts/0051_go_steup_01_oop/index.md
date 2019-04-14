@@ -43,17 +43,187 @@ Go言語でオブジェクト指向プログラミングを行う方法を残す
 実際、下記を表現していればオブジェクト指向プログラミングだと言って差し支えないと思う(思いたい)。
 
 1. カプセル化
-1. 部分型(is-aの関係を表現できる)
-  1. 継承
-  1. ポリモーフィズム
 1. オブジェクトを集約・コンポジットできる(has-aの関係を表現できる)
   1. 集約
   1. コンポジション
+1. 部分型(is-aの関係を表現できる)
+  1. 継承
+  1. ポリモーフィズム
+
 
 # Goで各OOP原則を実践する
 ここからは、実際にGoでOOP原則を表現していく。
 
 ## カプセル化
+カプセル化は、構造体とメソッドによって実現できる。  
+下記のコードでは、`Human`のフィールドに名前(`Name`)、年齢(`Age`)、郵便番号(`ZipCode`)を持ち、さらに、メソッドに自己紹介(`Introduce`)を持つ。
+
+```go
+// 人間
+type Human struct {
+	Name string
+	Age int
+	ZipCode string
+}
+
+// Humanのメソッド
+// 自己紹介する
+func (h *Human) Introduce() {
+	fmt.Printf("Hi, I'm %s. I'm %d years old.\n", h.Name, h.Age)
+}
+
+func main() {
+	h := Human {
+		Name: "John",
+		Age: 3,
+		ZipCode: "1234-5678",
+	}
+	h.Introduce()	// Humanの持つIntroduce()を呼ぶ
+}
+// => "Hi, I'm John. I'm 3 years old."
+```
+
+## 集約・コンポジション(has-a)
+オブジェクトがオブジェクトを内包する(持つ)のも、構造体によって実現できる。  
+上記のコードの`Human`に、ペットとして`Animal`型を所有させると、下記コードになる。
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+// 人間
+type Human struct {
+	Name string		// 名前
+	Age int			// 年齢
+	ZipCode string	// 郵便番号
+	Pets []Animal	// ペット
+}
+
+// Humanのメソッド
+// 自己紹介する
+// NOTE: レシーバは、型が(p *Human)型なので必ず参照渡しになる
+func (p *Human) Introduce() {
+	fmt.Printf("Hi, I'm %s. I'm %d years old.\n", p.Name, p.Age)
+	p.Age += 1
+}
+
+// 動物
+type Animal struct {
+	Name string	// 名前
+	Age int		// 年齢
+	Kind string	// 種類
+}
+
+func main() {
+	p := Human { Name: "John", Age: 30, ZipCode: "1234-5678" }
+	p.Pets = []Animal{
+		Animal { Name: "Robert", Age:50, Kind: "Dog"},
+		Animal { Name: "Tama", Age:10, Kind: "Chicken"},
+		Animal { Name: "Taro", Age:14, Kind: "Panda"},
+	}
+
+	// pが参照渡しとなることに注意
+	// Introduce()にはpを参照渡しすることに注意
+	p.Introduce()	// 1年目
+	p.Introduce()	// 2年目
+
+	// Humanが持っているペット達を紹介
+	fmt.Println("I have pets")
+	for _, pet := range p.Pets {
+		fmt.Printf("  %s(%d), a %s,\n", pet.Name, pet.Age, pet.Kind)
+	}
+	fmt.Println("that's all.")
+
+	// そういえば今日はRobertの誕生日
+	p.Pets[0].Age += 1
+	fmt.Printf("%s \"Hey, I turned %d today.\"\n", p.Pets[0].Name, p.Pets[0].Age)
+}
+
+// =>
+// Hi, I'm John. I'm 30 years old.
+// Hi, I'm John. I'm 31 years old.
+// I have pets
+//   Robert(50), a Dog,
+//   Tama(10), a Chicken,
+//   Taro(14), a Panda,
+// that's all.
+// Robert "Hey, I turned 51 today."
+//
+```
+
+継承まがいのコードを雑に書いても良いなら、下記コードのように構造体に対して無名フィールドのコンポジションを使えば良い。
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+// 人間
+type Human struct {
+	Name string		// 名前
+	Age int			// 年齢
+	ZipCode string	// 郵便番号
+}
+
+// Humanのメソッド
+// 自己紹介する
+func (p *Human) Introduce() {
+	fmt.Printf("Hi, I'm %s. I'm %d years old.\n", p.Name, p.Age)
+}
+
+// 国民
+type People struct {
+	Human				// 国民は人間
+	Nationality string	// 国籍
+	Income int			// 収入
+}
+
+// 国民のメソッド
+// 納税する
+func (p *People) PayTax() int {
+	if p.Age <= 20 {
+		return 0
+	} else {
+		return int(float64(p.Income) * 0.5)
+	}
+}
+
+func main() {
+	p1 := People {
+		Human: Human { Name: "John", Age: 30, ZipCode: "1234-5678" },
+		Nationality: "Japan",
+		Income: 100,
+	}
+	p1.Introduce()
+	fmt.Printf("It's too hard for me to pay %d for Tax >_<\n", p1.PayTax())
+
+	fmt.Println()
+
+	p2 := People {
+		Human: Human { Name: "Bob", Age: 3, ZipCode: "1234-1234" },
+		Nationality: "Spain",
+		Income: 10000,
+	}
+	p2.Introduce()
+	fmt.Printf("It's too hard for me to pay %d for Tax >_<\n", p2.PayTax())
+}
+// =>
+// Hi, I'm John. I'm 30 years old.
+// It's too hard for me to pay 50 for Tax >_<
+//
+// Hi, I'm Bob. I'm 3 years old.
+// It's too hard for me to pay 0 for Tax >_<
+//
+```
+
+### 集約
+
+### コンポジション
 
 ## 部分型(is-a)
 
@@ -63,8 +233,4 @@ Go言語でオブジェクト指向プログラミングを行う方法を残す
 
 #### ダックタイピング
 
-## 集約・コンポジション(has-a)
 
-### 集約
-
-### コンポジション
