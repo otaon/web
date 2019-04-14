@@ -370,6 +370,14 @@ showStruct(p)	// => "{3 8}"
 構造体のポインタ型を定義したら、通常は`*p.FieldName`として参照できる。  
 また、アスタリスクを省略して`p.FieldName`としても参照できる。
 
+```go
+p := &Point{X: 1, Y: 2}	// Pointのポインタ型を定義
+*p.X	// 1
+*p.Y	// 2
+p.X		// 1
+p.Y		// 2
+```
+
 構造体を関数へ参照渡しするためには、構造体型へのポインタを使用する。
 
 ```go
@@ -403,7 +411,7 @@ p.X	// 2
 p.Y	// 1
 ```
 
-### `new()`関数で指定子た型のポインタ型を生成する
+### `new()`関数で指定した型のポインタ型を生成する
 指定した型のポインタ型を生成するために、組み込み関数`new()`が使用できる。
 
 ```go
@@ -422,3 +430,368 @@ p.Name	// ""
 p.Area	// ""
 ```
 
+`new()`は、構造体以外にも基本型や参照型にも使用できる。ただし、使用用途としては専ら構造体用とされている。
+
+```go
+i := new(int)
+*i	// 0
+// sは[]string型のポインタ
+s := new([]string)
+*s	// nil
+```
+
+`new()`を使用した構造体型のポインタ生成と、アドレス演算子`&`を使用した構造体型のポインタ生成には、ほとんど違いがない。
+
+```go
+p := new(Point)
+p.X = 1
+p.Y = 2
+
+p := &Point{X: 1, Y: 2}
+p.X = 1
+p.Y = 2
+```
+
+### メソッド
+Goにおけるメソッドとは、任意の方に特化した関数を定義するための仕組み。  
+
+#### メソッドの定義
+メソッド定義は、関数定義とは異なり、`func`とメソッド名の間に**レシーバー**の型とその変数名が必要になる。  
+型に定義されたメソッドは、`レシーバー.メソッド`という形式で呼び出せる。  
+
+```go
+// メソッドの定義例
+func (p *Point) Render()
+
+// メソッドの呼び出し例
+p := &Point{X: 5, Y: 12}
+*p.Render()
+p.Render()
+```
+
+構造体型と、その構造体型に定義したメソッドの例を下記に示す。
+
+```go
+type Point struct{X, Y int}
+
+// Point型のメソッド
+func (p *Point) Render() {
+	fmt.Printf("<%d, %d>\n", p.X, p.Y)
+}
+
+p := &Point{X: 5, Y: 12}
+p.Render()	// => "<5, 12>"
+```
+
+レシーバーの場合は、レシーバーの方さえ異なっていれば、同名のメソッドを定義できる。
+
+```go
+type IntPoint struct{X, Y int}
+type FloatPoint struct{X, Y float64}
+
+// *IntPoint型のメソッドDistance
+func (p *IntPoint) Distance(dp *IntPoint) float64 {
+	x, y := p.X - dp.X, p.Y - dp.Y
+	return math.Sqrt(float64(x * x + y * y))
+}
+
+// *FloatPoint型のメソッドDistance
+func (p *FloatPoint) Distance(dp *FloatPoint) float64 {
+	x, y := p.X - dp.X, p.Y - dp.Y
+	return math.Sqrt(x * x + y * y)
+}
+```
+
+#### エイリアスへのメソッド定義
+メソッドは、エイリアスを定義することで、基本型に対しても定義できる。
+
+```go
+type MyInt int
+
+func (m MyInt) Plus(i int) int {
+	return int(m) + i
+}
+
+MyInt(4).Plus(2)	// 6
+```
+
+#### 型のコンストラクタパターン
+Goではコンストラクタとしての機能は存在しない。  
+しかし、慣例的に**型のコンストラクタ**というパターンを利用する。
+
+型のコンストラクタを表す関数は、一般的に`New型名`のように命名する。  
+また、型のコンストラクタでは、対象の型のポインタ型を返すように定義するのが望ましい。
+
+```go
+type user struct {
+	Id int
+	Name string
+}
+
+func NewUser(id int, name string) *User {
+	u := new(User)	// 構造体を生成して、そのポインタ型を返す
+	u.Id = id		// 引数の値を構造体に代入
+	u.Name = name	// 引数の値を構造体に代入
+	return u		// 対象の型のポインタ型を返す
+}
+
+user := NewUser(1, "Taro")
+fmt.Printf(user)	// "&{1 Taro}"
+
+```
+
+#### メソッドを関数型として参照する
+##### `レシーバーの型.メソッド名`の形で参照
+メソッドを関数型として参照するときは、`レシーバーの型.メソッド名`のように記述できる。
+
+```go
+type Point struct{X, Y int}
+
+func (p *Point) ToString() string {
+	return fmt.Sprintf("[%d, %d]", p.X, p.Y)
+}
+
+// 変数fは func(*Point) string 型
+f := (*Point).ToString
+
+// レシーバをただの関数として呼び出すこともできる
+f(&Point{X: 7, Y: 11})	// "[7, 11]"
+```
+
+`(*Point).ToString`の部分が、メソッドを関数型として参照している部分。  
+`f`に入るのは`func(*Point) string`という型。これは、第１引数が`*Point`型で戻り値型が`string`の関数の型と等しい。  
+つまり、**メソッドは第１引数としてとる単なる関数に過ぎない**。  
+実際に、レシーバをただの関数として呼び出すこともできる。
+
+上記の事実を利用すると、トリッキーだが、下記のように記述できる。
+
+```go
+((*Point).ToString)(&Point{X: 11, Y: 33})
+```
+
+#### `レシーバー名.メソッド名`の形で参照
+メソッドを関数型として参照するとき、`レシーバー名.メソッド名`のようにも記述できる。  
+この形で記述すると、レシーバーの内容が具体的に決定しているため、第1引数にレシーバーを必要としない関数が得られる。  
+
+```go
+p := &Point{X: 2, Y: 3}
+// 変数fは func() string 型
+f := p.ToString
+f()	// "[2, 3]"
+```
+
+#### メソッドのレシーバーは原則**ポインタ型**にすべき
+メソッドに対していレシーバーが値渡しされるか参照渡しされるかは、レシーバーの型が値型かポインタ型かで決まる。
+
+|ポインタ型||
+
+構造体に定義するメソッドのレシーバーはポインタ型にすべき。  
+下記のように、値型でメソッド定義すると、メソッドにはレシーバーのコピーが渡されることになる。(値渡し)
+
+```go
+type Point struct{X, Y int}
+
+// Point型のレシーバー
+func (p Point) Set(x, y int) {
+	p.X = x
+	p.Y = Y
+}
+
+// 変数p1はPoint型
+p1 := Point{}
+p1.Set(1, 2)	// Setにはp1のコピーが渡される(値渡し)
+p1.X	// 0	レシーバーの値が変化しない
+p1.Y	// 0	レシーバーの値が変化しない
+
+// 変数p2は*Point型
+p2 := &Point{}
+p2.Set(1, 2)	// *p2.Set(1, 2)となり、Setには*p2のコピーが渡される(値渡し)
+p2.X	// 0	レシーバーの値が変化しない
+p2.Y	// 0	レシーバーの値が変化しない
+```
+
+### フィールドとメソッドのアクセシビリティ
+パッケージに定義された関数・定数・パッケージ変数・型など、全ての識別子において、**大文字ならパッケージ外から参照可能**で、**小文字ならパッケージ外から参照不可**。このルールは、構造体のフィールドやメソッドでも同様。  
+この仕組を利用し、構造体のフィールドは全て非公開として、公開メソッドとしてaccessorを作成すれば、メンテナンス性の高いパッケージが作成可能となる。
+
+```go
+package foo
+
+type T struct {
+	Field1 int	// 公開フィールド
+	field2 int	// 非公開フィールド
+}
+
+// 公開メソッド
+func (t *T) Method1() int {
+	return t.Field1
+}
+
+// 非公開メソッド
+func (t *T) method2() int {
+	return t.field2
+}
+```
+
+```go
+package main
+
+t := &foo.T{}
+t.Method1()	// OK
+t.Field1	// OK
+t.method2	// コンパイルエラー
+t. field	// コンパイルエラー
+```
+
+### スライスと構造体を組み合わせる
+C言語で構造体の配列を扱うように、Goではスライスと構造体を組み合わせる処理が頻発する。
+
+組み込み関数`new()`などで別々に構造体を生成するよりも、`make([]構造体の型, 要素数)`としてまとめてメモリ領域を確保したほうが効率が良い。
+
+```go
+type Point struct{X, Y int}
+
+// 構造体のスライス(要素数5)を作成する
+ps := make([]Point, 5)
+
+for _, p := range ps {
+	fmt.Println(p.X, p.Y)
+}
+// =>
+// 0 0
+// 0 0
+// 0 0
+// 0 0
+// 0 0
+```
+
+また、`*[]Point`のように、複雑な型に対してtypeによるエイリアスを定義し、そのエイリアスに対してメソッドを定義することで型を扱いやすくする方法も頻発する。
+
+```go
+type Points ()*Point
+
+func (ps Points) ToString() string {
+	str := ""
+	for _, p := range ps {
+		if str != "" {
+			str += ","
+		}
+		if p == nil {
+			str += "<nil>"
+		} else {
+			str += fmt.Sprintf("[%d, %d]", p.X, p.Y)
+		}
+	}
+	return str
+}
+
+ps := Points{}
+ps = append(ps, &Point{X: 1, Y: 2})
+ps = append(ps, nil)
+ps = append(ps, &Point{X: 3, Y: 4})
+ps.ToString()	// "[1, 2], <nil>, [3, 4]"
+```
+
+### マップと構造体
+Goでは、マップのキーや値に構造体型を使用できる。こういうときに使用する、マップのリテラル表現がある。
+構造体型をマップのキー、または、値にする場合、リテラル内で構造体型の型名を省略できる。
+
+
+```go
+type User struct {
+	Id int
+	Name string
+}
+
+// キーが構造体型のマップ
+m1 := map[User]string{
+	// キーの構造体型の型名を省略できる
+	{Id: 1, Name: "Taro"}: "Tokyo",
+	{Id: 2, Name: "Jiro"}: "Osaka",
+}
+
+// 値が構造体型のマップ
+m2 := map[int]string{
+	// 値の構造体型の型名を省略できる
+	1: {Id: 1, Name: "Taro"},
+	2: {Id: 2, Name: "Jiro"},
+}
+```
+
+### タグ
+Goの構造体には、**タグ**という、フィールドにメタ情報を付与する機能がある。  
+タグは、文字列リテラル("文字列")かRAW文字列リテラル(\`RAW文字列\`)が使用できる。
+
+```go
+type User struct {
+	Id int "ID"			// タグ "ID"
+	Name string "名前"	// タグ "名前"
+}
+```
+
+タグはあくまでも構造体のフィールドに付与するメタ情報。つまり、文字列リテラルに問題が無い限り、プログラムの実行には影響しない。  
+タグとは、プログラム内で定義された構造体のフィールドに、文字列を使って柔軟性の高いメタ情報を追加する仕組み。
+タグの内容がどのように使用されるのかは、ライブラリやプログラムの実装による。
+
+```go
+package main
+
+import (
+	"fmt"
+	"reflect"
+)
+
+type User struct {
+	Id int "ユーザID"
+	Name string "名前"
+	Age uint "年齢"
+}
+
+func main() {
+	u := User{Id: 1, Name: "Taro", Age: 32}
+
+	// 変数tは reflect.Type型
+	t := reflect.TypeOf(u)
+
+	// 構造体の全フィールドを処理する
+	for i := 0; i < t.NumField(); i++ {
+		// i番目のフィールドを取得
+		f := t.Field(i)
+		fmt.Println(f.Name, f.Tag)
+	}
+}
+
+// =>
+// Id ユーザID
+// Name 名前
+// Age 年齢
+```
+
+構造体のタグが有効利用される場面としては、`json`パッケージをつかったプログラムが例にある。  
+`json`パッケージは、与えられた構造体のフィールドのタグ内に`json: "キー名"`という形式の文字列を見つけると、自動的にその情報を出力するJSONテキストのキー名として利用する。
+
+
+```go
+package main
+
+import (
+	"fmt"
+	"encoding/json"
+)
+
+type User struct {
+	Id int `json:"user_id"`
+	Name string `json:"user_name"`
+	Age uint `json:"user_age"`
+}
+
+func main() {
+	u := User{Id: 1, Name: "Taro", Age: 32}
+	bs, _ := json.Marshal(u)
+	fmt.Println(string(bs))
+}
+// =>
+// {"user_id":1, "user_name":"Taro", "user_age":32}
+```
+
+タグを利用する際は、コンパイルによってエラーを検出できないことに注意すること。
