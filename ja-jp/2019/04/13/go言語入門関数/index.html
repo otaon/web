@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>Go言語入門(関数) · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 基本構文 関数 func 関数名([引数名 型名]*) 戻り値の型名* { 処理 } [引数名 型名]* 同" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E9%96%A2%E6%95%B0/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="Go言語入門(関数)" />
+<meta property="og:description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 基本構文 関数 func 関数名([引数名 型名]*) 戻り値の型名* { 処理 } [引数名 型名]* 同" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E9%96%A2%E6%95%B0/" />
+<meta property="article:published_time" content="2019-04-13T12:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-04-13T12:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="Go言語入門(関数)">
+<meta itemprop="description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 基本構文 関数 func 関数名([引数名 型名]*) 戻り値の型名* { 処理 } [引数名 型名]* 同">
+
+
+<meta itemprop="datePublished" content="2019-04-13T12:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-04-13T12:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="1616">
+
+
+
+<meta itemprop="keywords" content="Go,Golang," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go言語入門(関数)"/>
+<meta name="twitter:description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 基本構文 関数 func 関数名([引数名 型名]*) 戻り値の型名* { 処理 } [引数名 型名]* 同"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">Go言語入門(関数)</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-04-13
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/go/">Go</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/golang/">Golang</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h1 id="目的">目的</h1>
+
+<p>Go言語の基本構文を残す。</p>
+
+<h1 id="参考文献">参考文献</h1>
+
+<ul>
+<li><a href="https://www.shoeisha.co.jp/book/detail/9784798142418">スターティング Go言語</a></li>
+</ul>
+
+<h1 id="基本構文">基本構文</h1>
+
+<h2 id="関数">関数</h2>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nx">関数名</span><span class="p">([</span><span class="nx">引数名</span> <span class="nx">型名</span><span class="p">]</span><span class="o">*</span><span class="p">)</span> <span class="nx">戻り値の型名</span><span class="o">*</span> <span class="p">{</span>
+    <span class="nx">処理</span>
+<span class="p">}</span></code></pre></div>
+<h3 id="引数名-型名">[引数名 型名]*</h3>
+
+<p>同じ型の引数を指定する場合、<code>x, y int</code>のように型の指定を一つにまとめることも、<code>x int, y int</code>のように変数ごとに型名を指定することもできる。</p>
+
+<h3 id="戻り値のない関数">戻り値のない関数</h3>
+
+<p>戻り値のない関数は、下記のように戻り値の型名を省略することで定義できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nx">関数名</span><span class="p">([</span><span class="nx">引数名</span> <span class="nx">型名</span><span class="p">]</span><span class="o">*</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">処理</span>
+<span class="p">}</span></code></pre></div>
+<h3 id="複数の戻り値を持つ関数">複数の戻り値を持つ関数</h3>
+
+<p>Goでは複数の戻り値を持つ関数を定義できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nx">関数名</span><span class="p">([</span><span class="nx">引数名</span> <span class="nx">型名</span><span class="p">]</span><span class="o">*</span><span class="p">)</span> <span class="p">(</span><span class="nx">戻り値の型名1</span><span class="p">,</span> <span class="nx">戻り値の型名2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">処理</span>
+    <span class="k">return</span> <span class="nx">戻り値1</span><span class="p">,</span> <span class="nx">戻り値2</span>
+<span class="p">}</span></code></pre></div>
+<p>複数の戻り値を持つ関数の戻り値は下記のように受け取る</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span> <span class="o">:=</span> <span class="nf">f</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span></code></pre></div>
+<p>複数の戻り値に不要なものがある場合、下記のように<code>_</code>を使うことで破棄できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 2つ目の戻り値を破棄
+</span><span class="c1"></span><span class="nx">q</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nf">f</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span>
+
+<span class="c1">// 型推論できないためコンパイルエラー
+</span><span class="c1"></span><span class="nx">_</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nf">f</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span>
+
+<span class="c1">// コンパイルエラーとはならないが、ただの関数呼び出しと等しいため無意味
+</span><span class="c1"></span><span class="nx">_</span><span class="p">,</span> <span class="nx">_</span> <span class="p">=</span> <span class="nf">f</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span></code></pre></div>
+<h3 id="goにおけるエラー処理">Goにおけるエラー処理</h3>
+
+<p>Goには例外機構がない。<br />
+Goにおける一般的なエラー処理では、下記のイディオムを用いる。<br />
+複数の戻り値を用いて、最後の戻り値でエラー内容を表すことで、関数の呼び出し元に自主的にエラー判定を行わせる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">result</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">f</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// エラー発生時の処理を書く
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<p>この方法は、C言語ライクのエラー判定をやりやすくした程度で原始的だが、単純で良いと思う。<br />
+エラー用の戻り値を読み捨てるような使い方をされる可能性があるが、そもそも<code>err</code>は契約的プログラミングでいう事前条件違反を表すものと考えれば、むしろエラーハンドリングの責務を明確にできるのかもしれない。</p>
+
+<h3 id="戻り値を表す変数">戻り値を表す変数</h3>
+
+<p>Goでは戻り値に変数を割り当てることができる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">f</span><span class="p">()</span> <span class="p">(</span><span class="nx">a</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>  <span class="c1">// 戻り値に変数aを割り当てた
+</span><span class="c1"></span>    <span class="k">return</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nf">f</span><span class="p">())</span>    <span class="c1">// =&gt; 0 (== aのデフォルト値)
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<p>上記の構文は、下記のコードの短縮形と考えられる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 短縮形
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">f</span><span class="p">()</span> <span class="p">(</span><span class="nx">a</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span>
+<span class="p">}</span>
+
+<span class="c1">// 短縮していない形
+</span><span class="c1"></span><span class="nx">fnc</span> <span class="nf">f</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">a</span> <span class="kt">int</span>
+    <span class="k">return</span> <span class="nx">a</span>
+<span class="p">}</span></code></pre></div>
+<p>複数の戻り値に対しても変数を割り当てることができる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 短縮形
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">f</span><span class="p">()</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">b</span> <span class="p">=</span> <span class="mi">5</span>
+    <span class="k">return</span>  <span class="c1">// x === 0, y == 5
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="c1">// 短縮していない形
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">f</span><span class="p">()</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span> <span class="kt">int</span>
+    <span class="nx">b</span> <span class="p">=</span> <span class="mi">5</span>
+    <span class="k">return</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span> <span class="c1">// x === 0, y == 5
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<h3 id="引数を無視する">引数を無視する</h3>
+
+<p>戻り値と同じく、引数も破棄することができる。<br />
+インターフェースで定義されているプロトタイプを実装するとき、実装で使用しない場合に、それを明示する場合に使用すると無駄な変数割り当てが発生しない。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">f</span><span class="p">(</span><span class="nx">_</span><span class="p">,</span> <span class="nx">_</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="mi">1</span>
+<span class="p">}</span>
+
+<span class="nf">f</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">//</span> <span class="p">=&gt;</span> <span class="mi">1</span></code></pre></div>
+<h3 id="無名関数">無名関数</h3>
+
+<p>Goでは、関数を変数に代入できる。<br />
+名前がある関数を代入できるのはもちろんのこと、下記のように関数定義自体をそのまま代入することもできる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">f</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span><span class="p">}</span></code></pre></div>
+<p>上記の右辺のように、関数を名前無しで定義して、それ自身を変数に代入できる。<br />
+このとき、右辺を<strong>関数リテラル</strong>と呼ぶ。</p>
+
+<p>関数リテラルの型は、その関数の引数の型と戻り値の型の組となる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;%T\n&#34;</span><span class="p">,</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span><span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span><span class="p">})</span>
+<span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;func(int, int) int&#34;</span></code></pre></div>
+<p>したがって、意味はないが、変数を、この型で定義することもできる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">f</span> <span class="kd">func</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span>
+<span class="nx">f</span> <span class="p">=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span><span class="p">}</span></code></pre></div>
+<h3 id="高階関数-関数を返す関数">高階関数(関数を返す関数)</h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">F</span><span class="p">()</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>   <span class="c1">// 戻り値の型 func()
+</span><span class="c1"></span>    <span class="k">return</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Hello, World!&#34;</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">function</span> <span class="o">:=</span> <span class="nf">F</span><span class="p">()</span>
+    <span class="nf">function</span><span class="p">()</span>  <span class="c1">// &#34;Hello, World!&#34;
+</span><span class="c1"></span>
+    <span class="c1">// F()で帰ってきたfを同時に呼び出す
+</span><span class="c1"></span>    <span class="nf">F</span><span class="p">()()</span>   <span class="c1">// &#34;Hello, World!&#34;
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<h3 id="高階関数-関数を引数に渡す関数">高階関数(関数を引数に渡す関数)</h3>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">F</span><span class="p">(</span><span class="nx">f</span> <span class="kd">func</span><span class="p">())</span> <span class="p">{</span>
+    <span class="nf">f</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nf">F</span><span class="p">(</span><span class="kd">func</span><span class="p">()</span> <span class="p">{</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Hello, World!&#34;</span><span class="p">)</span> <span class="p">})</span>  <span class="c1">// &#34;Hello, World!&#34;
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<h3 id="クロージャ">クロージャ</h3>
+
+<p>Goではクロージャも定義できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="cm">/**
+</span><span class="cm"> * &#34;nextに値を渡すとその値を内部に保持し、その前にnextに渡した値を返す&#34;関数を返す
+</span><span class="cm"> */</span>
+<span class="kd">func</span> <span class="nf">later</span><span class="p">()</span> <span class="kd">func</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">store</span> <span class="kt">string</span>
+    <span class="k">return</span> <span class="kd">func</span><span class="p">(</span><span class="nx">next</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">string</span> <span class="p">{</span>
+        <span class="nx">s</span> <span class="o">:=</span> <span class="nx">store</span>
+        <span class="nx">store</span> <span class="p">=</span> <span class="nx">next</span>
+        <span class="k">return</span> <span class="nx">s</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">f</span> <span class="o">:=</span> <span class="nf">later</span><span class="p">()</span>
+    <span class="nf">f</span><span class="p">(</span><span class="s">&#34;Golang&#34;</span><span class="p">)</span> <span class="c1">// =&gt; &#34;&#34;
+</span><span class="c1"></span>    <span class="nf">f</span><span class="p">(</span><span class="s">&#34;is&#34;</span><span class="p">)</span> <span class="c1">// =&gt; &#34;Golang&#34;
+</span><span class="c1"></span>    <span class="nf">f</span><span class="p">(</span><span class="s">&#34;good&#34;</span><span class="p">)</span>   <span class="c1">// =&gt; &#34;is&#34;
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<h4 id="クロージャでジェネレータを実装する">クロージャでジェネレータを実装する</h4>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="cm">/**
+</span><span class="cm"> * &#34;nextに値を渡すとその値を内部に保持し、その前にnextに渡した値を返す&#34;関数を返す
+</span><span class="cm"> */</span>
+<span class="kd">func</span> <span class="nf">integers</span><span class="p">()</span> <span class="kd">func</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="nx">index</span> <span class="o">:=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">return</span> <span class="kd">func</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+        <span class="nx">index</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="nx">index</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">f</span> <span class="o">:=</span> <span class="nf">integers</span><span class="p">()</span>
+    <span class="nf">f</span><span class="p">()</span> <span class="c1">// =&gt; 0
+</span><span class="c1"></span>    <span class="nf">f</span><span class="p">()</span> <span class="c1">// =&gt; 1
+</span><span class="c1"></span>    <span class="nf">f</span><span class="p">()</span> <span class="c1">// =&gt; 2
+</span><span class="c1"></span>    <span class="nf">f</span><span class="p">()</span> <span class="c1">// =&gt; 3
+</span><span class="c1"></span>    <span class="nx">f2</span> <span class="o">:=</span> <span class="nf">integers</span><span class="p">()</span>
+    <span class="nf">f2</span><span class="p">()</span>    <span class="c1">// =&gt; 0
+</span><span class="c1"></span>    <span class="nf">f2</span><span class="p">()</span>    <span class="c1">// =&gt; 1
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="/web/asset/mermaid/mermaid.js"></script>
+
+</body>
+</html>

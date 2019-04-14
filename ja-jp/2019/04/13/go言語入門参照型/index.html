@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>Go言語入門(参照型) · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 基本構文 参照型 Goには、参照型と呼ばれる下記の３つの型がある。 slice スライス map マップ" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E5%8F%82%E7%85%A7%E5%9E%8B/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="Go言語入門(参照型)" />
+<meta property="og:description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 基本構文 参照型 Goには、参照型と呼ばれる下記の３つの型がある。 slice スライス map マップ" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E5%8F%82%E7%85%A7%E5%9E%8B/" />
+<meta property="article:published_time" content="2019-04-13T16:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-04-13T16:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="Go言語入門(参照型)">
+<meta itemprop="description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 基本構文 参照型 Goには、参照型と呼ばれる下記の３つの型がある。 slice スライス map マップ">
+
+
+<meta itemprop="datePublished" content="2019-04-13T16:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-04-13T16:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="11527">
+
+
+
+<meta itemprop="keywords" content="Go,Golang," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go言語入門(参照型)"/>
+<meta name="twitter:description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 基本構文 参照型 Goには、参照型と呼ばれる下記の３つの型がある。 slice スライス map マップ"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">Go言語入門(参照型)</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-04-13
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/go/">Go</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/golang/">Golang</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h1 id="目的">目的</h1>
+
+<p>Go言語の基本構文を残す。</p>
+
+<h1 id="参考文献">参考文献</h1>
+
+<ul>
+<li><a href="https://www.shoeisha.co.jp/book/detail/9784798142418">スターティング Go言語</a></li>
+</ul>
+
+<h1 id="基本構文">基本構文</h1>
+
+<h2 id="参照型">参照型</h2>
+
+<p>Goには、参照型と呼ばれる下記の３つの型がある。</p>
+
+<ul>
+<li><code>slice</code> スライス</li>
+<li><code>map</code> マップ</li>
+<li><code>channel</code> チャネル</li>
+</ul>
+
+<h3 id="make-関数の使用方法"><code>make</code>関数の使用方法</h3>
+
+<p>参照型の生成には、組み込み関数<code>make</code>を使用する。</p>
+
+<table>
+<thead>
+<tr>
+<th>呼び出し形式</th>
+<th>&nbsp;&nbsp;型<code>T</code></th>
+<th>&nbsp;&nbsp;意味</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>make(T, n)</code></td>
+<td>&nbsp;&nbsp;スライス</td>
+<td>&nbsp;&nbsp;要素数と容量が<code>n</code>である<code>T</code>型のスライスを生成</td>
+</tr>
+
+<tr>
+<td><code>make(T, n, m)</code></td>
+<td>&nbsp;&nbsp;スライス</td>
+<td>&nbsp;&nbsp;要素数が<code>n</code>で容量が<code>m</code>である<code>T</code>型のスライスを生成</td>
+</tr>
+
+<tr>
+<td><code>make(T)</code></td>
+<td>&nbsp;&nbsp;マップ</td>
+<td>&nbsp;&nbsp;<code>T</code>型のマップを生成</td>
+</tr>
+
+<tr>
+<td><code>make(T, n)</code></td>
+<td>&nbsp;&nbsp;マップ</td>
+<td>&nbsp;&nbsp;<code>T</code>型のマップを、要素数<code>n</code>をヒントにして生成</td>
+</tr>
+
+<tr>
+<td><code>make(T)</code></td>
+<td>&nbsp;&nbsp;チャネル</td>
+<td>&nbsp;&nbsp;バッファ無しの<code>T</code>型のチャネルを生成</td>
+</tr>
+
+<tr>
+<td><code>make(T, n)</code></td>
+<td>&nbsp;&nbsp;チャネル</td>
+<td>&nbsp;&nbsp;バッファサイズ<code>n</code>の<code>T</code>型のチャネルを生成</td>
+</tr>
+</tbody>
+</table>
+
+<h3 id="スライス-slice">スライス(slice)</h3>
+
+<p>スライスは可変長配列を表現する型。<br />
+スライスには、配列とは異なり、<strong>要素数</strong>と<strong>容量</strong>という概念がある。</p>
+
+<dl>
+<dt>要素数(length)</dt>
+<dd>スライスの生成時に、値を格納するために確保される領域。<br />
+組み込み関数<code>len()</code>で取得できる。</dd>
+<dt>容量(capacity)</dt>
+<dd>スライスの生成時に、後でスライスを拡張する際に使用するための領域。<br />
+組み込み関数<code>cap()</code>で取得できる。</dd>
+</dl>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// スライス生成の書式
+</span><span class="c1"></span><span class="nb">make</span><span class="p">(</span><span class="nx">型名</span><span class="p">,</span> <span class="nx">要素数</span><span class="p">,</span> <span class="nx">容量</span><span class="o">*</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// int型を格納するスライス
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">s</span> <span class="p">[]</span><span class="kt">int</span>
+
+<span class="c1">// 要素数と容量が10であるint型のスライスを生成する
+</span><span class="c1"></span><span class="nx">s</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="c1">// =&gt;
+</span><span class="c1">// [0 0 0 0 0 0 0 0 0 0]
+</span><span class="c1"></span>
+<span class="c1">// スライスの使い方
+</span><span class="c1"></span><span class="nx">s</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">float64</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>  <span class="c1">// =&gt; &#34;[0, 0, 0]&#34;
+</span><span class="c1"></span><span class="nx">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">=</span> <span class="mf">3.14</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>  <span class="c1">// =&gt; &#34;[3.14, 0, 0]&#34;
+</span><span class="c1"></span><span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="mf">6.28</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>  <span class="c1">// =&gt; &#34;[3.14, 6.28, 0]&#34;
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>   <span class="c1">// =&gt; &#34;3.14&#34;
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>   <span class="c1">// 要素数を超えた要素にアクセスしたためランタイムパニック発生
+</span><span class="c1"></span>
+<span class="c1">// 要素数8, 容量8のスライス
+</span><span class="c1"></span><span class="nx">s</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="c1">// スライスの要素数を調べる
+</span><span class="c1"></span><span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>  <span class="c1">// == 8
+</span><span class="c1"></span>
+<span class="c1">// 要素数5, 容量5のスライス
+</span><span class="c1"></span><span class="nx">s</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="c1">// スライスの要素数を調べる
+</span><span class="c1"></span><span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>  <span class="c1">// == 5
+</span><span class="c1">// スライスの容量を調べる
+</span><span class="c1"></span><span class="nb">cap</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>  <span class="c1">// == 5
+</span><span class="c1"></span>
+<span class="c1">// 要素数5, 容量10のスライス
+</span><span class="c1"></span><span class="nx">s</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="c1">// スライスの要素数を調べる
+</span><span class="c1"></span><span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>  <span class="c1">// == 5
+</span><span class="c1">// スライスの容量を調べる
+</span><span class="c1"></span><span class="nb">cap</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>  <span class="o">//</span> <span class="o">==</span> <span class="mi">10</span></code></pre></div>
+<p>例えば、要素数5, 容量10のスライスは下記のようになる。<br />
+<code>[n]</code>によるインデックスで参照・代入できる範囲は0～4までだが、スライスの容量としては10個分のメモリ領域を確保している。</p>
+
+<table>
+<thead>
+<tr>
+<th><strong>[n]</strong></th>
+<th>&nbsp;&nbsp;[0]</th>
+<th>&nbsp;&nbsp;[1]</th>
+<th>&nbsp;&nbsp;[2]</th>
+<th>&nbsp;&nbsp;[3]</th>
+<th>&nbsp;&nbsp;[4]</th>
+<th>&nbsp;&nbsp;[5]</th>
+<th>&nbsp;&nbsp;[6]</th>
+<th>&nbsp;&nbsp;[7]</th>
+<th>&nbsp;&nbsp;[8]</th>
+<th>&nbsp;&nbsp;[9]</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><strong>int</strong></td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;-</td>
+<td>&nbsp;&nbsp;-</td>
+<td>&nbsp;&nbsp;-</td>
+<td>&nbsp;&nbsp;-</td>
+<td>&nbsp;&nbsp;-</td>
+</tr>
+</tbody>
+</table>
+
+<p>上記のスライスに要素を追加していくと、容量いっぱいまではそのまま残りの空き領域を使う。<br />
+そして、容量がいっぱいになってしまった状態で、更に要素を追加すると、<strong>容量10よりも大きなメモリ領域を確保して、元のスライスのデータを丸ごとコピーする</strong>。<br />
+データのコピーは計算コストが高いため、容量が推測できる場合はなるべくその推測値を設定してスライス生成したほうが良い。</p>
+
+<h4 id="リテラルでスライスを生成する">リテラルでスライスを生成する</h4>
+
+<p>配列やスライスを元にして、新しいスライスを生成するために、<strong>簡易スライス式(simple slice expressions)</strong>という機能がある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 要素数5の配列
+</span><span class="c1"></span><span class="nx">a</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>
+
+<span class="c1">// 配列aの要素0から要素1(2-1)までの要素を元にスライスを生成する
+</span><span class="c1"></span><span class="nx">s</span> <span class="o">:=</span> <span class="nx">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="c1">// 変数sは[]int型
+</span><span class="c1"></span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>  <span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;[0, 1]&#34;</span></code></pre></div>
+<p>簡易スライス式には下記の記述パターンがある。</p>
+
+<table>
+<thead>
+<tr>
+<th><code>a := [5]int{1, 2, 3, 4, 5}</code></th>
+<th>&nbsp;&nbsp;意味</th>
+<th>&nbsp;&nbsp;結果</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>a[0:2]</code></td>
+<td>&nbsp;&nbsp;要素0～1のスライス</td>
+<td>&nbsp;&nbsp;<code>[0, 1]</code></td>
+</tr>
+
+<tr>
+<td><code>a[2:]</code></td>
+<td>&nbsp;&nbsp;要素2～<code>len(a)-1</code>のスライス</td>
+<td>&nbsp;&nbsp;<code>[3, 4, 5]</code></td>
+</tr>
+
+<tr>
+<td><code>a[:4]</code></td>
+<td>&nbsp;&nbsp;要素0～3のスライス</td>
+<td>&nbsp;&nbsp;<code>[1, 2, 3, 4]</code></td>
+</tr>
+
+<tr>
+<td><code>a[:]</code></td>
+<td>&nbsp;&nbsp;要素0～<code>len(a)-1</code>のスライス</td>
+<td>&nbsp;&nbsp;<code>[1, 2, 3, 4, 5]</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>見て分かるとおり、簡易スライス式の書式は下記の通り。<br />
+簡易スライス式を使って生成したスライスは、生成元の配列の参照していない範囲が容量になる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">配列</span><span class="p">[</span><span class="nx">開始インデックス</span><span class="p">:</span><span class="nx">末尾の次のインデックス</span><span class="p">]</span>
+<span class="o">//</span> <span class="p">=&gt;</span> <span class="nx">開始インデックス</span><span class="err">～</span><span class="nx">末尾インデックスのスライス</span></code></pre></div>
+<p><code>var a [10]int</code>のとき、<code>a[2:4]</code>は下記のような範囲となる。</p>
+
+<table>
+<thead>
+<tr>
+<th><strong>[n]</strong></th>
+<th>&nbsp;&nbsp;[0]</th>
+<th>&nbsp;&nbsp;[1]</th>
+<th>&nbsp;&nbsp;[2]</th>
+<th>&nbsp;&nbsp;[3]</th>
+<th>&nbsp;&nbsp;[4]</th>
+<th>&nbsp;&nbsp;[5]</th>
+<th>&nbsp;&nbsp;[6]</th>
+<th>&nbsp;&nbsp;[7]</th>
+<th>&nbsp;&nbsp;[8]</th>
+<th>&nbsp;&nbsp;[9]</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><strong>int</strong></td>
+<td></td>
+<td></td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;-</td>
+<td>&nbsp;&nbsp;-</td>
+<td>&nbsp;&nbsp;-</td>
+<td>&nbsp;&nbsp;-</td>
+<td>&nbsp;&nbsp;-</td>
+<td>&nbsp;&nbsp;-</td>
+</tr>
+
+<tr>
+<td><strong>容量</strong></td>
+<td></td>
+<td></td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<p>文字列にも簡易スライス式を適用できる。ただしマルチバイト文字列の場合は注意が必要。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">s</span> <span class="o">:=</span> <span class="s">&#34;ABCDE&#34;</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>   <span class="c1">// =&gt; s == &#34;BC&#34;
+</span><span class="c1"></span>
+<span class="c1">// 文字列はバイト列として処理する必要があるため、
+</span><span class="c1">// &#34;あ&#34;を3バイト分でカウントする
+</span><span class="c1"></span><span class="nx">s</span> <span class="p">=</span> <span class="s">&#34;あいうえお&#34;</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">9</span><span class="p">]</span>    <span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;いう&#34;</span></code></pre></div>
+<h4 id="組み込み関数-append-で要素を追加する">組み込み関数<code>append</code>で要素を追加する</h4>
+
+<p><code>append</code>を使うことで、スライスの末尾に要素を追加した新たなスライスを生成できる。<br />
+<code>append</code>の戻り値を変数に代入しないとコンパイルエラーとなることに注意。<br />
+また、<code>append</code>の2番目以降の引数は可変長引数で、スライスの要素の型に合致する値を任意個指定できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 要素数3のスライス
+</span><span class="c1"></span><span class="nx">s</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span>
+
+<span class="c1">// 4をスライスの末尾に追加
+</span><span class="c1"></span><span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>    <span class="c1">// s == [1, 2, 3, 4]
+</span><span class="c1"></span>
+<span class="c1">// 5, 6, 7をスライスの末尾に追加
+</span><span class="c1"></span><span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>  <span class="o">//</span> <span class="nx">s</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span></code></pre></div>
+<p>スライスの末尾に、別のスライスの要素を追加することもできる。<br />
+<code>append()</code>に渡している第2引数が<code>s1...</code>という形式になっていることに注意。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">s0</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span>
+<span class="nx">s1</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">}</span>
+<span class="nx">s2</span> <span class="o">:=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s0</span><span class="p">,</span> <span class="nx">s1</span><span class="o">...</span><span class="p">)</span> <span class="c1">// s2 == [1, 2, 3, 4, 5, 6]
+</span><span class="c1"></span>
+<span class="kd">var</span> <span class="nx">b</span> <span class="p">[]</span><span class="kt">byte</span>
+<span class="nx">b</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="s">&#34;あいうえお&#34;</span><span class="o">...</span><span class="p">)</span>
+<span class="nx">b</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="s">&#34;かきくけこ&#34;</span><span class="o">...</span><span class="p">)</span>
+<span class="nx">b</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="s">&#34;さしすせそ&#34;</span><span class="o">...</span><span class="p">)</span>
+<span class="o">//</span> <span class="nx">b</span> <span class="o">==</span> <span class="p">[</span><span class="mi">227</span> <span class="mi">129</span> <span class="mi">130</span> <span class="mi">227</span> <span class="mi">129</span> <span class="mi">132</span> <span class="o">...</span><span class="p">]</span></code></pre></div>
+<h4 id="append-とスライスの容量"><code>append</code>とスライスの容量</h4>
+
+<p>要素数0、容量0のスライスを初期値として、<code>append</code>で要素を追加しつつ、要素数と容量を確認してみる。<br />
+Goランタイムは、要素数の大きさによって拡張サイズを調整していることが分かる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 要素数0,容量0のint型のスライス
+</span><span class="c1"></span><span class="nx">s</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>              <span class="c1">// 要素数0, 容量0
+</span><span class="c1"></span><span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>                    <span class="c1">// 要素数1, 容量1
+</span><span class="c1"></span><span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">}</span><span class="o">...</span><span class="p">)</span>    <span class="c1">// 要素数4, 容量4
+</span><span class="c1"></span><span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>                    <span class="c1">// 要素数5, 容量8
+</span><span class="c1"></span><span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>           <span class="c1">// 要素数9, 容量16
+</span><span class="c1">// 要素数が少なめの場合、容量の拡張は倍々で行われる
+</span><span class="c1"></span>
+<span class="nx">s1</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">1024</span><span class="p">)</span>   <span class="c1">// 要素数1024, 容量1024
+</span><span class="c1"></span><span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>                <span class="o">//</span> <span class="nx">要素数1025</span><span class="p">,</span> <span class="nx">容量1312</span></code></pre></div>
+<h4 id="copy-によるスライスの一括複製"><code>copy</code>によるスライスの一括複製</h4>
+
+<p>組み込み関数<code>copy</code>を用いて、スライスにスライスの値を一括コピーできる。<br />
+<code>copy</code>の使用方法には下記の2種類がある。</p>
+
+<ul>
+<li>1番目の引数に指定したスライスを<strong>コピー先</strong>として、2番めの引数に指定したスライスの内容を、コピー先のスライスの先頭から上書きするようにコピーする。<br />
+各々のスライスの要素数は異なっていても良い。</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// []T型のスライスsrcを、[]T型のスライスdstにコピーする
+</span><span class="c1"></span><span class="nb">copy</span><span class="p">(</span><span class="nx">dst</span><span class="p">,</span> <span class="nx">src</span> <span class="p">[]</span><span class="nx">T</span><span class="p">)</span> <span class="kt">int</span>  <span class="c1">// copyの戻り値 == コピーが実行された要素数
+</span><span class="c1"></span>
+<span class="nx">s1</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>
+<span class="nx">s2</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">}</span>
+<span class="nx">n</span> <span class="o">:=</span> <span class="nb">copy</span><span class="p">(</span><span class="nx">s1</span><span class="p">,</span> <span class="nx">s2</span><span class="p">)</span>   <span class="c1">// n == 2, s1 == [10, 11, 3, 4, 5]
+</span><span class="c1">// copyの戻り値 == コピーが実行された要素数
+</span><span class="c1"></span>
+<span class="nx">s1</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>
+<span class="nx">s2</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">16</span><span class="p">}</span>
+<span class="nx">n</span> <span class="o">:=</span> <span class="nb">copy</span><span class="p">(</span><span class="nx">s1</span><span class="p">,</span> <span class="nx">s2</span><span class="p">)</span>   <span class="o">//</span> <span class="nx">n</span> <span class="o">==</span> <span class="mi">5</span><span class="p">,</span> <span class="nx">s1</span> <span class="o">==</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">]</span></code></pre></div>
+<ul>
+<li><code>[]byte</code>型のスライスを<strong>コピー先</strong>として、文字列型のデータをコピーする。<br />
+この場合も<code>append()</code>と同様に、コピーする単位はバイト単位であり、文字単位ではない。</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// string型のスライスsrcを、[]byte型のdstにコピーする
+</span><span class="c1"></span><span class="nb">copy</span><span class="p">(</span><span class="nx">dst</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">src</span> <span class="kt">string</span><span class="p">)</span> <span class="kt">int</span>    <span class="c1">// copyの戻り値 == コピーが実行された要素数
+</span><span class="c1"></span>
+<span class="nx">b</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">byte</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="nx">n</span> <span class="o">:=</span> <span class="nb">copy</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="s">&#34;あいうえお&#34;</span><span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">n</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span>   <span class="o">//</span> <span class="nx">n</span> <span class="o">==</span> <span class="mi">9</span><span class="p">,</span> <span class="nx">b</span> <span class="o">==</span> <span class="p">[]</span><span class="nb">byte</span><span class="p">(</span><span class="s">&#34;あいう&#34;</span><span class="p">)</span></code></pre></div>
+<h4 id="完全スライス式">完全スライス式</h4>
+
+<p>２つのパラメータを指定する簡易スライス式の他に、３つのパラメータを指定する<strong>完全スライス式(full slice expression)</strong>という記法がある。</p>
+
+<p>完全スライス式では、整数3つを<code>:</code>で区切る。<br />
+各々のパラメータは、<code>0 &lt;= low &lt;= high &lt;= max &lt;= cap(a)</code>という関係を満たす必要がある。<br />
+簡易スライス式との違いは、<code>max</code>の指定によってスライスの容量を指定できるかどうか。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">a</span><span class="p">[</span><span class="nx">low</span> <span class="p">:</span> <span class="nx">high</span> <span class="p">:</span> <span class="nx">max</span><span class="p">]</span></code></pre></div>
+<h5 id="配列-var-a-10-int">配列 <code>var a [10]int</code></h5>
+
+<table>
+<thead>
+<tr>
+<th><strong>[n]</strong></th>
+<th>&nbsp;&nbsp;[0]</th>
+<th>&nbsp;&nbsp;[1]</th>
+<th>&nbsp;&nbsp;[2]</th>
+<th>&nbsp;&nbsp;[3]</th>
+<th>&nbsp;&nbsp;[4]</th>
+<th>&nbsp;&nbsp;[5]</th>
+<th>&nbsp;&nbsp;[6]</th>
+<th>&nbsp;&nbsp;[7]</th>
+<th>&nbsp;&nbsp;[8]</th>
+<th>&nbsp;&nbsp;[9]</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><strong>int</strong></td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+</tr>
+
+<tr>
+<td><strong>容量=10</strong></td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="簡易スライス式-a-2-4">簡易スライス式 <code>a[2:4]</code></h5>
+
+<table>
+<thead>
+<tr>
+<th><strong>[n]</strong></th>
+<th>&nbsp;&nbsp;[0]</th>
+<th>&nbsp;&nbsp;[1]</th>
+<th>&nbsp;&nbsp;[2]</th>
+<th>&nbsp;&nbsp;[3]</th>
+<th>&nbsp;&nbsp;[4]</th>
+<th>&nbsp;&nbsp;[5]</th>
+<th>&nbsp;&nbsp;[6]</th>
+<th>&nbsp;&nbsp;[7]</th>
+<th>&nbsp;&nbsp;[8]</th>
+<th>&nbsp;&nbsp;[9]</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><strong>int</strong></td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td><strong>容量= 8</strong></td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+</tr>
+</tbody>
+</table>
+
+<h5 id="完全スライス式-a-2-4-6">完全スライス式 <code>a[2:4:6]</code></h5>
+
+<table>
+<thead>
+<tr>
+<th><strong>[n]</strong></th>
+<th>&nbsp;&nbsp;[0]</th>
+<th>&nbsp;&nbsp;[1]</th>
+<th>&nbsp;&nbsp;[2]</th>
+<th>&nbsp;&nbsp;[3]</th>
+<th>&nbsp;&nbsp;[4]</th>
+<th>&nbsp;&nbsp;[5]</th>
+<th>&nbsp;&nbsp;[6]</th>
+<th>&nbsp;&nbsp;[7]</th>
+<th>&nbsp;&nbsp;[8]</th>
+<th>&nbsp;&nbsp;[9]</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><strong>int</strong></td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;0</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+</tr>
+
+<tr>
+<td><strong>容量= 4</strong></td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;*</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+<td>&nbsp;&nbsp;</td>
+</tr>
+</tbody>
+</table>
+
+<h4 id="スライスを-for-文で使う">スライスを<code>for</code>文で使う</h4>
+
+<p>範囲節による<code>for</code>では、スライスを範囲として使用できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">s</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;Apple&#34;</span><span class="p">,</span> <span class="s">&#34;Banana&#34;</span><span class="p">,</span> <span class="s">&#34;Cherry&#34;</span><span class="p">}</span>
+
+<span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">s</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;[%d] =&gt; %s\n&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="c1">// =&gt;
+</span><span class="c1">// [0] =&gt; Apple
+</span><span class="c1">// [1] =&gt; Banana
+</span><span class="c1"></span><span class="o">//</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="p">=&gt;</span> <span class="nx">Cherry</span></code></pre></div>
+<p>範囲節ではない<code>for</code>ループ内でスライスの要素数を変化させると、想定外の動作になる可能性がある。<br />
+下記のコードでは、要素数が増え続けるため、<code>for</code>の条件式が常に真となってしまう。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">s</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;Apple&#34;</span><span class="p">,</span> <span class="s">&#34;Banana&#34;</span><span class="p">,</span> <span class="s">&#34;Cherry&#34;</span><span class="p">}</span>
+
+<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">);</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;[%d] =&gt; %s\n&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">s</span><span class="p">[</span><span class="nx">i</span><span class="p">])</span>
+    <span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="s">&#34;Melon&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="c1">// =&gt;
+</span><span class="c1">// [0] =&gt; Apple
+</span><span class="c1">// [1] =&gt; Banana
+</span><span class="c1">// [2] =&gt; Cherry
+</span><span class="c1">// [3] =&gt; Melon
+</span><span class="c1">// [4] =&gt; Melon
+</span><span class="c1">// [5] =&gt; Melon
+</span><span class="c1"></span><span class="o">//</span> <span class="o">...</span><span class="nx">無限ループ</span><span class="o">...</span></code></pre></div>
+<p>範囲節の<code>for</code>ループでは、ループ開始時の要素数をもとにループ回数を決定している。<br />
+したがって、ループ内でスライスの要素数を増やしても、ループ回数に影響はない。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">s</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;Apple&#34;</span><span class="p">,</span> <span class="s">&#34;Banana&#34;</span><span class="p">,</span> <span class="s">&#34;Cherry&#34;</span><span class="p">}</span>
+
+<span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">s</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;[%d] =&gt; %s\n&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+    <span class="nx">s</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s</span><span class="p">,</span> <span class="s">&#34;Melon&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+<span class="c1">// =&gt;
+</span><span class="c1">// [0] =&gt; Apple
+</span><span class="c1">// [1] =&gt; Banana
+</span><span class="c1">// [2] =&gt; Cherry
+</span><span class="c1"></span><span class="o">//</span> <span class="p">[</span><span class="s">&#34;Apple&#34;</span><span class="p">,</span> <span class="s">&#34;Banana&#34;</span><span class="p">,</span> <span class="s">&#34;Cherry&#34;</span><span class="p">,</span> <span class="s">&#34;Melon&#34;</span><span class="p">,</span> <span class="s">&#34;Melon&#34;</span><span class="p">,</span> <span class="s">&#34;Melon&#34;</span><span class="p">]</span></code></pre></div>
+<h4 id="スライスと可変長引数">スライスと可変長引数</h4>
+
+<p><code>fmt.Printf</code>のような関数は、任意個数の引数を指定できる。<br />
+このような関数の可変長引数を自分で定義するために、Goではスライスを使用する。</p>
+
+<p>関数<code>fmt.Printf</code>は次のように定義される。<br />
+1番目の引数にフォーマット引数を取り、2番目以降の引数は<code>interface{}</code>型のスライスである変数<code>a</code>にまとめられる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">Printf</span><span class="p">(</span><span class="nx">format</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">a</span> <span class="o">...</span><span class="kd">interface</span><span class="p">{})</span> <span class="p">(</span><span class="nx">n</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span></code></pre></div>
+<p>関数定義に可変長引数を指定することで、次のように任意個数のint型の値を引数に取る<code>sum</code>のような関数が定義できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">sum</span><span class="p">(</span><span class="nx">s</span> <span class="o">...</span><span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="nx">n</span> <span class="o">:=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">s</span> <span class="p">{</span>
+        <span class="nx">n</span> <span class="o">+=</span> <span class="nx">v</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">n</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nf">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>        <span class="c1">// 16
+</span><span class="c1"></span>    <span class="nf">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>  <span class="c1">// 15
+</span><span class="c1"></span>    <span class="nf">sum</span><span class="p">()</span>               <span class="c1">// 0
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<p><code>s ...int</code>という引数の定義が、可変長引数のすべての値を<code>[]int</code>型のスライスにまとめる意味となる。<br />
+注目すべきは、<strong>任意個数とは0個も含まれる</strong>点。この関数<code>sum</code>では要素数0個のスライスでもエラーとならない実装となっているため、0も含まれる。</p>
+
+<p><strong>NOTE</strong><br />
+関数における可変長引数は、<strong>引数の末尾に1つのみ定義できる</strong>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// エラーとなるパターン
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">doSomething</span><span class="p">(</span><span class="nx">a</span> <span class="o">...</span><span class="kt">string</span><span class="p">,</span> <span class="nx">b</span> <span class="kt">bool</span><span class="p">)</span>   <span class="c1">// コンパイルエラー
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">doSomething</span><span class="p">(</span><span class="nx">a</span> <span class="o">...</span><span class="kt">int</span><span class="p">,</span> <span class="nx">b</span> <span class="kt">float64</span><span class="p">)</span>   <span class="o">//</span> <span class="nx">コンパイルエラー</span></code></pre></div>
+<h4 id="スライスを可変長引数に代入して関数呼び出しする">スライスを可変長引数に代入して関数呼び出しする</h4>
+
+<p>前段で定義した関数<code>sum</code>に、スライスを使って可変長引数の代わりに渡すことができる。<br />
+引数のスライスの後ろに<code>...</code>を付加すると、スライスの要素を可変長引数として展開する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">s</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span>
+<span class="nf">sum</span><span class="p">(</span><span class="nx">s</span><span class="o">...</span><span class="p">)</span>   <span class="o">//</span> <span class="mi">6</span></code></pre></div>
+<h4 id="参照型としてのスライス">参照型としてのスライス</h4>
+
+<p>そもそも<strong>参照型</strong>とは何か。一言で言うと、C言語などでも存在する、関数に渡すと<strong>参照渡し</strong>となる型のこと。<br />
+スライス、マップ、チャネルは参照型であるため、関数の引数に渡してそれを関数内で変更すると、副作用が発生する。</p>
+
+<h5 id="参照型の特性について確認する">参照型の特性について確認する</h5>
+
+<p><strong>配列</strong><br />
+まず、配列型を使った関数<code>pow</code>を考える。<br />
+<code>pow</code>は、<code>[3]int</code>型を引数にとり、配列の各要素を2乗した値に更新したい。しかし、配列を渡した場合は参照渡しとならない。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">pow</span><span class="p">(</span><span class="nx">a</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">a</span> <span class="p">{</span>
+        <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">v</span> <span class="o">*</span> <span class="nx">v</span>
+    <span class="p">}</span>
+    <span class="k">return</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// 要素数3の配列
+</span><span class="c1"></span>    <span class="nx">a</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span>
+    <span class="nf">pow</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>  <span class="c1">// =&gt; &#34;[1, 2, 3]&#34;
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<p><strong>スライス</strong><br />
+次に、スライスを使った関数<code>pow</code>を考える。<br />
+この場合、スライスは参照型だから、期待通り、引数に渡したスライスの各要素が、2乗された値に更新される。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">pow</span><span class="p">(</span><span class="nx">a</span> <span class="p">[]</span><span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">a</span> <span class="p">{</span>
+        <span class="nx">a</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">v</span> <span class="o">*</span> <span class="nx">v</span>
+    <span class="p">}</span>
+    <span class="k">return</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// 要素数3のスライス
+</span><span class="c1"></span>    <span class="nx">a</span> <span class="o">:=</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span>
+    <span class="nf">pow</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>  <span class="c1">// =&gt; &#34;[1, 4, 9]&#34;
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<h5 id="nil-の値を取りうるかどうか"><code>nil</code>の値を取りうるかどうか</h5>
+
+<p>基本型と値型の違いとして、<code>nil</code>を値として取り得るかどうかがある。</p>
+
+<ul>
+<li>初期化をせずに<strong>配列型</strong>の変数を定義した場合、そのタイミングで<code>[3]int</code>に対応したメモリ領域が確保され、さらに要素の型の初期値によって要素が埋められる。</li>
+<li>初期化をせずに<strong>スライス型</strong>の変数を定義した場合、スライスは<code>nil</code>が初期値となる。(いわゆるnull参照)</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="p">(</span>
+    <span class="nx">a</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">int</span>
+    <span class="nx">s</span> <span class="p">[]</span><span class="kt">int</span>
+<span class="p">)</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span>  <span class="c1">// =&gt; &#34;[0, 0, 0]&#34;
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">)</span>   <span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;true&#34;</span></code></pre></div>
+<h5 id="スライス作成元の配列">スライス作成元の配列</h5>
+
+<p>配列を元にスライスを作成したとき、そのスライスは、作成元の配列を参照している。<br />
+したがって、配列の値を変更したらスライスの値も変化したように見え、その逆も然り。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">a</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">}</span>
+<span class="nx">s</span> <span class="o">:=</span> <span class="nx">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="c1">// s == [1, 2]
+</span><span class="c1"></span><span class="nb">len</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>      <span class="c1">// 2
+</span><span class="c1"></span><span class="nb">cap</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>      <span class="c1">// 5
+</span><span class="c1"></span><span class="nx">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="mi">0</span>    <span class="o">//</span> <span class="nx">s</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></code></pre></div>
+<p>では、<code>append()</code>関数などによってスライスの容量が拡張されたときはどうなるのか?<br />
+その場合、スライスは作成元の配列とは全く異なるメモリ領域を確保し、配列の値をそこにコピーし、そのメモリ領域が新しいスライスとなる。
+すなわち、下記コードのとおり、スライスが作成元のメモリ領域を参照しているとは限らない場合がある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// s0とs1が同じ配列データを共有するかは不定
+</span><span class="c1"></span><span class="nx">s1</span> <span class="o">:=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">s0</span><span class="p">,</span> <span class="nx">x</span><span class="p">)</span></code></pre></div>
+<h3 id="マップ-map">マップ(map)</h3>
+
+<p>マップは、いわゆる<strong>連想配列</strong>。<br />
+関数型と参照型以外の、「任意の型のキーと任意の型の要素のペアを保持できる特殊な型」といえる。<br />
+Goのマップを表す型は、<code>map[キーの型]要素の型</code>という書式で定義する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 「int型のキーとstring型の値」を保持するマップ
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">m</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">string</span></code></pre></div>
+<p>マップも、スライスと同様に、関数<code>make</code>を使って生成する。<br />
+マップは、一意に定まるキーと任意の要素の組み合わせで構成される。したがって、キーの値が重複する代入では、要素の値は上書きされる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">m</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">string</span><span class="p">)</span>
+
+<span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;US&#34;</span>
+<span class="nx">m</span><span class="p">[</span><span class="mi">81</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;UK&#34;</span>
+<span class="nx">m</span><span class="p">[</span><span class="mi">81</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;Japan&#34;</span>
+<span class="nx">m</span><span class="p">[</span><span class="mi">86</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;China&#34;</span>
+
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span>
+<span class="c1">// =&gt;
+</span><span class="c1"></span><span class="o">//</span> <span class="kd">map</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="nx">US</span> <span class="mi">81</span><span class="p">:</span><span class="nx">Japan</span> <span class="mi">86</span><span class="p">:</span><span class="nx">China</span><span class="p">]</span></code></pre></div>
+<p><strong>NOTE</strong><br />
+キーを浮動小数点数にする場合は注意が必要。<br />
+というのも、例えば<code>float64</code>型などの精度の上限によって値が丸められて同じ数値になってしまった場合、同じキーとして扱われてしまう。</p>
+
+<h4 id="マップのリテラル">マップのリテラル</h4>
+
+<p>マップにも、キーと要素のペアをまとめて生成するためのリテラル「<code>キーの値: 要素の値</code>」が有る。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// マップリテラルで各要素を生成している
+</span><span class="c1"></span><span class="nx">m</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">string</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s">&#34;Hanako&#34;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s">&#34;Jiro&#34;</span><span class="p">}</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span>
+<span class="c1">// =&gt;
+</span><span class="c1">// map[3:Jiro 1:Taro 2:Hanako]
+</span><span class="c1"></span>
+<span class="c1">// 下記のように改行も可能(末尾のカンマは必須)
+</span><span class="c1"></span><span class="nx">m</span> <span class="p">=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">string</span> <span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="s">&#34;Hanako&#34;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="s">&#34;Jiro&#34;</span><span class="p">,</span>  <span class="c1">// カンマは必須
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="c1">// スライスをもたせることも可能
+</span><span class="c1"></span><span class="nx">m</span> <span class="p">=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">][]</span><span class="kt">int</span> <span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">},</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span>  <span class="c1">// カンマは必須
+</span><span class="c1"></span><span class="p">}</span>
+<span class="c1">// =&gt; map[1:[1], 2:[1, 2], 3:[1, 2, 3]]
+</span><span class="c1"></span>
+<span class="c1">// []int{}型は下記のように書くことも可能
+</span><span class="c1"></span><span class="nx">m</span> <span class="p">=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">][]</span><span class="kt">int</span> <span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="mi">1</span><span class="p">},</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span>   <span class="c1">// カンマは必須
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="c1">// マップを入れ子にすることも可能
+</span><span class="c1"></span><span class="nx">m</span> <span class="p">=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kd">map</span><span class="p">[</span><span class="kt">float64</span><span class="p">]</span><span class="kt">string</span> <span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="mf">3.14</span><span class="p">:</span> <span class="s">&#34;円周率&#34;</span><span class="p">},</span>
+<span class="p">}</span></code></pre></div>
+<h4 id="マップの要素を参照する">マップの要素を参照する</h4>
+
+<p>マップの要素を参照するには、配列と同じように<code>[キーの値]</code>とする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">m</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]{</span><span class="mi">1</span><span class="p">:</span> <span class="s">&#34;A&#34;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s">&#34;B&#34;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s">&#34;C&#34;</span><span class="p">}</span>
+<span class="nx">s</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>   <span class="c1">// &#34;A&#34;
+</span><span class="c1"></span><span class="nx">s</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span>   <span class="o">//</span> <span class="s">&#34;&#34;</span></code></pre></div>
+<p><strong>指定したキーの値に対応する要素がないときは、型のデフォルト値が返される。</strong><br />
+したがって、全く無関係のキーを誤って指定しても、それを検知しにくいことに注意すべき。<br />
+もしくは、マップへの要素を参照した際は、その第2戻り値を確認することで、要素の有無が分かる。</p>
+
+<ul>
+<li>第2戻り値が<code>true</code>・・・要素が存在する</li>
+<li>第2戻り値が<code>false</code>・・・要素が存在しない</li>
+</ul>
+
+<p><strong>NOTE</strong><br />
+このときの第2戻り値の名前は、特別な理由がなければ<code>ok</code>とすべき。(慣習的なもの)</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">m</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="s">&#34;A&#34;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s">&#34;B&#34;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s">&#34;C&#34;</span><span class="p">}</span>
+
+<span class="nx">s</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>   <span class="c1">// s == &#34;A&#34;, ok == true
+</span><span class="c1"></span><span class="nx">s</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span>   <span class="c1">// s == &#34;&#34;,  ok == false
+</span><span class="c1"></span><span class="nx">_</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>   <span class="c1">// ok == true
+</span><span class="c1"></span>
+<span class="k">if</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="nx">ok</span> <span class="p">{</span>
+    <span class="c1">// m[1]の要素が存在するときの処理
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<p><strong>NOTE</strong><br />
+マップの要素型がスライス型の場合、要素の存在チェックを下記のように行ってはいけない。<br />
+必ず第2戻り値を使うこと。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">m</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">][]</span><span class="kt">int</span> <span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="mi">1</span><span class="p">},</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span>
+<span class="p">}</span>
+
+<span class="nx">s</span> <span class="o">:=</span> <span class="nx">m</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="c1">// **問題がある書き方**
+</span><span class="c1">// 下記の区別がつかない
+</span><span class="c1">// - m[1]に対応する要素が無くてnilの場合と、
+</span><span class="c1">// - m[1]に対応するスライスはあるが、その中のスライスが値を持っておらずnilの場合
+</span><span class="c1"></span><span class="k">if</span> <span class="nx">s</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+    <span class="c1">// 中略
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<h4 id="for-の範囲節にマップを使う"><code>for</code>の範囲節にマップを使う</h4>
+
+<p>マップも、スライスと同様に、<code>for</code>の範囲節に使用して、繰り返し処理できる。</p>
+
+<p><strong>NOTE</strong><br />
+マップを範囲節に指定した場合、キーが処理される順序は保証されないことに注意すべき。<br />
+実行環境によっても異なる可能性があることに注意。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">m</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">string</span> <span class="p">{</span>
+    <span class="mi">1</span><span class="p">:</span> <span class="s">&#34;Apple&#34;</span><span class="p">,</span>
+    <span class="mi">2</span><span class="p">:</span> <span class="s">&#34;Banana&#34;</span><span class="p">,</span>
+    <span class="mi">3</span><span class="p">:</span> <span class="s">&#34;Cherry&#34;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">m</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%d =&gt; %s\n&#34;</span><span class="p">,</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="c1">// =&gt;
+</span><span class="c1">// 1 =&gt; Apple
+</span><span class="c1">// 2 =&gt; Banana
+</span><span class="c1"></span><span class="o">//</span> <span class="mi">3</span> <span class="p">=&gt;</span> <span class="nx">Cherry</span></code></pre></div>
+<h4 id="まっぷの要素数を-len-で取得する">まっぷの要素数を<code>len()</code>で取得する</h4>
+
+<p>マップの要素数は、スライスと同様に<code>len()</code>で取得できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">m</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]{</span><span class="mi">1</span><span class="p">:</span> <span class="s">&#34;A&#34;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s">&#34;B&#34;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s">&#34;C&#34;</span><span class="p">}</span>
+<span class="nb">len</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span>  <span class="c1">// 3
+</span><span class="c1"></span><span class="nx">m</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;D&#34;</span>
+<span class="nx">m</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="p">=</span> <span class="s">&#34;E&#34;</span>
+<span class="nb">len</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span>  <span class="o">//</span> <span class="mi">5</span></code></pre></div>
+<p><strong>NOTE</strong><br />
+当然ながら、マップに<code>cap()</code>は使用できない。なぜなら、マップにスライスの容量に該当する概念はないため。<br />
+内部的に確保しているメモリ領域は必ず有るだろうが、それをユーザに見せることはないため。</p>
+
+<h4 id="delete-でマップの要素を削除する"><code>delete()</code>でマップの要素を削除する</h4>
+
+<p>マップの要素は、組み込み関数<code>delete()</code>を使って削除できる。<br />
+書式は「<code>delete(マップ, キーの値)</code>」。<br />
+<code>delete()</code>で指定したキーの値に該当する要素がない場合、<code>delete()</code>は何もしない。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">m</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]{</span><span class="mi">1</span><span class="p">:</span> <span class="s">&#34;A&#34;</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="s">&#34;B&#34;</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span> <span class="s">&#34;C&#34;</span><span class="p">}</span>
+
+<span class="nb">delete</span><span class="p">(</span><span class="nx">m</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>    <span class="c1">// マップmのキー2の要素を削除する
+</span><span class="c1"></span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span>
+
+<span class="c1">// =&gt;
+</span><span class="c1"></span><span class="o">//</span> <span class="kd">map</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="nx">A</span> <span class="mi">3</span><span class="p">:</span><span class="nx">C</span><span class="p">]</span></code></pre></div>
+<h4 id="make-によるマップ生成時に要素数を指定する"><code>make()</code>によるマップ生成時に要素数を指定する</h4>
+
+<p>組み込み関数<code>make()</code>を使ってマップを生成する場合、2番めの引数に<strong>要素数に対応した初期スペース</strong>を整数で指定できる。<br />
+これが指定されると、これをヒントにGoランタイムが最適なメモリ領域を確保する。<br />
+要素数が膨大なマップの場合はパフォーマンスに影響するが、小さい場合は指定しなくて良い。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// map[int]string型のマップを初期スペース100で初期化
+</span><span class="c1"></span><span class="nx">m</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">string</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span></code></pre></div>
+<h3 id="チャネル-channel">チャネル(channel)</h3>
+
+<p>チャネルとは、<strong>ゴルーチン間でのデータの受け渡しを行うためのGo特有のデータ構造</strong>で、キューのようなデータ構造。<br />
+したがって、ゴルーチンを使用する場合にのみ、チャネルを使用することになる。</p>
+
+<dl>
+<dt>ゴルーチン</dt>
+<dd>前述の通り<code>go</code>文を用いて生成できる、Go特有の、スレッドよりも軽量な処理単位のこと。</dd>
+</dl>
+
+<h4 id="チャネルの型名">チャネルの型名</h4>
+
+<p>チャネルの型は、「<code>chan データ型</code>」と記述する。<br />
+型名の内側にスペースが入るため、見た目に違和感がある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// int型のチャネルch
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">ch</span> <span class="kd">chan</span> <span class="kt">int</span></code></pre></div>
+<h5 id="チャネルのサブタイプ">チャネルのサブタイプ</h5>
+
+<p>チャネルにはサブタイプがある。<br />
+サブチャネルには双方向、受信専用、送信専用がある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 送受信用(双方向)チャネル
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">ch1</span> <span class="kd">chan</span> <span class="kt">int</span>
+
+<span class="c1">// 受信専用チャネル
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">ch2</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kt">int</span>
+
+<span class="c1">// 送信専用チャネル
+</span><span class="c1"></span><span class="kd">var</span> <span class="nx">ch3</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="kt">int</span></code></pre></div>
+<p>チャネルのサブタイプにおいて、異なるもの同士の代入が可能な場合がある。<br />
+送受信用(双方向)チャネルの変数は、受信用または送信用の変数に代入できるが、反対向きの代入はできない。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 異なるサブタイプ同士の代入が可能
+</span><span class="c1"></span><span class="kd">var</span> <span class="p">(</span>
+    <span class="nx">ch_in_out</span> <span class="kd">chan</span> <span class="kt">int</span>
+    <span class="nx">ch_in</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kt">int</span>
+    <span class="nx">ch_out</span> <span class="kd">chan</span><span class="o">&lt;-</span> <span class="kt">int</span>
+<span class="p">)</span>
+
+<span class="nx">ch_in</span> <span class="p">=</span> <span class="nx">ch_in_out</span>
+<span class="nx">ch_out</span> <span class="p">=</span> <span class="nx">ch_in_out</span></code></pre></div>
+<h5 id="チャネルの生成と送受信">チャネルの生成と送受信</h5>
+
+<p>チャネルも、スライスやマップと同様に、組み込み関数<code>make</code>を使って生成する。<br />
+<code>make</code>へ2番めの引数を渡すと、チャネルのバッファサイズを指定できる。指定されてない場合、チャネルのバッファサイズは0になる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// バッファサイズ0のチャネル
+</span><span class="c1"></span><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+
+<span class="c1">/// バッファサイズ8のチャネル
+</span><span class="c1"></span><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span></code></pre></div>
+<p>チャネルは、キューの性質を備えるデータ構造。チャネルのバッファとは、このキューを格納する領域で、バッファサイズとはこのキューのサイズを意味する。<br />
+キューはFIFO(先入れ先出し)であり、キューに挿入された順番にデータを取得できる。Goにおけるチャネルも、FIFOの性質が有る。</p>
+
+
+<link rel="stylesheet" href="https://otaon.github.io/css/hugo-easy-gallery.css" />
+<div class="box aligncenter" style="max-width:500px;">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img  itemprop="thumbnail" src="go-channel.svg" alt="Goのチャネル" />
+    </div>
+    
+      <figcaption>
+          <p>Goのチャネル
+              
+          </p>
+      </figcaption>
+  </figure>
+</div>
+
+
+<p>チャネルが保持するデータに対する操作は、「送信」か「受信」の2パターンのみ。<br />
+送受信共に、演算子<code>&lt;-</code>を使用する。</p>
+
+<dl>
+<dt>送信</dt>
+<dd>チャネルに対して、データを送る。</dd>
+<dt>受信</dt>
+<dd>他のゴルーチンがチャネルへデータを送信するのを待つ。そして、チャネルに入ったデータを受け取る。</dd>
+</dl>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// バッファサイズ10のチャネル
+</span><span class="c1"></span><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="c1">// チャネルchに整数5を送信
+</span><span class="c1"></span><span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">5</span>
+<span class="c1">// チャネルから整数値を受信
+</span><span class="c1"></span><span class="nx">i</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span></code></pre></div>
+<p><code>ch &lt;- 5</code>はチャネルに整数5を送信する処理で、<code>i := &lt;-ch</code>はチャネルからデータを受信する処理。</p>
+
+<h5 id="チャネルとゴルーチン">チャネルとゴルーチン</h5>
+
+<p>チャネルは、複数のゴルーチン間で安全にデータを共有するための仕組み。<br />
+これを実際に使った例を下記コードに示す。(ただしこれは不完全)</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+    <span class="c1">// チャネルから受信から内容を出力
+</span><span class="c1"></span>    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Prinln</span><span class="p">(</span><span class="o">&lt;-</span><span class="nx">ch</span><span class="p">)</span>
+<span class="p">}</span></code></pre></div>
+<p>上記を実行するとランタイムエラー<code>fatal error: ass goroutines are asleep - deadloak!</code>が発生する。<br />
+すなわち、「上記コードの<code>ch</code>にデータを送信するゴルーチンが動いておらず、<code>ch</code>が永遠に待ち続けてしまう」ことがデッドロックとして検知される。</p>
+
+<p>下記コードでは、関数<code>main</code>からゴルーチンを生成して、チャネルを共有しつつ処理を行う。<br />
+<code>go</code>の使用方法は「<code>go</code>文による並行処理」を参照。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">reveiver</span><span class="p">(</span><span class="nx">ch</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="c1">// チャネルからデータを受信してiに代入する
+</span><span class="c1"></span>        <span class="nx">i</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// バッファサイズ0のチャネルを作成する
+</span><span class="c1"></span>    <span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+
+    <span class="c1">// チャネルch受信して表示するゴルーチンを生成する
+</span><span class="c1"></span>    <span class="k">go</span> <span class="nf">reveiver</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span>
+
+    <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">1000</span> <span class="p">{</span>
+        <span class="c1">// チャネルに整数値iを送る
+</span><span class="c1"></span>        <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">i</span>
+        <span class="nx">i</span><span class="o">++</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// =&gt;
+</span><span class="c1">// 0
+</span><span class="c1">// 1
+</span><span class="c1">// 2
+</span><span class="c1">// 3
+</span><span class="c1">// 4
+</span><span class="c1">// 5
+</span><span class="c1"></span><span class="o">//</span> <span class="o">...</span></code></pre></div>
+<p>上記コードの処理を説明する。</p>
+
+<ol>
+<li>関数<code>main</code>は、<code>go</code>文でゴルーチンを生成し、関数<code>receiver</code>への引数を使ってチャネル<code>ch</code>を共有する。</li>
+<li>関数<code>main</code>側のゴルーチン(<code>main</code>関数自体)では、0始まりの整数値をインクリメントさせつつチャネルに送信する。</li>
+<li>関数<code>receiver</code>側のゴルーチンは、データを受信して、それを標準出力に出力し続ける。<br />
+関数定義の引数の型指定で、引数で受け取るチャネルの型を<code>&lt;-chan int</code>型に限定する。</li>
+</ol>
+
+<div class="mermaid" align="center">
+    
+sequenceDiagram;
+	participant main as main-goroutine
+	participant ch as channel
+	participant receiver as receiver-goroutine
+
+	activate main
+	main ->> ch: ch := make(chan int)
+	main -x+ receiver: go receiver(ch)
+	main ->> main: i := 0
+	loop 無限ループ
+		main ->> ch: ch <- i
+		main ->> main: i++
+	end
+
+	loop 無限ループ
+		receiver ->> ch: i := <-ch
+		receiver ->> receiver: Prinln(i)
+    end
+
+	deactivate receiver
+	deactivate main
+
+</div>
+
+
+<p>バッファサイズを設定したチャネルを使用した場合、ゴルーチンが停止するかどうかはチャネルのバッファサイズによる。<br />
+下記のコードで分かるとおり、バッファサイズに収まる限りデータは正常に格納されてゴルーチンは停止しない。<br />
+しかし、バッファに空きがないチャネルへの送信が発生した場合、デッドロック発生する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">rune</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="nx">c</span> <span class="o">&lt;-</span> <span class="sc">&#39;a&#39;</span>    <span class="c1">// &#39;a&#39;
+</span><span class="c1"></span><span class="nx">c</span> <span class="o">&lt;-</span> <span class="sc">&#39;b&#39;</span>    <span class="c1">// &#39;a&#39;, &#39;b&#39;
+</span><span class="c1"></span><span class="nx">c</span> <span class="o">&lt;-</span> <span class="sc">&#39;c&#39;</span>    <span class="c1">// &#39;a&#39;, &#39;b&#39;, &#39;c&#39;
+</span><span class="c1"></span><span class="nx">c</span> <span class="o">&lt;-</span> <span class="sc">&#39;d&#39;</span>    <span class="o">//</span> <span class="nx">サイズ超過によりデッドロック発生と判断される</span></code></pre></div>
+<p>ゴルーチンがチャネル操作によって停止する条件は下記の2通り。</p>
+
+<ul>
+<li>バッファサイズが0またはバッファ内が空のチャネルから<strong>受信</strong>する</li>
+<li>バッファサイズが0またはバッファ内が満杯のチャネルへ<strong>送信</strong>する</li>
+</ul>
+
+<h5 id="チャネルにおける-len-と-cap">チャネルにおける<code>len</code>と<code>cap</code></h5>
+
+<h6 id="len-関数"><code>len</code>関数</h6>
+
+<p>チャネルに対する組み込み関数<code>len</code>は、<strong>チャネルのバッファ内に貯められているデータの個数</strong>を返す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">string</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="s">&#34;Apple&#34;</span>
+<span class="nb">len</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span> <span class="c1">// == 1
+</span><span class="c1"></span><span class="nx">ch</span> <span class="o">&lt;-</span> <span class="s">&#34;Banana&#34;</span>
+<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="s">&#34;Cherry&#34;</span>
+<span class="nb">len</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span> <span class="o">//</span> <span class="o">==</span> <span class="mi">3</span></code></pre></div>
+<p><code>len</code>チャネルのバッファ内の状態を動的に取得できるとしても、下記のコードはアトミックでないため、記述してはいけない。
+すなわち、<code>if len(ch) &gt; 0</code>が成り立って<code>if</code>節の中に入ったとしても、その直後に他のゴルーチンがチャネル<code>ch</code>からデータを受信してしまうと、<code>i := ch</code>の時点では<code>len(ch) &gt; 0</code>が成り立たなくなっている可能性がある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span> <span class="p">&gt;</span> <span class="mi">0</span> <span class="p">{</span>
+    <span class="nx">i</span> <span class="o">:=</span> <span class="nx">ch</span> <span class="c1">//  この瞬間len(ch) &gt; 0 は保証されない
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<h6 id="cap-関数"><code>cap</code>関数</h6>
+
+<p>チャネルに対する組み込み関数<code>cap</code>は、チャネルのバッファサイズ。<br />
+ただし、一度生成したチャネルのバッファサイズは変動しないため、取得したい場面は限られる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">string</span><span class="p">)</span>
+<span class="nb">cap</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span> <span class="c1">// == 0
+</span><span class="c1"></span>
+<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">string</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="nb">cap</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span> <span class="o">//</span> <span class="o">==</span> <span class="mi">3</span></code></pre></div>
+<h5 id="close-関数でチャネルをクローズする"><code>close</code>関数でチャネルをクローズする</h5>
+
+<p>チャネルは<strong>クローズ(closed</strong>という状態を持っている。<code>make</code>で生成したチャネルはオープンされた状態から始まるが、これを明示的にクローズ状態に変更するには組み込み関数<code>close</code>を使用する。</p>
+
+<p>指定したチャネルをクローズする書式は「<code>close(チャネル)</code>」。</p>
+
+<ul>
+<li><strong>NOTE</strong><br />
+
+<ul>
+<li>クローズされたチャネルに対してデータの<strong>送信</strong>を行うと、ランタイムパニックが発生する。</li>
+<li>クローズされたチャネルに対してデータの<strong>受信</strong>を行うと、バッファにデータがまだ溜まっていたら問題なく受信でき、既にチャネルが空ならチャネルの初期値を受信できる。</li>
+</ul></li>
+</ul>
+
+<p>チャネルのクローズ判定は、第2戻り値によって行う。</p>
+
+<ul>
+<li>第2戻り値の意味
+
+<ul>
+<li><code>false</code>:チャネルのバッファ内が空 and クローズされた状態</li>
+<li><code>true</code>:チャネルのバッファ内にデータがある or クローズされていない状態</li>
+</ul></li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+<span class="nb">close</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span>
+<span class="nx">i</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span>   <span class="c1">// i == 0, ok ==false
+</span><span class="c1"></span>
+
+<span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
+<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">2</span>
+<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">3</span>
+
+<span class="nb">close</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span>
+
+<span class="kd">var</span> <span class="p">(</span>
+    <span class="nx">i</span> <span class="kt">int</span>
+    <span class="nx">ok</span> <span class="kt">bool</span>
+<span class="p">)</span>
+<span class="nx">i</span><span class="p">,</span> <span class="nx">ok</span> <span class="p">=</span> <span class="o">&lt;-</span><span class="nx">ch</span>    <span class="c1">// i == 1, ok == true
+</span><span class="c1"></span><span class="nx">i</span><span class="p">,</span> <span class="nx">ok</span> <span class="p">=</span> <span class="o">&lt;-</span><span class="nx">ch</span>    <span class="c1">// i == 2, ok == true
+</span><span class="c1"></span><span class="nx">i</span><span class="p">,</span> <span class="nx">ok</span> <span class="p">=</span> <span class="o">&lt;-</span><span class="nx">ch</span>    <span class="c1">// i == 3, ok == true
+</span><span class="c1"></span><span class="nx">i</span><span class="p">,</span> <span class="nx">ok</span> <span class="p">=</span> <span class="o">&lt;-</span><span class="nx">ch</span>    <span class="o">//</span> <span class="nx">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">==</span> <span class="kc">false</span></code></pre></div>
+<h5 id="ゴルーチンと-close-の実例">ゴルーチンと<code>close</code>の実例</h5>
+
+<p>ゴルーチンを使用する際に、<code>close</code>を使用すると下記コードのような挙動となる。仕組みは上述のとおり。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;fmt&#34;</span>
+    <span class="s">&#34;time&#34;</span>
+<span class="p">)</span>
+
+
+<span class="c1">// receiveは、チャネルchから整数値を受信して表示する
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">receive</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">{</span>   <span class="c1">// 無限ループ
+</span><span class="c1"></span>        <span class="nx">i</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch</span>
+        <span class="k">if</span> <span class="nx">ok</span> <span class="o">==</span> <span class="kc">false</span> <span class="p">{</span>
+            <span class="c1">// 受信できなくなったため終了
+</span><span class="c1"></span>            <span class="k">break</span>
+        <span class="p">}</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+    <span class="c1">// ゴルーチンを3つ生成
+</span><span class="c1"></span>    <span class="k">go</span> <span class="nf">receive</span><span class="p">(</span><span class="s">&#34;1st goroutine&#34;</span><span class="p">,</span> <span class="nx">ch</span><span class="p">)</span>
+    <span class="k">go</span> <span class="nf">receive</span><span class="p">(</span><span class="s">&#34;2nd goroutine&#34;</span><span class="p">,</span> <span class="nx">ch</span><span class="p">)</span>
+    <span class="k">go</span> <span class="nf">receive</span><span class="p">(</span><span class="s">&#34;3rd goroutine&#34;</span><span class="p">,</span> <span class="nx">ch</span><span class="p">)</span>
+
+    <span class="c1">// チャネルに整数値0~99を送信する
+</span><span class="c1"></span>    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="mi">100</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+        <span class="nx">ch</span> <span class="o">&lt;-</span> <span class="nx">i</span>
+    <span class="p">}</span>
+
+    <span class="c1">// チャネルをクローズする
+</span><span class="c1"></span>    <span class="nb">close</span><span class="p">(</span><span class="nx">ch</span><span class="p">)</span>
+
+    <span class="c1">// ゴルーチンの完了を3秒待つ(簡略的な処理)
+</span><span class="c1"></span>    <span class="nx">time</span><span class="p">.</span><span class="nf">Sleep</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="nx">time</span><span class="p">.</span><span class="nx">Second</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// =&gt;
+</span><span class="c1">// 3rd goroutine 0
+</span><span class="c1">// 3rd goroutine 3
+</span><span class="c1">// 3rd goroutine 4
+</span><span class="c1">// 3rd goroutine 5
+</span><span class="c1">// 3rd goroutine 6
+</span><span class="c1">// 3rd goroutine 7
+</span><span class="c1">// 3rd goroutine 8
+</span><span class="c1">// ...中略...
+</span><span class="c1">// 3rd goroutine 93
+</span><span class="c1">// 3rd goroutine 94
+</span><span class="c1">// 3rd goroutine 95
+</span><span class="c1">// 1st goroutine 79
+</span><span class="c1">// 1st goroutine 97
+</span><span class="c1">// 1st goroutine 98
+</span><span class="c1">// 1st goroutine 99
+</span><span class="c1">// 3rd goroutine 96
+</span><span class="c1"></span><span class="o">//</span> <span class="mi">2</span><span class="nx">nd</span> <span class="nx">goroutine</span> <span class="mi">88</span></code></pre></div>
+<h5 id="チャネルを-for-と組み合わせる">チャネルを<code>for</code>と組み合わせる</h5>
+
+<p>範囲節の<code>for</code>において、チャネルを使用できる。下記コードのようにすると、チャネルからデータを延々と受信し続けることができる。<br />
+<code>a := range ch</code>の形式で、チャネルから受信したデータが変数<code>a</code>に代入される。<br />
+しかし、この方法には、チャネルがクローズされたかどうかを検出するタイミングが得られないという欠点がある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">ch</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">1</span>
+<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">2</span>
+<span class="nx">ch</span> <span class="o">&lt;-</span> <span class="mi">3</span>
+
+<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ch</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// =&gt;
+</span><span class="c1">// 1
+</span><span class="c1">// 2
+</span><span class="c1">// 3
+</span><span class="c1">// fatal error: all goroutines are asleep - deadlock!
+</span><span class="c1"></span><span class="o">//</span> <span class="nx">以下略</span></code></pre></div>
+<h5 id="制御構文-select-で複数のチャネルをコントロールする">制御構文<code>select</code>で複数のチャネルをコントロールする</h5>
+
+<p>下記のように、チャネル<code>ch1</code>、<code>ch2</code>と、チャネルが内包するデータ<code>e1</code>、<code>e2</code>について考える。<br />
+チャネル<code>ch1</code>からデータが受信できない場合、この処理の流れを実行しているゴルーチン(<code>main</code>)は処理を停止する。
+したがって、チャネル<code>ch2</code>の受信処理には、いつまで立ってもたどり着けない可能性がある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">e1</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch1</span> <span class="c1">// 受信街でゴルーチンが停止
+</span><span class="c1"></span><span class="nx">e2</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch2</span></code></pre></div>
+<p>上記コードのように、1つの処理の流れの中で複数のチャネルを処理しようとする場合、チャネルの状態に応じてゴルーチンが停止する問題をどうにかして回避する必要がある。<br />
+そこで、<code>select</code>文を使用する。これを使うと、複数チャネルの送受信処理を、ゴルーチンを停止させずに扱える。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="k">select</span> <span class="p">{</span>
+<span class="k">case</span> <span class="nx">e1</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch1</span>
+    <span class="c1">// ch1からの受信が成功した場合の処理
+</span><span class="c1"></span><span class="k">case</span> <span class="nx">e2</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch2</span>
+    <span class="c1">// ch2からの受信が成功した場合の処理
+</span><span class="c1"></span><span class="k">default</span><span class="p">:</span>
+    <span class="c1">// 上記条件のいずれも成立しなかった場合の処理
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<p><code>select</code>文の全ての<code>case</code>節は、必ずチャネルへの処理を記述する必要がある。チャネルへの処理には、下記の種類がある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// ch1から受信
+</span><span class="c1"></span><span class="k">case</span> <span class="nx">e1</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch1</span><span class="p">:</span>
+
+<span class="c1">// ch2から受信(2変数で)
+</span><span class="c1"></span><span class="k">case</span> <span class="nx">e2</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch2</span><span class="p">:</span>
+
+<span class="c1">// ch3へe3を送信
+</span><span class="c1"></span><span class="k">case</span> <span class="nx">ch3</span> <span class="o">&lt;-</span> <span class="nx">e3</span><span class="p">:</span>
+
+<span class="c1">// ch5から受信したデータをch4へ送信
+</span><span class="c1"></span><span class="k">case</span> <span class="nx">ch4</span> <span class="o">&lt;-</span> <span class="p">(</span><span class="o">&lt;-</span><span class="mi">5</span><span class="p">):</span></code></pre></div>
+<p><code>select</code>文は、<code>switch</code>文とは異なり、各<code>case</code>節を<strong>ランダム</strong>に選択して処理する。
+(ただし<code>default</code>はすべての<code>case</code>が成立しない場合にのみ遷移する。)<br />
+これは、最初の<code>case</code>ばかり処理されてそれ以降の<code>case</code>が処理されない問題を回避するための仕様。<br />
+下記コードを実際に実行してみると、実行のたびにランダムに<code>case</code>が選択されている事が分かる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">ch1</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nx">ch2</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nx">ch3</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="nx">ch1</span> <span class="o">&lt;-</span> <span class="mi">1</span>
+<span class="nx">ch2</span> <span class="o">&lt;-</span> <span class="mi">2</span>
+
+<span class="c1">// 複数のcaseが成立する場合はランダムに選択される
+</span><span class="c1"></span><span class="k">select</span> <span class="p">{</span>
+<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ch1</span><span class="p">:</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;ch1から受信&#34;</span><span class="p">)</span>
+<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ch2</span><span class="p">:</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;ch2から受信&#34;</span><span class="p">)</span>
+<span class="k">case</span> <span class="nx">ch3</span> <span class="o">&lt;-</span> <span class="mi">3</span><span class="p">:</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;3をch3へ送信&#34;</span><span class="p">)</span>
+<span class="k">default</span><span class="p">:</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;ここへは到達しない&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// =&gt;
+</span><span class="c1">// $ go run test.go
+</span><span class="c1">// ch2から受信
+</span><span class="c1">// $ go run test.go
+</span><span class="c1">// 3をch3へ送信
+</span><span class="c1">// $ go run test.go
+</span><span class="c1">// 3をch3へ送信
+</span><span class="c1">// $ go run test.go
+</span><span class="c1">// 3をch3へ送信
+</span><span class="c1">// $ go run test.go
+</span><span class="c1">// ch2から受信
+</span><span class="c1">// $ go run test.go
+</span><span class="c1">// ch2から受信
+</span><span class="c1">// $ go run test.go
+</span><span class="c1">// ch1から受信
+</span><span class="c1">// $ go run test.go
+</span><span class="c1">// 3をch3へ送信
+</span><span class="c1">// $ go run test.go
+</span><span class="c1"></span><span class="o">//</span> <span class="mi">3</span><span class="nx">をch3へ送信</span></code></pre></div>
+<p>複数のチャネルと複数のゴルーチンに<code>select</code>文を組み合わせたプログラムを下記に示す。<br />
+このプログラムは、下記を実行している。</p>
+
+<ol>
+<li>整数値1～99をch1に送信する</li>
+<li>ch1からデータを受信し、それを2倍したらch2に送信する</li>
+<li>ch2からデータを受信し、それを-1したらch3に送信する</li>
+<li>ch3からデータを受信し、それを表示する</li>
+</ol>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">ch1</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+<span class="nx">ch2</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+<span class="nx">ch3</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">(</span><span class="kd">chan</span> <span class="kt">int</span><span class="p">)</span>
+
+<span class="c1">// ch1から受信した整数を2倍してch2へ送信する
+</span><span class="c1"></span><span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="nx">i</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch1</span>
+        <span class="nx">ch2</span> <span class="o">&lt;-</span> <span class="p">(</span><span class="nx">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}()</span>
+
+<span class="c1">// ch2から受信した整数を-1してch3へ送信する
+</span><span class="c1"></span><span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">{</span>
+        <span class="nx">i</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch2</span>
+        <span class="nx">ch3</span> <span class="o">&lt;-</span> <span class="p">(</span><span class="nx">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}()</span>
+
+<span class="nx">n</span> <span class="o">:=</span> <span class="mi">1</span>
+<span class="nx">LOOP</span><span class="p">:</span>
+<span class="k">for</span> <span class="p">{</span>
+    <span class="k">select</span> <span class="p">{</span>
+    <span class="c1">// 整数をインクリメントさせつつch1へ送信する
+</span><span class="c1"></span>    <span class="k">case</span> <span class="nx">ch1</span> <span class="o">&lt;-</span> <span class="nx">n</span><span class="p">:</span>
+        <span class="nx">n</span><span class="o">++</span>
+    <span class="c1">// ch3から受信した値を表示する
+</span><span class="c1"></span>    <span class="k">case</span> <span class="nx">i</span> <span class="o">:=</span> <span class="o">&lt;-</span><span class="nx">ch3</span><span class="p">:</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;received&#34;</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span>
+    <span class="c1">// 上記caseの送受信が失敗したら実行
+</span><span class="c1"></span>    <span class="k">default</span><span class="p">:</span>
+        <span class="c1">// nが100以上になったらループを抜ける
+</span><span class="c1"></span>        <span class="k">if</span> <span class="nx">n</span> <span class="p">&gt;</span> <span class="mi">100</span> <span class="p">{</span>
+            <span class="k">break</span> <span class="nx">LOOP</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// =&gt;
+</span><span class="c1">// received 1
+</span><span class="c1">// received 3
+</span><span class="c1">// received 5
+</span><span class="c1">// received 7
+</span><span class="c1">// received 9
+</span><span class="c1">// received 11
+</span><span class="c1">// received 13
+</span><span class="c1">// received 15
+</span><span class="c1"></span><span class="o">//</span> <span class="o">...</span><span class="nx">以下略</span><span class="o">...</span></code></pre></div>
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="/web/asset/mermaid/mermaid.js"></script>
+
+</body>
+</html>
