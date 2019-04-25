@@ -85,7 +85,14 @@ func main() {
 
 ## 集約・コンポジション(has-a)
 オブジェクトがオブジェクトを内包する(持つ)のも、構造体によって実現できる。  
-上記のコードの`Human`に、ペットとして`Animal`型を所有させると、下記コードになる。
+
+### コンポジション
+コンポジションは、１つの「部分」インスタンスが高々１つの「全体」インスタンスに持たれる。  
+多重度をあえて記載すると、下図のとおり。
+
+{{<figure src="aggregate.svg" alt="aggregate" width="400">}}
+
+上記「カプセル化」のコードの`Human`に、ペットとして`Animal`型を所有させると、下記のとおり「コンポジション」を実現できる。
 
 ```go
 package main
@@ -99,7 +106,7 @@ type Human struct {
 	Name string		// 名前
 	Age int			// 年齢
 	ZipCode string	// 郵便番号
-	Pets []Animal	// ペット
+	Pets []Animal	// ペット(コンポジション)
 }
 
 // Humanのメソッド
@@ -154,6 +161,7 @@ func main() {
 //
 ```
 
+上記のコンポジションの方法を用いて、擬似的な継承を実現できる。  
 継承まがいのコードを雑に書いても良いなら、下記コードのように構造体に対して無名フィールドのコンポジションを使えば良い。
 
 ```go
@@ -178,7 +186,7 @@ func (p *Human) Introduce() {
 
 // 国民
 type People struct {
-	Human				// 国民は人間
+	Human				// 国民は人間(擬似的な継承)
 	Nationality string	// 国籍
 	Income int			// 収入
 }
@@ -222,8 +230,106 @@ func main() {
 ```
 
 ### 集約
+集約は、複数の「全体」インスタンスが１つの「部分」インスタンスを共有する可能性がある。  
+多重度をあえて記載すると、下図のとおり。
 
-### コンポジション
+{{<figure src="composite.svg" alt="composite" width="400">}}
+
+上記「コンポジション」のコードの`Human`に、ペットとして`Animal`のポインタ型を所有させると、下記のとおり「集約」を実現できる。
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+// 人間
+type Human struct {
+	Name string		// 名前
+	Age int			// 年齢
+	ZipCode string	// 郵便番号
+	Pets []*Animal	// ペット(集約)
+}
+
+// Humanのメソッド
+// 自己紹介する
+// NOTE: レシーバは、型が(p *Human)型なので必ず参照渡しになる
+func (p *Human) Introduce() {
+	fmt.Printf("Hi, I'm %s. I'm %d years old.\n", p.Name, p.Age)
+	p.Age += 1
+}
+
+// 動物
+type Animal struct {
+	Name string	// 名前
+	Age int		// 年齢
+	Kind string	// 種類
+}
+
+func main() {
+	p1 := Human { Name: "John", Age: 30, ZipCode: "1234-5678" }
+	p2 := Human { Name: "Bob", Age: 100, ZipCode: "1111-1111" }
+
+	Pets := []*Animal{
+		&Animal { Name: "Robert", Age:50, Kind: "Dog"},
+		&Animal { Name: "Tama", Age:10, Kind: "Chicken"},
+		&Animal { Name: "Taro", Age:14, Kind: "Panda"},
+	}
+
+	p1.Pets = Pets
+
+	// Introduce()にはp1を参照渡しすることに注意
+	p1.Introduce()	// 1年目
+	p1.Introduce()	// 2年目
+
+	// Humanが持っているペット達を紹介
+	fmt.Println(p1.Name, ": I have pets")
+	for _, pet := range p1.Pets {
+		fmt.Printf("  %s(%d), a %s,\n", pet.Name, pet.Age, pet.Kind)
+	}
+	fmt.Println("that's all.")
+
+	// そういえば今日はRobertの誕生日
+	p1.Pets[0].Age += 1
+	fmt.Printf("%s \"Hey, I turned %d today.\"\n", p1.Pets[0].Name, p1.Pets[0].Age)
+
+	// p1のペットをp2にも所有させる(複数の親が同一インスタンスを所有=集約)
+	p2.Pets = Pets
+
+	// Introduce()にはp2を参照渡しすることに注意
+	p2.Introduce()	// 1年目
+	p2.Introduce()	// 2年目
+
+	// Humanが持っているペット達を紹介
+	fmt.Println(p2.Name, ": I have pets")
+	for _, pet := range p2.Pets {
+		fmt.Printf("  %s(%d), a %s,\n", pet.Name, pet.Age, pet.Kind)
+	}
+	fmt.Println("that's all.")
+
+	// そういえば今日はRobertの誕生日
+	p2.Pets[0].Age += 1
+	fmt.Printf("%s \"Hey, I turned %d today.\"\n", p2.Pets[0].Name, p2.Pets[0].Age)
+}
+// =>
+// Hi, I'm John. I'm 30 years old.
+// Hi, I'm John. I'm 31 years old.
+// John : I have pets
+//   Robert(50), a Dog,
+//   Tama(10), a Chicken,
+//   Taro(14), a Panda,
+// that's all.
+// Robert "Hey, I turned 51 today."
+// Hi, I'm Bob. I'm 100 years old.
+// Hi, I'm Bob. I'm 101 years old.
+// Bob : I have pets
+//   Robert(51), a Dog,
+//   Tama(10), a Chicken,
+//   Taro(14), a Panda,
+// that's all.
+// Robert "Hey, I turned 52 today."
+```
 
 ## 部分型(is-a)
 
@@ -234,3 +340,44 @@ func main() {
 #### ダックタイピング
 
 
+- golang で継承っぽい事をやる方法(`https://twitter.com/mattn_jp/status/670415696656883713`)
+
+```go
+
+package main
+
+type Worker interface {
+	Do()
+}
+
+type Base struct {
+	Worker
+}
+
+func (b *Base) Do() {
+	if b.Worker != nil {
+		b.Worker.Do()
+	} else {
+		println("Base.Do")
+	}
+}
+
+type Derived struct {
+	Base
+}
+
+/* このコメントアウトを外せば Derived.Do が呼ばれる
+func (d *Derived) Do() {
+	println("Derived.Do")
+}
+*/
+
+func NewBase(w Worker) Worker {
+	return &Base{w}
+}
+
+func main() {
+	d := NewBase(new(Derived))
+	d.Do()
+}
+```
