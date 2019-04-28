@@ -38,7 +38,7 @@ Go言語でオブジェクト指向プログラミングを行う方法を残す
      1. 多重ディスパッチ（multiple dispatch）
 1. メッセージパッシング（message passing）
 
-# GoにおけるOOP原則の定義
+# Go言語におけるOOP原則の定義
 本稿では独断で、下記が表現できるプログラミングスタイルのことと定義する。  
 実際、下記を表現していればオブジェクト指向プログラミングだと言って差し支えないと思う(思いたい)。
 
@@ -51,8 +51,8 @@ Go言語でオブジェクト指向プログラミングを行う方法を残す
   1. ポリモーフィズム
 
 
-# Goで各OOP原則を実践する
-ここからは、実際にGoでOOP原則を表現していく。
+# Go言語で各OOP原則を実践する
+ここからは、実際にGo言語でOOP原則を表現していく。
 
 ## カプセル化
 カプセル化は、構造体とメソッドによって実現できる。  
@@ -90,7 +90,7 @@ func main() {
 コンポジションは、１つの「部分」インスタンスが高々１つの「全体」インスタンスに持たれる。  
 多重度をあえて記載すると、下図のとおり。
 
-{{<figure src="aggregate.svg" alt="aggregate" width="400">}}
+{{<figure src="composite.svg" alt="composite" width="400">}}
 
 上記「カプセル化」のコードの`Human`に、ペットとして`Animal`型を所有させると、下記のとおり「コンポジション」を実現できる。
 
@@ -126,10 +126,10 @@ type Animal struct {
 
 func main() {
 	p := Human { Name: "John", Age: 30, ZipCode: "1234-5678" }
-	p.Pets = []Animal{
-		Animal { Name: "Robert", Age:50, Kind: "Dog"},
-		Animal { Name: "Tama", Age:10, Kind: "Chicken"},
-		Animal { Name: "Taro", Age:14, Kind: "Panda"},
+	p.Pets = []Animal {
+		Animal { Name: "Robert", Age:50, Kind: "Dog" },
+		Animal { Name: "Tama", Age:10, Kind: "Chicken" },
+		Animal { Name: "Taro", Age:14, Kind: "Panda" },
 	}
 
 	// pが参照渡しとなることに注意
@@ -233,7 +233,7 @@ func main() {
 集約は、複数の「全体」インスタンスが１つの「部分」インスタンスを共有する可能性がある。  
 多重度をあえて記載すると、下図のとおり。
 
-{{<figure src="composite.svg" alt="composite" width="400">}}
+{{<figure src="aggregate.svg" alt="aggregate" width="400">}}
 
 上記「コンポジション」のコードの`Human`に、ペットとして`Animal`のポインタ型を所有させると、下記のとおり「集約」を実現できる。
 
@@ -271,10 +271,10 @@ func main() {
 	p1 := Human { Name: "John", Age: 30, ZipCode: "1234-5678" }
 	p2 := Human { Name: "Bob", Age: 100, ZipCode: "1111-1111" }
 
-	Pets := []*Animal{
-		&Animal { Name: "Robert", Age:50, Kind: "Dog"},
-		&Animal { Name: "Tama", Age:10, Kind: "Chicken"},
-		&Animal { Name: "Taro", Age:14, Kind: "Panda"},
+	Pets := []*Animal {
+		&Animal { Name: "Robert", Age:50, Kind: "Dog" },
+		&Animal { Name: "Tama", Age:10, Kind: "Chicken" },
+		&Animal { Name: "Taro", Age:14, Kind: "Panda" },
 	}
 
 	p1.Pets = Pets
@@ -332,15 +332,35 @@ func main() {
 ```
 
 ## 部分型(is-a)
+部分型の特徴として、継承・ポリモーフィズムがある。  
+ここで、Go言語においてそれぞれがどう扱われるのかを考える。
 
 ### 継承
+Go言語には継承はない。つまり、親クラスがあって、子クラスがその親クラスの属性と振る舞いを使用する、という機構はサポートされていない。  
+ただし、トリッキーな方法で継承らしきものは実現できる。詳細は本稿末を参照。
 
 ### ポリモーフィズム
 
+
 #### ダックタイピング
+動的型付け言語におけるオブジェクトの型の考え方の一つで、振る舞い(メソッドの有無)によって型を規定する。  
+wikipediaの概要が分かりやすい。
+
+- [wikipedia - ダック・タイピング](https://ja.wikipedia.org/wiki/%E3%83%80%E3%83%83%E3%82%AF%E3%83%BB%E3%82%BF%E3%82%A4%E3%83%94%E3%83%B3%E3%82%B0)
+
+> ダック・タイピング（duck typing）とは、Smalltalk、Perl、Python、Rubyなどのいくつかの動的型付けオブジェクト指向プログラミング言語に特徴的な型付けの作法のことである。  
+> それらの言語ではオブジェクト（変数の値）に何ができるかはオブジェクトそのものが決定する。  
+> これによりポリモーフィズム（多態性）を実現することができる。  
+> つまり、静的型付け言語であるJavaやC#の概念で例えると、オブジェクトがあるインタフェースのすべてのメソッドを持っているならば、たとえそのクラスがそのインタフェースを宣言的に実装していなくとも、オブジェクトはそのインタフェースを実行時に実装しているとみなせる。
+
+Go言語では、インターフェースによってダックタイピングできるように設計されている。  
+このインターフェースが要求したメソッドをすべて実装してさえれば、インターフェースを実装していることを明示しなくとも、その型は当該インターフェースであるとみなされる。
+これが、振る舞い(メソッドの有無)によって型が規定されるという意味。
 
 
-- golang で継承っぽい事をやる方法(`https://twitter.com/mattn_jp/status/670415696656883713`)
+## golang で継承っぽい事をやる方法
+
+ {{< tweet 670415696656883713 >}}
 
 ```go
 
