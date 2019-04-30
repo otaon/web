@@ -345,12 +345,16 @@ Go言語には継承はない。つまり、親クラスがあって、子クラ
 
 
 ```go
+package main
+
+import (
+	"fmt"
+)
+
 // Human型
 type Human interface {
 	// 話せる
 	talk() string
-	// 聞ける
-	listen(string) string
 }
 
 type Person struct {
@@ -359,16 +363,16 @@ type Person struct {
 	Human
 }
 
+func (*Person) talk() string {
+	return "I am a person."
+}
+
 type Male struct {
 	Person
 }
 
 func (*Male) talk() string {
-
-}
-
-func (*Male) listen() string {
-
+	return "I am a male."
 }
 
 type Female struct {
@@ -376,13 +380,50 @@ type Female struct {
 }
 
 func (*Female) talk() string {
-
+	return "I am a female."
 }
 
-func (*Female) listen() string {
-
+type NewGender struct {
+	Person
 }
 
+type NewNewGender struct{}
+
+func (*NewNewGender) talk() string {
+	return "I am a New New Gender."
+}
+
+type NotGender struct{}
+
+func (*NotGender) talk() (string, string) {
+	return "I am not a gender.", "not error"
+}
+
+func main() {
+	person := new(Person)
+	if value, ok := person.(Human); ok {
+		fmt.Println(value.talk())
+	}
+
+	male := new(Male)
+	if value, ok := male.(Human); ok {
+		fmt.Println(value.talk())
+	}
+
+	female := new(Female)
+	if value, ok := female.(Human); ok {
+		fmt.Println(value.talk())
+	}
+
+	newgen := new(NewGender)
+	fmt.Println(newgen.talk())
+
+	newnewgen := new(NewNewGender)
+	fmt.Println(newnewgen.talk())
+
+	notgen := new(NotGender)
+	fmt.Println(notgen.talk())
+}
 ```
 
 
