@@ -60,6 +60,9 @@
 {{ define "main" }}
 <div class="container content">
   <article>
+  {{ if eq .Params.toc true }}
+    {{ partial "toc.html" . }}
+  {{ end }}
   {{ .Content }}
   </article>
 
