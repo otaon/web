@@ -3,6 +3,7 @@ title: "Gitの使い方"
 date:    2019-03-13T01:00:00+09:00
 lastmod: 2019-03-13T01:00:00+09:00
 draft: false
+toc: true
 tags: ["Git"]
 categories: ["Notes"]
 authors:

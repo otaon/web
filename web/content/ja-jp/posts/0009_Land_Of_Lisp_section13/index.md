@@ -3,19 +3,12 @@ title: "書籍 Land of Lisp 13章 Webサーバを作ろう！"
 date:    2019-03-07T00:00:00+09:00
 lastmod: 2019-03-07T00:00:00+09:00
 draft: false
+toc: true
 tags: ["lisp"]
 categories: ["Notes"]
 authors:
 - otaon
 ---
-
-## T.O.C.
-
-- [13.1 Common Lispでのエラー処理](#131-common-lispでのエラー処理)
-- [13.2 ゼロからWebサーバを書く](#132-ゼロからwebサーバを書く)
-- [13.3 動的なWebサイトを作る](#133-動的なwebサイトを作る)
-
-----
 
 ## 13.1 Common Lispでのエラー処理
 

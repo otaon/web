@@ -3,6 +3,7 @@ title: "テンプレート"
 date: 2019-03-01T16:01:23+09:00
 lastmod: 2019-03-01T16:01:23+09:00
 draft: false
+toc: true
 tags: ["template"]
 categories: ["Notes"]
 resources:

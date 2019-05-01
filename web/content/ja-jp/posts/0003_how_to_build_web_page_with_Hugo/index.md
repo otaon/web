@@ -3,6 +3,7 @@ title: "GitHub + Hugo + Travis CI で静的サイトを GitHub Pages に公開�
 date:    2019-03-03T16:23:58+09:00
 lastmod: 2019-03-06T02:35:00+09:00
 draft: false
+toc: true
 tags: ["Hugo", "TravisCI", "GitHub Pages"]
 categories: ["Notes"]
 authors:

@@ -3,17 +3,12 @@ title: "書籍 Land of Lisp 15章 ダイスオブドゥーム：関数型スタ�
 date:    2019-03-07T00:00:00+09:00
 lastmod: 2019-03-07T00:00:00+09:00
 draft: false
+toc: true
 tags: ["lisp"]
 categories: ["Notes"]
 authors:
 - otaon
 ---
-
-## T.O.C.
-
-- [15.5 ダイス・オブ・ドゥームを高速化する](#155-ダイスオブドゥームを高速化する)
-
-----
 
 ## 15.5 ダイス・オブ・ドゥームを高速化する
 

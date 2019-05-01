@@ -3,6 +3,7 @@ title: "Go言語入門(変数定義・変数への代入)"
 date:    2019-04-13T06:00:00+09:00
 lastmod: 2019-04-13T06:00:00+09:00
 draft: false
+toc: true
 tags: ["Go", "Golang"]
 categories: ["Notes"]
 authors:

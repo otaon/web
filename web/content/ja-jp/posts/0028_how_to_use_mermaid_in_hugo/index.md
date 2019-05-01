@@ -3,6 +3,7 @@ title: "mermaid.jsをHugoで使えるようにする"
 date:    2019-03-08T00:00:00+09:00
 lastmod: 2019-03-08T00:00:00+09:00
 draft: false
+toc: true
 tags: ["hugo", "mermaid.js"]
 categories: ["Notes"]
 authors:

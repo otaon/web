@@ -3,6 +3,7 @@ title: "Go言語入門(インターフェース)"
 date:    2019-04-13T19:00:00+09:00
 lastmod: 2019-04-13T19:00:00+09:00
 draft: false
+toc: true
 tags: ["Go", "Golang"]
 categories: ["Notes"]
 authors:

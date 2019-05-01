@@ -3,6 +3,7 @@ title: "Go言語入門(文構造)"
 date:    2019-04-13T03:00:00+09:00
 lastmod: 2019-04-13T03:00:00+09:00
 draft: false
+toc: true
 tags: ["Go", "Golang"]
 categories: ["Notes"]
 authors:
