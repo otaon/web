@@ -41,7 +41,7 @@ type error interface {
 }
 
 // error型を使用した関数
-func DoSometiong() (int, error) {
+func DoSomething() (int, error) {
 	// ....省略....
 }
 
