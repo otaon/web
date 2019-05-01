@@ -24,6 +24,129 @@
     </item>
     
     <item>
+      <title>HugoにTOCを追加する</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/01/hugo%E3%81%ABtoc%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B/</link>
+      <pubDate>Wed, 01 May 2019 22:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/01/hugo%E3%81%ABtoc%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B/</guid>
+      
+        <description>
+
+&lt;h1 id=&#34;目的&#34;&gt;目的&lt;/h1&gt;
+
+&lt;p&gt;HugoにTOC(目次)を追加する方法を残す。&lt;/p&gt;
+
+&lt;h1 id=&#34;参考文献&#34;&gt;参考文献&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://akisnote.com/2018/11/table-of-contents/&#34;&gt;わからないから調べるブログ - Hugoに開閉式の目次を実装する方法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://qiita.com/y_hokkey/items/f9d8b66b3770a82d4c1c&#34;&gt;Qiita - HUGOで作れるCMSっぽいパーツ:関連記事・目次・JSON-LDなど&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;設定ファイルと設定箇所の一覧&#34;&gt;設定ファイルと設定箇所の一覧&lt;/h1&gt;
+
+&lt;p&gt;上記の参考文献を見つつ、下記のとおり設定すれば、記事の頭にTOCが挿入されるはず。&lt;/p&gt;
+
+&lt;h2 id=&#34;記事の基本情報のデフォルト値を変更&#34;&gt;記事の基本情報のデフォルト値を変更&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;web\archetypes\default.md&lt;/code&gt; 変更&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;  title: &amp;#34;{{ replace .Name &amp;#34;-&amp;#34; &amp;#34; &amp;#34; | title }}&amp;#34;
+  date: {{ .Date }}
+  draft: true
+&lt;span class=&#34;gi&#34;&gt;+ toc: true
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;&lt;/span&gt;  ---
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;web\themes\hugo-theme-den\archetypes\default.md&lt;/code&gt; 変更&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;  +++
+&lt;span class=&#34;gi&#34;&gt;+ toc = true
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;&lt;/span&gt;  +++
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;tocを記事に追加するように設定を変更&#34;&gt;TOCを記事に追加するように設定を変更&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;web\themes\hugo-theme-den\layouts\posts\single.html&lt;/code&gt; 変更&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;{{ define &amp;#34;main&amp;#34; }}
+&amp;lt;div class=&amp;#34;container content&amp;#34;&amp;gt;
+  &amp;lt;article&amp;gt;
+&lt;span class=&#34;gi&#34;&gt;+ {{ if eq .Params.toc true }}
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+   {{ partial &amp;#34;toc.html&amp;#34; . }}
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+ {{ end }}
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;&lt;/span&gt;  {{ .Content }}
+  &amp;lt;/article&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;web\themes\hugo-theme-den\layouts\partials\toc.html&lt;/code&gt; 新規追加&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;&lt;span class=&#34;gi&#34;&gt;+ &amp;lt;section class=&amp;#34;js-toc&amp;#34;&amp;gt;
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+   &amp;lt;div class=&amp;#34;toc&amp;#34;&amp;gt;
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+   {{ .TableOfContents }}
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+   &amp;lt;/div&amp;gt;
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+ &amp;lt;/section&amp;gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;toc用のcssクラス-toc-のデザイン設定&#34;&gt;TOC用のcssクラス&lt;code&gt;toc&lt;/code&gt;のデザイン設定&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;web\themes\hugo-theme-den\static\css\den.css&lt;/code&gt; 変更&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;  @import url(&amp;#39;https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700&amp;#39;);
+  
+  @import url(&amp;#34;syntax.css&amp;#34;);
+&lt;span class=&#34;gi&#34;&gt;+ @import url(&amp;#34;style.css&amp;#34;);
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;&lt;/span&gt;  
+  /* Responsive */
+  @media (min-width: 768px) {
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;web\themes\hugo-theme-den\static\css\style.css&lt;/code&gt; 新規作成&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;&lt;span class=&#34;gi&#34;&gt;+ .toc ul {
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+     list-style-type:none;
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+ }
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+ .toc ul ul {
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+     list-style-type:disc;
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+ }
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+ .toc:before {
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+     content: &amp;#34;TOC&amp;#34;;
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+     font-size: 120%;
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+     font-weight: bold;
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+     padding-left: 3em;
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+ }
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+ .toc  {
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+     background: #f8f8f8;
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+     border-radius: 5px;
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+     padding: 1em;
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+ }
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;web\themes\hugo-theme-den\static\js\script.js&lt;/code&gt; 新規作成(これは必要なのか不明)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;&lt;span class=&#34;gi&#34;&gt;+ var $tocPlace = $(&amp;#39;#js-toc-place&amp;#39;);
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+ if ($tocPlace.length === 1) {
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+     $(&amp;#39;.js-toc&amp;#39;).appendTo($tocPlace);
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;+ }
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;記事にtocを追加するための設定方法&#34;&gt;記事にTOCを追加するための設定方法&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;web\content\ja-jp\posts\0051_go_steup_01_oop\index.md&lt;/code&gt; 変更&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;  date:    2019-05-01T00:00:00+09:00
+  lastmod: 2019-05-01T00:00:00+09:00
+  draft: false
+&lt;span class=&#34;gi&#34;&gt;+ toc: true
+&lt;/span&gt;&lt;span class=&#34;gi&#34;&gt;&lt;/span&gt;  tags: [&amp;#34;Go&amp;#34;, &amp;#34;Golang&amp;#34;, &amp;#34;OOP&amp;#34;, &amp;#34;オブジェクト指向プログラミング&amp;#34;, &amp;#34;ポリモーフィズム&amp;#34;, &amp;#34;多態性&amp;#34;]
+  categories: [&amp;#34;Notes&amp;#34;]
+  authors:
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+      
+    </item>
+    
+    <item>
       <title>Go言語ステップアップ(オブジェクト指向プログラミング)</title>
       <link>https://otaon.github.io/web/ja-jp/2019/05/01/go%E8%A8%80%E8%AA%9E%E3%82%B9%E3%83%86%E3%83%83%E3%83%97%E3%82%A2%E3%83%83%E3%83%97%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/</link>
       <pubDate>Wed, 01 May 2019 00:00:00 +0900</pubDate>
@@ -5248,34 +5371,6 @@ Goでは、配列のサイズを拡張することはできない(例えば&lt;c
     &lt;span class=&#34;s&#34;&gt;&amp;#34;bar&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
     &lt;span class=&#34;s&#34;&gt;&amp;#34;baz&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;// 文末と判断されず;は挿入されない
 &lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>Go言語入門(コメント)</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88/</link>
-      <pubDate>Sat, 13 Apr 2019 02:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E3%82%B3%E3%83%A1%E3%83%B3%E3%83%88/</guid>
-      
-        <description>
-
-&lt;h1 id=&#34;目的&#34;&gt;目的&lt;/h1&gt;
-
-&lt;p&gt;Go言語の基本構文を残す。&lt;/p&gt;
-
-&lt;h1 id=&#34;参考文献&#34;&gt;参考文献&lt;/h1&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.shoeisha.co.jp/book/detail/9784798142418&#34;&gt;スターティング Go言語&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;基本構文&#34;&gt;基本構文&lt;/h1&gt;
-
-&lt;h2 id=&#34;コメント&#34;&gt;コメント&lt;/h2&gt;
-
-&lt;p&gt;C言語と同じコメント形式(&lt;code&gt;//&lt;/code&gt; or &lt;code&gt;/* */&lt;/code&gt;)を使用できる。後者は入れ子不可能。&lt;/p&gt;
-</description>
       
     </item>
     

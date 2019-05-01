@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>HugoにTOCを追加する · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="目的 HugoにTOC(目次)を追加する方法を残す。 参考文献 わからないから調べるブログ - Hugoに開閉式の目次を実装する方法 Qiita - HUGOで作れ" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/05/01/hugo%E3%81%ABtoc%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="HugoにTOCを追加する" />
+<meta property="og:description" content="目的 HugoにTOC(目次)を追加する方法を残す。 参考文献 わからないから調べるブログ - Hugoに開閉式の目次を実装する方法 Qiita - HUGOで作れ" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/05/01/hugo%E3%81%ABtoc%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B/" />
+<meta property="article:published_time" content="2019-05-01T22:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-05-01T22:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="HugoにTOCを追加する">
+<meta itemprop="description" content="目的 HugoにTOC(目次)を追加する方法を残す。 参考文献 わからないから調べるブログ - Hugoに開閉式の目次を実装する方法 Qiita - HUGOで作れ">
+
+
+<meta itemprop="datePublished" content="2019-05-01T22:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-05-01T22:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="491">
+
+
+
+<meta itemprop="keywords" content="TOC,Hugo," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="HugoにTOCを追加する"/>
+<meta name="twitter:description" content="目的 HugoにTOC(目次)を追加する方法を残す。 参考文献 わからないから調べるブログ - Hugoに開閉式の目次を実装する方法 Qiita - HUGOで作れ"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">HugoにTOCを追加する</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-05-01
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/hugo/">Hugo</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/toc/">TOC</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+    <section class="js-toc">
+  <div class="toc">
+  <nav id="TableOfContents">
+<ul>
+<li><a href="#目的">目的</a></li>
+<li><a href="#参考文献">参考文献</a></li>
+<li><a href="#設定ファイルと設定箇所の一覧">設定ファイルと設定箇所の一覧</a>
+<ul>
+<li><a href="#記事の基本情報のデフォルト値を変更">記事の基本情報のデフォルト値を変更</a></li>
+<li><a href="#tocを記事に追加するように設定を変更">TOCを記事に追加するように設定を変更</a></li>
+<li><a href="#toc用のcssクラス-toc-のデザイン設定">TOC用のcssクラス<code>toc</code>のデザイン設定</a></li>
+<li><a href="#記事にtocを追加するための設定方法">記事にTOCを追加するための設定方法</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</section>
+
+  
+  
+
+<h1 id="目的">目的</h1>
+
+<p>HugoにTOC(目次)を追加する方法を残す。</p>
+
+<h1 id="参考文献">参考文献</h1>
+
+<ul>
+<li><a href="https://akisnote.com/2018/11/table-of-contents/">わからないから調べるブログ - Hugoに開閉式の目次を実装する方法</a></li>
+<li><a href="https://qiita.com/y_hokkey/items/f9d8b66b3770a82d4c1c">Qiita - HUGOで作れるCMSっぽいパーツ:関連記事・目次・JSON-LDなど</a></li>
+</ul>
+
+<h1 id="設定ファイルと設定箇所の一覧">設定ファイルと設定箇所の一覧</h1>
+
+<p>上記の参考文献を見つつ、下記のとおり設定すれば、記事の頭にTOCが挿入されるはず。</p>
+
+<h2 id="記事の基本情報のデフォルト値を変更">記事の基本情報のデフォルト値を変更</h2>
+
+<ul>
+<li><code>web\archetypes\default.md</code> 変更</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff">  title: &#34;{{ replace .Name &#34;-&#34; &#34; &#34; | title }}&#34;
+  date: {{ .Date }}
+  draft: true
+<span class="gi">+ toc: true
+</span><span class="gi"></span>  ---
+</code></pre></div>
+<ul>
+<li><code>web\themes\hugo-theme-den\archetypes\default.md</code> 変更</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff">  +++
+<span class="gi">+ toc = true
+</span><span class="gi"></span>  +++
+</code></pre></div>
+<h2 id="tocを記事に追加するように設定を変更">TOCを記事に追加するように設定を変更</h2>
+
+<ul>
+<li><code>web\themes\hugo-theme-den\layouts\posts\single.html</code> 変更</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff">{{ define &#34;main&#34; }}
+&lt;div class=&#34;container content&#34;&gt;
+  &lt;article&gt;
+<span class="gi">+ {{ if eq .Params.toc true }}
+</span><span class="gi">+   {{ partial &#34;toc.html&#34; . }}
+</span><span class="gi">+ {{ end }}
+</span><span class="gi"></span>  {{ .Content }}
+  &lt;/article&gt;
+</code></pre></div>
+<ul>
+<li><code>web\themes\hugo-theme-den\layouts\partials\toc.html</code> 新規追加</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gi">+ &lt;section class=&#34;js-toc&#34;&gt;
+</span><span class="gi">+   &lt;div class=&#34;toc&#34;&gt;
+</span><span class="gi">+   {{ .TableOfContents }}
+</span><span class="gi">+   &lt;/div&gt;
+</span><span class="gi">+ &lt;/section&gt;
+</span></code></pre></div>
+<h2 id="toc用のcssクラス-toc-のデザイン設定">TOC用のcssクラス<code>toc</code>のデザイン設定</h2>
+
+<ul>
+<li><code>web\themes\hugo-theme-den\static\css\den.css</code> 変更</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff">  @import url(&#39;https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700&#39;);
+  
+  @import url(&#34;syntax.css&#34;);
+<span class="gi">+ @import url(&#34;style.css&#34;);
+</span><span class="gi"></span>  
+  /* Responsive */
+  @media (min-width: 768px) {
+</code></pre></div>
+<ul>
+<li><code>web\themes\hugo-theme-den\static\css\style.css</code> 新規作成</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gi">+ .toc ul {
+</span><span class="gi">+     list-style-type:none;
+</span><span class="gi">+ }
+</span><span class="gi">+ .toc ul ul {
+</span><span class="gi">+     list-style-type:disc;
+</span><span class="gi">+ }
+</span><span class="gi">+ .toc:before {
+</span><span class="gi">+     content: &#34;TOC&#34;;
+</span><span class="gi">+     font-size: 120%;
+</span><span class="gi">+     font-weight: bold;
+</span><span class="gi">+     padding-left: 3em;
+</span><span class="gi">+ }
+</span><span class="gi">+ .toc  {
+</span><span class="gi">+     background: #f8f8f8;
+</span><span class="gi">+     border-radius: 5px;
+</span><span class="gi">+     padding: 1em;
+</span><span class="gi">+ }
+</span></code></pre></div>
+<ul>
+<li><code>web\themes\hugo-theme-den\static\js\script.js</code> 新規作成(これは必要なのか不明)</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gi">+ var $tocPlace = $(&#39;#js-toc-place&#39;);
+</span><span class="gi">+ if ($tocPlace.length === 1) {
+</span><span class="gi">+     $(&#39;.js-toc&#39;).appendTo($tocPlace);
+</span><span class="gi">+ }
+</span></code></pre></div>
+<h2 id="記事にtocを追加するための設定方法">記事にTOCを追加するための設定方法</h2>
+
+<ul>
+<li><code>web\content\ja-jp\posts\0051_go_steup_01_oop\index.md</code> 変更</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff">  date:    2019-05-01T00:00:00+09:00
+  lastmod: 2019-05-01T00:00:00+09:00
+  draft: false
+<span class="gi">+ toc: true
+</span><span class="gi"></span>  tags: [&#34;Go&#34;, &#34;Golang&#34;, &#34;OOP&#34;, &#34;オブジェクト指向プログラミング&#34;, &#34;ポリモーフィズム&#34;, &#34;多態性&#34;]
+  categories: [&#34;Notes&#34;]
+  authors:
+</code></pre></div>
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="/web/asset/mermaid/mermaid.js"></script>
+
+</body>
+</html>
