@@ -32,7 +32,7 @@
     <item>
       <title>Go</title>
       <link>https://otaon.github.io/web/ja-jp/tag/go/</link>
-      <pubDate>Sat, 13 Apr 2019 19:00:00 +0900</pubDate>
+      <pubDate>Wed, 01 May 2019 00:00:00 +0900</pubDate>
       
       <guid>https://otaon.github.io/web/ja-jp/tag/go/</guid>
       <description></description>
@@ -41,7 +41,7 @@
     <item>
       <title>Golang</title>
       <link>https://otaon.github.io/web/ja-jp/tag/golang/</link>
-      <pubDate>Sat, 13 Apr 2019 19:00:00 +0900</pubDate>
+      <pubDate>Wed, 01 May 2019 00:00:00 +0900</pubDate>
       
       <guid>https://otaon.github.io/web/ja-jp/tag/golang/</guid>
       <description></description>
@@ -53,6 +53,15 @@
       <pubDate>Sun, 03 Mar 2019 16:23:58 +0900</pubDate>
       
       <guid>https://otaon.github.io/web/ja-jp/tag/hugo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>OOP</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/oop/</link>
+      <pubDate>Wed, 01 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/oop/</guid>
       <description></description>
     </item>
     
@@ -170,6 +179,15 @@
       <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
       
       <guid>https://otaon.github.io/web/ja-jp/tag/vim/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>オブジェクト指向プログラミング</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/</link>
+      <pubDate>Wed, 01 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/</guid>
       <description></description>
     </item>
     

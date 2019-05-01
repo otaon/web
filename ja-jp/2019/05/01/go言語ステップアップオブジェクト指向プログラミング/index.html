@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>Go言語ステップアップ(オブジェクト指向プログラミング) · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="目的 Go言語でオブジェクト指向プログラミングを行う方法を残す。 参考文献 POSTD - Goはオブジェクト指向言語だろうか？ Go言語でのダックタイピング Qiita" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/05/01/go%E8%A8%80%E8%AA%9E%E3%82%B9%E3%83%86%E3%83%83%E3%83%97%E3%82%A2%E3%83%83%E3%83%97%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="Go言語ステップアップ(オブジェクト指向プログラミング)" />
+<meta property="og:description" content="目的 Go言語でオブジェクト指向プログラミングを行う方法を残す。 参考文献 POSTD - Goはオブジェクト指向言語だろうか？ Go言語でのダックタイピング Qiita" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/05/01/go%E8%A8%80%E8%AA%9E%E3%82%B9%E3%83%86%E3%83%83%E3%83%97%E3%82%A2%E3%83%83%E3%83%97%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/" />
+<meta property="article:published_time" content="2019-05-01T00:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-05-01T00:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="Go言語ステップアップ(オブジェクト指向プログラミング)">
+<meta itemprop="description" content="目的 Go言語でオブジェクト指向プログラミングを行う方法を残す。 参考文献 POSTD - Goはオブジェクト指向言語だろうか？ Go言語でのダックタイピング Qiita">
+
+
+<meta itemprop="datePublished" content="2019-05-01T00:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-05-01T00:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="5433">
+
+
+
+<meta itemprop="keywords" content="Go,Golang,OOP,オブジェクト指向プログラミング,ポリモーフィズム,多態性," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Go言語ステップアップ(オブジェクト指向プログラミング)"/>
+<meta name="twitter:description" content="目的 Go言語でオブジェクト指向プログラミングを行う方法を残す。 参考文献 POSTD - Goはオブジェクト指向言語だろうか？ Go言語でのダックタイピング Qiita"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">Go言語ステップアップ(オブジェクト指向プログラミング)</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-05-01
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/go/">Go</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/golang/">Golang</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/oop/">OOP</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/">オブジェクト指向プログラミング</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/%E3%83%9D%E3%83%AA%E3%83%A2%E3%83%BC%E3%83%95%E3%82%A3%E3%82%BA%E3%83%A0/">ポリモーフィズム</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/%E5%A4%9A%E6%85%8B%E6%80%A7/">多態性</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+
+<h1 id="目的">目的</h1>
+
+<p>Go言語でオブジェクト指向プログラミングを行う方法を残す。</p>
+
+<h1 id="参考文献">参考文献</h1>
+
+<ul>
+<li><a href="https://postd.cc/is-go-object-oriented/">POSTD - Goはオブジェクト指向言語だろうか？</a></li>
+<li><a href="https://blog.mmmcorp.co.jp/blog/2018/10/26/go-duck-typing/">Go言語でのダックタイピング</a></li>
+<li><a href="https://qiita.com/shibukawa/items/16acb36e94cfe3b02aa1">Qiita - オブジェクト指向言語としてGolangをやろうとするとハマること</a></li>
+<li><a href="https://qiita.com/weloan/items/de3b1bcabd329ec61709">Qiita - Go言語のInterfaceの考え方、Accept interfaces,return structs</a></li>
+</ul>
+
+<h1 id="オブジェクト指向プログラミング原則-oop原則-の定義">オブジェクト指向プログラミング原則(OOP原則)の定義</h1>
+
+<p>何を以ってオブジェクト指向というのかは諸説ある。<br />
+例えば有名なものは下記(3大原則「カプセル化・継承・多態性」を含む。wikipediaから引用)。</p>
+
+<ol>
+<li><strong>カプセル化</strong>(encapsulation)</li>
+<li><strong>継承</strong>(inheritance)</li>
+<li><strong>多態性</strong>(polymorphism)
+
+<ol>
+<li>アドホック多態性(ad hoc polymorphism)
+
+<ol>
+<li>関数オーバーロード(function overloading)</li>
+<li>演算子オーバーロード(operator overloading)</li>
+</ol></li>
+<li>パラメータ多態性(parameter polymorphism)
+
+<ol>
+<li>ジェネリック関数(generic function)</li>
+<li>ジェネリックプログラミング(generic programming)</li>
+</ol></li>
+<li>サブタイプ多態性(subtyping)
+
+<ol>
+<li>仮想関数(virtual function)</li>
+<li>動的ディスパッチ(dynamic dispatch)</li>
+<li>ダブルディスパッチ(double dispatch)</li>
+<li>多重ディスパッチ(multiple dispatch)</li>
+</ol></li>
+</ol></li>
+<li>メッセージパッシング(message passing)</li>
+</ol>
+
+<h1 id="go言語におけるoop原則の定義">Go言語におけるOOP原則の定義</h1>
+
+<p>本稿では独断で、下記が表現できるプログラミングスタイルのことと定義する。<br />
+実際、下記を表現していればオブジェクト指向プログラミングだと言って差し支えないと思う(思いたい)。</p>
+
+<ol>
+<li>カプセル化</li>
+<li>オブジェクトを集約・コンポジットできる(has-aの関係を表現できる)
+
+<ol>
+<li>集約</li>
+<li>コンポジション</li>
+</ol></li>
+<li>ポリモーフィズム
+
+<ol>
+<li>部分型(is-aの関係を表現できる)</li>
+</ol></li>
+</ol>
+
+<h1 id="go言語で各oop原則を実践する">Go言語で各OOP原則を実践する</h1>
+
+<p>ここからは、実際にGo言語でOOP原則を表現していく。</p>
+
+<h2 id="カプセル化">カプセル化</h2>
+
+<p>カプセル化は、構造体とメソッドによって実現できる。<br />
+下記のコードでは、<code>Human</code>のフィールドに名前(<code>Name</code>)、年齢(<code>Age</code>)、郵便番号(<code>ZipCode</code>)を持ち、さらに、メソッドに自己紹介(<code>Introduce</code>)を持つ。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 人間
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Human</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Name</span> <span class="kt">string</span>
+    <span class="nx">Age</span> <span class="kt">int</span>
+    <span class="nx">ZipCode</span> <span class="kt">string</span>
+<span class="p">}</span>
+
+<span class="c1">// Humanのメソッド
+</span><span class="c1">// 自己紹介する
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">h</span> <span class="o">*</span><span class="nx">Human</span><span class="p">)</span> <span class="nf">Introduce</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Hi, I&#39;m %s. I&#39;m %d years old.\n&#34;</span><span class="p">,</span> <span class="nx">h</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">h</span><span class="p">.</span><span class="nx">Age</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">h</span> <span class="o">:=</span> <span class="nx">Human</span> <span class="p">{</span>
+        <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;John&#34;</span><span class="p">,</span>
+        <span class="nx">Age</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="nx">ZipCode</span><span class="p">:</span> <span class="s">&#34;1234-5678&#34;</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="nx">h</span><span class="p">.</span><span class="nf">Introduce</span><span class="p">()</span>   <span class="c1">// Humanの持つIntroduce()を呼ぶ
+</span><span class="c1"></span><span class="p">}</span>
+<span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;Hi, I&#39;m John. I&#39;m 3 years old.&#34;</span></code></pre></div>
+<h2 id="集約-コンポジション-has-a">集約・コンポジション(has-a)</h2>
+
+<p>オブジェクトがオブジェクトを内包する(持つ)のも、構造体によって実現できる。</p>
+
+<h3 id="コンポジション">コンポジション</h3>
+
+<p>コンポジションは、１つの「部分」インスタンスが高々１つの「全体」インスタンスに持たれる。<br />
+多重度をあえて記載すると、下図のとおり。</p>
+
+
+<link rel="stylesheet" href="https://otaon.github.io/css/hugo-easy-gallery.css" />
+<div class="box" style="max-width:400px;">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img  itemprop="thumbnail" src="composite.svg" alt="composite" />
+    </div>
+    
+  </figure>
+</div>
+
+
+<p>上記「カプセル化」のコードの<code>Human</code>に、ペットとして<code>Animal</code>型を所有させると、下記のとおり「コンポジション」を実現できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="c1">// 人間
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Human</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Name</span> <span class="kt">string</span>     <span class="c1">// 名前
+</span><span class="c1"></span>    <span class="nx">Age</span> <span class="kt">int</span>         <span class="c1">// 年齢
+</span><span class="c1"></span>    <span class="nx">ZipCode</span> <span class="kt">string</span>  <span class="c1">// 郵便番号
+</span><span class="c1"></span>    <span class="nx">Pets</span> <span class="p">[]</span><span class="nx">Animal</span>   <span class="c1">// ペット(コンポジション)
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="c1">// Humanのメソッド
+</span><span class="c1">// 自己紹介する
+</span><span class="c1">// NOTE: レシーバは、型が(p *Human)型なので必ず参照渡しになる
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Human</span><span class="p">)</span> <span class="nf">Introduce</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Hi, I&#39;m %s. I&#39;m %d years old.\n&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Age</span><span class="p">)</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">Age</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="p">}</span>
+
+<span class="c1">// 動物
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Animal</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Name</span> <span class="kt">string</span> <span class="c1">// 名前
+</span><span class="c1"></span>    <span class="nx">Age</span> <span class="kt">int</span>     <span class="c1">// 年齢
+</span><span class="c1"></span>    <span class="nx">Kind</span> <span class="kt">string</span> <span class="c1">// 種類
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">p</span> <span class="o">:=</span> <span class="nx">Human</span> <span class="p">{</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;John&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="nx">ZipCode</span><span class="p">:</span> <span class="s">&#34;1234-5678&#34;</span> <span class="p">}</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">Pets</span> <span class="p">=</span> <span class="p">[]</span><span class="nx">Animal</span> <span class="p">{</span>
+        <span class="nx">Animal</span> <span class="p">{</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Robert&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span> <span class="nx">Kind</span><span class="p">:</span> <span class="s">&#34;Dog&#34;</span> <span class="p">},</span>
+        <span class="nx">Animal</span> <span class="p">{</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Tama&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="nx">Kind</span><span class="p">:</span> <span class="s">&#34;Chicken&#34;</span> <span class="p">},</span>
+        <span class="nx">Animal</span> <span class="p">{</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span><span class="mi">14</span><span class="p">,</span> <span class="nx">Kind</span><span class="p">:</span> <span class="s">&#34;Panda&#34;</span> <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="c1">// pが参照渡しとなることに注意
+</span><span class="c1"></span>    <span class="c1">// Introduce()にはpを参照渡しすることに注意
+</span><span class="c1"></span>    <span class="nx">p</span><span class="p">.</span><span class="nf">Introduce</span><span class="p">()</span>   <span class="c1">// 1年目
+</span><span class="c1"></span>    <span class="nx">p</span><span class="p">.</span><span class="nf">Introduce</span><span class="p">()</span>   <span class="c1">// 2年目
+</span><span class="c1"></span>
+    <span class="c1">// Humanが持っているペット達を紹介
+</span><span class="c1"></span>    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;I have pets&#34;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">pet</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Pets</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;  %s(%d), a %s,\n&#34;</span><span class="p">,</span> <span class="nx">pet</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">pet</span><span class="p">.</span><span class="nx">Age</span><span class="p">,</span> <span class="nx">pet</span><span class="p">.</span><span class="nx">Kind</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;that&#39;s all.&#34;</span><span class="p">)</span>
+
+    <span class="c1">// そういえば今日はRobertの誕生日
+</span><span class="c1"></span>    <span class="nx">p</span><span class="p">.</span><span class="nx">Pets</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">Age</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%s \&#34;Hey, I turned %d today.\&#34;\n&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Pets</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Pets</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">Age</span><span class="p">)</span>
+<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">Hi, I<span class="s1">&#39;m John. I&#39;</span>m <span class="m">30</span> years old.
+Hi, I<span class="s1">&#39;m John. I&#39;</span>m <span class="m">31</span> years old.
+I have pets
+  Robert<span class="o">(</span><span class="m">50</span><span class="o">)</span>, a Dog,
+  Tama<span class="o">(</span><span class="m">10</span><span class="o">)</span>, a Chicken,
+  Taro<span class="o">(</span><span class="m">14</span><span class="o">)</span>, a Panda,
+that<span class="err">&#39;</span>s all.
+Robert <span class="s2">&#34;Hey, I turned 51 today.&#34;</span></code></pre></div>
+<p>上記のコンポジションの方法を用いて、擬似的な継承を実現できる。<br />
+継承まがいのコードを雑に書いても良いなら、下記コードのように構造体に対して無名フィールドのコンポジションを使えば良い。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="c1">// 人間
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Human</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Name</span> <span class="kt">string</span>     <span class="c1">// 名前
+</span><span class="c1"></span>    <span class="nx">Age</span> <span class="kt">int</span>         <span class="c1">// 年齢
+</span><span class="c1"></span>    <span class="nx">ZipCode</span> <span class="kt">string</span>  <span class="c1">// 郵便番号
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="c1">// Humanのメソッド
+</span><span class="c1">// 自己紹介する
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Human</span><span class="p">)</span> <span class="nf">Introduce</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Hi, I&#39;m %s. I&#39;m %d years old.\n&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Age</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// 国民
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">People</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Human</span>               <span class="c1">// 国民は人間(擬似的な継承)
+</span><span class="c1"></span>    <span class="nx">Nationality</span> <span class="kt">string</span>  <span class="c1">// 国籍
+</span><span class="c1"></span>    <span class="nx">Income</span> <span class="kt">int</span>          <span class="c1">// 収入
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="c1">// 国民のメソッド
+</span><span class="c1">// 納税する
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">People</span><span class="p">)</span> <span class="nf">PayTax</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Age</span> <span class="o">&lt;=</span> <span class="mi">20</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float64</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">Income</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">p1</span> <span class="o">:=</span> <span class="nx">People</span> <span class="p">{</span>
+        <span class="nx">Human</span><span class="p">:</span> <span class="nx">Human</span> <span class="p">{</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;John&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="nx">ZipCode</span><span class="p">:</span> <span class="s">&#34;1234-5678&#34;</span> <span class="p">},</span>
+        <span class="nx">Nationality</span><span class="p">:</span> <span class="s">&#34;Japan&#34;</span><span class="p">,</span>
+        <span class="nx">Income</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="nx">p1</span><span class="p">.</span><span class="nf">Introduce</span><span class="p">()</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;It&#39;s too hard for me to pay %d for Tax &gt;_&lt;\n&#34;</span><span class="p">,</span> <span class="nx">p1</span><span class="p">.</span><span class="nf">PayTax</span><span class="p">())</span>
+
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">()</span>
+
+    <span class="nx">p2</span> <span class="o">:=</span> <span class="nx">People</span> <span class="p">{</span>
+        <span class="nx">Human</span><span class="p">:</span> <span class="nx">Human</span> <span class="p">{</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Bob&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="nx">ZipCode</span><span class="p">:</span> <span class="s">&#34;1234-1234&#34;</span> <span class="p">},</span>
+        <span class="nx">Nationality</span><span class="p">:</span> <span class="s">&#34;Spain&#34;</span><span class="p">,</span>
+        <span class="nx">Income</span><span class="p">:</span> <span class="mi">10000</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="nx">p2</span><span class="p">.</span><span class="nf">Introduce</span><span class="p">()</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;It&#39;s too hard for me to pay %d for Tax &gt;_&lt;\n&#34;</span><span class="p">,</span> <span class="nx">p2</span><span class="p">.</span><span class="nf">PayTax</span><span class="p">())</span>
+<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">Hi, I<span class="s1">&#39;m John. I&#39;</span>m <span class="m">30</span> years old.
+It<span class="s1">&#39;s too hard for me to pay 50 for Tax &gt;_&lt;
+</span><span class="s1">Hi, I&#39;</span>m Bob. I<span class="s1">&#39;m 3 years old.
+</span><span class="s1">It&#39;</span>s too hard <span class="k">for</span> me to pay <span class="m">0</span> <span class="k">for</span> Tax &gt;_&lt;</code></pre></div>
+<h3 id="集約">集約</h3>
+
+<p>集約は、複数の「全体」インスタンスが１つの「部分」インスタンスを共有する可能性がある。<br />
+多重度をあえて記載すると、下図のとおり。</p>
+
+
+
+<div class="box" style="max-width:400px;">
+  <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
+    <div class="img">
+      <img  itemprop="thumbnail" src="aggregate.svg" alt="aggregate" />
+    </div>
+    
+  </figure>
+</div>
+
+
+<p>上記「コンポジション」のコードの<code>Human</code>に、ペットとして<code>Animal</code>のポインタ型を所有させると、下記のとおり「集約」を実現できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="c1">// 人間
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Human</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Name</span> <span class="kt">string</span>     <span class="c1">// 名前
+</span><span class="c1"></span>    <span class="nx">Age</span> <span class="kt">int</span>         <span class="c1">// 年齢
+</span><span class="c1"></span>    <span class="nx">ZipCode</span> <span class="kt">string</span>  <span class="c1">// 郵便番号
+</span><span class="c1"></span>    <span class="nx">Pets</span> <span class="p">[]</span><span class="o">*</span><span class="nx">Animal</span>  <span class="c1">// ペット(集約)
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="c1">// Humanのメソッド
+</span><span class="c1">// 自己紹介する
+</span><span class="c1">// NOTE: レシーバは、型が(p *Human)型なので必ず参照渡しになる
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Human</span><span class="p">)</span> <span class="nf">Introduce</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;Hi, I&#39;m %s. I&#39;m %d years old.\n&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Age</span><span class="p">)</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">Age</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="p">}</span>
+
+<span class="c1">// 動物
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Animal</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Name</span> <span class="kt">string</span> <span class="c1">// 名前
+</span><span class="c1"></span>    <span class="nx">Age</span> <span class="kt">int</span>     <span class="c1">// 年齢
+</span><span class="c1"></span>    <span class="nx">Kind</span> <span class="kt">string</span> <span class="c1">// 種類
+</span><span class="c1"></span><span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">p1</span> <span class="o">:=</span> <span class="nx">Human</span> <span class="p">{</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;John&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="nx">ZipCode</span><span class="p">:</span> <span class="s">&#34;1234-5678&#34;</span> <span class="p">}</span>
+    <span class="nx">p2</span> <span class="o">:=</span> <span class="nx">Human</span> <span class="p">{</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Bob&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="nx">ZipCode</span><span class="p">:</span> <span class="s">&#34;1111-1111&#34;</span> <span class="p">}</span>
+
+    <span class="nx">Pets</span> <span class="o">:=</span> <span class="p">[]</span><span class="o">*</span><span class="nx">Animal</span> <span class="p">{</span>
+        <span class="o">&amp;</span><span class="nx">Animal</span> <span class="p">{</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Robert&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span> <span class="nx">Kind</span><span class="p">:</span> <span class="s">&#34;Dog&#34;</span> <span class="p">},</span>
+        <span class="o">&amp;</span><span class="nx">Animal</span> <span class="p">{</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Tama&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span> <span class="nx">Kind</span><span class="p">:</span> <span class="s">&#34;Chicken&#34;</span> <span class="p">},</span>
+        <span class="o">&amp;</span><span class="nx">Animal</span> <span class="p">{</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span><span class="mi">14</span><span class="p">,</span> <span class="nx">Kind</span><span class="p">:</span> <span class="s">&#34;Panda&#34;</span> <span class="p">},</span>
+    <span class="p">}</span>
+
+    <span class="nx">p1</span><span class="p">.</span><span class="nx">Pets</span> <span class="p">=</span> <span class="nx">Pets</span>
+
+    <span class="c1">// Introduce()にはp1を参照渡しすることに注意
+</span><span class="c1"></span>    <span class="nx">p1</span><span class="p">.</span><span class="nf">Introduce</span><span class="p">()</span>  <span class="c1">// 1年目
+</span><span class="c1"></span>    <span class="nx">p1</span><span class="p">.</span><span class="nf">Introduce</span><span class="p">()</span>  <span class="c1">// 2年目
+</span><span class="c1"></span>
+    <span class="c1">// Humanが持っているペット達を紹介
+</span><span class="c1"></span>    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">p1</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="s">&#34;: I have pets&#34;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">pet</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">p1</span><span class="p">.</span><span class="nx">Pets</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;  %s(%d), a %s,\n&#34;</span><span class="p">,</span> <span class="nx">pet</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">pet</span><span class="p">.</span><span class="nx">Age</span><span class="p">,</span> <span class="nx">pet</span><span class="p">.</span><span class="nx">Kind</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;that&#39;s all.&#34;</span><span class="p">)</span>
+
+    <span class="c1">// そういえば今日はRobertの誕生日
+</span><span class="c1"></span>    <span class="nx">p1</span><span class="p">.</span><span class="nx">Pets</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">Age</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%s \&#34;Hey, I turned %d today.\&#34;\n&#34;</span><span class="p">,</span> <span class="nx">p1</span><span class="p">.</span><span class="nx">Pets</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">p1</span><span class="p">.</span><span class="nx">Pets</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">Age</span><span class="p">)</span>
+
+    <span class="c1">// p1のペットをp2にも所有させる(複数の親が同一インスタンスを所有=集約)
+</span><span class="c1"></span>    <span class="nx">p2</span><span class="p">.</span><span class="nx">Pets</span> <span class="p">=</span> <span class="nx">Pets</span>
+
+    <span class="c1">// Introduce()にはp2を参照渡しすることに注意
+</span><span class="c1"></span>    <span class="nx">p2</span><span class="p">.</span><span class="nf">Introduce</span><span class="p">()</span>  <span class="c1">// 1年目
+</span><span class="c1"></span>    <span class="nx">p2</span><span class="p">.</span><span class="nf">Introduce</span><span class="p">()</span>  <span class="c1">// 2年目
+</span><span class="c1"></span>
+    <span class="c1">// Humanが持っているペット達を紹介
+</span><span class="c1"></span>    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">p2</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="s">&#34;: I have pets&#34;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">pet</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">p2</span><span class="p">.</span><span class="nx">Pets</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;  %s(%d), a %s,\n&#34;</span><span class="p">,</span> <span class="nx">pet</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">pet</span><span class="p">.</span><span class="nx">Age</span><span class="p">,</span> <span class="nx">pet</span><span class="p">.</span><span class="nx">Kind</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;that&#39;s all.&#34;</span><span class="p">)</span>
+
+    <span class="c1">// そういえば今日はRobertの誕生日
+</span><span class="c1"></span>    <span class="nx">p2</span><span class="p">.</span><span class="nx">Pets</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">Age</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%s \&#34;Hey, I turned %d today.\&#34;\n&#34;</span><span class="p">,</span> <span class="nx">p2</span><span class="p">.</span><span class="nx">Pets</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">p2</span><span class="p">.</span><span class="nx">Pets</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">Age</span><span class="p">)</span>
+<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">Hi, I<span class="s1">&#39;m John. I&#39;</span>m <span class="m">30</span> years old.
+Hi, I<span class="s1">&#39;m John. I&#39;</span>m <span class="m">31</span> years old.
+John : I have pets
+  Robert<span class="o">(</span><span class="m">50</span><span class="o">)</span>, a Dog,
+  Tama<span class="o">(</span><span class="m">10</span><span class="o">)</span>, a Chicken,
+  Taro<span class="o">(</span><span class="m">14</span><span class="o">)</span>, a Panda,
+that<span class="s1">&#39;s all.
+</span><span class="s1">Robert &#34;Hey, I turned 51 today.&#34;
+</span><span class="s1">Hi, I&#39;</span>m Bob. I<span class="s1">&#39;m 100 years old.
+</span><span class="s1">Hi, I&#39;</span>m Bob. I<span class="s1">&#39;m 101 years old.
+</span><span class="s1">Bob : I have pets
+</span><span class="s1">  Robert(51), a Dog,
+</span><span class="s1">  Tama(10), a Chicken,
+</span><span class="s1">  Taro(14), a Panda,
+</span><span class="s1">that&#39;</span>s all.
+Robert <span class="s2">&#34;Hey, I turned 52 today.&#34;</span></code></pre></div>
+<h2 id="ポリモーフィズム">ポリモーフィズム</h2>
+
+<p>ポリモーフィズムには、アドホック多相、パラメータ多相、部分型付け等が存在する。</p>
+
+<h3 id="アドホック多相-ad-hoc-polymorphism">アドホック多相(Ad hoc polymorphism)</h3>
+
+<p>ある関数が、異なる型の引数に対してそれぞれ異なる実装を持つ性質。<br />
+多重定義(オーバーロード)として多くのプログラミング言語でサポートされる。</p>
+
+<dl>
+<dt>オーバーロード</dt>
+<dd>同一名(シンボル)を持つ関数あるいはメソッドおよび同一の演算子記号について複数定義し、利用時にプログラムの文脈に応じて選択する。<br />
+例えば異なるシグネチャで同一名の関数を定義する。</dd>
+</dl>
+
+<h4 id="例-c-によるオーバーロード">例: C#によるオーバーロード</h4>
+<div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">class</span> <span class="nc">TypeA</span>
+<span class="p">{</span>
+    <span class="c1">// 2乗する(int型version)
+</span><span class="c1"></span>    <span class="k">public</span> <span class="kt">int</span> <span class="n">Square</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">i</span> <span class="p">*</span> <span class="n">i</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 2乗する(float型version)
+</span><span class="c1"></span>    <span class="k">public</span> <span class="kt">int</span> <span class="n">Square</span><span class="p">(</span><span class="kt">double</span> <span class="n">f</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">f</span> <span class="p">*</span> <span class="n">f</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">void</span> <span class="n">Main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">obj</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TypeA</span><span class="p">();</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">Square</span><span class="p">(</span><span class="m">3</span><span class="p">));</span>   <span class="c1">// 9
+</span><span class="c1"></span>    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">Square</span><span class="p">(</span><span class="m">2.5</span><span class="p">));</span> <span class="c1">// 6
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<h3 id="パラメータ多相-parametric-polymorphism">パラメータ多相(Parametric polymorphism)</h3>
+
+<p>コードが特定の型を指定せずに書かれることで、さまざまな型に対して透過的に使用できる性質。<br />
+ジェネリクスとして多くのプログラミング言語でサポートされる。</p>
+
+<h4 id="例-c-によるジェネリクス">例: C#によるジェネリクス</h4>
+<div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">class</span> <span class="nc">TypeA</span>
+<span class="p">{</span>
+    <span class="c1">// IComparableを満たす任意の型に対して最大値を返す
+</span><span class="c1"></span>    <span class="k">public</span> <span class="n">T</span> <span class="n">Max</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="n">T</span> <span class="n">a</span><span class="p">,</span> <span class="n">T</span> <span class="n">b</span><span class="p">)</span> <span class="k">where</span> <span class="n">T</span> <span class="p">:</span> <span class="n">IComparable</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">a</span><span class="p">.</span><span class="n">CompareTo</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="p">&gt;</span> <span class="m">0</span> <span class="p">?</span> <span class="n">a</span> <span class="p">:</span> <span class="n">b</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">void</span> <span class="n">Main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">obj</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TypeA</span><span class="p">();</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">Max</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;(</span><span class="m">1</span><span class="p">,</span> <span class="m">2</span><span class="p">));</span>  <span class="c1">// 2
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<h3 id="部分型付け-subtyping">部分型付け(Subtyping)</h3>
+
+<p>部分型付けとも。共通の上位型をもつ複数の型を、1つの名前で扱う性質。<br />
+これにより、<strong>部分型(is-a)</strong>を実現できる。<br />
+大抵のオブジェクト指向言語では、サブクラス化(継承)によって部分型多相を提供する。</p>
+
+<h4 id="例-c-による継承とオーバーライド">例: C#による継承とオーバーライド</h4>
+<div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">class</span> <span class="nc">Type</span>
+<span class="p">{</span>
+    <span class="k">virtual</span> <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&#34;Type&#34;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Subtype</span> <span class="p">:</span> <span class="n">Type</span>
+<span class="p">{</span>
+    <span class="k">override</span> <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&#34;Subtype&#34;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">void</span> <span class="n">Main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Type</span> <span class="n">obj</span><span class="p">;</span>
+    <span class="n">obj</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Subtype</span><span class="p">();</span>
+    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">Name</span><span class="p">());</span>  <span class="c1">// &#34;Subtype&#34;
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<h3 id="go言語における部分型-is-a">Go言語における部分型(is-a)</h3>
+
+<p>Go言語には継承の機能がない。したがって、継承ではなく、インターフェース実装によって部分型を実現する必要がある。<br />
+Go言語には<code>interface{}</code>型があるため、これを使用する。</p>
+
+<h4 id="go言語によるインターフェース実装">Go言語によるインターフェース実装</h4>
+
+<ul>
+<li>Humanインターフェース</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Human</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nf">talk</span><span class="p">()</span> <span class="kt">string</span>   <span class="c1">// 話せる
+</span><span class="c1"></span><span class="p">}</span></code></pre></div>
+<ul>
+<li>Person: Humanインターフェースを満たす</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Person</span> <span class="kd">struct</span> <span class="p">{}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="o">*</span><span class="nx">Person</span><span class="p">)</span> <span class="nf">talk</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s">&#34;I am a person.&#34;</span>
+<span class="p">}</span></code></pre></div>
+<ul>
+<li>Male: Humanインターフェースを満たす</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Male</span> <span class="kd">struct</span> <span class="p">{}</span>
+<span class="c1">// MaleでPersonのtalk()をオーバーライド
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="o">*</span><span class="nx">Male</span><span class="p">)</span> <span class="nf">talk</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s">&#34;I am a male.&#34;</span>
+<span class="p">}</span></code></pre></div>
+<ul>
+<li>Female: Humanインターフェースを満たす</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Female</span> <span class="kd">struct</span> <span class="p">{}</span>
+<span class="c1">// FemaleでPersonのtalk()をオーバーライド
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="o">*</span><span class="nx">Female</span><span class="p">)</span> <span class="nf">talk</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s">&#34;I am a female.&#34;</span>
+<span class="p">}</span></code></pre></div>
+<ul>
+<li>NewGender: Humanインターフェースを満たす</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// NewGender.talk()でNewGender.Person.talk()を呼び出せる
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">NewGender</span> <span class="kd">struct</span><span class="p">{</span>
+    <span class="nx">Person</span>
+<span class="p">}</span></code></pre></div>
+<ul>
+<li>NewNewGender: Humanインターフェースを満たさない</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// talk()を実装していない
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">NewNewGender</span> <span class="kd">struct</span><span class="p">{}</span></code></pre></div>
+<ul>
+<li>NotGender: Humanインターフェースを満たさない</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 異なるシグネチャのtalk()を実装している
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">NotGender</span> <span class="kd">struct</span><span class="p">{}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="o">*</span><span class="nx">NotGender</span><span class="p">)</span> <span class="nf">talk</span><span class="p">()</span> <span class="p">(</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s">&#34;I am not a gender.&#34;</span><span class="p">,</span> <span class="s">&#34;not error&#34;</span>
+<span class="p">}</span></code></pre></div>
+<ul>
+<li>NotGender: Humanインターフェースを満たすが<strong>talk()を呼び出すとPanic発生する</strong></li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">MaybePerson</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// MaybePerson.talk()というアクセスが可能となる
+</span><span class="c1"></span>    <span class="c1">// ただし、MaybePersonにはtalk()が実装されていないため、呼び出し時にPanic発生する
+</span><span class="c1"></span>    <span class="nx">Human</span>
+<span class="p">}</span></code></pre></div>
+<ul>
+<li>上記構造体・インターフェースの動作確認コード
+
+<ul>
+<li>構造体ごとに型アサーションしつつ<code>talk()</code>を呼び出す</li>
+</ul></li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;--- Person ---&#34;</span><span class="p">)</span>
+    <span class="kd">var</span> <span class="nx">person</span> <span class="kd">interface</span><span class="p">{}</span> <span class="p">=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">Person</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">person</span><span class="p">.(</span><span class="nx">Human</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34; &#34;</span><span class="p">,</span> <span class="nx">value</span><span class="p">.</span><span class="nf">talk</span><span class="p">())</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;  Person: %T\n&#34;</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;--- Male ---&#34;</span><span class="p">)</span>
+    <span class="kd">var</span> <span class="nx">male</span> <span class="kd">interface</span><span class="p">{}</span> <span class="p">=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">Male</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">male</span><span class="p">.(</span><span class="nx">Human</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34; &#34;</span><span class="p">,</span> <span class="nx">value</span><span class="p">.</span><span class="nf">talk</span><span class="p">())</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;  Male: %T\n&#34;</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;--- Female ---&#34;</span><span class="p">)</span>
+    <span class="kd">var</span> <span class="nx">female</span> <span class="kd">interface</span><span class="p">{}</span> <span class="p">=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">Female</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">female</span><span class="p">.(</span><span class="nx">Human</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34; &#34;</span><span class="p">,</span> <span class="nx">value</span><span class="p">.</span><span class="nf">talk</span><span class="p">())</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;  Female: %T\n&#34;</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;--- NewGender ---&#34;</span><span class="p">)</span>
+    <span class="kd">var</span> <span class="nx">newgen</span> <span class="kd">interface</span><span class="p">{}</span> <span class="p">=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">NewGender</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">newgen</span><span class="p">.(</span><span class="nx">Human</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34; &#34;</span><span class="p">,</span> <span class="nx">value</span><span class="p">.</span><span class="nf">talk</span><span class="p">())</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;  NewGender: %T\n&#34;</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;--- NewNewGender ---&#34;</span><span class="p">)</span>
+    <span class="kd">var</span> <span class="nx">newnewgen</span> <span class="kd">interface</span><span class="p">{}</span> <span class="p">=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">NewNewGender</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">newnewgen</span><span class="p">.(</span><span class="nx">Human</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34; &#34;</span><span class="p">,</span> <span class="nx">value</span><span class="p">.</span><span class="nf">talk</span><span class="p">())</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;  NewNewGender: %T\n&#34;</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;--- NotGender ---&#34;</span><span class="p">)</span>
+    <span class="kd">var</span> <span class="nx">notgen</span> <span class="kd">interface</span><span class="p">{}</span> <span class="p">=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">NotGender</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">notgen</span><span class="p">.(</span><span class="nx">Human</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34; &#34;</span><span class="p">,</span> <span class="nx">value</span><span class="p">.</span><span class="nf">talk</span><span class="p">())</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;  NotGender: %T\n&#34;</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">// !! this calling causes Panic !!
+</span><span class="c1"></span>    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;--- MaybePerson ---&#34;</span><span class="p">)</span>
+    <span class="kd">var</span> <span class="nx">maybe</span> <span class="kd">interface</span><span class="p">{}</span> <span class="p">=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">MaybePerson</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">maybe</span><span class="p">.(</span><span class="nx">Human</span><span class="p">);</span> <span class="nx">ok</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34; &#34;</span><span class="p">,</span> <span class="nx">value</span><span class="p">.</span><span class="nf">talk</span><span class="p">())</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;  MaybePerson: %T\n&#34;</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+<ul>
+<li>実行結果</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">&gt; go run .<span class="se">\t</span>est.go
+--- Person ---
+  I am a person.
+--- Male ---
+  I am a male.
+--- Female ---
+  I am a female.
+--- NewGender ---
+  I am a person.
+--- NewNewGender ---
+  NewNewGender: &lt;nil&gt;
+--- NotGender ---
+  NotGender: &lt;nil&gt;
+--- MaybePerson ---
+panic: runtime error: invalid memory address or nil pointer dereference
+<span class="o">[</span>signal 0xc0000005 <span class="nv">code</span><span class="o">=</span>0x0 <span class="nv">addr</span><span class="o">=</span>0x18 <span class="nv">pc</span><span class="o">=</span>0x493bc9<span class="o">]</span>
+
+goroutine <span class="m">1</span> <span class="o">[</span>running<span class="o">]</span>:
+main.<span class="o">(</span>*MaybePerson<span class="o">)</span>.talk<span class="o">(</span>0xc000050200, 0x4ac700, 0xc000050200<span class="o">)</span>
+        &lt;autogenerated&gt;:1 +0x39
+main.main<span class="o">()</span>
+        C:/Users/username/test.go:112 +0x82e
+<span class="nb">exit</span> status <span class="m">2</span></code></pre></div>
+<h4 id="go言語とダックタイピングの関係">Go言語とダックタイピングの関係</h4>
+
+<p>動的型付け言語におけるオブジェクトの型の考え方の一つで、振る舞い(メソッドの有無)によって型を特定する。
+ダックタイピングの説明は、Wikipediaの概要が分かりやすい。</p>
+
+<ul>
+<li><a href="https://ja.wikipedia.org/wiki/%E3%83%80%E3%83%83%E3%82%AF%E3%83%BB%E3%82%BF%E3%82%A4%E3%83%94%E3%83%B3%E3%82%B0">Wikipedia - ダック・タイピング</a></li>
+</ul>
+
+<blockquote>
+<p>ダック・タイピング(duck typing)とは、Smalltalk、Perl、Python、Rubyなどのいくつかの動的型付けオブジェクト指向プログラミング言語に特徴的な型付けの作法のことである。<br />
+それらの言語ではオブジェクト(変数の値)に何ができるかはオブジェクトそのものが決定する。<br />
+これによりポリモーフィズム(多態性)を実現することができる。<br />
+つまり、静的型付け言語であるJavaやC#の概念で例えると、<strong>オブジェクトがあるインタフェースのすべてのメソッドを持っているならば、たとえそのクラスがそのインタフェースを宣言的に実装していなくとも、オブジェクトはそのインタフェースを実行時に実装しているとみなせる</strong>。</p>
+</blockquote>
+
+<p>Go言語では、とある<code>interface{}</code>型で要求するメソッドを全て実装していれば、例えばJavaにおける<code>implements</code>のようにキーワードで明示しなくとも、その<code>interface{}</code>型を実装したことになる。<br />
+すなわち、これがGo言語におけるダックタイピング。</p>
+
+<h5 id="c-の-dynamic-型によるダックタイピング">C#の<code>dynamic</code>型によるダックタイピング</h5>
+
+<p>Go以外の静的言語でも、実行時の型情報を自己参照することによってダックタイピングは可能。<br />
+下記は、C#の<code>dynamic</code>型(内部的にはリフレクション機能)を用いたダックタイピングの例(Wikipediaから引用)。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">class</span> <span class="nc">Duck</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Sound</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&#34;quack&#34;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Cat</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Sound</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="s">&#34;myaa&#34;</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">DuckTypingTest</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="k">void</span> <span class="n">Test</span><span class="p">(</span><span class="kt">dynamic</span> <span class="n">obj</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// objがSound()メソッドを持つかは実行時に調べられる
+</span><span class="c1"></span>        <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="n">Sound</span><span class="p">());</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="n">Main</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">Test</span><span class="p">(</span><span class="k">new</span> <span class="n">Duck</span><span class="p">());</span>
+        <span class="n">Test</span><span class="p">(</span><span class="k">new</span> <span class="n">Cat</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+<hr />
+
+<h2 id="go言語で継承っぽい事をやる方法">Go言語で継承っぽい事をやる方法</h2>
+
+<p>Go言語には継承がないと書いたが、継承らしいことを実現できなくはないらしい。</p>
+
+<blockquote class="twitter-tweet"><p lang="ja" dir="ltr">golang で継承っぽい事をやるのであればこうすると出来るけど、闇しかないのでやめたほうがいい。 <a href="https://t.co/hHE9vGu6rr">https://t.co/hHE9vGu6rr</a></p>&mdash; mattn (@mattn_jp) <a href="https://twitter.com/mattn_jp/status/670415696656883713?ref_src=twsrc%5Etfw">November 28, 2015</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+<p>内容が凄いコードだったので、下記にコメントを補いつつ示す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="c1">// すくなくとも基本型が実装すべきインターフェース
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Worker</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nf">Do</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="c1">// 基本型
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Base</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// 派生型をコンポジションするための匿名メンバ
+</span><span class="c1"></span>    <span class="nx">Worker</span>
+<span class="p">}</span>
+
+<span class="c1">// 基本型のメソッド
+</span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">Base</span><span class="p">)</span> <span class="nf">Do</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="nx">b</span><span class="p">.</span><span class="nx">Worker</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+        <span class="c1">// bの内包する派生型がWorkerを満たす(Do()がある)場合、
+</span><span class="c1"></span>        <span class="c1">// 派生型の実装を呼び出す
+</span><span class="c1"></span>        <span class="nx">b</span><span class="p">.</span><span class="nx">Worker</span><span class="p">.</span><span class="nf">Do</span><span class="p">()</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="c1">// 基本型のメソッドの実装
+</span><span class="c1"></span>        <span class="nb">println</span><span class="p">(</span><span class="s">&#34;Base.Do&#34;</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 派生型
+</span><span class="c1"></span><span class="kd">type</span> <span class="nx">Derived</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="c1">// 基本型をコンポジションするための匿名メンバ
+</span><span class="c1"></span>    <span class="c1">// これがあると、Do()が有るか検査される時にBaseの方も確認されるから、
+</span><span class="c1"></span>    <span class="c1">// 常にWorkerを満たすとみなされる
+</span><span class="c1"></span>    <span class="nx">Base</span>
+<span class="p">}</span>
+
+<span class="cm">/* このコメントアウトを外せば Derived.Do が呼ばれる(オーバーライド)
+</span><span class="cm">func (d *Derived) Do() {
+</span><span class="cm">    println(&#34;Derived.Do&#34;)
+</span><span class="cm">}
+</span><span class="cm">*/</span>
+
+<span class="c1">// 基本型を生成し、さらに派生型を内包して返す
+</span><span class="c1"></span><span class="kd">func</span> <span class="nf">NewBase</span><span class="p">(</span><span class="nx">w</span> <span class="nx">Worker</span><span class="p">)</span> <span class="nx">Worker</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">Base</span><span class="p">{</span><span class="nx">w</span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">d</span> <span class="o">:=</span> <span class="nf">NewBase</span><span class="p">(</span><span class="nb">new</span><span class="p">(</span><span class="nx">Derived</span><span class="p">))</span>
+    <span class="nx">d</span><span class="p">.</span><span class="nf">Do</span><span class="p">()</span>
+<span class="p">}</span></code></pre></div>
+<p>・・・ツイートで既に非推奨だと言われている通り、上記のコードは複雑すぎて実用性は無いと思う。<br />
+基本型から派生型の<code>Do()</code>をダックタイピングしたい(C#のdynamic型の様に)ならこの方法になると思うが、オーバーライドするだけなら下記のコードで事足りるはず。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+    <span class="s">&#34;fmt&#34;</span>
+<span class="p">)</span>
+
+<span class="kd">type</span> <span class="nx">Worker</span> <span class="kd">interface</span> <span class="p">{</span>
+    <span class="nf">Do</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">Base</span> <span class="kd">struct</span> <span class="p">{}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">b</span> <span class="o">*</span><span class="nx">Base</span><span class="p">)</span> <span class="nf">Do</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Base.Do&#34;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">type</span> <span class="nx">Derived</span> <span class="kd">struct</span> <span class="p">{</span>
+    <span class="nx">Worker</span>
+<span class="p">}</span>
+
+<span class="cm">/*
+</span><span class="cm">func (d *Derived) Do() {
+</span><span class="cm">    fmt.Println(&#34;Derived.Do&#34;)
+</span><span class="cm">}
+</span><span class="cm">*/</span>
+
+<span class="kd">func</span> <span class="nf">NewDerived</span><span class="p">()</span> <span class="nx">Worker</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">Derived</span> <span class="p">{</span> <span class="nx">Worker</span><span class="p">:</span> <span class="nb">new</span><span class="p">(</span><span class="nx">Base</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">b</span> <span class="o">:=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">Base</span><span class="p">)</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%T\n&#34;</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span>
+    <span class="nx">b</span><span class="p">.</span><span class="nf">Do</span><span class="p">()</span>
+    
+    <span class="nx">d</span> <span class="o">:=</span> <span class="nf">NewDerived</span><span class="p">()</span>
+    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%T\n&#34;</span><span class="p">,</span> <span class="nx">d</span><span class="p">)</span>
+    <span class="nx">d</span><span class="p">.</span><span class="nf">Do</span><span class="p">()</span>
+<span class="p">}</span></code></pre></div>
+<ul>
+<li>実行結果: コメントアウトした状態</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">*main.Base
+Base.Do
+*main.Derived
+Base.Do</code></pre></div>
+<ul>
+<li>実行結果: コメントアウトを外した状態</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-bash" data-lang="bash">*main.Base
+Base.Do
+*main.Derived
+Derived.Do</code></pre></div>
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="/web/asset/mermaid/mermaid.js"></script>
+
+</body>
+</html>

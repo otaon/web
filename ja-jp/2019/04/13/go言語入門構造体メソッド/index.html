@@ -31,7 +31,7 @@
 
 <meta itemprop="datePublished" content="2019-04-13T18:00:00&#43;09:00" />
 <meta itemprop="dateModified" content="2019-04-13T18:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="7313">
+<meta itemprop="wordCount" content="7391">
 
 
 
@@ -454,10 +454,11 @@ Goでは、構造体を、Javaなどにおけるクラスやオブジェクト�
 
 <span class="nx">p</span> <span class="o">:=</span> <span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">8</span><span class="p">}</span>
 <span class="nf">showStruct</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>   <span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;{3 8}&#34;</span></code></pre></div>
-<h3 id="構造体とポインタ">構造体とポインタ</h3>
+<h3 id="ポインタの参照先の構造体が持つフィールド-メソッドに参照する方法">ポインタの参照先の構造体が持つフィールド・メソッドに参照する方法</h3>
 
 <p>構造体のポインタ型を定義したら、通常は<code>*p.FieldName</code>として参照できる。<br />
-また、アスタリスクを省略して<code>p.FieldName</code>としても参照できる。</p>
+また、アスタリスクを省略して<code>p.FieldName</code>としても参照できる。<br />
+さらに、後述するメソッドに対しても、<code>*p.MethodName</code>は<code>p.MethodName</code>としても参照できる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span> <span class="c1">// Pointのポインタ型を定義
 </span><span class="c1"></span><span class="o">*</span><span class="nx">p</span><span class="p">.</span><span class="nx">X</span>    <span class="c1">// 1
 </span><span class="c1"></span><span class="o">*</span><span class="nx">p</span><span class="p">.</span><span class="nx">Y</span>    <span class="c1">// 2
