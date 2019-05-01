@@ -134,6 +134,76 @@
 <div class="container content">
   <article>
   
+    <section class="js-toc">
+  <h1>TOC</h1>
+  <div class="toc">
+  <nav id="TableOfContents">
+<ul>
+<li><a href="#目的">目的</a></li>
+<li><a href="#参考文献">参考文献</a></li>
+<li><a href="#基本構文">基本構文</a>
+<ul>
+<li><a href="#参照型">参照型</a>
+<ul>
+<li><a href="#make-関数の使用方法"><code>make</code>関数の使用方法</a></li>
+<li><a href="#スライス-slice">スライス(slice)</a>
+<ul>
+<li><a href="#リテラルでスライスを生成する">リテラルでスライスを生成する</a></li>
+<li><a href="#組み込み関数-append-で要素を追加する">組み込み関数<code>append</code>で要素を追加する</a></li>
+<li><a href="#append-とスライスの容量"><code>append</code>とスライスの容量</a></li>
+<li><a href="#copy-によるスライスの一括複製"><code>copy</code>によるスライスの一括複製</a></li>
+<li><a href="#完全スライス式">完全スライス式</a>
+<ul>
+<li><a href="#配列-var-a-10-int">配列 <code>var a [10]int</code></a></li>
+<li><a href="#簡易スライス式-a-2-4">簡易スライス式 <code>a[2:4]</code></a></li>
+<li><a href="#完全スライス式-a-2-4-6">完全スライス式 <code>a[2:4:6]</code></a></li>
+</ul></li>
+<li><a href="#スライスを-for-文で使う">スライスを<code>for</code>文で使う</a></li>
+<li><a href="#スライスと可変長引数">スライスと可変長引数</a></li>
+<li><a href="#スライスを可変長引数に代入して関数呼び出しする">スライスを可変長引数に代入して関数呼び出しする</a></li>
+<li><a href="#参照型としてのスライス">参照型としてのスライス</a>
+<ul>
+<li><a href="#参照型の特性について確認する">参照型の特性について確認する</a></li>
+<li><a href="#nil-の値を取りうるかどうか"><code>nil</code>の値を取りうるかどうか</a></li>
+<li><a href="#スライス作成元の配列">スライス作成元の配列</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#マップ-map">マップ(map)</a>
+<ul>
+<li><a href="#マップのリテラル">マップのリテラル</a></li>
+<li><a href="#マップの要素を参照する">マップの要素を参照する</a></li>
+<li><a href="#for-の範囲節にマップを使う"><code>for</code>の範囲節にマップを使う</a></li>
+<li><a href="#まっぷの要素数を-len-で取得する">まっぷの要素数を<code>len()</code>で取得する</a></li>
+<li><a href="#delete-でマップの要素を削除する"><code>delete()</code>でマップの要素を削除する</a></li>
+<li><a href="#make-によるマップ生成時に要素数を指定する"><code>make()</code>によるマップ生成時に要素数を指定する</a></li>
+</ul></li>
+<li><a href="#チャネル-channel">チャネル(channel)</a>
+<ul>
+<li><a href="#チャネルの型名">チャネルの型名</a>
+<ul>
+<li><a href="#チャネルのサブタイプ">チャネルのサブタイプ</a></li>
+<li><a href="#チャネルの生成と送受信">チャネルの生成と送受信</a></li>
+<li><a href="#チャネルとゴルーチン">チャネルとゴルーチン</a></li>
+<li><a href="#チャネルにおける-len-と-cap">チャネルにおける<code>len</code>と<code>cap</code></a>
+<ul>
+<li><a href="#len-関数"><code>len</code>関数</a></li>
+<li><a href="#cap-関数"><code>cap</code>関数</a></li>
+</ul></li>
+<li><a href="#close-関数でチャネルをクローズする"><code>close</code>関数でチャネルをクローズする</a></li>
+<li><a href="#ゴルーチンと-close-の実例">ゴルーチンと<code>close</code>の実例</a></li>
+<li><a href="#チャネルを-for-と組み合わせる">チャネルを<code>for</code>と組み合わせる</a></li>
+<li><a href="#制御構文-select-で複数のチャネルをコントロールする">制御構文<code>select</code>で複数のチャネルをコントロールする</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  <hr>
+  </div>
+</section>
+
+  
   
 
 <h1 id="目的">目的</h1>

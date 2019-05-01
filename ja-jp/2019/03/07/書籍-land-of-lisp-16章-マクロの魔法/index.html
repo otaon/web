@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>書籍 Land of Lisp 16章 マクロの魔法 · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="T.O.C. 16.1 簡単なLispマクロ 16.2 もっと複雑なマクロ 16.3 マクロの危険と代替案 マクロプログラミング によって、プログラマはLispのコンパイラ/インタプリ" />
+  <meta name="description" content="マクロプログラミング によって、プログラマはLispのコンパイラ/インタプリタの動作に変更を加え、Lispを独自の言語へと変化させられる。 16.1 簡" />
 
   <meta name="keywords" content="programming, make" />
 
@@ -19,26 +19,26 @@
 
 
 <meta property="og:title" content="書籍 Land of Lisp 16章 マクロの魔法" />
-<meta property="og:description" content="T.O.C. 16.1 簡単なLispマクロ 16.2 もっと複雑なマクロ 16.3 マクロの危険と代替案 マクロプログラミング によって、プログラマはLispのコンパイラ/インタプリ" />
+<meta property="og:description" content="マクロプログラミング によって、プログラマはLispのコンパイラ/インタプリタの動作に変更を加え、Lispを独自の言語へと変化させられる。 16.1 簡" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-16%E7%AB%A0-%E3%83%9E%E3%82%AF%E3%83%AD%E3%81%AE%E9%AD%94%E6%B3%95/" />
 <meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
 <meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
 
 <meta itemprop="name" content="書籍 Land of Lisp 16章 マクロの魔法">
-<meta itemprop="description" content="T.O.C. 16.1 簡単なLispマクロ 16.2 もっと複雑なマクロ 16.3 マクロの危険と代替案 マクロプログラミング によって、プログラマはLispのコンパイラ/インタプリ">
+<meta itemprop="description" content="マクロプログラミング によって、プログラマはLispのコンパイラ/インタプリタの動作に変更を加え、Lispを独自の言語へと変化させられる。 16.1 簡">
 
 
 <meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
 <meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="8726">
+<meta itemprop="wordCount" content="8693">
 
 
 
 <meta itemprop="keywords" content="lisp," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="書籍 Land of Lisp 16章 マクロの魔法"/>
-<meta name="twitter:description" content="T.O.C. 16.1 簡単なLispマクロ 16.2 もっと複雑なマクロ 16.3 マクロの危険と代替案 マクロプログラミング によって、プログラマはLispのコンパイラ/インタプリ"/>
+<meta name="twitter:description" content="マクロプログラミング によって、プログラマはLispのコンパイラ/インタプリタの動作に変更を加え、Lispを独自の言語へと変化させられる。 16.1 簡"/>
 </head>
 <body>
   
@@ -133,17 +133,36 @@
 <div class="container content">
   <article>
   
-  
-
-<h2 id="t-o-c">T.O.C.</h2>
-
+    <section class="js-toc">
+  <h1>TOC</h1>
+  <div class="toc">
+  <nav id="TableOfContents">
 <ul>
-<li><a href="#161-簡単なlispマクロ">16.1 簡単なLispマクロ</a></li>
-<li><a href="#162-もっと複雑なマクロ">16.2 もっと複雑なマクロ</a></li>
-<li><a href="#163-マクロの危険と代替案">16.3 マクロの危険と代替案</a></li>
+<li>
+<ul>
+<li><a href="#16-1-簡単なlispマクロ">16.1 簡単なLispマクロ</a>
+<ul>
+<li><a href="#マクロの展開">マクロの展開</a></li>
+<li><a href="#マクロはどんなふうに変換されるか">マクロはどんなふうに変換されるか</a></li>
+<li><a href="#簡単なマクロを使ってみる">簡単なマクロを使ってみる</a></li>
+</ul></li>
+<li><a href="#16-2-もっと複雑なマクロ">16.2 もっと複雑なマクロ</a>
+<ul>
+<li><a href="#リストを分割するマクロ">リストを分割するマクロ</a></li>
+<li><a href="#マクロ中で式が繰り返し実行されるのを防ぐ">マクロ中で式が繰り返し実行されるのを防ぐ</a></li>
+<li><a href="#変更捕捉を避ける">変更捕捉を避ける</a></li>
+<li><a href="#再帰呼び出しマクロ">再帰呼び出しマクロ</a></li>
+</ul></li>
+<li><a href="#16-3-マクロの危険と代替案">16.3 マクロの危険と代替案</a></li>
+</ul></li>
 </ul>
+</nav>
+  <hr>
+  </div>
+</section>
 
-<hr />
+  
+  
 
 <p><strong>マクロプログラミング</strong> によって、プログラマはLispのコンパイラ/インタプリタの動作に変更を加え、Lispを独自の言語へと変化させられる。</p>
 

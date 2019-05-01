@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>書籍 Land of Lisp 18章 遅延プログラミング · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="T.O.C. 18.1 Lispに遅延評価を足す 18.2 ダイスオブドゥームVer2 18.3 大きなゲーム盤でAIを動かす 関数型プログラミングによって、コードが簡潔になることが" />
+  <meta name="description" content="関数型プログラミングによって、コードが簡潔になることが分かった。 数学的な関数は、同じ引数に対して常に同じ結果を返すことによる利点である。 しか" />
 
   <meta name="keywords" content="programming, make" />
 
@@ -19,26 +19,26 @@
 
 
 <meta property="og:title" content="書籍 Land of Lisp 18章 遅延プログラミング" />
-<meta property="og:description" content="T.O.C. 18.1 Lispに遅延評価を足す 18.2 ダイスオブドゥームVer2 18.3 大きなゲーム盤でAIを動かす 関数型プログラミングによって、コードが簡潔になることが" />
+<meta property="og:description" content="関数型プログラミングによって、コードが簡潔になることが分かった。 数学的な関数は、同じ引数に対して常に同じ結果を返すことによる利点である。 しか" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-18%E7%AB%A0-%E9%81%85%E5%BB%B6%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/" />
 <meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
 <meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
 
 <meta itemprop="name" content="書籍 Land of Lisp 18章 遅延プログラミング">
-<meta itemprop="description" content="T.O.C. 18.1 Lispに遅延評価を足す 18.2 ダイスオブドゥームVer2 18.3 大きなゲーム盤でAIを動かす 関数型プログラミングによって、コードが簡潔になることが">
+<meta itemprop="description" content="関数型プログラミングによって、コードが簡潔になることが分かった。 数学的な関数は、同じ引数に対して常に同じ結果を返すことによる利点である。 しか">
 
 
 <meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
 <meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="13852">
+<meta itemprop="wordCount" content="13809">
 
 
 
 <meta itemprop="keywords" content="lisp," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="書籍 Land of Lisp 18章 遅延プログラミング"/>
-<meta name="twitter:description" content="T.O.C. 18.1 Lispに遅延評価を足す 18.2 ダイスオブドゥームVer2 18.3 大きなゲーム盤でAIを動かす 関数型プログラミングによって、コードが簡潔になることが"/>
+<meta name="twitter:description" content="関数型プログラミングによって、コードが簡潔になることが分かった。 数学的な関数は、同じ引数に対して常に同じ結果を返すことによる利点である。 しか"/>
 </head>
 <body>
   
@@ -133,17 +133,41 @@
 <div class="container content">
   <article>
   
-  
-
-<h2 id="t-o-c">T.O.C.</h2>
-
+    <section class="js-toc">
+  <h1>TOC</h1>
+  <div class="toc">
+  <nav id="TableOfContents">
 <ul>
-<li><a href="#181-lispに遅延評価を足す">18.1 Lispに遅延評価を足す</a></li>
-<li><a href="#182-ダイスオブドゥームver2">18.2 ダイスオブドゥームVer2</a></li>
-<li><a href="#183-大きなゲーム盤でaiを動かす">18.3 大きなゲーム盤でAIを動かす</a></li>
+<li><a href="#18-1-lispに遅延評価を足す">18.1 Lispに遅延評価を足す</a>
+<ul>
+<li><a href="#lazy-コマンドと-force-コマンドを作成する"><code>lazy</code>コマンドと<code>force</code>コマンドを作成する</a>
+<ul>
+<li><a href="#lazy-コマンド"><code>lazy</code>コマンド</a></li>
+<li><a href="#force-マクロ"><code>force</code>マクロ</a></li>
+</ul></li>
+<li><a href="#遅延リストライブラリを作る">遅延リストライブラリを作る</a></li>
+<li><a href="#通常のリストと遅延リストとの変換">通常のリストと遅延リストとの変換</a></li>
+<li><a href="#遅延リストに対するマッピングと検索">遅延リストに対するマッピングと検索</a></li>
+</ul></li>
+<li><a href="#18-2-ダイスオブドゥームver2">18.2 ダイスオブドゥームVer2</a></li>
+<li><a href="#18-3-大きなゲーム盤でaiを動かす">18.3 大きなゲーム盤でAIを動かす</a>
+<ul>
+<li><a href="#ゲーム木の刈り込み">ゲーム木の刈り込み</a></li>
+<li><a href="#ヒューリスティクスを適用する">ヒューリスティクスを適用する</a></li>
+<li><a href="#大きく勝つか小さく勝つか">大きく勝つか小さく勝つか</a></li>
+<li><a href="#アルファ-ベータ法">アルファ・ベータ法</a>
+<ul>
+<li><a href="#アルファ-ベータ法のライブラリを作る">アルファ・ベータ法のライブラリを作る</a></li>
+</ul></li>
+</ul></li>
 </ul>
+</nav>
+  <hr>
+  </div>
+</section>
 
-<hr />
+  
+  
 
 <p>関数型プログラミングによって、コードが簡潔になることが分かった。
 数学的な関数は、同じ引数に対して常に同じ結果を返すことによる利点である。</p>

@@ -153,6 +153,58 @@ html, css諸々を書いて、サーバを立てて、ドメインを取って�
 <div class="container content">
   <article>
   
+    <section class="js-toc">
+  <h1>TOC</h1>
+  <div class="toc">
+  <nav id="TableOfContents">
+<ul>
+<li><a href="#はじめに">はじめに</a></li>
+<li><a href="#前提条件">前提条件</a></li>
+<li><a href="#事前に知っておくべきこと">事前に知っておくべきこと</a>
+<ul>
+<li><a href="#github-pagesとは">GitHub Pagesとは</a></li>
+<li><a href="#hugoとは">Hugoとは</a></li>
+<li><a href="#travisciとは">TravisCIとは</a></li>
+</ul></li>
+<li><a href="#どうやってhugoで記事編集-デプロイするのか">どうやってHugoで記事編集・デプロイするのか?</a>
+<ul>
+<li><a href="#記事を編集する">記事を編集する</a></li>
+<li><a href="#記事をデプロイする">記事をデプロイする</a></li>
+</ul></li>
+<li><a href="#サイト-編集環境の構築手順">サイト&amp;編集環境の構築手順</a>
+<ul>
+<li><a href="#1-webサイトの記事を置くリポジトリを作成する">1. Webサイトの記事を置くリポジトリを作成する</a></li>
+<li><a href="#2-hugoを用いたサイトのプレビュー環境の構築">2. Hugoを用いたサイトのプレビュー環境の構築</a>
+<ul>
+<li><a href="#2-1-hugoをインストールする">2-1. Hugoをインストールする</a></li>
+<li><a href="#2-2-hugoでサイトの初期設定を行う">2-2. Hugoでサイトの初期設定を行う</a></li>
+<li><a href="#2-3-hugoのテーマを作るor公式サイトで選ぶ">2-3. Hugoのテーマを作るor公式サイトで選ぶ</a></li>
+<li><a href="#2-4-hugoのテーマをワークツリーに格納する">2-4. Hugoのテーマをワークツリーに格納する</a></li>
+<li><a href="#2-5-hugoのテーマが使用可能か確認する">2-5. Hugoのテーマが使用可能か確認する</a></li>
+<li><a href="#2-6-hugoの設定ファイル-config-toml-を自分用に修正する">2-6. Hugoの設定ファイル<code>config.toml</code>を自分用に修正する</a></li>
+<li><a href="#2-7-日本語用の多言語対応ファイルを作成する">2-7. 日本語用の多言語対応ファイルを作成する</a></li>
+<li><a href="#2-8-サイトのコンテンツを自分向けに変更する">2-8. サイトのコンテンツを自分向けに変更する</a></li>
+<li><a href="#2-9-gitignore-を作成する">2-9. <code>.gitignore</code>を作成する</a></li>
+<li><a href="#2-10-ファイルをコミットする">2-10. ファイルをコミットする</a></li>
+</ul></li>
+<li><a href="#3-hugoによるビルド-gh-pagesへのpushの自動化設定">3. Hugoによるビルド&amp;gh-pagesへのpushの自動化設定</a>
+<ul>
+<li><a href="#3-1-travisciにサインアップする">3-1. TravisCIにサインアップする</a></li>
+<li><a href="#3-2-githubでtravisciが使うためのトークンを作成する">3-2. GitHubでTravisCIが使うためのトークンを作成する</a></li>
+<li><a href="#3-3-travisciの-web-リポジトリの設定をする">3-3. TravisCIの<code>web</code>リポジトリの設定をする</a></li>
+<li><a href="#3-4-travisciのビルド設定ファイル-travis-yml-を作成する">3-4. TravisCIのビルド設定ファイル<code>.travis.yml</code>を作成する</a></li>
+<li><a href="#3-5-ワークツリーの内容を全て-push-する">3-5. ワークツリーの内容を全て<code>push</code>する</a></li>
+<li><a href="#3-6-gh-pages-ブランチにビルド結果が-push-されていることを確認する">3-6. <code>gh-pages</code>ブランチにビルド結果が<code>push</code>されていることを確認する</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#まとめ">まとめ</a></li>
+</ul>
+</nav>
+  <hr>
+  </div>
+</section>
+
+  
   <h1 id="はじめに">はじめに</h1>
 
 <p>自前でサーバを構築することなく、全て外部サービスを使用してブログ的な静的サイトを楽に作りたい場合、この記事が役に立つと思う。<br />

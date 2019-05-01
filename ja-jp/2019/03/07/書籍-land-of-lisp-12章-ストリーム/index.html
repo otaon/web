@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>書籍 Land of Lisp 12章 ストリーム · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="T.O.C. 12.1 ストリームの種類 12.2 ファイルの読み書き 12.3 ソケットを使う 12.4 異端児の文字列ストリーム REPLによる入出力、ディスク上のファイルの読み書き、LA" />
+  <meta name="description" content="REPLによる入出力、ディスク上のファイルの読み書き、LANやインターネットの通信において、 Common Lispでは ストリーム を使用する。 本ドキュメン" />
 
   <meta name="keywords" content="programming, make" />
 
@@ -19,26 +19,26 @@
 
 
 <meta property="og:title" content="書籍 Land of Lisp 12章 ストリーム" />
-<meta property="og:description" content="T.O.C. 12.1 ストリームの種類 12.2 ファイルの読み書き 12.3 ソケットを使う 12.4 異端児の文字列ストリーム REPLによる入出力、ディスク上のファイルの読み書き、LA" />
+<meta property="og:description" content="REPLによる入出力、ディスク上のファイルの読み書き、LANやインターネットの通信において、 Common Lispでは ストリーム を使用する。 本ドキュメン" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-12%E7%AB%A0-%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%A0/" />
 <meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
 <meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
 
 <meta itemprop="name" content="書籍 Land of Lisp 12章 ストリーム">
-<meta itemprop="description" content="T.O.C. 12.1 ストリームの種類 12.2 ファイルの読み書き 12.3 ソケットを使う 12.4 異端児の文字列ストリーム REPLによる入出力、ディスク上のファイルの読み書き、LA">
+<meta itemprop="description" content="REPLによる入出力、ディスク上のファイルの読み書き、LANやインターネットの通信において、 Common Lispでは ストリーム を使用する。 本ドキュメン">
 
 
 <meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
 <meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="5518">
+<meta itemprop="wordCount" content="5477">
 
 
 
 <meta itemprop="keywords" content="lisp," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="書籍 Land of Lisp 12章 ストリーム"/>
-<meta name="twitter:description" content="T.O.C. 12.1 ストリームの種類 12.2 ファイルの読み書き 12.3 ソケットを使う 12.4 異端児の文字列ストリーム REPLによる入出力、ディスク上のファイルの読み書き、LA"/>
+<meta name="twitter:description" content="REPLによる入出力、ディスク上のファイルの読み書き、LANやインターネットの通信において、 Common Lispでは ストリーム を使用する。 本ドキュメン"/>
 </head>
 <body>
   
@@ -133,18 +133,57 @@
 <div class="container content">
   <article>
   
-  
-
-<h2 id="t-o-c">T.O.C.</h2>
-
+    <section class="js-toc">
+  <h1>TOC</h1>
+  <div class="toc">
+  <nav id="TableOfContents">
 <ul>
-<li><a href="#121-ストリームの種類">12.1 ストリームの種類</a></li>
-<li><a href="#122-ファイルの読み書き">12.2 ファイルの読み書き</a></li>
-<li><a href="#123-ソケットを使う">12.3 ソケットを使う</a></li>
-<li><a href="#124-異端児の文字列ストリーム">12.4 異端児の文字列ストリーム</a></li>
+<li>
+<ul>
+<li><a href="#12-1-ストリームの種類">12.1 ストリームの種類</a>
+<ul>
+<li><a href="#リソースの種類による分類">リソースの種類による分類</a></li>
+<li><a href="#ストリームの向きによる分類">ストリームの向きによる分類</a>
+<ul>
+<li><a href="#出力ストリーム">出力ストリーム</a>
+<ul>
+<li><a href="#出力ストリームか否かを調べる">出力ストリームか否かを調べる</a></li>
+<li><a href="#データをストリームへと送る">データをストリームへと送る</a></li>
+</ul></li>
+<li><a href="#入力ストリーム">入力ストリーム</a>
+<ul>
+<li><a href="#入力ストリームか否かを調べる">入力ストリームか否かを調べる</a></li>
+<li><a href="#入力ストリームから1文字取り出す">入力ストリームから1文字取り出す</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li><a href="#12-2-ファイルの読み書き">12.2 ファイルの読み書き</a>
+<ul>
+<li><a href="#リストをファイルに読み書きする">リストをファイルに読み書きする</a></li>
+<li><a href="#ファイルが既に存在するか否かをチェックする">ファイルが既に存在するか否かをチェックする</a></li>
+</ul></li>
+<li><a href="#12-3-ソケットを使う">12.3 ソケットを使う</a>
+<ul>
+<li><a href="#ソケットアドレス">ソケットアドレス</a></li>
+<li><a href="#コネクション">コネクション</a></li>
+<li><a href="#ソケット上でメッセージを送る">ソケット上でメッセージを送る</a></li>
+<li><a href="#遊んだ後はお片付け-ストリームを閉じる">遊んだ後はお片付け（ストリームを閉じる）</a></li>
+</ul></li>
+<li><a href="#12-4-異端児の文字列ストリーム">12.4 異端児の文字列ストリーム</a>
+<ul>
+<li><a href="#関数にストリームを渡す">関数にストリームを渡す</a></li>
+<li><a href="#長い文字列を作る">長い文字列を作る</a></li>
+<li><a href="#コードの読みやすさとデバッグ">コードの読みやすさとデバッグ</a></li>
+</ul></li>
+</ul></li>
 </ul>
+</nav>
+  <hr>
+  </div>
+</section>
 
-<hr />
+  
+  
 
 <p>REPLによる入出力、ディスク上のファイルの読み書き、LANやインターネットの通信において、<br />
 Common Lispでは <strong>ストリーム</strong> を使用する。</p>

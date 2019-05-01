@@ -31,7 +31,7 @@
 
 <meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
 <meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="2439">
+<meta itemprop="wordCount" content="2371">
 
 
 
@@ -133,6 +133,86 @@
 <div class="container content">
   <article>
   
+    <section class="js-toc">
+  <h1>TOC</h1>
+  <div class="toc">
+  <nav id="TableOfContents">
+<ul>
+<li><a href="#loopマクロ周期表">Loopマクロ周期表</a>
+<ul>
+<li><a href="#参考文献">参考文献</a></li>
+<li><a href="#基本的なトークン">基本的なトークン</a>
+<ul>
+<li><a href="#loop"><code>loop</code></a></li>
+<li><a href="#do"><code>do</code></a></li>
+<li><a href="#repeat"><code>repeat</code></a></li>
+<li><a href="#return"><code>return</code></a></li>
+<li><a href="#initially"><code>initially</code></a></li>
+<li><a href="#finally"><code>finally</code></a></li>
+<li><a href="#with"><code>with</code></a></li>
+<li><a href="#into"><code>into</code></a></li>
+</ul></li>
+<li><a href="#ループに対する名前付けとループの脱出">ループに対する名前付けとループの脱出</a>
+<ul>
+<li><a href="#named"><code>named</code></a></li>
+<li><a href="#return-from"><code>return-from</code></a></li>
+<li><a href="#while"><code>while</code></a></li>
+<li><a href="#until"><code>until</code></a></li>
+</ul></li>
+<li><a href="#ハッシュテーブル関連">ハッシュテーブル関連</a>
+<ul>
+<li><a href="#using"><code>using</code></a></li>
+<li><a href="#being"><code>being</code></a></li>
+<li><a href="#the-each"><code>the</code> <code>each</code></a></li>
+<li><a href="#hash-key-hash-keys"><code>hash-key</code> <code>hash-keys</code></a></li>
+<li><a href="#hash-value-hash-values"><code>hash-value</code> <code>hash-values</code></a></li>
+</ul></li>
+<li><a href="#for-ループ関連"><code>for</code>ループ関連</a>
+<ul>
+<li><a href="#for-as"><code>for</code> <code>as</code></a></li>
+<li><a href="#in-on"><code>in</code> <code>on</code></a></li>
+<li><a href="#by"><code>by</code></a></li>
+<li><a href="#then"><code>then</code></a></li>
+<li><a href="#from"><code>from</code></a></li>
+<li><a href="#upfrom"><code>upfrom</code></a></li>
+<li><a href="#downfrom"><code>downfrom</code></a></li>
+<li><a href="#to"><code>to</code></a></li>
+<li><a href="#upto"><code>upto</code></a></li>
+<li><a href="#downto"><code>downto</code></a></li>
+<li><a href="#across"><code>across</code></a></li>
+</ul></li>
+<li><a href="#要素が満たすべき条件を調べる">要素が満たすべき条件を調べる</a>
+<ul>
+<li><a href="#always"><code>always</code></a></li>
+<li><a href="#never"><code>never</code></a></li>
+<li><a href="#thereis"><code>thereis</code></a></li>
+</ul></li>
+<li><a href="#条件分岐">条件分岐</a>
+<ul>
+<li><a href="#if"><code>if</code></a></li>
+<li><a href="#when"><code>when</code></a></li>
+<li><a href="#unless"><code>unless</code></a></li>
+<li><a href="#and"><code>and</code></a></li>
+<li><a href="#else"><code>else</code></a></li>
+<li><a href="#end"><code>end</code></a></li>
+</ul></li>
+<li><a href="#結果の集積">結果の集積</a>
+<ul>
+<li><a href="#count-counting"><code>count</code> <code>counting</code></a></li>
+<li><a href="#sum-summing"><code>sum</code> <code>summing</code></a></li>
+<li><a href="#minimize-minimizing"><code>minimize</code> <code>minimizing</code></a></li>
+<li><a href="#maximize-maximizing"><code>maximize</code> <code>maximizing</code></a></li>
+<li><a href="#append-appending"><code>append</code> <code>appending</code></a></li>
+<li><a href="#nconc-nconcing"><code>nconc</code> <code>nconcing</code></a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  <hr>
+  </div>
+</section>
+
+  
   
 
 <h1 id="loopマクロ周期表">Loopマクロ周期表</h1>
@@ -143,18 +223,6 @@
 <h2 id="参考文献">参考文献</h2>
 
 <p><a href="http://lisp.satoshiweb.net/2018/01/iteration.html">独学 Common Lisp - 第6章「繰り返し」</a></p>
-
-<h2 id="t-o-c">T.O.C.</h2>
-
-<ul>
-<li><a href="#基本的なトークン">基本的なトークン</a></li>
-<li><a href="#ループに対する名前付けとループの脱出">ループに対する名前付けとループの脱出</a></li>
-<li><a href="#ハッシュテーブル関連">ハッシュテーブル関連</a></li>
-<li><a href="#forループ関連"><code>for</code>ループ関連</a></li>
-<li><a href="#要素が満たすべき条件を調べる">要素が満たすべき条件を調べる</a></li>
-<li><a href="#条件分岐">条件分岐</a></li>
-<li><a href="#結果の集積">結果の集積</a></li>
-</ul>
 
 <h2 id="基本的なトークン">基本的なトークン</h2>
 

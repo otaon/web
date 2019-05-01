@@ -134,6 +134,29 @@
 <div class="container content">
   <article>
   
+    <section class="js-toc">
+  <h1>TOC</h1>
+  <div class="toc">
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#5-1-新しい関数の定義">5.1 新しい関数の定義</a></li>
+<li><a href="#5-2-関数のパラメータリスト">5.2 関数のパラメータリスト</a></li>
+<li><a href="#5-3-オプショナルパラメータ">5.3 オプショナルパラメータ</a></li>
+<li><a href="#5-4-レストパラメータ">5.4 レストパラメータ</a></li>
+<li><a href="#5-5-キーワードパラメータ">5.5 キーワードパラメータ</a></li>
+<li><a href="#5-6-異なるパラメータの併用">5.6 異なるパラメータの併用</a></li>
+<li><a href="#5-7-関数の戻り値">5.7 関数の戻り値</a></li>
+<li><a href="#5-8-データとしての関数または高階関数">5.8 データとしての関数または高階関数</a></li>
+</ul></li>
+</ul>
+</nav>
+  <hr>
+  </div>
+</section>
+
+  
   
 
 <h2 id="5-1-新しい関数の定義">5.1 新しい関数の定義</h2>
@@ -317,8 +340,8 @@
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">dotimes</span> <span class="p">(</span><span class="nv">i</span> <span class="mi">10</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">dotimes</span> <span class="p">(</span><span class="nv">j</span> <span class="mi">10</span><span class="p">)</span>
-	 <span class="p">(</span><span class="nv">when</span> <span class="p">(</span><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">*</span> <span class="nv">i</span> <span class="nv">j</span><span class="p">)</span> <span class="nv">n</span><span class="p">)</span>
-	   <span class="p">(</span><span class="nv">return-from</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">list</span> <span class="nv">i</span> <span class="nv">j</span><span class="p">))))))</span></code></pre></div>
+     <span class="p">(</span><span class="nv">when</span> <span class="p">(</span><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">*</span> <span class="nv">i</span> <span class="nv">j</span><span class="p">)</span> <span class="nv">n</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">return-from</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">list</span> <span class="nv">i</span> <span class="nv">j</span><span class="p">))))))</span></code></pre></div>
 <h2 id="5-8-データとしての関数または高階関数">5.8 データとしての関数または高階関数</h2>
 
   </article>

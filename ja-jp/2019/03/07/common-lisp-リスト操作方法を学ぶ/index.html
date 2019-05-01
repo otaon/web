@@ -134,6 +134,36 @@
 <div class="container content">
   <article>
   
+    <section class="js-toc">
+  <h1>TOC</h1>
+  <div class="toc">
+  <nav id="TableOfContents">
+<ul>
+<li><a href="#目的">目的</a></li>
+<li><a href="#関数の説明">関数の説明</a>
+<ul>
+<li><a href="#member-関数"><code>member</code>関数</a></li>
+<li><a href="#find-if-関数"><code>find-if</code>関数</a></li>
+<li><a href="#assoc-関数"><code>assoc</code>関数</a></li>
+<li><a href="#mapcar-関数"><code>mapcar</code>関数</a></li>
+<li><a href="#append-関数"><code>append</code>関数</a></li>
+<li><a href="#apply-関数"><code>apply</code>関数</a></li>
+<li><a href="#append-関数と-apply-関数の使用例"><code>append</code>関数と<code>apply</code>関数の使用例</a>
+<ul>
+<li><a href="#ゲームの変数を定義する">ゲームの変数を定義する。</a></li>
+<li><a href="#関数を定義する">関数を定義する。</a></li>
+</ul></li>
+<li><a href="#find-関数"><code>find</code>関数</a></li>
+<li><a href="#push-関数"><code>push</code>関数</a></li>
+<li><a href="#assoc-関数と-push-関数を使った-alist-association-list-の値変更"><code>assoc</code>関数と<code>push</code>関数を使った、alist(association list)の値変更</a></li>
+</ul></li>
+</ul>
+</nav>
+  <hr>
+  </div>
+</section>
+
+  
   
 
 <h1 id="目的">目的</h1>
@@ -146,8 +176,8 @@
 
 <p>リスト中に、或る要素が含まれているか否かを調べる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">member</span> <span class="mi">1</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">5</span><span class="p">))</span>
-	<span class="ss">&#39;one-is-in-the-list</span>
-	<span class="ss">&#39;one-is-not-in-the-list</span><span class="p">)</span>
+    <span class="ss">&#39;one-is-in-the-list</span>
+    <span class="ss">&#39;one-is-not-in-the-list</span><span class="p">)</span>
 <span class="nv">=&gt;</span> <span class="nv">ONE-IS-IN-THE-LIST</span>
 
 <span class="c1">; memberの実際の返り値</span>
@@ -182,8 +212,8 @@
 
 <p>例:</p>
 <div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">find-if</span> <span class="nf">#&#39;</span><span class="nv">null</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span><span class="p">))</span>
-	<span class="ss">&#39;there-is-an-odd-number</span>
-	<span class="ss">&#39;there-is-no-odd-number</span><span class="p">)</span>
+    <span class="ss">&#39;there-is-an-odd-number</span>
+    <span class="ss">&#39;there-is-no-odd-number</span><span class="p">)</span>
 <span class="c1">; =&gt; &#39;THERE-IS-AN-ODD-NUMBER</span></code></pre></div>
 <p><strong>注意:nilを探す場合には使えない。</strong></p>
 <div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">find-if</span> <span class="nf">#&#39;</span><span class="nv">null</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">4</span> <span class="no">nil</span> <span class="mi">6</span><span class="p">))</span>

@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>書籍 Land of Lisp 9章 より進んだデータ型とジェネリックプログラミング · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="T.O.C. 9.1 配列 9.2 ハッシュテーブル 9.3 構造体 9.4 データをジェネリックに扱う Common Lisp では、下記のようなデータ型が使用できる。 コンスセル シンボル 文字列 数値 配列 ハ" />
+  <meta name="description" content="Common Lisp では、下記のようなデータ型が使用できる。 コンスセル シンボル 文字列 数値 配列 ハッシュテーブル 構造体 9.1 配列 配列を使う 配列を作成するにはmake" />
 
   <meta name="keywords" content="programming, make" />
 
@@ -19,26 +19,26 @@
 
 
 <meta property="og:title" content="書籍 Land of Lisp 9章 より進んだデータ型とジェネリックプログラミング" />
-<meta property="og:description" content="T.O.C. 9.1 配列 9.2 ハッシュテーブル 9.3 構造体 9.4 データをジェネリックに扱う Common Lisp では、下記のようなデータ型が使用できる。 コンスセル シンボル 文字列 数値 配列 ハ" />
+<meta property="og:description" content="Common Lisp では、下記のようなデータ型が使用できる。 コンスセル シンボル 文字列 数値 配列 ハッシュテーブル 構造体 9.1 配列 配列を使う 配列を作成するにはmake" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-9%E7%AB%A0-%E3%82%88%E3%82%8A%E9%80%B2%E3%82%93%E3%81%A0%E3%83%87%E3%83%BC%E3%82%BF%E5%9E%8B%E3%81%A8%E3%82%B8%E3%82%A7%E3%83%8D%E3%83%AA%E3%83%83%E3%82%AF%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/" />
 <meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
 <meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
 
 <meta itemprop="name" content="書籍 Land of Lisp 9章 より進んだデータ型とジェネリックプログラミング">
-<meta itemprop="description" content="T.O.C. 9.1 配列 9.2 ハッシュテーブル 9.3 構造体 9.4 データをジェネリックに扱う Common Lisp では、下記のようなデータ型が使用できる。 コンスセル シンボル 文字列 数値 配列 ハ">
+<meta itemprop="description" content="Common Lisp では、下記のようなデータ型が使用できる。 コンスセル シンボル 文字列 数値 配列 ハッシュテーブル 構造体 9.1 配列 配列を使う 配列を作成するにはmake">
 
 
 <meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
 <meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="3675">
+<meta itemprop="wordCount" content="3644">
 
 
 
 <meta itemprop="keywords" content="lisp," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="書籍 Land of Lisp 9章 より進んだデータ型とジェネリックプログラミング"/>
-<meta name="twitter:description" content="T.O.C. 9.1 配列 9.2 ハッシュテーブル 9.3 構造体 9.4 データをジェネリックに扱う Common Lisp では、下記のようなデータ型が使用できる。 コンスセル シンボル 文字列 数値 配列 ハ"/>
+<meta name="twitter:description" content="Common Lisp では、下記のようなデータ型が使用できる。 コンスセル シンボル 文字列 数値 配列 ハッシュテーブル 構造体 9.1 配列 配列を使う 配列を作成するにはmake"/>
 </head>
 <body>
   
@@ -133,18 +133,55 @@
 <div class="container content">
   <article>
   
-  
-
-<h2 id="t-o-c">T.O.C.</h2>
-
+    <section class="js-toc">
+  <h1>TOC</h1>
+  <div class="toc">
+  <nav id="TableOfContents">
 <ul>
-<li><a href="#91-配列">9.1 配列</a></li>
-<li><a href="#92-ハッシュテーブル">9.2 ハッシュテーブル</a></li>
-<li><a href="#93-構造体">9.3 構造体</a></li>
-<li><a href="#94-データをジェネリックに扱う">9.4 データをジェネリックに扱う</a></li>
+<li>
+<ul>
+<li><a href="#9-1-配列">9.1 配列</a>
+<ul>
+<li><a href="#配列を使う">配列を使う</a></li>
+<li><a href="#ジェネリックなセッター">ジェネリックなセッター</a></li>
+<li><a href="#配列とリスト">配列とリスト</a></li>
+</ul></li>
+<li><a href="#9-2-ハッシュテーブル">9.2 ハッシュテーブル</a>
+<ul>
+<li><a href="#ハッシュテーブルを使う">ハッシュテーブルを使う</a></li>
+<li><a href="#複数の値を返す">複数の値を返す</a></li>
+</ul></li>
+<li><a href="#9-3-構造体">9.3 構造体</a>
+<ul>
+<li><a href="#構造体を使う">構造体を使う</a>
+<ul>
+<li><a href="#構造体のインスタンスを作成する関数">構造体のインスタンスを作成する関数</a></li>
+<li><a href="#各スロットへのゲッター">各スロットへのゲッター</a></li>
+</ul></li>
+<li><a href="#構造体をいつ使うか">構造体をいつ使うか</a></li>
+</ul></li>
+<li><a href="#9-4-データをジェネリックに扱う">9.4 データをジェネリックに扱う</a>
+<ul>
+<li><a href="#シーケンスを使う">シーケンスを使う</a></li>
+<li><a href="#探索のためのシーケンス関数">探索のためのシーケンス関数</a></li>
+<li><a href="#シーケンスの要素について繰り返す関数の例">シーケンスの要素について繰り返す関数の例</a>
+<ul>
+<li><a href="#reduce"><code>reduce</code></a></li>
+<li><a href="#map"><code>map</code></a></li>
+<li><a href="#subseq"><code>subseq</code></a></li>
+<li><a href="#sort"><code>sort</code></a></li>
+</ul></li>
+<li><a href="#型述語を使って自分でジェネリック関数を作る">型述語を使って自分でジェネリック関数を作る</a></li>
+</ul></li>
+</ul></li>
 </ul>
+</nav>
+  <hr>
+  </div>
+</section>
 
-<hr />
+  
+  
 
 <p>Common Lisp では、下記のようなデータ型が使用できる。</p>
 

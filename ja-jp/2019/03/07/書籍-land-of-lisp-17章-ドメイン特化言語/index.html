@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>書籍 Land of Lisp 17章 ドメイン特化言語 · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="T.O.C. 17.1 ドメインとは何か 17.2 SVGファイルを書き出す 17.3 魔法使いのアドベンチャーゲームに新コマンドを追加する マクロが最も効果的な場面の一つは、 ドメイ" />
+  <meta name="description" content="マクロが最も効果的な場面の一つは、 ドメイン特化言語(DSL) を作る場面である。 DSLプログラミングは高度なマクロプログラミングテクニックの1" />
 
   <meta name="keywords" content="programming, make" />
 
@@ -19,26 +19,26 @@
 
 
 <meta property="og:title" content="書籍 Land of Lisp 17章 ドメイン特化言語" />
-<meta property="og:description" content="T.O.C. 17.1 ドメインとは何か 17.2 SVGファイルを書き出す 17.3 魔法使いのアドベンチャーゲームに新コマンドを追加する マクロが最も効果的な場面の一つは、 ドメイ" />
+<meta property="og:description" content="マクロが最も効果的な場面の一つは、 ドメイン特化言語(DSL) を作る場面である。 DSLプログラミングは高度なマクロプログラミングテクニックの1" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-17%E7%AB%A0-%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E7%89%B9%E5%8C%96%E8%A8%80%E8%AA%9E/" />
 <meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
 <meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
 
 <meta itemprop="name" content="書籍 Land of Lisp 17章 ドメイン特化言語">
-<meta itemprop="description" content="T.O.C. 17.1 ドメインとは何か 17.2 SVGファイルを書き出す 17.3 魔法使いのアドベンチャーゲームに新コマンドを追加する マクロが最も効果的な場面の一つは、 ドメイ">
+<meta itemprop="description" content="マクロが最も効果的な場面の一つは、 ドメイン特化言語(DSL) を作る場面である。 DSLプログラミングは高度なマクロプログラミングテクニックの1">
 
 
 <meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
 <meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="7233">
+<meta itemprop="wordCount" content="7183">
 
 
 
 <meta itemprop="keywords" content="lisp," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="書籍 Land of Lisp 17章 ドメイン特化言語"/>
-<meta name="twitter:description" content="T.O.C. 17.1 ドメインとは何か 17.2 SVGファイルを書き出す 17.3 魔法使いのアドベンチャーゲームに新コマンドを追加する マクロが最も効果的な場面の一つは、 ドメイ"/>
+<meta name="twitter:description" content="マクロが最も効果的な場面の一つは、 ドメイン特化言語(DSL) を作る場面である。 DSLプログラミングは高度なマクロプログラミングテクニックの1"/>
 </head>
 <body>
   
@@ -133,17 +133,40 @@
 <div class="container content">
   <article>
   
-  
-
-<h2 id="t-o-c">T.O.C.</h2>
-
+    <section class="js-toc">
+  <h1>TOC</h1>
+  <div class="toc">
+  <nav id="TableOfContents">
 <ul>
-<li><a href="#171-ドメインとは何か">17.1 ドメインとは何か</a></li>
-<li><a href="#172-svgファイルを書き出す">17.2 SVGファイルを書き出す</a></li>
-<li><a href="#173-魔法使いのアドベンチャーゲームに新コマンドを追加する">17.3 魔法使いのアドベンチャーゲームに新コマンドを追加する</a></li>
+<li><a href="#17-1-ドメインとは何か">17.1 ドメインとは何か</a></li>
+<li><a href="#17-2-svgファイルを書き出す">17.2 SVGファイルを書き出す</a>
+<ul>
+<li><a href="#タグマクロを使ってxmlとhtmlを生成する">タグマクロを使ってXMLとHTMLを生成する</a>
+<ul>
+<li><a href="#マクロの補助関数を書く">マクロの補助関数を書く</a></li>
+<li><a href="#tagマクロを作る">tagマクロを作る</a></li>
+<li><a href="#tagマクロを使ってhtmlを生成する">tagマクロを使ってHTMLを生成する</a></li>
+<li><a href="#svg特有のマクロと関数を作る">SVG特有のマクロと関数を作る</a></li>
+<li><a href="#もっと複雑なsvg画像を描画する">もっと複雑なSVG画像を描画する</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#17-3-魔法使いのアドベンチャーゲームに新コマンドを追加する">17.3 魔法使いのアドベンチャーゲームに新コマンドを追加する</a>
+<ul>
+<li><a href="#ゲームコマンドを直接定義する">ゲームコマンドを直接定義する</a>
+<ul>
+<li><a href="#溶接-コマンド">「溶接」コマンド</a></li>
+<li><a href="#投げ入れる-コマンド">「投げ入れる」コマンド</a></li>
+</ul></li>
+<li><a href="#game-action-マクロ"><code>game-action</code>マクロ</a></li>
+</ul></li>
 </ul>
+</nav>
+  <hr>
+  </div>
+</section>
 
-<hr />
+  
+  
 
 <p>マクロが最も効果的な場面の一つは、 <strong>ドメイン特化言語(DSL)</strong> を作る場面である。
 DSLプログラミングは高度なマクロプログラミングテクニックの1つで、難しい問題を解くために、Lispの構造をその問題に最適な言語へと大幅に変更するというものである。

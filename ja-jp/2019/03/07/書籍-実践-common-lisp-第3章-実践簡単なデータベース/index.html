@@ -133,6 +133,30 @@
 <div class="container content">
   <article>
   
+    <section class="js-toc">
+  <h1>TOC</h1>
+  <div class="toc">
+  <nav id="TableOfContents">
+<ul>
+<li><a href="#第3章-実践-簡単なデータベース">第3章 実践：簡単なデータベース</a>
+<ul>
+<li><a href="#3-1-cdとレコード">3.1 CDとレコード</a></li>
+<li><a href="#3-2-cdのファイリング">3.2 CDのファイリング</a></li>
+<li><a href="#3-3-データベースの中身を見てみる">3.3 データベースの中身を見てみる</a></li>
+<li><a href="#3-4-ユーザインタラクションを改善する">3.4 ユーザインタラクションを改善する</a></li>
+<li><a href="#3-5-データベースの保存と読み出し">3.5 データベースの保存と読み出し</a></li>
+<li><a href="#3-6-データベースにクエリを投げる">3.6 データベースにクエリを投げる</a></li>
+<li><a href="#3-7-既存のレコードを更新する-もう1つの-where-の使い方">3.7 既存のレコードを更新する - もう1つの<code>WHERE</code>の使い方</a></li>
+<li><a href="#3-8-ムダを排除して勝利を収める">3.8 ムダを排除して勝利を収める</a></li>
+<li><a href="#3-9-まとめ">3.9 まとめ</a></li>
+</ul></li>
+</ul>
+</nav>
+  <hr>
+  </div>
+</section>
+
+  
   
 
 <h1 id="第3章-実践-簡単なデータベース">第3章 実践：簡単なデータベース</h1>
@@ -235,15 +259,15 @@ Lispでは、連想配列の実現方法として主に2種類のデータ構造
   <span class="p">(</span><span class="nv">make-cd</span>
     <span class="c1">;; CDタイトル</span>
     <span class="p">(</span><span class="nv">prompt-read</span> <span class="s">&#34;Title: &#34;</span><span class="p">)</span>
-	<span class="c1">;; アーティスト名</span>
+    <span class="c1">;; アーティスト名</span>
     <span class="p">(</span><span class="nv">prompt-read</span> <span class="s">&#34;Artist: &#34;</span><span class="p">)</span>
-	<span class="c1">;; CDのレーティング</span>
+    <span class="c1">;; CDのレーティング</span>
     <span class="p">(</span><span class="nv">or</span>
-	  <span class="c1">;; レーティングは数値で取得する</span>
-	  <span class="c1">;; レーティングデフォルト値: 0</span>
-	  <span class="p">(</span><span class="nv">parse-integer</span> <span class="p">(</span><span class="nv">prompt-read</span> <span class="s">&#34;Rating: &#34;</span><span class="p">)</span> <span class="ss">:junk-allowed</span> <span class="no">t</span><span class="p">)</span>
-	  <span class="mi">0</span><span class="p">)</span>
-	<span class="c1">;; リッピング完了したか</span>
+      <span class="c1">;; レーティングは数値で取得する</span>
+      <span class="c1">;; レーティングデフォルト値: 0</span>
+      <span class="p">(</span><span class="nv">parse-integer</span> <span class="p">(</span><span class="nv">prompt-read</span> <span class="s">&#34;Rating: &#34;</span><span class="p">)</span> <span class="ss">:junk-allowed</span> <span class="no">t</span><span class="p">)</span>
+      <span class="mi">0</span><span class="p">)</span>
+    <span class="c1">;; リッピング完了したか</span>
     <span class="p">(</span><span class="nv">y-or-n-p</span> <span class="s">&#34;Ripped [y/n]: &#34;</span><span class="p">)))</span></code></pre></div>
 <p>上記の、ユーザにCD1枚分のデータを入力させる関数を利用して、ユーザにCDのデータを好きなだけ入力させる関数を定義する。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">add-cds</span> <span class="p">()</span>
@@ -251,7 +275,7 @@ Lispでは、連想配列の実現方法として主に2種類のデータ構造
 </span><span class="s">   ret: -&#34;</span>
   <span class="p">(</span><span class="nv">loop</span> <span class="p">(</span><span class="nv">add-record</span> <span class="p">(</span><span class="nv">prompt-for-cd</span><span class="p">))</span>
     <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">not</span> <span class="p">(</span><span class="nv">y-or-n-p</span> <span class="s">&#34;Anther? [y/n]: &#34;</span><span class="p">))</span>
-	    <span class="p">(</span><span class="nv">return</span><span class="p">))))</span></code></pre></div>
+        <span class="p">(</span><span class="nv">return</span><span class="p">))))</span></code></pre></div>
 <h2 id="3-5-データベースの保存と読み出し">3.5 データベースの保存と読み出し</h2>
 
 <p>データベースの保存では、単純に<code>*db*</code>の中身をファイルに書き出すことにする。<br />
@@ -262,17 +286,17 @@ Lispでは、連想配列の実現方法として主に2種類のデータ構造
 </span><span class="s">   ret: -&#34;</span>
   <span class="p">(</span><span class="nv">with-open-file</span> <span class="p">(</span><span class="nv">out</span> <span class="nv">filename</span>
                    <span class="ss">:direction</span> <span class="ss">:output</span>      <span class="c1">; 出力先とする</span>
-				   <span class="ss">:if-exists</span> <span class="ss">:supersede</span><span class="p">)</span>  <span class="c1">; 既存のファイルを上書き</span>
+                   <span class="ss">:if-exists</span> <span class="ss">:supersede</span><span class="p">)</span>  <span class="c1">; 既存のファイルを上書き</span>
     <span class="p">(</span><span class="nv">with-standard-io-syntax</span>  <span class="c1">; print関数に影響する変数を標準に保つ</span>
-	  <span class="p">(</span><span class="nv">print</span> <span class="vg">*db*</span> <span class="nv">out</span><span class="p">))))</span>     <span class="c1">; REPLで読み直せる形でファイルに書き出す</span></code></pre></div>
+      <span class="p">(</span><span class="nv">print</span> <span class="vg">*db*</span> <span class="nv">out</span><span class="p">))))</span>     <span class="c1">; REPLで読み直せる形でファイルに書き出す</span></code></pre></div>
 <p>ファイルに書き出したデータベースの情報を<code>*bd*</code>に代入する関数を定義する。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">load-db</span> <span class="p">(</span><span class="nv">filename</span><span class="p">)</span>
   <span class="s">&#34;ファイルに書き込まれたデータベースを*db*に読み込む
 </span><span class="s">   filename: CDデータベースが保存されたファイルパス
 </span><span class="s">   ret: -&#34;</span>
   <span class="p">(</span><span class="nv">with-open-file</span> <span class="p">(</span><span class="nv">in</span> <span class="nv">filename</span><span class="p">)</span> <span class="c1">; inにfilenameの内容を入力する</span>
-    <span class="p">(</span><span class="nv">with-standard-io-sytax</span>		<span class="c1">; read関数に影響する変数を標準に保つ</span>
-	  <span class="p">(</span><span class="nv">setf</span> <span class="vg">*db*</span> <span class="p">(</span><span class="nv">read</span> <span class="nv">in</span><span class="p">)))))</span></code></pre></div>
+    <span class="p">(</span><span class="nv">with-standard-io-sytax</span>     <span class="c1">; read関数に影響する変数を標準に保つ</span>
+      <span class="p">(</span><span class="nv">setf</span> <span class="vg">*db*</span> <span class="p">(</span><span class="nv">read</span> <span class="nv">in</span><span class="p">)))))</span></code></pre></div>
 <h2 id="3-6-データベースにクエリを投げる">3.6 データベースにクエリを投げる</h2>
 
 <p>特定のアーティストのレコードのみを取得したい場合、<code>remove-if-not</code>関数を利用することが簡単に実現できる。</p>
@@ -282,8 +306,8 @@ Lispでは、連想配列の実現方法として主に2種類のデータ構造
 </span><span class="s">   ret: レコードのリスト&#34;</span>
   <span class="p">(</span><span class="nv">remove-if-not</span>
     <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">cd</span><span class="p">)</span>
-	    <span class="p">(</span><span class="nv">equal</span> <span class="p">(</span><span class="nv">getf</span> <span class="nv">cd</span> <span class="ss">:artist</span><span class="p">)</span> <span class="nv">artist</span><span class="p">))</span>
-	<span class="nv">artist</span><span class="p">))</span></code></pre></div>
+        <span class="p">(</span><span class="nv">equal</span> <span class="p">(</span><span class="nv">getf</span> <span class="nv">cd</span> <span class="ss">:artist</span><span class="p">)</span> <span class="nv">artist</span><span class="p">))</span>
+    <span class="nv">artist</span><span class="p">))</span></code></pre></div>
 <p>これを応用して、任意のアトリビュートに対して値を指定してレコードを取得する関数を定義する。<br />
 タイトル指定用の関数、アーティスト名指定用の関数を全てのアトリビュート分用意すれば、全てのアトリビュートに対して絞り込みをかけることができる。</p>
 

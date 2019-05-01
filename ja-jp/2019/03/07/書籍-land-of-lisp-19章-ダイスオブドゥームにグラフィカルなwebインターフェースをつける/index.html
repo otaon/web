@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <title>書籍 Land of Lisp 19章 ダイスオブドゥームにグラフィカルなWebインターフェースをつける · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="T.O.C. 19.1 ゲーム盤をSVGフォーマットで描画する 19.2 Webサーバインターフェースを作る 19.3 ダイスオブドゥームVer3をプレイする 18章で作ったダイスオ" />
+  <meta name="description" content="18章で作ったダイスオブドゥームVer2では、Ver1よりも大きなゲーム盤でプレイ可能となった。 この規模だと、コンソールでの可視化には視認性" />
 
   <meta name="keywords" content="programming, make" />
 
@@ -19,26 +19,26 @@
 
 
 <meta property="og:title" content="書籍 Land of Lisp 19章 ダイスオブドゥームにグラフィカルなWebインターフェースをつける" />
-<meta property="og:description" content="T.O.C. 19.1 ゲーム盤をSVGフォーマットで描画する 19.2 Webサーバインターフェースを作る 19.3 ダイスオブドゥームVer3をプレイする 18章で作ったダイスオ" />
+<meta property="og:description" content="18章で作ったダイスオブドゥームVer2では、Ver1よりも大きなゲーム盤でプレイ可能となった。 この規模だと、コンソールでの可視化には視認性" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-19%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%81%AB%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%82%AB%E3%83%AB%E3%81%AAweb%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%82%92%E3%81%A4%E3%81%91%E3%82%8B/" />
 <meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
 <meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
 
 <meta itemprop="name" content="書籍 Land of Lisp 19章 ダイスオブドゥームにグラフィカルなWebインターフェースをつける">
-<meta itemprop="description" content="T.O.C. 19.1 ゲーム盤をSVGフォーマットで描画する 19.2 Webサーバインターフェースを作る 19.3 ダイスオブドゥームVer3をプレイする 18章で作ったダイスオ">
+<meta itemprop="description" content="18章で作ったダイスオブドゥームVer2では、Ver1よりも大きなゲーム盤でプレイ可能となった。 この規模だと、コンソールでの可視化には視認性">
 
 
 <meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
 <meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="4810">
+<meta itemprop="wordCount" content="4751">
 
 
 
 <meta itemprop="keywords" content="lisp," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="書籍 Land of Lisp 19章 ダイスオブドゥームにグラフィカルなWebインターフェースをつける"/>
-<meta name="twitter:description" content="T.O.C. 19.1 ゲーム盤をSVGフォーマットで描画する 19.2 Webサーバインターフェースを作る 19.3 ダイスオブドゥームVer3をプレイする 18章で作ったダイスオ"/>
+<meta name="twitter:description" content="18章で作ったダイスオブドゥームVer2では、Ver1よりも大きなゲーム盤でプレイ可能となった。 この規模だと、コンソールでの可視化には視認性"/>
 </head>
 <body>
   
@@ -133,17 +133,39 @@
 <div class="container content">
   <article>
   
-  
-
-<h2 id="t-o-c">T.O.C.</h2>
-
+    <section class="js-toc">
+  <h1>TOC</h1>
+  <div class="toc">
+  <nav id="TableOfContents">
 <ul>
-<li><a href="#191-ゲーム盤をsvgフォーマットで描画する">19.1 ゲーム盤をSVGフォーマットで描画する</a></li>
-<li><a href="#192-webサーバインターフェースを作る">19.2 Webサーバインターフェースを作る</a></li>
-<li><a href="#193-ダイスオブドゥームver3をプレイする">19.3 ダイスオブドゥームVer3をプレイする</a></li>
+<li>
+<ul>
+<li><a href="#19-1-ゲーム盤をsvgフォーマットで描画する">19.1 ゲーム盤をSVGフォーマットで描画する</a>
+<ul>
+<li><a href="#サイコロを描く">サイコロを描く</a></li>
+<li><a href="#マスを描く">マスを描く</a></li>
+<li><a href="#ゲーム盤を描く">ゲーム盤を描く</a></li>
+</ul></li>
+<li><a href="#19-2-webサーバインターフェースを作る">19.2 Webサーバインターフェースを作る</a>
+<ul>
+<li><a href="#リクエストハンドラの作成">リクエストハンドラの作成</a></li>
+<li><a href="#このゲームwebサーバの制限">このゲームwebサーバの制限</a></li>
+<li><a href="#ゲームを初期化する">ゲームを初期化する</a></li>
+<li><a href="#勝者を表示する">勝者を表示する</a></li>
+<li><a href="#人間のプレイヤーの処理">人間のプレイヤーの処理</a></li>
+<li><a href="#コンピュータプレイヤの処理">コンピュータプレイヤの処理</a></li>
+<li><a href="#htmlの中にsvgゲーム盤を描く">HTMLの中にSVGゲーム盤を描く</a></li>
+</ul></li>
+<li><a href="#19-3-ダイスオブドゥームver3をプレイする">19.3 ダイスオブドゥームVer3をプレイする</a></li>
+</ul></li>
 </ul>
+</nav>
+  <hr>
+  </div>
+</section>
 
-<hr />
+  
+  
 
 <p>18章で作ったダイスオブドゥームVer2では、Ver1よりも大きなゲーム盤でプレイ可能となった。
 この規模だと、コンソールでの可視化には視認性に限界がある。<br />
