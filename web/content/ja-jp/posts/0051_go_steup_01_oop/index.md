@@ -3,6 +3,7 @@ title: "Go言語ステップアップ(オブジェクト指向プログラミン
 date:    2019-05-01T00:00:00+09:00
 lastmod: 2019-05-01T00:00:00+09:00
 draft: false
+toc: true
 tags: ["Go", "Golang", "OOP", "オブジェクト指向プログラミング", "ポリモーフィズム", "多態性"]
 categories: ["Notes"]
 authors:
