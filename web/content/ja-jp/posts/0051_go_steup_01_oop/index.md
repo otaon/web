@@ -1,9 +1,9 @@
 ---
 title: "Go言語ステップアップ(オブジェクト指向プログラミング)"
-date:    2019-04-13T19:00:00+09:00
-lastmod: 2019-04-13T19:00:00+09:00
+date:    2019-05-01T00:00:00+09:00
+lastmod: 2019-05-01T00:00:00+09:00
 draft: false
-tags: ["Go", "Golang"]
+tags: ["Go", "Golang", "OOP", "オブジェクト指向プログラミング", "ポリモーフィズム", "多態性"]
 categories: ["Notes"]
 authors:
 - otaon
@@ -22,21 +22,21 @@ Go言語でオブジェクト指向プログラミングを行う方法を残す
 何を以ってオブジェクト指向というのかは諸説ある。  
 例えば有名なものは下記(3大原則「カプセル化・継承・多態性」を含む。wikipediaから引用)。
 
-1. **カプセル化**（encapsulation）
-1. **継承**（inheritance）
-1. **多態性**（polymorphism）
-  1. アドホック多態性（ad hoc polymorphism）
-     1. 関数オーバーロード（function overloading）
-     1. 演算子オーバーロード（operator overloading）
-  1. パラメータ多態性（parameter polymorphism）
-     1. ジェネリック関数（generic function）
-     1. ジェネリックプログラミング（generic programming）
-  1. サブタイプ多態性（subtyping）
-     1. 仮想関数（virtual function）
-     1. 動的ディスパッチ（dynamic dispatch）
-     1. ダブルディスパッチ（double dispatch）
-     1. 多重ディスパッチ（multiple dispatch）
-1. メッセージパッシング（message passing）
+1. **カプセル化**(encapsulation)
+1. **継承**(inheritance)
+1. **多態性**(polymorphism)
+  1. アドホック多態性(ad hoc polymorphism)
+     1. 関数オーバーロード(function overloading)
+     1. 演算子オーバーロード(operator overloading)
+  1. パラメータ多態性(parameter polymorphism)
+     1. ジェネリック関数(generic function)
+     1. ジェネリックプログラミング(generic programming)
+  1. サブタイプ多態性(subtyping)
+     1. 仮想関数(virtual function)
+     1. 動的ディスパッチ(dynamic dispatch)
+     1. ダブルディスパッチ(double dispatch)
+     1. 多重ディスパッチ(multiple dispatch)
+1. メッセージパッシング(message passing)
 
 # Go言語におけるOOP原則の定義
 本稿では独断で、下記が表現できるプログラミングスタイルのことと定義する。  
@@ -46,10 +46,8 @@ Go言語でオブジェクト指向プログラミングを行う方法を残す
 1. オブジェクトを集約・コンポジットできる(has-aの関係を表現できる)
   1. 集約
   1. コンポジション
-1. 部分型(is-aの関係を表現できる)
-  1. 継承
-  1. ポリモーフィズム
-
+1. ポリモーフィズム
+  1. 部分型(is-aの関係を表現できる)
 
 # Go言語で各OOP原則を実践する
 ここからは、実際にGo言語でOOP原則を表現していく。
@@ -148,17 +146,18 @@ func main() {
 	p.Pets[0].Age += 1
 	fmt.Printf("%s \"Hey, I turned %d today.\"\n", p.Pets[0].Name, p.Pets[0].Age)
 }
+```
 
-// =>
-// Hi, I'm John. I'm 30 years old.
-// Hi, I'm John. I'm 31 years old.
-// I have pets
-//   Robert(50), a Dog,
-//   Tama(10), a Chicken,
-//   Taro(14), a Panda,
-// that's all.
-// Robert "Hey, I turned 51 today."
-//
+
+```bash
+Hi, I'm John. I'm 30 years old.
+Hi, I'm John. I'm 31 years old.
+I have pets
+  Robert(50), a Dog,
+  Tama(10), a Chicken,
+  Taro(14), a Panda,
+that's all.
+Robert "Hey, I turned 51 today."
 ```
 
 上記のコンポジションの方法を用いて、擬似的な継承を実現できる。  
@@ -220,13 +219,13 @@ func main() {
 	p2.Introduce()
 	fmt.Printf("It's too hard for me to pay %d for Tax >_<\n", p2.PayTax())
 }
-// =>
-// Hi, I'm John. I'm 30 years old.
-// It's too hard for me to pay 50 for Tax >_<
-//
-// Hi, I'm Bob. I'm 3 years old.
-// It's too hard for me to pay 0 for Tax >_<
-//
+```
+
+```bash
+Hi, I'm John. I'm 30 years old.
+It's too hard for me to pay 50 for Tax >_<
+Hi, I'm Bob. I'm 3 years old.
+It's too hard for me to pay 0 for Tax >_<
 ```
 
 ### 集約
@@ -312,37 +311,200 @@ func main() {
 	p2.Pets[0].Age += 1
 	fmt.Printf("%s \"Hey, I turned %d today.\"\n", p2.Pets[0].Name, p2.Pets[0].Age)
 }
-// =>
-// Hi, I'm John. I'm 30 years old.
-// Hi, I'm John. I'm 31 years old.
-// John : I have pets
-//   Robert(50), a Dog,
-//   Tama(10), a Chicken,
-//   Taro(14), a Panda,
-// that's all.
-// Robert "Hey, I turned 51 today."
-// Hi, I'm Bob. I'm 100 years old.
-// Hi, I'm Bob. I'm 101 years old.
-// Bob : I have pets
-//   Robert(51), a Dog,
-//   Tama(10), a Chicken,
-//   Taro(14), a Panda,
-// that's all.
-// Robert "Hey, I turned 52 today."
 ```
 
-## 部分型(is-a)
-部分型は、オブジェクト指向におけるサブタイプとして知られている。  
-ここで、Go言語における部分型の扱いを理解するために、継承・ポリモーフィズムについて考える。
+```bash
+Hi, I'm John. I'm 30 years old.
+Hi, I'm John. I'm 31 years old.
+John : I have pets
+  Robert(50), a Dog,
+  Tama(10), a Chicken,
+  Taro(14), a Panda,
+that's all.
+Robert "Hey, I turned 51 today."
+Hi, I'm Bob. I'm 100 years old.
+Hi, I'm Bob. I'm 101 years old.
+Bob : I have pets
+  Robert(51), a Dog,
+  Tama(10), a Chicken,
+  Taro(14), a Panda,
+that's all.
+Robert "Hey, I turned 52 today."
+```
 
-### 継承
-Go言語には継承はない。つまり、親クラスがあって、子クラスがその親クラスの属性と振る舞いを使用する、という機構はサポートされていない。  
-ただし、トリッキーな方法で継承らしきものは実現できる(本稿末を参照)。
+## ポリモーフィズム
+ポリモーフィズムには、アドホック多相、パラメータ多相、部分型付け等が存在する。  
 
-### ポリモーフィズム
-ポリモーフィズムには、アドホック多相(オーバーロード)、パラメータ多相(ジェネリクス)、部分型付け等、複数種類が存在する。  
-このうち、**部分片付け**は、メソッド呼び出しの際に、そのレシーバの型において実装されたメソッドを実行することを意味する。
+### アドホック多相(Ad hoc polymorphism)
+ある関数が、異なる型の引数に対してそれぞれ異なる実装を持つ性質。  
+多重定義(オーバーロード)として多くのプログラミング言語でサポートされる。
 
+オーバーロード
+: 同一名(シンボル)を持つ関数あるいはメソッドおよび同一の演算子記号について複数定義し、利用時にプログラムの文脈に応じて選択する。  
+例えば異なるシグネチャで同一名の関数を定義する。
+
+#### 例: C#によるオーバーロード
+
+```cs
+class TypeA
+{
+	// 2乗する(int型version)
+	public int Square(int i)
+	{
+		return i * i;
+	}
+
+	// 2乗する(float型version)
+	public int Square(double f)
+	{
+		return (int)(f * f);
+	}
+}
+
+void Main()
+{
+	var obj = new TypeA();
+	Console.WriteLine(obj.Square(3));	// 9
+	Console.WriteLine(obj.Square(2.5));	// 6
+}
+```
+
+### パラメータ多相(Parametric polymorphism)
+コードが特定の型を指定せずに書かれることで、さまざまな型に対して透過的に使用できる性質。  
+ジェネリクスとして多くのプログラミング言語でサポートされる。
+
+#### 例: C#によるジェネリクス
+
+```cs
+class TypeA
+{
+	// IComparableを満たす任意の型に対して最大値を返す
+	public T Max<T>(T a, T b) where T : IComparable
+	{
+		return a.CompareTo(b) > 0 ? a : b;
+	}
+}
+
+void Main()
+{
+	var obj = new TypeA();
+	Console.WriteLine(obj.Max<int>(1, 2));	// 2
+}
+```
+
+### 部分型付け(Subtyping)
+部分型付けとも。共通の上位型をもつ複数の型を、1つの名前で扱う性質。  
+これにより、**部分型(is-a)**を実現できる。  
+大抵のオブジェクト指向言語では、サブクラス化(継承)によって部分型多相を提供する。
+
+#### 例: C#による継承とオーバーライド
+
+```cs
+class Type
+{
+	virtual public string Name()
+	{
+		return "Type";
+	}
+}
+
+class Subtype : Type
+{
+	override public string Name()
+	{
+		return "Subtype";
+	}
+}
+
+void Main()
+{
+	Type obj;
+	obj = new Subtype();
+	Console.WriteLine(obj.Name());	// "Subtype"
+}
+```
+
+### Go言語における部分型(is-a)
+Go言語には継承の機能がない。したがって、継承ではなく、インターフェース実装によって部分型を実現する必要がある。  
+Go言語には`interface{}`型があるため、これを使用する。
+
+#### Go言語によるインターフェース実装
+
+- Humanインターフェース
+
+```go
+type Human interface {
+	talk() string	// 話せる
+}
+```
+
+- Person: Humanインターフェースを満たす
+
+```go
+type Person struct {}
+func (*Person) talk() string {
+	return "I am a person."
+}
+```
+
+- Male: Humanインターフェースを満たす
+
+```go
+type Male struct {}
+// MaleでPersonのtalk()をオーバーライド
+func (*Male) talk() string {
+	return "I am a male."
+}
+```
+
+- Female: Humanインターフェースを満たす
+
+```go
+type Female struct {}
+// FemaleでPersonのtalk()をオーバーライド
+func (*Female) talk() string {
+	return "I am a female."
+}
+```
+
+- NewGender: Humanインターフェースを満たす
+
+```go
+// NewGender.talk()でNewGender.Person.talk()を呼び出せる
+type NewGender struct{
+	Person
+}
+```
+
+- NewNewGender: Humanインターフェースを満たさない
+
+```go
+// talk()を実装していない
+type NewNewGender struct{}
+```
+
+- NotGender: Humanインターフェースを満たさない
+
+```go
+// 異なるシグネチャのtalk()を実装している
+type NotGender struct{}
+func (*NotGender) talk() (string, string) {
+	return "I am not a gender.", "not error"
+}
+```
+
+- NotGender: Humanインターフェースを満たすが**talk()を呼び出すとPanic発生する**
+
+```go
+type MaybePerson struct {
+	// MaybePerson.talk()というアクセスが可能となる
+	// ただし、MaybePersonにはtalk()が実装されていないため、呼び出し時にPanic発生する
+	Human
+}
+```
+
+- 上記構造体・インターフェースの動作確認コード
+  - 構造体ごとに型アサーションしつつ`talk()`を呼び出す
 
 ```go
 package main
@@ -351,132 +513,195 @@ import (
 	"fmt"
 )
 
-// Human型
-type Human interface {
-	// 話せる
-	talk() string
-}
-
-type Person struct {
-	// Humanインターフェースを実装したことになり、Person.talk()というアクセスが可能となる
-	// ただし、Personにtalk()およびlisten()を実装しなければ、呼び出し時にパニック発生する。
-	Human
-}
-
-func (*Person) talk() string {
-	return "I am a person."
-}
-
-type Male struct {
-	Person
-}
-
-func (*Male) talk() string {
-	return "I am a male."
-}
-
-type Female struct {
-	Person
-}
-
-func (*Female) talk() string {
-	return "I am a female."
-}
-
-type NewGender struct {
-	Person
-}
-
-type NewNewGender struct{}
-
-func (*NewNewGender) talk() string {
-	return "I am a New New Gender."
-}
-
-type NotGender struct{}
-
-func (*NotGender) talk() (string, string) {
-	return "I am not a gender.", "not error"
-}
-
 func main() {
-	person := new(Person)
+	fmt.Println("--- Person ---")
+	var person interface{} = new(Person)
 	if value, ok := person.(Human); ok {
-		fmt.Println(value.talk())
+		fmt.Println(" ", value.talk())
+	} else {
+		fmt.Printf("  Person: %T\n", value)
 	}
 
-	male := new(Male)
+	fmt.Println("--- Male ---")
+	var male interface{} = new(Male)
 	if value, ok := male.(Human); ok {
-		fmt.Println(value.talk())
+		fmt.Println(" ", value.talk())
+	} else {
+		fmt.Printf("  Male: %T\n", value)
 	}
 
-	female := new(Female)
+	fmt.Println("--- Female ---")
+	var female interface{} = new(Female)
 	if value, ok := female.(Human); ok {
-		fmt.Println(value.talk())
+		fmt.Println(" ", value.talk())
+	} else {
+		fmt.Printf("  Female: %T\n", value)
 	}
 
-	newgen := new(NewGender)
-	fmt.Println(newgen.talk())
+	fmt.Println("--- NewGender ---")
+	var newgen interface{} = new(NewGender)
+	if value, ok := newgen.(Human); ok {
+		fmt.Println(" ", value.talk())
+	} else {
+		fmt.Printf("  NewGender: %T\n", value)
+	}
 
-	newnewgen := new(NewNewGender)
-	fmt.Println(newnewgen.talk())
+	fmt.Println("--- NewNewGender ---")
+	var newnewgen interface{} = new(NewNewGender)
+	if value, ok := newnewgen.(Human); ok {
+		fmt.Println(" ", value.talk())
+	} else {
+		fmt.Printf("  NewNewGender: %T\n", value)
+	}
 
-	notgen := new(NotGender)
-	fmt.Println(notgen.talk())
+	fmt.Println("--- NotGender ---")
+	var notgen interface{} = new(NotGender)
+	if value, ok := notgen.(Human); ok {
+		fmt.Println(" ", value.talk())
+	} else {
+		fmt.Printf("  NotGender: %T\n", value)
+	}
+
+	// !! this calling causes Panic !!
+	fmt.Println("--- MaybePerson ---")
+	var maybe interface{} = new(MaybePerson)
+	if value, ok := maybe.(Human); ok {
+		fmt.Println(" ", value.talk())
+	} else {
+		fmt.Printf("  MaybePerson: %T\n", value)
+	}
 }
 ```
 
+- 実行結果
 
-#### ダックタイピング
-動的型付け言語におけるオブジェクトの型の考え方の一つで、振る舞い(メソッドの有無)によって型を規定する。  
-wikipediaの概要が分かりやすい。
+```bash
+> go run .\test.go
+--- Person ---
+  I am a person.
+--- Male ---
+  I am a male.
+--- Female ---
+  I am a female.
+--- NewGender ---
+  I am a person.
+--- NewNewGender ---
+  NewNewGender: <nil>
+--- NotGender ---
+  NotGender: <nil>
+--- MaybePerson ---
+panic: runtime error: invalid memory address or nil pointer dereference
+[signal 0xc0000005 code=0x0 addr=0x18 pc=0x493bc9]
 
-- [wikipedia - ダック・タイピング](https://ja.wikipedia.org/wiki/%E3%83%80%E3%83%83%E3%82%AF%E3%83%BB%E3%82%BF%E3%82%A4%E3%83%94%E3%83%B3%E3%82%B0)
+goroutine 1 [running]:
+main.(*MaybePerson).talk(0xc000050200, 0x4ac700, 0xc000050200)
+        <autogenerated>:1 +0x39
+main.main()
+        C:/Users/username/test.go:112 +0x82e
+exit status 2
+```
 
-> ダック・タイピング（duck typing）とは、Smalltalk、Perl、Python、Rubyなどのいくつかの動的型付けオブジェクト指向プログラミング言語に特徴的な型付けの作法のことである。  
-> それらの言語ではオブジェクト（変数の値）に何ができるかはオブジェクトそのものが決定する。  
-> これによりポリモーフィズム（多態性）を実現することができる。  
-> つまり、静的型付け言語であるJavaやC#の概念で例えると、オブジェクトがあるインタフェースのすべてのメソッドを持っているならば、たとえそのクラスがそのインタフェースを宣言的に実装していなくとも、オブジェクトはそのインタフェースを実行時に実装しているとみなせる。
+#### Go言語とダックタイピングの関係
+動的型付け言語におけるオブジェクトの型の考え方の一つで、振る舞い(メソッドの有無)によって型を特定する。
+ダックタイピングの説明は、Wikipediaの概要が分かりやすい。
 
-Go言語では、インターフェースによってダックタイピングできるように設計されている。  
-このインターフェースが要求したメソッドをすべて実装してさえれば、インターフェースを実装していることを明示しなくとも、その型は当該インターフェースであるとみなされる。
-これが、振る舞い(メソッドの有無)によって型が規定されるという意味。
+- [Wikipedia - ダック・タイピング](https://ja.wikipedia.org/wiki/%E3%83%80%E3%83%83%E3%82%AF%E3%83%BB%E3%82%BF%E3%82%A4%E3%83%94%E3%83%B3%E3%82%B0)
 
+> ダック・タイピング(duck typing)とは、Smalltalk、Perl、Python、Rubyなどのいくつかの動的型付けオブジェクト指向プログラミング言語に特徴的な型付けの作法のことである。  
+> それらの言語ではオブジェクト(変数の値)に何ができるかはオブジェクトそのものが決定する。  
+> これによりポリモーフィズム(多態性)を実現することができる。  
+> つまり、静的型付け言語であるJavaやC#の概念で例えると、**オブジェクトがあるインタフェースのすべてのメソッドを持っているならば、たとえそのクラスがそのインタフェースを宣言的に実装していなくとも、オブジェクトはそのインタフェースを実行時に実装しているとみなせる**。
 
-## golang で継承っぽい事をやる方法
+Go言語では、とある`interface{}`型で要求するメソッドを全て実装していれば、例えばJavaにおける`implements`のようにキーワードで明示しなくとも、その`interface{}`型を実装したことになる。  
+すなわち、これがGo言語におけるダックタイピング。
+
+##### C#の`dynamic`型によるダックタイピング
+Go以外の静的言語でも、実行時の型情報を自己参照することによってダックタイピングは可能。  
+下記は、C#の`dynamic`型(内部的にはリフレクション機能)を用いたダックタイピングの例(Wikipediaから引用)。
+
+```cs
+class Duck
+{
+	public string Sound()
+	{
+		return "quack";
+	}
+}
+
+class Cat
+{
+	public string Sound()
+	{
+		return "myaa";
+	}
+}
+
+public class DuckTypingTest
+{
+	static void Test(dynamic obj)
+	{
+		// objがSound()メソッドを持つかは実行時に調べられる
+		Console.WriteLine(obj.Sound());
+	}
+
+	public static void Main()
+	{
+		Test(new Duck());
+		Test(new Cat());
+	}
+}
+```
+
+----
+
+## Go言語で継承っぽい事をやる方法
+Go言語には継承がないと書いたが、継承らしいことを実現できなくはないらしい。
 
  {{< tweet 670415696656883713 >}}
 
-```go
+内容が凄いコードだったので、下記にコメントを補いつつ示す。
 
+```go
 package main
 
+// すくなくとも基本型が実装すべきインターフェース
 type Worker interface {
 	Do()
 }
 
+// 基本型
 type Base struct {
+	// 派生型をコンポジションするための匿名メンバ
 	Worker
 }
 
+// 基本型のメソッド
 func (b *Base) Do() {
 	if b.Worker != nil {
+		// bの内包する派生型がWorkerを満たす(Do()がある)場合、
+		// 派生型の実装を呼び出す
 		b.Worker.Do()
 	} else {
+		// 基本型のメソッドの実装
 		println("Base.Do")
 	}
 }
 
+// 派生型
 type Derived struct {
+	// 基本型をコンポジションするための匿名メンバ
+	// これがあると、Do()が有るか検査される時にBaseの方も確認されるから、
+	// 常にWorkerを満たすとみなされる
 	Base
 }
 
-/* このコメントアウトを外せば Derived.Do が呼ばれる
+/* このコメントアウトを外せば Derived.Do が呼ばれる(オーバーライド)
 func (d *Derived) Do() {
 	println("Derived.Do")
 }
 */
 
+// 基本型を生成し、さらに派生型を内包して返す
 func NewBase(w Worker) Worker {
 	return &Base{w}
 }
@@ -485,4 +710,67 @@ func main() {
 	d := NewBase(new(Derived))
 	d.Do()
 }
+```
+
+・・・ツイートで既に非推奨だと言われている通り、上記のコードは複雑すぎて実用性は無いと思う。  
+基本型から派生型の`Do()`をダックタイピングしたい(C#のdynamic型の様に)ならこの方法になると思うが、オーバーライドするだけなら下記のコードで事足りるはず。
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+type Worker interface {
+	Do()
+}
+
+type Base struct {}
+
+func (b *Base) Do() {
+	fmt.Println("Base.Do")
+}
+
+type Derived struct {
+	Worker
+}
+
+/*
+func (d *Derived) Do() {
+	fmt.Println("Derived.Do")
+}
+*/
+
+func NewDerived() Worker {
+	return &Derived { Worker: new(Base) }
+}
+
+func main() {
+	b := new(Base)
+	fmt.Printf("%T\n", b)
+	b.Do()
+	
+	d := NewDerived()
+	fmt.Printf("%T\n", d)
+	d.Do()
+}
+```
+
+- 実行結果: コメントアウトした状態
+
+```bash
+*main.Base
+Base.Do
+*main.Derived
+Base.Do
+```
+
+- 実行結果: コメントアウトを外した状態
+
+```bash
+*main.Base
+Base.Do
+*main.Derived
+Derived.Do
 ```

@@ -115,6 +115,21 @@ echo hello world
 - [ ] incomplete
 - [x] completed
 
+## 定義リスト
+
+```
+定義用語1
+: 用語の説明1
+
+定義用語2
+: 用語の説明2
+```
+
+定義用語1
+: 用語の説明1
+
+定義用語2
+: 用語の説明2
 
 ## 書式付きテキスト
 | Name              | Markdown              | HTML tag             |
