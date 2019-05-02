@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>ポリモーフィズム・部分型付け・派生型 · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="目的 部分型付け・派生型・リスコフの置換原則・仮想関数テーブルについての学習記録を残す。 参考文献 本文中に記す。 ポリモーフィズム(部分型付け) と" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/05/01/%E3%83%9D%E3%83%AA%E3%83%A2%E3%83%BC%E3%83%95%E3%82%A3%E3%82%BA%E3%83%A0%E9%83%A8%E5%88%86%E5%9E%8B%E4%BB%98%E3%81%91%E6%B4%BE%E7%94%9F%E5%9E%8B/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="ポリモーフィズム・部分型付け・派生型" />
+<meta property="og:description" content="目的 部分型付け・派生型・リスコフの置換原則・仮想関数テーブルについての学習記録を残す。 参考文献 本文中に記す。 ポリモーフィズム(部分型付け) と" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/05/01/%E3%83%9D%E3%83%AA%E3%83%A2%E3%83%BC%E3%83%95%E3%82%A3%E3%82%BA%E3%83%A0%E9%83%A8%E5%88%86%E5%9E%8B%E4%BB%98%E3%81%91%E6%B4%BE%E7%94%9F%E5%9E%8B/" />
+<meta property="article:published_time" content="2019-05-01T23:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-05-01T23:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="ポリモーフィズム・部分型付け・派生型">
+<meta itemprop="description" content="目的 部分型付け・派生型・リスコフの置換原則・仮想関数テーブルについての学習記録を残す。 参考文献 本文中に記す。 ポリモーフィズム(部分型付け) と">
+
+
+<meta itemprop="datePublished" content="2019-05-01T23:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-05-01T23:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="1533">
+
+
+
+<meta itemprop="keywords" content="ポリモーフィズム,部分型付け,派生型,リスコフの置換原則,仮想関数テーブル," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="ポリモーフィズム・部分型付け・派生型"/>
+<meta name="twitter:description" content="目的 部分型付け・派生型・リスコフの置換原則・仮想関数テーブルについての学習記録を残す。 参考文献 本文中に記す。 ポリモーフィズム(部分型付け) と"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">ポリモーフィズム・部分型付け・派生型</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-05-01
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/notes/">Notes</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/%E3%83%9D%E3%83%AA%E3%83%A2%E3%83%BC%E3%83%95%E3%82%A3%E3%82%BA%E3%83%A0/">ポリモーフィズム</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/%E3%83%AA%E3%82%B9%E3%82%B3%E3%83%95%E3%81%AE%E7%BD%AE%E6%8F%9B%E5%8E%9F%E5%89%87/">リスコフの置換原則</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/%E4%BB%AE%E6%83%B3%E9%96%A2%E6%95%B0%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB/">仮想関数テーブル</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/%E6%B4%BE%E7%94%9F%E5%9E%8B/">派生型</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/%E9%83%A8%E5%88%86%E5%9E%8B%E4%BB%98%E3%81%91/">部分型付け</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+    <section class="js-toc">
+  <div class="toc">
+  <nav id="TableOfContents">
+<ul>
+<li><a href="#目的">目的</a></li>
+<li><a href="#参考文献">参考文献</a></li>
+<li><a href="#ポリモーフィズム-部分型付け">ポリモーフィズム(部分型付け)</a>
+<ul>
+<li><a href="#部分型付け-部分型多相-とは">部分型付け(部分型多相)とは</a>
+<ul>
+<li><a href="#リスコフの置換原則">リスコフの置換原則</a></li>
+</ul></li>
+<li><a href="#サブクラス化-継承-仮想関数テーブルについて">サブクラス化(継承)・仮想関数テーブルについて</a></li>
+<li><a href="#ポリモーフィズム-部分型付け-の種類">ポリモーフィズム(部分型付け)の種類</a>
+<ul>
+<li><a href="#名前的部分型-nominal-subtyping">名前的部分型(Nominal Subtyping)</a></li>
+<li><a href="#構造的部分型-structural-subtyping">構造的部分型(Structural Subtyping)</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</section>
+
+  
+  
+
+<h1 id="目的">目的</h1>
+
+<p>部分型付け・派生型・リスコフの置換原則・仮想関数テーブルについての学習記録を残す。</p>
+
+<h1 id="参考文献">参考文献</h1>
+
+<p>本文中に記す。</p>
+
+<h1 id="ポリモーフィズム-部分型付け">ポリモーフィズム(部分型付け)</h1>
+
+<p>とりあえずWikipediaの記事から、言葉を少し補って引用する。</p>
+
+<p><a href="https://ja.wikipedia.org/wiki/%E3%83%9D%E3%83%AA%E3%83%A2%E3%83%BC%E3%83%95%E3%82%A3%E3%82%BA%E3%83%A0#%E9%83%A8%E5%88%86%E5%9E%8B%E4%BB%98%E3%81%91">Wikipedia - ポリモーフィズム#部分型付け</a></p>
+
+<h2 id="部分型付け-部分型多相-とは">部分型付け(部分型多相)とは</h2>
+
+<blockquote>
+<ul>
+<li>いくつかのプログラミング言語では、特定の多相性の状況において使用できる型の範囲を制限するために<strong>部分型付け(部分型多相とも呼ばれる)</strong>を採用している。</li>
+<li>そういった言語で部分型付けを使用すると、ある型<code>Type</code>のオブジェクトを受け取る関数は、<code>Type</code>の部分型である型<code>Subtype</code>のオブジェクトを渡された場合でも正しく動作する (<strong>リスコフの置換原則</strong>)。<br />
+この型の関係性はしばしば<code>Subtype&lt;:Type</code>と表記される。</li>
+<li>一般的に部分型多相は動的に解決される (後述)。</li>
+</ul>
+</blockquote>
+
+<p>部分型付け(部分型多相)は、基本型が使われている箇所を完全に置き換え可能な部分型を定義すること。
+つまり、基本型(例:<code>Base</code>クラス)の箇所を派生型(例:<code>Derived</code>クラス)に置き換えられるように派生型を定義すること。<br />
+C言語の場合、<code>char</code>型の箇所を<code>int</code>型に置き換えても成り立つ(今はエッジケースは無視する)ため、<code>int</code>型は<code>char</code>型の派生型だと言える。</p>
+
+<h3 id="リスコフの置換原則">リスコフの置換原則</h3>
+
+<p><a href="https://ja.wikipedia.org/wiki/%E3%83%AA%E3%82%B9%E3%82%B3%E3%83%95%E3%81%AE%E7%BD%AE%E6%8F%9B%E5%8E%9F%E5%89%87">Wikipedia - リスコフの置換原則</a>」</p>
+
+<blockquote>
+<p><code>T</code>型のオブジェクト<code>x</code>に関して真となる属性を<code>q(x)</code>とする。<br />
+このとき<code>S</code>が<code>T</code>の派生型であれば、<code>S</code>型のオブジェクト<code>y</code>について<code>q(y)</code>が真となる。</p>
+</blockquote>
+
+<p>リスコフの置換原則を設計指針に置き換えると、「基本型が使われている任意の箇所は、派生型で置き換えても正しく動作する必要がある」となる。</p>
+
+<h2 id="サブクラス化-継承-仮想関数テーブルについて">サブクラス化(継承)・仮想関数テーブルについて</h2>
+
+<blockquote>
+<ul>
+<li>オブジェクト指向言語は<strong>サブクラス化 (継承)</strong>によって部分型多相を提供する。<br /></li>
+<li>典型的な実装では、各クラスはそれぞれ<strong>仮想関数テーブル(<code>vtable</code>)</strong>と呼ばれる関数のテーブルを持ち、各オブジェクトは自らのクラスのvtableへのポインタを持つ。<br />
+多相なメソッドを呼び出すときには、この仮想関数テーブルを参照する。</li>
+</ul>
+</blockquote>
+
+<p>部分型付けは、大抵の場合<strong>サブクラス化(継承)</strong>によって実現される。<br />
+サブクラス化(継承)機能を持つオブジェクト指向言語においては、典型的には仮想関数テーブル(<code>vtable</code>)を用いて、インスタンス自体の型に定義されるメソッドを呼び出す。<br />
+仮想関数テーブルについては「<a href="/web/ja-jp/2019/05/02/%E3%83%87%E3%82%A3%E3%82%B9%E3%83%91%E3%83%83%E3%83%81%E4%BB%AE%E6%83%B3%E9%96%A2%E6%95%B0%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6%E5%AD%A6%E3%81%B6/">ディスパッチ・仮想関数テーブルについて学ぶ</a>」を参照。</p>
+
+<h2 id="ポリモーフィズム-部分型付け-の種類">ポリモーフィズム(部分型付け)の種類</h2>
+
+<p>部分型付けには、2種類(名前的部分型・構造的部分型)ある。</p>
+
+<p><a href="https://tech.nikkeibp.co.jp/it/article/COLUMN/20061107/252787/">数理科学的バグ撲滅方法論のすすめ - 第4回 関数型言語とオブジェクト指向，およびOCamlの&rdquo;O&rdquo;について</a></p>
+
+<blockquote>
+<ul>
+<li>OCamlは，クラスや継承・インタフェースなどを宣言しなくても，オブジェクトやメソッドの型を自動で推論する。<br /></li>
+<li>部分型関係（いわゆるis-a関係の一種）も，実際のオブジェクトの型にしたがい，あらかじめ宣言をしなくても成立する。<br /></li>
+<li>これを構造的部分型（structural subtyping）という。<br /></li>
+<li>逆に，JavaやC++のように，あらかじめ宣言しなければ成立しない部分型関係を名前的部分型（nominal subtyping）と呼ぶ。</li>
+</ul>
+</blockquote>
+
+<h3 id="名前的部分型-nominal-subtyping">名前的部分型(Nominal Subtyping)</h3>
+
+<p>部分型の実現方法のうち、継承関係をキーワードなどで明言して確定させるもの。<br />
+例:</p>
+
+<ul>
+<li>Java <code>class DerivedClass extends SuperClass</code><br /></li>
+<li>C# <code>class DerivedBlass : SuperClass</code><br /></li>
+<li>python <code>class DerivedClass(SuperClass):</code></li>
+</ul>
+
+<h3 id="構造的部分型-structural-subtyping">構造的部分型(Structural Subtyping)</h3>
+
+<p>部分型の実現方法のうち、継承関係を構造から静的に推論して確定させるもの。<br />
+ある意味、静的なダックタイピングと捉えることもできる。<br />
+例(実コードは省略):</p>
+
+<ul>
+<li>OCaml<br /></li>
+<li>Scala<br /></li>
+<li>Go(<code>interface{}</code>の扱い方が構造的部分型)<br /></li>
+<li>Typescript</li>
+</ul>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="/web/asset/mermaid/mermaid.js"></script>
+
+</body>
+</html>
