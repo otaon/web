@@ -1,0 +1,128 @@
+digraph G {
+	// Setting
+	graph [
+		fontname = "Migu 1M",
+		labelloc = "t",
+		labeljust = "c",
+		bgcolor = white,
+		fontcolor = Black,
+		fontsize = 14,
+		style = "filled",
+		rankdir = TB,
+		splines = polyline,
+		ranksep = 1.0,
+		nodesep = 0.25,
+	];
+
+	node [
+		colorscheme = "rdylbu9"
+		style = "solid,filled",
+		fontsize = 14,
+		fontname = "Migu 1M",
+		color = 9,
+		fillcolor = 6,
+	];
+
+	edge [
+		style = solid,
+		fontsize = 14,
+		fontcolor = white,
+		fontname = "Migu 1M",
+		color = gray,
+		labelfloat = true,
+		labeldistance = 2.5,
+		labelangle = 70,
+	];
+
+	// Elements
+	subgraph cluster0 {
+		label = "UserPackage";
+		graph [
+			fontname = "Migu 1M",
+			labelloc = "t",
+			labeljust = "c",
+			color = "#AFAF4F",
+			fillcolor = "#FDFDD7",
+			fontcolor = Black,
+			fontsize = 12,
+			style = "filled,rounded",
+			rankdir = TB,
+			splines = spline,
+			ranksep = 1.0,
+		];
+
+		UL [
+			shape = box,
+			label = "Main",
+		];
+	}
+
+	subgraph cluster1 {
+		label="LogicDLL";
+		graph [
+			fontname = "Migu 1M",
+			labelloc = "t",
+			labeljust = "c",
+			color = "#AFAF4F",
+			fillcolor = "#FDFDD7",
+			fontcolor = Black,
+			fontsize = 14,
+			style = "filled,rounded",
+			rankdir = TB,
+			splines = spline,
+			ranksep = 1.0,
+			nodesep = 0.05,
+		];
+
+		U [
+			shape = box,
+			label = "User",
+		];
+
+		ID [
+			shape = box,
+			style = filled,
+			label = "UserRepositoryInterface",
+		];
+
+		U -> ID [
+			tailport = s,
+			headport = n,
+		];
+	}
+
+	subgraph cluster2 {
+		label = "DataAccessDLL";
+		graph [
+			fontname = "Migu 1M",
+			labelloc = "t",
+			labeljust = "c",
+			color = "#AFAF4F",
+			fillcolor = "#FDFDD7",
+			fontcolor = Black,
+			fontsize = 14,
+			style = "filled,rounded",
+			rankdir = TB,
+			splines = spline,
+			ranksep = 1.0,
+			nodesep = 0.05,
+		];
+
+		D [
+			shape = box,
+			style = filled,
+			label = "UserRepository",
+		];
+	}
+
+	// Relationships
+	UL -> U [
+		weight = 1000,
+	];
+
+	ID -> D [
+		dir=back,
+		weight = 1000,
+	];
+}
+
