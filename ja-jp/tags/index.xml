@@ -6,10 +6,19 @@
     <description>Recent content in Tags on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Wed, 13 Mar 2019 01:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 05 May 2019 05:00:00 +0900</lastBuildDate>
     
 	<atom:link href="https://otaon.github.io/web/ja-jp/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>DIP</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/dip/</link>
+      <pubDate>Sun, 05 May 2019 05:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/dip/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Git</title>
@@ -57,11 +66,56 @@
     </item>
     
     <item>
+      <title>ISP</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/isp/</link>
+      <pubDate>Sun, 05 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/isp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>LSP</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/lsp/</link>
+      <pubDate>Sun, 05 May 2019 03:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/lsp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>OCP</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/ocp/</link>
+      <pubDate>Sun, 05 May 2019 02:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/ocp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>OOP</title>
       <link>https://otaon.github.io/web/ja-jp/tag/oop/</link>
-      <pubDate>Wed, 01 May 2019 00:00:00 +0900</pubDate>
+      <pubDate>Sun, 05 May 2019 05:00:00 +0900</pubDate>
       
       <guid>https://otaon.github.io/web/ja-jp/tag/oop/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SOLID</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/solid/</link>
+      <pubDate>Sun, 05 May 2019 05:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/solid/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SRP</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/srp/</link>
+      <pubDate>Sun, 05 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/srp/</guid>
       <description></description>
     </item>
     
@@ -134,60 +188,6 @@
       <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
       
       <guid>https://otaon.github.io/web/ja-jp/tag/lisp/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>mermaid.js</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/mermaid.js/</link>
-      <pubDate>Fri, 08 Mar 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/tag/mermaid.js/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>slimv</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/slimv/</link>
-      <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/tag/slimv/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>template</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/template/</link>
-      <pubDate>Sun, 03 Mar 2019 16:01:23 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/tag/template/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>toc</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/toc/</link>
-      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/tag/toc/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>vim</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/vim/</link>
-      <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/tag/vim/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>オブジェクト指向プログラミング</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/</link>
-      <pubDate>Wed, 01 May 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/tag/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/</guid>
       <description></description>
     </item>
     

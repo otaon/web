@@ -24,6 +24,1463 @@
     </item>
     
     <item>
+      <title>オブジェクト指向原則集(SOLID、他):依存性逆転の原理について</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E4%BE%9D%E5%AD%98%E6%80%A7%E9%80%86%E8%BB%A2%E3%81%AE%E5%8E%9F%E7%90%86%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/</link>
+      <pubDate>Sun, 05 May 2019 05:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E4%BE%9D%E5%AD%98%E6%80%A7%E9%80%86%E8%BB%A2%E3%81%AE%E5%8E%9F%E7%90%86%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/</guid>
+      
+        <description>
+
+&lt;h1 id=&#34;目的&#34;&gt;目的&lt;/h1&gt;
+
+&lt;p&gt;プログラミングや設計において守るべき「SOLID原則」についての学習記録を残す。&lt;/p&gt;
+
+&lt;h1 id=&#34;参考文献&#34;&gt;参考文献&lt;/h1&gt;
+
+&lt;p&gt;SOLID全体の説明については「&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96/&#34;&gt;オブジェクト指向原則集(SOLID、他)&lt;/a&gt;」を参照。&lt;/p&gt;
+
+&lt;h1 id=&#34;solid原則について&#34;&gt;SOLID原則について&lt;/h1&gt;
+
+&lt;p&gt;SOLID原則とは、プログラミングや設計において守るべき主要な原則5つをまとめたもの。&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&amp;nbsp;頭文字&lt;/th&gt;
+&lt;th&gt;&amp;nbsp;略称&lt;/th&gt;
+&lt;th&gt;&amp;nbsp;英名&lt;/th&gt;
+&lt;th&gt;&amp;nbsp;和名&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;S&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;SRP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;Single Responsibility Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;単一責任の原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;O&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;OCP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Open-Closed Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;開放／閉鎖原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;L&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;LSP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Liskov Substitution Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;リスコフの置換原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;I&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;ISP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Interface Segregation Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;インターフェース分離原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;D&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;DIP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Dependency Inversion Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;依存性逆転の原理&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;SOLID全体の説明については「&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96/&#34;&gt;オブジェクト指向原則集(SOLID、他)&lt;/a&gt;」を参照。&lt;/p&gt;
+
+&lt;h2 id=&#34;d-the-dependency-inversion-principle-dip-依存性逆転の原理&#34;&gt;&lt;strong&gt;D&lt;/strong&gt; : The Dependency Inversion Principle (DIP) : 依存性逆転の原理&lt;/h2&gt;
+
+&lt;p&gt;この原則は、下記のことを表す。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;上位レベルのモジュールは、下位レベルのモジュールに依存すべきではない&lt;/li&gt;
+&lt;li&gt;上位レベルのモジュール、下位レベルのモジュール、ともに抽象（abstractions)に依存すべき&lt;/li&gt;
+&lt;li&gt;抽象は、詳細に依存してはならない&lt;/li&gt;
+&lt;li&gt;詳細は、抽象に依存すべき&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;例えば、下記のような依存関係があるとする。&lt;/p&gt;
+
+
+&lt;link rel=&#34;stylesheet&#34; href=&#34;https://otaon.github.io/css/hugo-easy-gallery.css&#34; /&gt;
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:150px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;NOT-DI1.png&#34; alt=&#34;NOT-DI1&#34; /&gt;
+    &lt;/div&gt;
+    
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;p&gt;下位レベルのモジュールの再利用性を高めるためには、上記を、下記のような依存関係に逆転させたい。
+ロジック層とデータアクセス層との間だけにこの原則を適用したコード例を下記に示す。&lt;/p&gt;
+
+
+
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:150px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;NOT-DI2.png&#34; alt=&#34;NOT-DI2&#34; /&gt;
+    &lt;/div&gt;
+    
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;h3 id=&#34;0-サンプルプログラム&#34;&gt;0. サンプルプログラム&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ユーザの誕生日から現在の年齢を計算する&lt;/li&gt;
+&lt;li&gt;ユーザの情報は永続化して保存可能&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;user&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Date&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Time&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Now&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;Console&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;WriteLine&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;You are &amp;#34;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Age&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToString&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;years old.&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;n&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Save&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;User&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Birthday&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;set&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Age&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;get&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetAge&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetAge&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Save&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;repository&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UserRepository&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;repository&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Save&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;UserRepository&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Save&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// Insert Database
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;1-上位モジュールと下位モジュールを抽象に依存させる&#34;&gt;1. 上位モジュールと下位モジュールを抽象に依存させる&lt;/h3&gt;
+
+&lt;p&gt;上位モジュール(Logic DLL)と下位モジュール(Data Access DLL)を抽象に依存させる。&lt;br /&gt;
+しかし、単純に抽象に依存させると、&lt;code&gt;User&lt;/code&gt;クラスが&lt;code&gt;UserRepository&lt;/code&gt;インターフェースに依存してしまっている。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IUserRepository&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Save&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;User&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;user&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;User&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;_birthday&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// コンストラクタ
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;birthday&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;_birthday&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;birthday&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Age&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetAge&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetAge&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Save&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// まだ、UserRepositoryの実体に依存してしまっている
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;IUserRepository&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;repository&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UserRepository&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+        &lt;span class=&#34;n&#34;&gt;repository&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Save&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:200px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;DI1.png&#34; alt=&#34;DI1&#34; /&gt;
+    &lt;/div&gt;
+    
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;h3 id=&#34;2-依存性の注入&#34;&gt;2. 依存性の注入&lt;/h3&gt;
+
+&lt;p&gt;依存関係を、クラスやソースコードの外側から注入することで、&lt;code&gt;User&lt;/code&gt;クラスを&lt;code&gt;UserRepository&lt;/code&gt;インターフェースに依存させなくできる。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;User&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;c1&#34;&gt;// フィールドで依存先のインターフェースを持つ
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IUserRepository&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;_repository&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;_birthday&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// コンストラクタ
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// コンストラクタでIUserRepositoryの実装を受け取る
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;User&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;DateTime&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;birthday&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IUserRepository&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;repository&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;_birthday&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;birthday&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;_repository&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;repository&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Age&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetAge&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetAge&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Save&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// コンストラクタで受け取ったインスタンスを使う
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;c1&#34;&gt;// IUserRepository型である限り、実体が何なのかは無視できる
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;_repository&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Save&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:200px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;DI2.png&#34; alt=&#34;DI2&#34; /&gt;
+    &lt;/div&gt;
+    
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;h3 id=&#34;3-下位モジュールから上位モジュールに依存する&#34;&gt;3. 下位モジュールから上位モジュールに依存する&lt;/h3&gt;
+
+&lt;p&gt;パッケージの持ち方を変える事により、「下位モジュールから上位モジュールに依存する」が実現できる。&lt;/p&gt;
+
+
+
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:200px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;DI3.png&#34; alt=&#34;DI3&#34; /&gt;
+    &lt;/div&gt;
+    
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;h3 id=&#34;4-メインルーチンから依存性を注入する&#34;&gt;4. メインルーチンから依存性を注入する&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;User&lt;/code&gt;クラスから実際に&lt;code&gt;User Repository&lt;/code&gt;クラスを使うにはどうしたら良いか。&lt;br /&gt;
+最も簡単な方法は、これらのクラスの更に外側にある&lt;code&gt;Main&lt;/code&gt;クラスから&lt;strong&gt;オブジェクト&lt;/strong&gt;を注入すること。&lt;br /&gt;
+&lt;code&gt;Main&lt;/code&gt;クラスがアプリケーション全体を統括する責務を持つならば、&lt;code&gt;LogicDLL&lt;/code&gt;パッケージおよび&lt;code&gt;DataAccessDLL&lt;/code&gt;パッケージに依存していても問題ない。&lt;/p&gt;
+
+
+
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:300px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;DI4.png&#34; alt=&#34;DI4&#34; /&gt;
+    &lt;/div&gt;
+    
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;p&gt;依存性の注入と言われているが、実際の処理を見て分かる通り、大抵のオブジェクト指向の文脈においては&lt;strong&gt;オブジェクトの注入&lt;/strong&gt;と呼んだ方が分かりやすいと思う。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>オブジェクト指向原則集(SOLID、他):リスコフの置換原則について</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E3%83%AA%E3%82%B9%E3%82%B3%E3%83%95%E3%81%AE%E7%BD%AE%E6%8F%9B%E5%8E%9F%E5%89%87%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/</link>
+      <pubDate>Sun, 05 May 2019 03:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E3%83%AA%E3%82%B9%E3%82%B3%E3%83%95%E3%81%AE%E7%BD%AE%E6%8F%9B%E5%8E%9F%E5%89%87%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/</guid>
+      
+        <description>
+
+&lt;h1 id=&#34;目的&#34;&gt;目的&lt;/h1&gt;
+
+&lt;p&gt;プログラミングや設計において守るべき「SOLID原則」のうち、「リスコフの置換原則」についての学習記録を残す。&lt;/p&gt;
+
+&lt;h1 id=&#34;参考文献&#34;&gt;参考文献&lt;/h1&gt;
+
+&lt;p&gt;「&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96/&#34;&gt;オブジェクト指向原則集(SOLID、他)&lt;/a&gt;」を参照。&lt;/p&gt;
+
+&lt;h1 id=&#34;solid原則について&#34;&gt;SOLID原則について&lt;/h1&gt;
+
+&lt;p&gt;SOLID原則とは、プログラミングや設計において守るべき主要な原則5つをまとめたもの。&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&amp;nbsp;頭文字&lt;/th&gt;
+&lt;th&gt;&amp;nbsp;略称&lt;/th&gt;
+&lt;th&gt;&amp;nbsp;英名&lt;/th&gt;
+&lt;th&gt;&amp;nbsp;和名&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;S&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;SRP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;Single Responsibility Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;単一責任の原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;O&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;OCP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Open-Closed Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;開放／閉鎖原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;L&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;LSP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Liskov Substitution Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;リスコフの置換原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;I&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;ISP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Interface Segregation Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;インターフェース分離原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;D&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;DIP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Dependency Inversion Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;依存性逆転の原理&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;SOLID全体の説明については「&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96/&#34;&gt;オブジェクト指向原則集(SOLID、他)&lt;/a&gt;」を参照。&lt;/p&gt;
+
+&lt;h2 id=&#34;l-the-liskov-substitution-principle-lsp-リスコフの置換原則&#34;&gt;&lt;strong&gt;L&lt;/strong&gt; : The Liskov Substitution Principle (LSP) : リスコフの置換原則&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;T&lt;/code&gt; 型のオブジェクト&lt;code&gt;x&lt;/code&gt;に関して真となる属性を&lt;code&gt;q(x)&lt;/code&gt;とする。&lt;br /&gt;
+このとき&lt;code&gt;S&lt;/code&gt;が&lt;code&gt;T&lt;/code&gt; の派生型であれば、&lt;code&gt;S&lt;/code&gt;型のオブジェクト&lt;code&gt;y&lt;/code&gt; について&lt;code&gt;q(y)&lt;/code&gt;が真となる。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;code&gt;S&lt;/code&gt;が&lt;code&gt;T&lt;/code&gt;の派生型であれば、プログラム内で&lt;code&gt;T&lt;/code&gt;型のオブジェクトが使われている箇所は全て&lt;code&gt;S&lt;/code&gt;型のオブジェクトで置換可能であるべき。&lt;/p&gt;
+
+&lt;p&gt;リスコフの置換原則を契約プログラミングに適用すると、契約と継承の相互作用に次のような制約をもたらす&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;派生型は、事前条件を強めることはできない。つまり、上位の型よりも強い事前条件を持つ派生型を作ることはできない。
+
+&lt;ul&gt;
+&lt;li&gt;サブクラスは、スーパークラスが呼び出せる状況なら必ず呼び出せること。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;派生型は、事後条件を弱めることはできない。つまり、上位の型よりも弱い事後条件を持つ派生型を作ることはできない。
+
+&lt;ul&gt;
+&lt;li&gt;サブクラスは、スーパークラスが達成することは必ず達成すること。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;実装例&#34;&gt;実装例&lt;/h3&gt;
+
+&lt;p&gt;車クラス と F1クラス を用意する。&lt;br /&gt;
+これらのクラスを利用するドライバクラスを用意する。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Driver&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;car&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Car&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;F1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+    &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;crt&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CreateCurrentLocation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dst&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CreateRandomDestination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// 事前条件チェック
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;dst&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dst&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DefaultDestination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;crt&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;crt&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Home&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// サブルーチン呼び出し
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;car&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SetDestination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;crt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// 事前条件を満たしているのでメッセージの妥当性が保証されている
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;car&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Read&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+
+    &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dst&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;CreateRandomDestination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// 事前条件チェック
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;dst&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dst&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DefaultDestination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// サブルーチン呼び出し
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;SetDestination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;crt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;dst&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// 事前条件を満たしているのでメッセージの妥当性が保証されている
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;f1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Read&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Car&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Message&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;SetDestination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;currentPlace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;destination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// 事前条件
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;currentPlace&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NullCurrentPlaceException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;destination&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NullDestinationException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+        &lt;span class=&#34;c1&#34;&gt;// 不変条件
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;InvariantTest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+        &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Destination&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;destination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;ChangeDriveMode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Mode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Ready&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Message&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Mode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Message&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+        &lt;span class=&#34;c1&#34;&gt;// 事後条件
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(!&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Destination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IsValid&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;InvalidDestinationException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(!&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Mode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IsReady&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NotPreparedException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NullMessageException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+        &lt;span class=&#34;c1&#34;&gt;// 不変条件
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;InvariantTest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// クラス不変条件の判定
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;InvariantTest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(!&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CurrentPlace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IsValidLocation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;InvalidLocationException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(!&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Destination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IsValidLocation&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;InvalidLocationException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;CurrentPlace&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Destination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;InvalidLocationException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;F1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Car&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Message&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;SetDestination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;currentPlace&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;destination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// 事前条件 派生型では事前条件を弱めることのみできる
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;destination&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NullDestinationException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+        &lt;span class=&#34;c1&#34;&gt;// 不変条件
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;InvariantTest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+        &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Destination&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;destination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;ChangeDriveMode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Mode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Ready&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Message&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Mode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Message&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+
+        &lt;span class=&#34;c1&#34;&gt;// 事後条件 派生型では事後条件を強化のみできる
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(!&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Destination&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IsValid&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;InvalidDestinationException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(!&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Mode&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IsReady&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NotPreparedException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;message&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NullMessageException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(!&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;IsIgnited&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;throw&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;NotIgnitedException&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+        &lt;span class=&#34;c1&#34;&gt;// 不変条件
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;InvariantTest&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;message&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;programming-by-contract-契約プログラミング&#34;&gt;Programming By Contract 契約プログラミング&lt;/h3&gt;
+
+&lt;p&gt;プログラムコードの中にプログラムが満たすべき仕様についての記述を盛り込む事で設計の安全性を高める技法。&lt;br /&gt;
+コードを呼ぶ側が事前条件と不変条件を満たす義務を負うことで、呼ばれたコードはその条件が恒真であるとの前提を利益として得る。&lt;br /&gt;
+引き換えに、呼ばれたコードは事後条件と不変条件を義務として負い、呼ぶ側の利益としてこれを保証する。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;事前条件 (precondition)
+
+&lt;ul&gt;
+&lt;li&gt;サブルーチンの開始時に、これを呼ぶ側で保証すべき性質。例：引数チェック。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;事後条件 (postcondition)
+
+&lt;ul&gt;
+&lt;li&gt;サブルーチンが、終了時に保証すべき性質。例：戻り値チェック。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;不変条件 (invariant)
+
+&lt;ul&gt;
+&lt;li&gt;クラスなどのオブジェクトがその外部に公開しているすべての操作の開始時と終了時に保証されるべき、オブジェクト毎に共通した性質。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>オブジェクト指向原則集(SOLID、他):開放／閉鎖原則について</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E9%96%8B%E6%94%BE%E9%96%89%E9%8E%96%E5%8E%9F%E5%89%87%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/</link>
+      <pubDate>Sun, 05 May 2019 02:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E9%96%8B%E6%94%BE%E9%96%89%E9%8E%96%E5%8E%9F%E5%89%87%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/</guid>
+      
+        <description>
+
+&lt;h1 id=&#34;目的&#34;&gt;目的&lt;/h1&gt;
+
+&lt;p&gt;プログラミングや設計において守るべき「SOLID原則」のうち、「開放／閉鎖原則」についての学習記録を残す。&lt;/p&gt;
+
+&lt;h1 id=&#34;参考文献&#34;&gt;参考文献&lt;/h1&gt;
+
+&lt;p&gt;「&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96/&#34;&gt;オブジェクト指向原則集(SOLID、他)&lt;/a&gt;」を参照。&lt;/p&gt;
+
+&lt;h1 id=&#34;solid原則について&#34;&gt;SOLID原則について&lt;/h1&gt;
+
+&lt;p&gt;SOLID原則とは、プログラミングや設計において守るべき主要な原則5つをまとめたもの。&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&amp;nbsp;頭文字&lt;/th&gt;
+&lt;th&gt;&amp;nbsp;略称&lt;/th&gt;
+&lt;th&gt;&amp;nbsp;英名&lt;/th&gt;
+&lt;th&gt;&amp;nbsp;和名&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;S&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;SRP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;Single Responsibility Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;単一責任の原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;O&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;OCP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Open-Closed Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;開放／閉鎖原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;L&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;LSP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Liskov Substitution Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;リスコフの置換原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;I&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;ISP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Interface Segregation Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;インターフェース分離原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;D&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;DIP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Dependency Inversion Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;依存性逆転の原理&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;SOLID全体の説明については「&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96/&#34;&gt;オブジェクト指向原則集(SOLID、他)&lt;/a&gt;」を参照。&lt;/p&gt;
+
+&lt;h2 id=&#34;o-the-open-closed-principle-ocp-開放-閉鎖原則&#34;&gt;&lt;strong&gt;O&lt;/strong&gt; : The Open-Closed Principle (OCP) : 開放／閉鎖原則&lt;/h2&gt;
+
+&lt;p&gt;OCPは、プログラムや設計の拡張・修正に対する下記の原則のこと。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;拡張に対して開いているべき (開放原則(open))
+
+&lt;ul&gt;
+&lt;li&gt;機能拡張はコード修正によってではなく、コードの追加によって実現せよ&lt;/li&gt;
+&lt;li&gt;これが守られている⇒既存コード(共通ライブラリ等)を変更せずに機能拡張できる&lt;/li&gt;
+&lt;li&gt;これが守られていない⇒既存コード(共通ライブラリ等)を変更する必要がある&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;修正に対して閉じているべき (閉鎖原則(closed))
+
+&lt;ul&gt;
+&lt;li&gt;コードに修正が必要になった時、不要に影響範囲が漏れ出ることを避けよ&lt;/li&gt;
+&lt;li&gt;これが守られている⇒修正コードのみテストすれば良い(共通ライブラリ等はテストせずに済む)&lt;/li&gt;
+&lt;li&gt;これが守られていない⇒修正コード(修正の入った共通ライブラリ等もテストする必要がある)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;上記の原則を満たすコードは、機能拡張の際に既存のコードに影響しないと考えて良い。(トートロジーじみているが。)&lt;/p&gt;
+
+&lt;h3 id=&#34;メイヤーの開放-閉鎖原則&#34;&gt;メイヤーの開放/閉鎖原則&lt;/h3&gt;
+
+&lt;p&gt;1988年に、バートランド・メイヤーが『オブジェクト指向ソフトウェアの構築(Object Oriented Software Construction)』の中で「開放/閉鎖原則」という語を生み出したと一般に称される。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;コードが完成したら、エラーを修正するには、クラスの&lt;strong&gt;実装&lt;/strong&gt;だけを変更すべき。&lt;br /&gt;&lt;/li&gt;
+&lt;li&gt;新しい機能を拡張するには、別のクラスを作るべき。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;この原則を守るコードでは、オリジナルのクラスから派生クラスを継承させることによってコードの再利用が可能となる。&lt;br /&gt;
+この派生クラスは、オリジナルのクラスと同じインタフェースを持っていても持っていなくとも良い。&lt;br /&gt;
+(確か、契約的プログラミングへのサポートが強いオブジェクト指向言語Eiffelでは派生型で基本型に有るインターフェースを削除できたはず(要検証)。)&lt;/p&gt;
+
+&lt;p&gt;メイヤーの定義においては、(インターフェースではなくクラスの)実装の継承をしても良い。&lt;br /&gt;
+実装は継承によって再利用可能であるが、インタフェース仕様は必ずしもそうではない。&lt;br /&gt;
+既存の実装は修正に対して閉じており、また新しいクラスは既存のインタフェースを引き継ぐ必要はない。&lt;/p&gt;
+
+&lt;h3 id=&#34;ポリモーフィックな開放-閉鎖原則&#34;&gt;ポリモーフィックな開放/閉鎖原則&lt;/h3&gt;
+
+&lt;p&gt;1990年代、開放/閉鎖原則とは、一般的に抽象インタフェースの利用を指すように意味が変わっていった。
+その定義では、実装はもはや固定ではなく、複数の実装が存在可能となり、互いにポリモーフィックに入れ替えることができる。&lt;/p&gt;
+
+&lt;h3 id=&#34;開放-閉鎖原則の実例&#34;&gt;開放/閉鎖原則の実例&lt;/h3&gt;
+
+&lt;p&gt;下記図のように、ライブラリ&lt;code&gt;Common Library&lt;/code&gt;とそれを使用するコード&lt;code&gt;User (A|B|C|D)&lt;/code&gt;について考える。&lt;/p&gt;
+
+
+&lt;link rel=&#34;stylesheet&#34; href=&#34;https://otaon.github.io/css/hugo-easy-gallery.css&#34; /&gt;
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:400px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;Library%20and%20Users.svg&#34; alt=&#34;Library and Users&#34; /&gt;
+    &lt;/div&gt;
+    
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;dl&gt;
+&lt;dt&gt;ライブラリの基本仕様&lt;/dt&gt;
+&lt;dd&gt;指定ディレクトリ内のファイルオブジェクトを探索し、その名前(つまりファイル名)の一覧を返す。&lt;br /&gt;
+メソッドは下記の通り。
+&lt;br /&gt;&lt;/dd&gt;
+&lt;/dl&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;namespace&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;Library&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Library&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Directory&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetFiles&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;namespace&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;User&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;User&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lib&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Library&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;strings&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/path/to/directory/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;最初、各Userは&lt;code&gt;List&amp;lt;string&amp;gt; GetFileNames(string path)&lt;/code&gt;を利用している。&lt;br /&gt;
+しかし、あるときUser Aが&lt;strong&gt;ファイル名を全て大文字にした上で一覧を返してほしい&lt;/strong&gt;と要望してきたとする(機能拡張)。
+このとき、修正方法には大きく２つの選択肢がある。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;既存の&lt;code&gt;GetFileNames&lt;/code&gt;メソッド内で基本仕様と大文字仕様の両方に対応する。&lt;/li&gt;
+&lt;li&gt;大文字変換部分を、別の箇所(別メソッド、別クラス、User A自身)に任せ、既存の&lt;code&gt;GetFileNames&lt;/code&gt;メソッドは変更しない。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;前者の対応方針は誤り。なぜならば、今回と同様の要望(機能拡張)が発生した場合、その都度ライブラリの既存メソッドを修正する必要がある(&lt;strong&gt;開放原則&lt;/strong&gt;への違反)。
+こうなると、既存メソッドはどんどん肥大化していき、複雑度も増していく。&lt;br /&gt;
+さらに、修正したメソッドの使用者(=他User)に対して、それらが全くコードを変更していなくても再テストを要求することになる(&lt;strong&gt;閉鎖原則&lt;/strong&gt;への違反)。&lt;br /&gt;
+したがって後者の対応方針を取るのが正解となる。&lt;/p&gt;
+
+&lt;p&gt;よく見かけるのは、&lt;strong&gt;ストラテジーパターン&lt;/strong&gt;、または、&lt;strong&gt;デコレータ&lt;/strong&gt;を使用した方法。&lt;br /&gt;
+つまり、下記のように、実現したいロジックをライブラリのクラスメンバやメソッド引数に渡す方法。&lt;/p&gt;
+
+&lt;p&gt;例えば、ライブラリとして機能を提供したいなら、はじめのうちは任意のロジックを引数などで渡せるようにした汎用的な関数を用意しておき、大勢の利用者がいる事が分かった時点で特殊化すれば良いと思う。&lt;/p&gt;
+
+&lt;h4 id=&#34;基本クラスのメソッドにオプション引数を使って-予め拡張性を持たせる方法&#34;&gt;基本クラスのメソッドにオプション引数を使って、予め拡張性を持たせる方法&lt;/h4&gt;
+
+&lt;p&gt;デリゲートを渡すためのオプション引数を用意する方法。&lt;br /&gt;
+関数を第1級オブジェクトとして使用できる言語で実現可能。&lt;br /&gt;
+Library自体に変更が入らないため、Libraryの回帰テストが不要になる。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;変更箇所・・・User。&lt;/li&gt;
+&lt;li&gt;大文字変換のロジック・・・User側にある。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;namespace&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;Library&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Library&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Func&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;filenames&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Directory&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetFiles&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;?&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;filenames&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;filenames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;func&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToList&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;namespace&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;User&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;User&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lib&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Library&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;strings&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/path/to/directory/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToUpper&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id=&#34;基本クラスのコンストラクタを使って-予め拡張性を持たせる方法&#34;&gt;基本クラスのコンストラクタを使って、予め拡張性を持たせる方法&lt;/h4&gt;
+
+&lt;p&gt;コンストラクタにデリゲートを渡す方法。&lt;br /&gt;
+関数を第1級オブジェクトとして使用できる言語で実現可能。&lt;br /&gt;
+&lt;code&gt;GetFileNames&lt;/code&gt;を同じ設定で使いまわしたいなら、こちらのほうが使いやすい。&lt;br /&gt;
+Library自体に変更が入らないため、Libraryの回帰テストが不要になる。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;変更箇所・・・User。&lt;/li&gt;
+&lt;li&gt;大文字変換のロジック・・・User側にある。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;namespace&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;Library&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Library&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Func&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Function&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Library&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Func&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;function&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;Function&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;filenames&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Directory&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetFiles&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Function&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;!=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;null&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;?&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;filenames&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;filenames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Function&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToList&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;namespace&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;User&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;User&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lib&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Library&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToUpper&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;strings&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/path/to/directory/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id=&#34;基本クラスを継承したサブクラスとコンストラクタを使って-拡張性を持たせる方法&#34;&gt;基本クラスを継承したサブクラスとコンストラクタを使って、拡張性を持たせる方法&lt;/h4&gt;
+
+&lt;p&gt;実行したいロジックを実装したサブクラス作成する方法。&lt;br /&gt;
+ライブラリの既存コードは変更不要だが、ライブラリ側で新規クラスを作成する必要がある。&lt;br /&gt;
+関数を第1級オブジェクトとして使用できない言語でも実現可能。&lt;br /&gt;
+Library側は既存クラスに変更が入らないため、既存クラスの回帰テストが不要になる。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;変更箇所・・・Library(クラス追加のみ)、User(呼び出し変更のみ)。&lt;/li&gt;
+&lt;li&gt;大文字変換のロジック・・・Library側にある。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;namespace&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;Library&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Library&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;virtual&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Directory&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetFiles&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;UpperCaseLibrary&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Library&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;override&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;base&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToUpper&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToList&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;namespace&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;User&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;User&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lib&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UpperCaseLibrary&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;strings&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/path/to/directory/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id=&#34;ストラテジーパターンを使って-拡張性を持たせる方法&#34;&gt;ストラテジーパターンを使って、拡張性を持たせる方法&lt;/h4&gt;
+
+&lt;p&gt;ストラテジーパターンを用いる方法。&lt;br /&gt;
+ライブラリの既存コードは変更不要だが、ライブラリ側で新規クラスを作成する必要がある。&lt;br /&gt;
+関数を第1級オブジェクトとして使用できない言語でも実現可能。&lt;br /&gt;
+Library側は既存クラスに変更が入らないため、既存クラスの回帰テストが不要になる。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;変更箇所・・・Library(クラス追加のみ)、User(呼び出し変更のみ)。&lt;/li&gt;
+&lt;li&gt;大文字変換のロジック・・・Library側にある。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://ja.wikipedia.org/wiki/Strategy_%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3&#34;&gt;Wikipedia - Strategy パターン&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;namespace&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;Library&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Container&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Library&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Lib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Container&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Library&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;library&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;n&#34;&gt;Lib&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;library&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Execute&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;c1&#34;&gt;// Libの動的型で定義されたGetFileNames()を動的ディスパッチにより呼び出す
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Lib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Library&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;virtual&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Directory&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetFiles&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;UpperCaseLibrary&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Library&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;override&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;base&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToUpper&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToList&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;namespace&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;User&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;User&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;container&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Container&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;UpperCaseLibrary&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;());&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;strings&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;container&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Execute&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/path/to/directory/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id=&#34;拡張メソッドを使って-拡張性を持たせる方法&#34;&gt;拡張メソッドを使って、拡張性を持たせる方法&lt;/h4&gt;
+
+&lt;p&gt;C#などでは、既存クラスに外からあたかもメソッドを追加したかのように見せかける機能がある。&lt;br /&gt;
+実質的にやっていることは、User側で&lt;code&gt;GetFileNames&lt;/code&gt;メソッドのwrapperメソッドを実装しているに過ぎない。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;変更箇所・・・User。&lt;/li&gt;
+&lt;li&gt;大文字変換のロジック・・・User側にある。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;namespace&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;Library&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Library&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;filenames&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Directory&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetFiles&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;*&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;));&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;namespace&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;User&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;User&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lib&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Library&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+            &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;strings&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetUpperCaseFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;/path/to/directory/&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;LibraryExtensions&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// 拡張メソッド
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;static&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;List&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetUpperCaseFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;this&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Library&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+            &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;lib&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetFileNames&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Select&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToUpper&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;ToList&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+        &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+      
+    </item>
+    
+    <item>
+      <title>オブジェクト指向原則集(SOLID、他)</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96/</link>
+      <pubDate>Sun, 05 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96/</guid>
+      
+        <description>
+
+&lt;h1 id=&#34;目的&#34;&gt;目的&lt;/h1&gt;
+
+&lt;p&gt;プログラミングや設計において守るべき、クラスに関する原則である「SOLID原則」についての学習記録を残す。&lt;/p&gt;
+
+&lt;h1 id=&#34;参考文献&#34;&gt;参考文献&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;SOLIDについて
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://postd.cc/solid-principles-every-developer-should-know/&#34;&gt;POSTD - 開発者が知っておくべきSOLIDの原則&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;原文 &lt;a href=&#34;https://blog.bitsrc.io/solid-principles-every-developer-should-know-b3bfa96bb688&#34;&gt;Bits and Pieces - SOLID Principles every Developer Should Know&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://qiita.com/kenjihiranabe/items/9eddc70e279861992274&#34;&gt;Qiita - オブジェクト指向の法則集&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ja.wikipedia.org/wiki/%E9%96%8B%E6%94%BE/%E9%96%89%E9%8E%96%E5%8E%9F%E5%89%87&#34;&gt;Wikipedia - 開放/閉鎖原則&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ja.wikipedia.org/wiki/%E3%83%AA%E3%82%B9%E3%82%B3%E3%83%95%E3%81%AE%E7%BD%AE%E6%8F%9B%E5%8E%9F%E5%89%87&#34;&gt;Wikipedia - リスコフの置換原則&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://ja.wikipedia.org/wiki/%E4%BE%9D%E5%AD%98%E6%80%A7%E9%80%86%E8%BB%A2%E3%81%AE%E5%8E%9F%E5%89%87&#34;&gt;Wikipedia - 依存性逆転の原則&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.slideshare.net/ShintaroKurosawa/20160526-62511723&#34;&gt;SlideShare - 20160526 依存関係逆転の原則&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://etc9.hatenablog.com/entry/20090925/1253883259&#34;&gt;The Interface Segregation Principle (ISP)　インターフェース分離原則&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Graphvizについて(本稿の図作成に使用)
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://iroha208.com/categories/graphviz/02/&#34;&gt;いろは二〇八 - Graphvizの基本 - 02&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://qiita.com/rubytomato@github/items/51779135bc4b77c8c20d&#34;&gt;Qiita - Graphvizとdot言語でグラフを描く方法のまとめ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.graphviz.org/doc/info/attrs.html&#34;&gt;Graphviz - Node, Edge and Graph Attributes&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;その他
+
+&lt;ul&gt;
+&lt;li&gt;本稿の各引用箇所に記載&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;クラスに関する原則-solid原則-について&#34;&gt;クラスに関する原則「SOLID原則」について&lt;/h1&gt;
+
+&lt;p&gt;SOLID原則とは、プログラミングや設計において守るべき主要な原則5つをまとめたもの。&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&amp;nbsp;頭文字&lt;/th&gt;
+&lt;th&gt;&amp;nbsp;略称&lt;/th&gt;
+&lt;th&gt;&amp;nbsp;英名&lt;/th&gt;
+&lt;th&gt;&amp;nbsp;和名&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;S&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;SRP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;Single Responsibility Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;単一責任の原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;O&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;OCP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Open-Closed Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;開放／閉鎖原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;L&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;LSP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Liskov Substitution Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;リスコフの置換原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;I&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;ISP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Interface Segregation Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;インターフェース分離原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;&lt;strong&gt;D&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;DIP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Dependency Inversion Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;依存性逆転の原理&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;s-single-responsibility-principle-srp-単一責任の原則&#34;&gt;&lt;strong&gt;S&lt;/strong&gt; : Single Responsibility Principle (SRP) : 単一責任の原則&lt;/h2&gt;
+
+&lt;h2 id=&#34;o-the-open-closed-principle-ocp-開放-閉鎖原則&#34;&gt;&lt;strong&gt;O&lt;/strong&gt; : The Open-Closed Principle (OCP) : 開放／閉鎖原則&lt;/h2&gt;
+
+&lt;p&gt;OCPは、プログラムや設計の拡張・修正に対する下記の原則のこと。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;拡張に対して開いているべき (開放原則(open))
+
+&lt;ul&gt;
+&lt;li&gt;機能拡張はコード修正によってではなく、コードの追加によって実現せよ&lt;/li&gt;
+&lt;li&gt;これが守られている⇒既存コード(共通ライブラリ等)を変更せずに機能拡張できる&lt;/li&gt;
+&lt;li&gt;これが守られていない⇒既存コード(共通ライブラリ等)を変更する必要がある&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;修正に対して閉じているべき (閉鎖原則(closed))
+
+&lt;ul&gt;
+&lt;li&gt;コードに修正が必要になった時、不要に影響範囲が漏れ出ることを避けよ&lt;/li&gt;
+&lt;li&gt;これが守られている⇒修正コードのみテストすれば良い(共通ライブラリ等はテストせずに済む)&lt;/li&gt;
+&lt;li&gt;これが守られていない⇒修正コード(修正の入った共通ライブラリ等もテストする必要がある)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;上記の原則を満たすコードは、機能拡張の際に既存のコードに影響しないと考えて良い。(トートロジーじみているが。)&lt;/p&gt;
+
+&lt;p&gt;開放/閉鎖原則の詳細については「&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E9%96%8B%E6%94%BE%E9%96%89%E9%8E%96%E5%8E%9F%E5%89%87%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/&#34;&gt;オブジェクト指向原則集(SOLID、他):開放／閉鎖原則について&lt;/a&gt;」を参照。&lt;/p&gt;
+
+&lt;h2 id=&#34;l-the-liskov-substitution-principle-lsp-リスコフの置換原則&#34;&gt;&lt;strong&gt;L&lt;/strong&gt; : The Liskov Substitution Principle (LSP) : リスコフの置換原則&lt;/h2&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;code&gt;T&lt;/code&gt; 型のオブジェクト&lt;code&gt;x&lt;/code&gt;に関して真となる属性を&lt;code&gt;q(x)&lt;/code&gt;とする。&lt;br /&gt;
+このとき&lt;code&gt;S&lt;/code&gt;が&lt;code&gt;T&lt;/code&gt; の派生型であれば、&lt;code&gt;S&lt;/code&gt;型のオブジェクト&lt;code&gt;y&lt;/code&gt; について&lt;code&gt;q(y)&lt;/code&gt;が真となる。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;code&gt;S&lt;/code&gt;が&lt;code&gt;T&lt;/code&gt;の派生型であれば、プログラム内で&lt;code&gt;T&lt;/code&gt;型のオブジェクトが使われている箇所は全て&lt;code&gt;S&lt;/code&gt;型のオブジェクトで置換可能であるべき。&lt;/p&gt;
+
+&lt;p&gt;リスコフの置換原則を契約プログラミングに適用すると、契約と継承の相互作用に次のような制約をもたらす&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;派生型は、事前条件を強めることはできない。つまり、上位の型よりも強い事前条件を持つ派生型を作ることはできない。
+
+&lt;ul&gt;
+&lt;li&gt;サブクラスは、スーパークラスが呼び出せる状況なら必ず呼び出せること。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;派生型は、事後条件を弱めることはできない。つまり、上位の型よりも弱い事後条件を持つ派生型を作ることはできない。
+
+&lt;ul&gt;
+&lt;li&gt;サブクラスは、スーパークラスが達成することは必ず達成すること。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;リスコフの置換原則の詳細については「&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E3%83%AA%E3%82%B9%E3%82%B3%E3%83%95%E3%81%AE%E7%BD%AE%E6%8F%9B%E5%8E%9F%E5%89%87%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/&#34;&gt;オブジェクト指向原則集(SOLID、他):リスコフの置換原則について&lt;/a&gt;」を参照。&lt;/p&gt;
+
+&lt;h2 id=&#34;i-the-interface-segregation-principle-isp-インターフェース分離の原則&#34;&gt;&lt;strong&gt;I&lt;/strong&gt; : The Interface Segregation Principle (ISP) : インターフェース分離の原則&lt;/h2&gt;
+
+&lt;p&gt;インターフェース分離の原則は、下記の通り。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;クライアントは自分が使うインタフェースだけを依存すべきである&lt;/li&gt;
+&lt;li&gt;単一のインタフェースより複数のインタフェースを使うべきである&lt;/li&gt;
+&lt;li&gt;インタフェースをクライアントごとに分離すべきである&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;あるいは、下記のように言い表せる。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;顧客に特化した細粒度のインタフェースを作れ。&lt;br /&gt;
+顧客は自分たちが使わないインターフェースに依存することを強いられるべきではない。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;つまり、一つのインターフェースに、不必要に多くのメソッドを定義するのは得策ではない。&lt;/p&gt;
+
+&lt;h3 id=&#34;インターフェース分離の原則に違反したコード&#34;&gt;インターフェース分離の原則に違反したコード&lt;/h3&gt;
+
+&lt;p&gt;下記のようにインターフェースを定義してしまうと、ユーザーが&lt;code&gt;Circle&lt;/code&gt;クラスのみを欲していたとしても、下記のように、&lt;code&gt;DrawSquare()&lt;/code&gt;、&lt;code&gt;DrawRectangle()&lt;/code&gt;を定義しなければならない。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IShape&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DrawCircle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DrawSquare&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DrawRectangle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Circle&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IShape&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DrawCircle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// ...
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DrawSquare&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// ...
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DrawRectangle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// ...
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&#34;インターフェース分離の原則に適合したコード&#34;&gt;インターフェース分離の原則に適合したコード&lt;/h3&gt;
+
+&lt;p&gt;下記のように、インターフェースをユーザの用途に合わせて適切に分離して定義していれば、ユーザのクラスに余計なメソッドを定義せずに済む。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ICircle&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DrawCircle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ISquare&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DrawSquare&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;interface&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;IRectangle&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DrawRectangle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;Circle&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;ICircle&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;DrawCircle&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;c1&#34;&gt;// ...
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;d-the-dependency-inversion-principle-dip-依存性逆転の原理&#34;&gt;&lt;strong&gt;D&lt;/strong&gt; : The Dependency Inversion Principle (DIP) : 依存性逆転の原理&lt;/h2&gt;
+
+&lt;p&gt;この原則は、下記のことを表す。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;上位レベルのモジュールは、下位レベルのモジュールに依存すべきではない&lt;/li&gt;
+&lt;li&gt;上位レベルのモジュール、下位レベルのモジュール、ともに抽象（abstractions)に依存すべき&lt;/li&gt;
+&lt;li&gt;抽象は、詳細に依存してはならない&lt;/li&gt;
+&lt;li&gt;詳細は、抽象に依存すべき&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;依存性逆転の原理の詳細については「&lt;a href=&#34;https://otaon.github.io/web/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E4%BE%9D%E5%AD%98%E6%80%A7%E9%80%86%E8%BB%A2%E3%81%AE%E5%8E%9F%E7%90%86%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/&#34;&gt;オブジェクト指向原則集(SOLID、他):依存性逆転の原理について&lt;/a&gt;」を参照。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;パッケージに関する原則&#34;&gt;パッケージに関する原則&lt;/h1&gt;
+
+&lt;p&gt;パッケージとは、複数のクラスをひとまとめにした単位。&lt;br /&gt;
+このパッケージの構成に関しても、原則が存在する。&lt;/p&gt;
+
+&lt;p&gt;最近では、2018年にO&amp;rsquo;REILLYから、&lt;a href=&#34;https://www.oreilly.com/library/view/principles-of-package/9781484241196/&#34;&gt;Principles of Package Design: Creating Reusable Software Components&lt;/a&gt;という電子書籍が出ており、これにも掲載されているらしい(未確認だが)。&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;&amp;nbsp;種別&lt;/th&gt;
+&lt;th&gt;&amp;nbsp;略称&lt;/th&gt;
+&lt;th&gt;&amp;nbsp;英名&lt;/th&gt;
+&lt;th&gt;&amp;nbsp;和名&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;パッケージ凝集&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;REP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Reuse/Release Equivalence Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;再利用開放等価原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;〃&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;CRP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Common Reuse Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;共通再利用原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;〃&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;CCP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Common Closure Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;共通閉鎖原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;パッケージ結合&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;ADP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Acyclic Dependencies Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;非環式依存原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;〃&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;SDP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Stable Dependencies Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;安定依存原則&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&amp;nbsp;〃&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;SAP&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;The Stable Abstractions Principle&lt;/td&gt;
+&lt;td&gt;&amp;nbsp;安定抽象概念原則&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;パッケージ凝集に関する原則&#34;&gt;パッケージ凝集に関する原則&lt;/h2&gt;
+
+&lt;p&gt;あるパッケージの責務分割に関する原則。&lt;br /&gt;
+この原則に則ると、パッケージを高凝集にできる。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://ja.wikipedia.org/wiki/%E5%87%9D%E9%9B%86%E5%BA%A6&#34;&gt;Wikipedia - 凝集度&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;the-reuse-release-equivalence-principle-rep-再利用開放等価原則&#34;&gt;The Reuse/Release Equivalence Principle (REP) : 再利用開放等価原則&lt;/h3&gt;
+
+&lt;p&gt;パッケージのリリースと再利用の関係に関する原則。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://etc9.hatenablog.com/entry/20090926/1253974827&#34;&gt;A Memorandum - The Reuse/Release Equivalence Principle (REP)　再利用開放等価原則&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;個々のクラスを集めたパッケージに関する原則です。この REP は、パッケージを再利用可能にするためのシステムについて述べたものです。一般に、クラス単体は再利用可能ではありません。あるクラスは他のクラスに依存している場合がほとんどです。再利用可能にするには、クラス群をリリースする単位としてパッケージ化し、バージョン管理を行うようにすべきだ、ということです。そういうシステムがない限り再利用はうまくいかないということでしょう。&lt;/p&gt;
+
+&lt;p&gt;再利用の単位（パッケージ）がリリースの単位より小さくなってはいけない。パッケージに含まれる個々のクラス単位で再利用するのではなく、パッケージごと再利用できるようにすべきである。つまり、リリースはパッケージの単位で行う必要がある。また、パッケージを分割する際には、それを再利用する側の視点に立って個々のパッケージを構築すべきである。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;リリースは、最小でもパッケージ単位で行うべきということ。
+パッケージ単位でリリースすれば、リリース毎のバージョン整合が取れている限りはシステムが整合する。
+反対に、例えばクラス毎でリリースしてしまうと、各クラスのバージョン違いが発生してシステムが破綻する恐れがある。&lt;br /&gt;
+ただし、バージョン設計が正しくなされていることが前提。&lt;/p&gt;
+
+&lt;h3 id=&#34;the-common-reuse-principle-crp-共通再利用原則&#34;&gt;The Common Reuse Principle (CRP) : 共通再利用原則&lt;/h3&gt;
+
+&lt;p&gt;パッケージが再利用できるように、パッケージを切る単位(=パッケージにどのクラスを入れるか)を考える際に則るべき原則。&lt;br /&gt;
+ユーザが使用するクラス/使用しないクラスという観点で述べられている。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://etc9.hatenablog.com/entry/20091017/1255749130&#34;&gt;A Memorandum - The Common Reuse Principle (CRP)　共通再利用原則&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;パッケージに入れるクラスは何にするかという判定基準を再利用の観点から表したものです。あるパッケージをバージョンアップする場合、利用している側のソフトウェアにとって関係のないクラスが修正されたにも関わらず更新しなければならない、というのはおかしな話です。パッケージをリリースしたあとの配布の問題を考えてもこうなっていることが理想です。Interface Segregation Principle のパッケージ版といえます。&lt;/p&gt;
+
+&lt;p&gt;パッケージを利用する側の視点に立ってパッケージを構築すること。クライアントから利用されないクラスは、同一パッケージに含めてはならない。パッケージにクライアントが利用しないクラスが含まれていれば、クライアントには本来関係のないそれらのクラスの修正に伴ってパッケージが再リリースされることになる。これは先の「再利用・リリース等値の原則」に違反することにもなる。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;パッケージは、ユーザが使用するクラスと使用しないクラスが混在しないようにすべきということ。
+さもなくば、ユーザが使用しないクラスのバージョンアップがあった場合にもパッケージが更新され、ユーザにバージョンアップを強いることになる。&lt;/p&gt;
+
+&lt;h3 id=&#34;the-common-closure-principle-ccp-共通閉鎖原則&#34;&gt;The Common Closure Principle (CCP) : 共通閉鎖原則&lt;/h3&gt;
+
+&lt;p&gt;パッケージが再利用できるように、パッケージを切る単位(=パッケージにどのクラスを入れるか)を考える際に則るべき原則。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://etc9.hatenablog.com/entry/20090927/1254035143&#34;&gt;A Memorandum - The Common Closure Principle (CCP)　共通閉鎖原則&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;クラスをどのようなパッケージとしてまとめるか？ という判定基準をメンテナンス性の観点から表したものです。ソフトウェアを修正しなければならない場合、その修正があるパッケージの中で閉じているにこしたことはありません。そのため将来起こるであろう変更を想定した場合、同時に修正することになるクラスは同じパッケージとして管理するべきです。&lt;/p&gt;
+
+&lt;p&gt;この原則は、クラスに関する設計原則である「単一責任の原則」をパッケージに当てはめたものになります。クラスの変更理由が1つでなければいけないように、パッケージの変更理由も複数存在してはならないということになります。変更理由が複数のパッケージにまたがってしまえば保守性が低下します。つまり、パッケージは変更理由が同じクラス群で構成されるべきということです。こうすることでリリースの単位とパッケージの単位を同じにすることができるようになります。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;あるパッケージ内のクラスは、同種の変更理由に対して共に閉じている必要がある。&lt;br /&gt;
+つまり、とある1つの理由で変更されるパッケージは、ただ1であるべき。&lt;br /&gt;
+さもなくば、何かの理由でソフトウェアの変更が発生した際、変更箇所が複数のパッケージにまたがってしまい保守性が低下する。&lt;/p&gt;
+
+&lt;h2 id=&#34;パッケージ結合に関する原則&#34;&gt;パッケージ結合に関する原則&lt;/h2&gt;
+
+&lt;p&gt;あるパッケージの結合度に関する原則。&lt;br /&gt;
+この原則に則ると、パッケージ同士を疎結合にできる。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://ja.wikipedia.org/wiki/%E7%B5%90%E5%90%88%E5%BA%A6&#34;&gt;Wikipedia - 結合度&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;the-acyclic-dependencies-principle-adp-非環式依存原則&#34;&gt;The Acyclic Dependencies Principle (ADP) : 非環式依存原則&lt;/h3&gt;
+
+&lt;p&gt;パッケージの依存関係に関する原則。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://etc9.hatenablog.com/entry/20091018/1255926653&#34;&gt;A Memorandum - The Common Closure Principle (CCP)　非環式依存原則&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;パッケージ間に依存の循環があれば、1つのパッケージ内のクラスに対する修正の影響が、関連するすべてのパッケージに及ぶ。パッケージをビルドする順番に制約があるような場合がよい例である。これではせっかくパッケージとして分割されていても、実際は分割されていないのと同じである。&lt;/p&gt;
+
+&lt;p&gt;パッケージ間の循環を断つ手段として次の2つの方法が存在する。&lt;/p&gt;
+
+&lt;p&gt;　1つ目の方法は、クラスに関する設計原則である「依存関係逆転の原則」を適用する方法。例えばパッケージMyGuiPartsのクラスXがパッケージMyApplicationのクラスYに依存しているような場合には、パッケージMyGuiParts内にクラスXが利用する抽象インターフェイスを配置し、その派生クラスとしてYクラスをパッケージMyApplication内に配置する。こうすることでパッケージMyGuiPartsとパッケージMyApplicationの依存関係が逆転して循環が断たれる。&lt;/p&gt;
+
+&lt;p&gt;もう1つの方法は新たなパッケージを追加する方法である。新たに追加したパッケージに依存元が参照しているクラスを移動させることで循環が断たれる。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;パッケージの依存関係は、有向非巡回グラフとなっている必要がある。&lt;br /&gt;
+つまり、依存関係が循環してはいけない。&lt;br /&gt;
+さもなくば、循環関係にあるパッケージ1つをバージョンアップしたい場合、そのパッケージと循環関係ある全パッケージを同時にバージョンアップする必要がある。&lt;/p&gt;
+
+&lt;h3 id=&#34;the-stable-dependencies-principle-sdp-安定依存原則&#34;&gt;The Stable Dependencies Principle (SDP) : 安定依存原則&lt;/h3&gt;
+
+&lt;p&gt;パッケージの依存関係に関する原則。&lt;br /&gt;
+依存関係にあるパッケージ同士の安定性という観点で述べられている。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://etc9.hatenablog.com/entry/20091019/1255961020&#34;&gt;A Memorandum - The Common Closure Principle (CCP)　安定依存原則&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;安定しているパッケージは修正が難しく、不安定なパッケージは修正が容易です。SDP では、パッケージの依存関係はより安定しているパッケージへと向かうべきだ、と言っています。言い変えると、パッケージは、自分よりも不安定なパッケージに依存してはならないとなります。変更が少ない安定したパッケージでも、依存先のパッケージが不安定であればその影響が及んで結局は不安定になってしまう。つまり、末端（依存されるクラスのない）のパッケージから依存関係を上にたどっていくに従って、パッケージの安定度が増すようにすべきである、ということになります。&lt;/p&gt;
+
+&lt;p&gt;さらに突き詰めていくと、システム中のパッケージすべてが安定している必要はないということが言えます。先の「閉鎖性共通の原則」に従って構成されたパッケージは、変更理由が同じクラス群がまとめられており、いい換えると、変更することを意識して作られた不安定なパッケージということになります。システムに柔軟性を持たせようとすれば、このような不安定なパッケージと安定したパッケージを混在させる必要が出てきます。ただし、安定依存の原則に従うためには「依存関係逆転の原則」を使用してパッケージ間の依存関係を調整する必要があります。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;パッケージは、変更する可能性が高いパッケージに依存すべきではない。
+そして、変更する可能性が高いパッケージは、不安定なパッケージになっている。&lt;br /&gt;
+したがって、パッケージの依存関係は、&lt;strong&gt;不安定なパッケージ &amp;ndash;依存-&amp;gt; 安定なパッケージ&lt;/strong&gt;となっている必要がある。&lt;br /&gt;
+ここで、安定なパッケージとは、下記の「安定している」に当たるパッケージのこと。&lt;br /&gt;
+安定なパッケージは&lt;strong&gt;変更が難しい&lt;/strong&gt;。反対に、不安定なパッケージは&lt;strong&gt;変更が容易&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;内側結合度 &lt;code&gt;Ca = このパッケージ内のクラスに依存するクラス数&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;外側結合度 &lt;code&gt;Ce = パッケージ外のクラスに依存するパッケージ内のクラス数&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;不安定度 &lt;code&gt;I = Ce / (Ca + Ce)&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;安定している：&lt;code&gt;Iが小さい&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;the-stable-abstractions-principle-sap-安定抽象概念原則&#34;&gt;The Stable Abstractions Principle (SAP) : 安定抽象概念原則&lt;/h3&gt;
+
+&lt;p&gt;パッケージの依存関係と抽象度に関する原則。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://etc9.hatenablog.com/entry/20091020/1256051472&#34;&gt;A Memorandum - The Common Closure Principle (CCP)　安定抽象概念原則&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;パッケージの依存関係は、抽象度が高いパッケージへと向かうべき、ということで SAP と SDP は Dependency Inversion Principleのパッケージ版となります。
+パッケージの安定度を高めるには、抽象的でなくてはならず、一方、不安定なパッケージは具体的でなくてはならない。パッケージの抽象度を高めれば その安定度も高くなる。その逆もまたしかりと。&lt;/p&gt;
+
+&lt;p&gt;抽象クラスやインターフェイスは、その派生クラスによって振る舞いが拡張されます。これは抽象クラスやインターフェイスがその派生クラスより安定していることを示しています。つまり、安定したパッケージを構成するためは、パッケージ内での抽象クラスやインターフェイスの割合を高めればよいことになります。さらに、これらの抽象クラスやインターフェイスに依存する派生クラスをまとめて別のパッケージに配置すれば、そのパッケージは不安定なパッケージとなり、安定したパッケージに依存することになります。結果として自然に先の「安定依存の原則」に従うことになります。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;パッケージの安定度を最大にするためには、抽象度を最大化する必要がある。&lt;br /&gt;
+また反対に、不安定なパッケージは、具象である必要がある。&lt;br /&gt;
+したがって、パッケージの依存関係は、具象的なパッケージから抽象的なパッケージに向かうべき。&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h1 id=&#34;その他の原則&#34;&gt;その他の原則&lt;/h1&gt;
+
+&lt;h2 id=&#34;the-law-of-demeter-デメテルの法則&#34;&gt;The Law of Demeter（デメテルの法則）&lt;/h2&gt;
+
+&lt;p&gt;デメテルの法則とは、1987年の末にかけてノースイースタン大学で作成された、オブジェクト指向プログラミングにおけるガイドライン。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://ja.wikipedia.org/wiki/%E3%83%87%E3%83%A1%E3%83%86%E3%83%AB%E3%81%AE%E6%B3%95%E5%89%87&#34;&gt;Wikipedia - デメテルの法則&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;オブジェクト指向におけるデメテルの法則の適用&#34;&gt;オブジェクト指向におけるデメテルの法則の適用&lt;/h3&gt;
+
+&lt;p&gt;Wikipediaの文章を少し変更しつつ引用する。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;オブジェクト指向プログラムにデメテルの法則を適用する場合には、この法則はより厳密に「関数/メソッドに関するデメテルの法則」(&lt;em&gt;Law of Demeter for Functions/Methods, LoD-F&lt;/em&gt;) と言い表すことができる。&lt;br /&gt;
+この場合、下記が成り立つ。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;あるオブジェクトAは別のオブジェクトBのサービスを要求してもよい
+
+&lt;ul&gt;
+&lt;li&gt;クラスA内でメソッド呼び出し&lt;code&gt;B.Method()&lt;/code&gt;しても良い&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;オブジェクトAがオブジェクトBを&lt;strong&gt;経由して&lt;/strong&gt;更にに別のオブジェクトCのサービスを要求してはならない。
+
+&lt;ul&gt;
+&lt;li&gt;クラスA内で&lt;code&gt;var c := B.GetC()&lt;/code&gt;して得た&lt;code&gt;c&lt;/code&gt;に対してメソッド呼び出し&lt;code&gt;c.Method()&lt;/code&gt;してはならない。&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;これが望ましくないのは、オブジェクトAがオブジェクトBに対して、オブジェクトB自身の内部構造以上の知識を要求してしまうためである。 このような場合には、クラスBを変更し、クラスAがクラスBに対して行った要求を適切なBのサブコンポーネントに伝播させるようにすればよい。または、AがCへのリファレンスを持つようにして、AがCを直接呼ぶようにしてもよい。この法則に従えば、オブジェクトBが知っているのは自分自身の内部構造だけになる。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;つまり、下記コードは違反となる。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;A&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;B&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;B&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Method&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetC&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Method&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;// クラスAが直接参照していないクラスCに対してメソッド呼び出し(=違反)
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;上記を適合コードに修正する方法には、主に2通りある。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;下記のように、クラスAがクラスCに対して行った要求を、クラスBが伝播するようにクラスBを修正する。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;A&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;B&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;B&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Method&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetCAndMethod&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;B&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;C&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;C&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;C&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetC&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+
+    &lt;span class=&#34;c1&#34;&gt;// このメソッドを新設
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;GetCAndMethod&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;GetC&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;().&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Method&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;下記のようにクラスA内にクラスCへの参照を持たせ、クラスAからクラスCへ直接要求するように修正する。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;A&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;B&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;B&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;C&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// Cへの参照を直接持つ
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Method&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetC&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// Aが持つCへの参照をセットするだけなので問題ない
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Method&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;より形式的に言えば、関数に対するデメテルの法則に従った場合、オブジェクトO上のメソッドMが呼び出してもよいメソッドは以下のオブジェクトに属するメソッドのみに限定される。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Oそれ自身(&lt;code&gt;this&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;Mの引数に渡されたオブジェクト&lt;/li&gt;
+&lt;li&gt;Mの内部でインスタンス化されたオブジェクト&lt;/li&gt;
+&lt;li&gt;Oを直接的に構成するオブジェクト（Oのインスタンス変数）&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;つまり、呼び出して良いメソッドは下記のパターンに限られる。(番号は上記と対応する)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;O&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;k&#34;&gt;private&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OtherO3&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;otherO3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
+
+    &lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;M&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OtherO&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+        &lt;span class=&#34;k&#34;&gt;this&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;M2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;// OK (1.)
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;input&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OtherOM&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// OK (2.)
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;new&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;OtherO2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;).&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OtherO2M&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// OK (3.)
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;otherO3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;OtherO3M&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// OK (4.)
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;具体的には、他のメソッドの戻り値として返されたオブジェクトのメソッドの呼び出しを避けるということになる。最近のオブジェクト指向言語の多くではフィールド識別子としてドット(.)が採用されているが、そのような言語においてはこの法則は単純に「使えるドットは一つだけ」と言い表すこともできる。つまり、&amp;rdquo;a.b.Method()&amp;ldquo;という呼び出しは法則に違反しているが&amp;rdquo;a.Method()&amp;ldquo;という呼び出しは問題ない。なお、&lt;strong&gt;このアプローチの充足性については反論がある。&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;「使えるドットは一つだけ」がデメテルの法則を充足しないのは、例えば下記コードも許してしまうため。&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-cs&#34; data-lang=&#34;cs&#34;&gt;&lt;span class=&#34;k&#34;&gt;public&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;void&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;Method&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;B&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+    &lt;span class=&#34;kt&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;GetC&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// 一時変数を挟むだけでOKとみなされてしまう
+&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Method&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;();&lt;/span&gt;
+&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;blockquote&gt;
+&lt;p&gt;簡単な例として、犬を散歩に連れ出すことを考える。この際、犬の足に直接「歩け」と命じるのはおかしいだろう。この場合は、犬に対して命令し、自分の足の面倒は自分で見させるのが正しい方法だといえる。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&#34;デメテルの法則の利点と欠点&#34;&gt;デメテルの法則の利点と欠点&lt;/h3&gt;
+
+&lt;h4 id=&#34;利点&#34;&gt;利点&lt;/h4&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;デメテルの法則の利点としては、結果的にソフトウェアがよりメンテナンスしやすく、柔軟なものになりやすいという点が挙げられる。オブジェクトが他のオブジェクトの内部構造に依存することが少なくなるため、オブジェクトのコンテナを呼び出し側の変更なしに修正することができる。&lt;/p&gt;
+
+&lt;p&gt;Basiliらによる1996年の実験では、デメテルの法則がソフトウェアの欠陥の発生確率を低下させるのに有効であることが示唆されている。&lt;/p&gt;
+
+&lt;p&gt;マルチレイヤアーキテクチャは、ソフトウェアシステムにおいてデメテルの法則を系統的に実装するためのメカニズムとして捉えることができる。 レイヤ化されたアーキテクチャにおいて、各レイヤ中のコードは自分の属するレイヤと直下のレイヤのコードのみを呼び出すことができる。直下のレイヤをスキップして他のレイヤにアクセスした場合には、アーキテクチャに違反していることになる。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&#34;欠点&#34;&gt;欠点&lt;/h4&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;デメテルの法則の欠点としては、時として数多くの&amp;rdquo;ラッパー&amp;rdquo;メソッド（デメテルのTransmogrifierと呼ばれる）を作成する必要があるという点が挙げられる。このメソッドは自分自身の呼び出しを別のコンポーネントに委譲するためのものである。さらに、自分自身が含んでいるクラスのメソッドを呼び出せるようにするためにインタフェースが巨大になり、結果としてクラスの凝集度が低下するという欠点もある。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;利点と欠点を読んで思ったが、結局は、デメテルの法則は厳格すぎて実用性を削いでいると思う。&lt;br /&gt;
+厳格に守るべきは、メソッド(例:&lt;code&gt;C c = b.GetC()&lt;/code&gt;)呼び出しで得られた他オブジェクト(例:&lt;code&gt;c&lt;/code&gt;)の&lt;strong&gt;内部構造&lt;/strong&gt;に依存しないという点ではないか?&lt;br /&gt;
+メソッドがインターフェースを返すようにし(例:&lt;code&gt;IC ic = b.GetIC()&lt;/code&gt;)、そのインターフェースが提供するメソッド(例:&lt;code&gt;Method()&lt;/code&gt;)は呼び出せるようにすれば良いと思う(例:&lt;code&gt;ic.Method()&lt;/code&gt;)。こうすれば下記が実現できる。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;呼び出し元クラス(例:&lt;code&gt;A&lt;/code&gt;)からは、メソッド呼び出しで得られた他オブジェクト(例:&lt;code&gt;ic&lt;/code&gt;)を直接使用できる。&lt;/li&gt;
+&lt;li&gt;メソッドが呼び出された側(例:&lt;code&gt;B&lt;/code&gt;)では、返り値のオブジェクト自体(例:クラス&lt;code&gt;C&lt;/code&gt;)ではなく、インターフェース(例:インターフェース&lt;code&gt;IC&lt;/code&gt;)を保証するだけで済む(返り値のオブジェクトの内部構造に依存しなくなる)。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;…と、ここまで書いているととても当たり前のことしか言っていないように思う。実際、「メソッド利用者側にオブジェクトを返す際には、実体ではなくインターフェースを返す」というのは、よく見かける。上記のような流れで、インターフェースが活躍するようになったのかもしれない。&lt;/p&gt;
+</description>
+      
+    </item>
+    
+    <item>
       <title>ディスパッチ・仮想関数テーブルについて学ぶ</title>
       <link>https://otaon.github.io/web/ja-jp/2019/05/02/%E3%83%87%E3%82%A3%E3%82%B9%E3%83%91%E3%83%83%E3%83%81%E4%BB%AE%E6%83%B3%E9%96%A2%E6%95%B0%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6%E5%AD%A6%E3%81%B6/</link>
       <pubDate>Thu, 02 May 2019 00:00:00 +0900</pubDate>
@@ -5240,565 +6697,6 @@ Goにおける一般的なエラー処理では、下記のイディオムを用
 &lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;&lt;br /&gt;
 Goでは、配列のサイズを拡張することはできない(例えば&lt;code&gt;[]int&lt;/code&gt;は可変長配列ではない)。&lt;br /&gt;
 そのかわり、Goでは&lt;strong&gt;Slice(スライス)&lt;/strong&gt;というデータ構造を可変長配列のように扱うことができる。&lt;/p&gt;
-</description>
-      
-    </item>
-    
-    <item>
-      <title>Go言語入門(リテラル・型変換)</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E3%83%AA%E3%83%86%E3%83%A9%E3%83%AB%E5%9E%8B%E5%A4%89%E6%8F%9B/</link>
-      <pubDate>Sat, 13 Apr 2019 08:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E3%83%AA%E3%83%86%E3%83%A9%E3%83%AB%E5%9E%8B%E5%A4%89%E6%8F%9B/</guid>
-      
-        <description>
-
-&lt;h1 id=&#34;目的&#34;&gt;目的&lt;/h1&gt;
-
-&lt;p&gt;Go言語の基本構文を残す。&lt;/p&gt;
-
-&lt;h1 id=&#34;参考文献&#34;&gt;参考文献&lt;/h1&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.shoeisha.co.jp/book/detail/9784798142418&#34;&gt;スターティング Go言語&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;基本構文&#34;&gt;基本構文&lt;/h1&gt;
-
-&lt;h2 id=&#34;型の扱い&#34;&gt;型の扱い&lt;/h2&gt;
-
-&lt;h3 id=&#34;整数リテラル&#34;&gt;整数リテラル&lt;/h3&gt;
-
-&lt;p&gt;Goの整数リテラルにはC言語と同じく3種類存在する。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;10進数・・・&lt;code&gt;[1-9][0-9]*&lt;/code&gt; 例: &lt;code&gt;123&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;8進数・・・&lt;code&gt;0[1-7][0-7]*&lt;/code&gt; 例: &lt;code&gt;0755&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;16進数・・・&lt;code&gt;0[Xx][0-9A-Fa-f]+&lt;/code&gt; 例: &lt;code&gt;0x0719BEEF&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;その他のリテラル&#34;&gt;その他のリテラル&lt;/h3&gt;
-
-&lt;p&gt;整数型以外も含めると、リテラルには下記がある。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;// int型
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;f64&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;1.0&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;// float64型
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;f32&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;float32&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;1.0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// float32型のリテラルは存在しない。型変換が必要。
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;zero&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.0&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// float64型
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;pinf&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;1.0&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;zero&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;// +Inf 正の無限大(float64型)
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;ninf&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;1.0&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;zero&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// -Inf 負の無限大(float64型)
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;nan&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;zero&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;zero&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;// NaN 非数(float64型)
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;// その他の浮動小数点型リテラル
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;0.&lt;/span&gt;
-&lt;span class=&#34;mf&#34;&gt;72.40&lt;/span&gt;
-&lt;span class=&#34;mf&#34;&gt;072.40&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;// 72.40
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;2.71828&lt;/span&gt;
-&lt;span class=&#34;mf&#34;&gt;1.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;
-&lt;span class=&#34;mf&#34;&gt;6.67428e-11&lt;/span&gt;
-&lt;span class=&#34;mf&#34;&gt;1E6&lt;/span&gt;
-&lt;span class=&#34;mf&#34;&gt;.25&lt;/span&gt;
-&lt;span class=&#34;mf&#34;&gt;.12345E+5&lt;/span&gt;
-
-&lt;span class=&#34;nx&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;1.0&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;m&#34;&gt;3i&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// complex128型
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;c2&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;complex&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;1.0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// complex128型(組み込み関数を使用)
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;r&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;real&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;c2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// 1.0(実部)
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;imag&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;c2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// 3.0(虚部)
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;// その他の複素数型リテラル
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0i&lt;/span&gt;
-&lt;span class=&#34;m&#34;&gt;011i&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// 11i
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;0.i&lt;/span&gt;
-&lt;span class=&#34;m&#34;&gt;2.71828i&lt;/span&gt;
-&lt;span class=&#34;m&#34;&gt;1.e+0i&lt;/span&gt;
-&lt;span class=&#34;m&#34;&gt;6.67428e-11i&lt;/span&gt;
-&lt;span class=&#34;mf&#34;&gt;1E6&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt;
-&lt;span class=&#34;m&#34;&gt;.25i&lt;/span&gt;
-&lt;span class=&#34;m&#34;&gt;.12345E+5i&lt;/span&gt;
-
-&lt;span class=&#34;kt&#34;&gt;rune&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;&amp;#39;松&amp;#39;&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// == 26494 rune型(int32のエイリアス)
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;// その他のruneリテラル
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;&amp;#39;\a&amp;#39;&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;U&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;mo&#34;&gt;0007&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// ベル
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;&amp;#39;\b&amp;#39;&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;U&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;mo&#34;&gt;000&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// バックスペース
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;&amp;#39;\f&amp;#39;&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;U&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;mo&#34;&gt;000&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;C&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// フィード
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;&amp;#39;\n&amp;#39;&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;U&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;mo&#34;&gt;000&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;A&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// 改行(LF)
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;&amp;#39;\r&amp;#39;&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;U&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;mo&#34;&gt;000&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;D&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// 改行(CR)
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;&amp;#39;\t&amp;#39;&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;U&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;mo&#34;&gt;000&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;9&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// 水平タブ
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;&amp;#39;\v&amp;#39;&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;U&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;mo&#34;&gt;000&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;b&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// 垂直タブ
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;&amp;#39;\\&amp;#39;&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;U&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;mo&#34;&gt;005&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// バックスラッシュ
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;&amp;#39;\&amp;#39;&amp;#39;&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;U&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;mo&#34;&gt;0027&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// シングルクォート(ルーンリテラルのみ)
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;&amp;#39;\&amp;#34;&amp;#39;&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;U&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;+&lt;/span&gt;&lt;span class=&#34;mo&#34;&gt;0022&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#39;&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// ダブルクォート(文字列リテラルのみ)
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
-&lt;span class=&#34;sc&#34;&gt;&amp;#39;a&amp;#39;&lt;/span&gt;
-&lt;span class=&#34;sc&#34;&gt;&amp;#39;本&amp;#39;&lt;/span&gt;
-&lt;span class=&#34;sc&#34;&gt;&amp;#39;\t&amp;#39;&lt;/span&gt;
-
-&lt;span class=&#34;c1&#34;&gt;// 8進数3桁
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;&amp;#39;\000&amp;#39;&lt;/span&gt;
-&lt;span class=&#34;sc&#34;&gt;&amp;#39;\007&amp;#39;&lt;/span&gt;
-&lt;span class=&#34;sc&#34;&gt;&amp;#39;\377&amp;#39;&lt;/span&gt;
-
-&lt;span class=&#34;c1&#34;&gt;// 16進数2桁
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;&amp;#39;\x07&amp;#39;&lt;/span&gt;
-&lt;span class=&#34;sc&#34;&gt;&amp;#39;\xff&amp;#39;&lt;/span&gt;
-
-&lt;span class=&#34;c1&#34;&gt;// 16進数4桁(小さいUnicodeコードポイント)
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;&amp;#39;\u12e4&amp;#39;&lt;/span&gt;
-
-&lt;span class=&#34;c1&#34;&gt;// 16進数8桁(大きいUnicodeコードポイント)
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;sc&#34;&gt;&amp;#39;\U00101234&amp;#39;&lt;/span&gt;
-
-&lt;span class=&#34;s&#34;&gt;&amp;#34;文字列&amp;#34;&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// 文字列リテラル
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
-
-&lt;span class=&#34;s&#34;&gt;`
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;abcd
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;efg
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;hijk
-&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;`&lt;/span&gt;   &lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;RAW文字列リテラル&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;改行や特殊文字を後処理せずそのまま扱う&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;型変換&#34;&gt;型変換&lt;/h3&gt;
-
-&lt;p&gt;Goでは、&lt;strong&gt;異なる型の暗黙的な型変換を許容しない&lt;/strong&gt;。したがって、下記のコードはコンパイルエラーとなる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
-    &lt;span class=&#34;nx&#34;&gt;n1&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;
-    &lt;span class=&#34;nx&#34;&gt;n2&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int64&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;n1&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;n2&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;n1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;コンパイルエラー&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;明示的な型変換は可能。下記のように、&lt;code&gt;型名(変換対象)&lt;/code&gt;と記述することで型変換できる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;17&lt;/span&gt;             &lt;span class=&#34;c1&#34;&gt;// 型指定子がないとリテラルの型(この場合はint型)の変数iにint型の17を代入
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;n&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;uint&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;       &lt;span class=&#34;c1&#34;&gt;// uint型の変数nにuint型の17を代入
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;byte&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;n&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;        &lt;span class=&#34;c1&#34;&gt;// byte型に変換
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;i64&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;int64&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;n&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;     &lt;span class=&#34;c1&#34;&gt;// int64型に変換
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;u32&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;uint32&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;n&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;uint32型に変換&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h4 id=&#34;整数型の型変換時の-ラップアラウンド&#34;&gt;整数型の型変換時の&amp;rdquo;ラップアラウンド&amp;rdquo;&lt;/h4&gt;
-
-&lt;p&gt;下記の場合は、整数リテラル(int)からbyte型へのナローイング変換をコンパイラが検知して、コンパイルエラーとなる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;byte&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;256&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;  &lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;コンパイルエラー&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;しかし、いったんint型の変数に値を代入して、それを型変換変換すると、ナローイング変換できてしまう。下記の場合、&lt;code&gt;b&lt;/code&gt;は&lt;code&gt;0&lt;/code&gt;となる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;n&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;256&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;byte&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;n&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;byte&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Go言語は、C言語と同様に、オーバーフローした時にその型で扱えない桁のビットを単純に無視する。これにより、ある型において、演算結果を、ある型の&lt;code&gt;mod&lt;/code&gt;のようなものとして扱うことをラップアラウンドと呼ぶ。&lt;/p&gt;
-
-&lt;h4 id=&#34;各々の方の最大値-最小値を使ったラップアラウンド対策&#34;&gt;各々の方の最大値・最小値を使ったラップアラウンド対策&lt;/h4&gt;
-
-&lt;p&gt;Goでは、C言語と同様にオーバーフローを考慮した演算を行う必要がある。&lt;br /&gt;
-この際に、&lt;code&gt;math&lt;/code&gt;パッケージに用意されている&lt;u&gt;各々の方の最大値・最小値&lt;/u&gt;を使用することができる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kn&#34;&gt;package&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;main&lt;/span&gt;
-
-&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
-    &lt;span class=&#34;s&#34;&gt;&amp;#34;fmt&amp;#34;&lt;/span&gt;
-    &lt;span class=&#34;s&#34;&gt;&amp;#34;math&amp;#34;&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-
-&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-    &lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Printf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;uint32 max value = %d\n&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;math&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;MaxUint32&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// uint32 max value = 4294967295
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;各々の型の最大値・最小値は下記の通り。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-Go&#34; data-lang=&#34;Go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;MaxInt8&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt;  &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;MinInt8&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-
-&lt;span class=&#34;nx&#34;&gt;MaxInt16&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt;  &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;16&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;MinInt16&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;16&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-
-&lt;span class=&#34;nx&#34;&gt;MaxInt32&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt;  &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;32&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;MinInt32&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;32&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-
-&lt;span class=&#34;nx&#34;&gt;MaxInt64&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt;  &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;64&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;MinInt64&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;64&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-
-&lt;span class=&#34;nx&#34;&gt;MaxUInt8&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;MaxUInt16&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;16&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;MaxUInt32&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;32&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;MaxUInt64&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;64&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
-
-&lt;span class=&#34;nx&#34;&gt;MaxFloat32&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;**&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;127&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;**&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;24&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;**&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;23&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;SmallestNonzeroFloat32&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;**&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;127&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;23&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;MaxFloat64&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;**&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1023&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;**&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;53&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;**&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;52&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;SmallestNonzeroFloat64&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;**&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1023&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;52&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;上記の型の最大値・最小値を使用すれば、オーバーフローに(比較的)楽に対応できる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;sum&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;uint32&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;bool&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;math&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;MaxUint32&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-        &lt;span class=&#34;c1&#34;&gt;// オーバーフローする
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;false&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
-
-    &lt;span class=&#34;nx&#34;&gt;sum&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;b&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// このパスではオーバーフローしないことを保証済み
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;sum&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>Go言語入門(Goのプリミティブ型)</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80go%E3%81%AE%E3%83%97%E3%83%AA%E3%83%9F%E3%83%86%E3%82%A3%E3%83%96%E5%9E%8B/</link>
-      <pubDate>Sat, 13 Apr 2019 07:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80go%E3%81%AE%E3%83%97%E3%83%AA%E3%83%9F%E3%83%86%E3%82%A3%E3%83%96%E5%9E%8B/</guid>
-      
-        <description>
-
-&lt;h1 id=&#34;目的&#34;&gt;目的&lt;/h1&gt;
-
-&lt;p&gt;Go言語の基本構文を残す。&lt;/p&gt;
-
-&lt;h1 id=&#34;参考文献&#34;&gt;参考文献&lt;/h1&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.shoeisha.co.jp/book/detail/9784798142418&#34;&gt;スターティング Go言語&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;基本構文&#34;&gt;基本構文&lt;/h1&gt;
-
-&lt;h2 id=&#34;goのプリミティブ型&#34;&gt;Goのプリミティブ型&lt;/h2&gt;
-
-&lt;h3 id=&#34;真偽値型&#34;&gt;真偽値型&lt;/h3&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th align=&#34;left&#34;&gt;型名&lt;/th&gt;
-&lt;th&gt;説明&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;bool&lt;/td&gt;
-&lt;td&gt;真（true）または偽（false）&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h3 id=&#34;数値型&#34;&gt;数値型&lt;/h3&gt;
-
-&lt;h4 id=&#34;符号なし整数&#34;&gt;符号なし整数&lt;/h4&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th align=&#34;left&#34;&gt;型名&lt;/th&gt;
-&lt;th&gt;説明&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;範囲&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;uint8&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;8bit符号なし整数&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0 ~ 255&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;byte&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;uint8のエイリアス&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;uint16&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;16bit符号なし整数&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0 ~ 65535&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;uint32&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;32bit符号なし整数&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0 ~ 4294967295&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;uint64&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;64bit符号なし整数&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0 ~ 18446744073709551615&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;uint&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;32bit or 64bitの符号なし整数&lt;br&gt;&lt;strong&gt;（環境依存）&lt;/strong&gt;&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;0 ~ 18446744073709551615 &lt;br&gt;&lt;em&gt;or&lt;/em&gt;&lt;br&gt;0 ~ 4294967295&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;uintptr&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;ポインタの値&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;ポインタの値をそのまま格納するのに十分な大きさの符号なし整数&lt;br&gt;（環境依存）&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h4 id=&#34;符号付き整数&#34;&gt;符号付き整数&lt;/h4&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th align=&#34;left&#34;&gt;型名&lt;/th&gt;
-&lt;th align=&#34;left&#34;&gt;説明&lt;/th&gt;
-&lt;th align=&#34;right&#34;&gt;範囲&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;int8&lt;/code&gt;&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;8bit符号付き整数&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;-128 ~ 127&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;int16&lt;/code&gt;&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;16bit符号付き整数&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;-32768 ~ 32767&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;int32&lt;/code&gt;&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;32bit符号付き整数&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;-2147483648 ~ 2147483647&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;int64&lt;/code&gt;&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;64bit符号付き整数&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;-9223372036854775808 ~ 9223372036854775807&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;int&lt;/code&gt;&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;32bit or 64bitの符号付き整数&lt;br&gt;&lt;strong&gt;（環境依存）&lt;/strong&gt;&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;-2147483648 ~ 2147483647 &lt;br&gt;&lt;em&gt;or&lt;/em&gt;&lt;br&gt;-9223372036854775808 ~ 9223372036854775807&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;rune&lt;/code&gt;&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;int32のエイリアス&lt;/td&gt;
-&lt;td align=&#34;right&#34;&gt;-2147483648 ~ 2147483647&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h4 id=&#34;浮動小数点&#34;&gt;浮動小数点&lt;/h4&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th align=&#34;left&#34;&gt;型名&lt;/th&gt;
-&lt;th align=&#34;left&#34;&gt;説明&lt;/th&gt;
-&lt;th align=&#34;left&#34;&gt;範囲&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;float32&lt;/code&gt;&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;32bit浮動小数点&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;IEEE-754 32bit浮動小数点数&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;float64&lt;/code&gt;&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;64bit浮動小数点&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;IEEE-754 64bit浮動小数点数&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h4 id=&#34;複素数&#34;&gt;複素数&lt;/h4&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th align=&#34;left&#34;&gt;型名&lt;/th&gt;
-&lt;th align=&#34;left&#34;&gt;説明&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;complex64&lt;/code&gt;&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;実数部・虚数部をfloat32で表現する複素数&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;complex128&lt;/code&gt;&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;実数部・虚数部をfloat64で表現する複素数&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h3 id=&#34;文字列型&#34;&gt;文字列型&lt;/h3&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th align=&#34;left&#34;&gt;型名&lt;/th&gt;
-&lt;th align=&#34;left&#34;&gt;説明&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td align=&#34;left&#34;&gt;&lt;code&gt;string&lt;/code&gt;&lt;/td&gt;
-&lt;td align=&#34;left&#34;&gt;文字列(ダブルクオートで囲む)&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-</description>
-      
-    </item>
-    
-    <item>
-      <title>Go言語入門(変数定義・変数への代入)</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E5%A4%89%E6%95%B0%E5%AE%9A%E7%BE%A9%E5%A4%89%E6%95%B0%E3%81%B8%E3%81%AE%E4%BB%A3%E5%85%A5/</link>
-      <pubDate>Sat, 13 Apr 2019 06:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E5%A4%89%E6%95%B0%E5%AE%9A%E7%BE%A9%E5%A4%89%E6%95%B0%E3%81%B8%E3%81%AE%E4%BB%A3%E5%85%A5/</guid>
-      
-        <description>
-
-&lt;h1 id=&#34;目的&#34;&gt;目的&lt;/h1&gt;
-
-&lt;p&gt;Go言語の基本構文を残す。&lt;/p&gt;
-
-&lt;h1 id=&#34;参考文献&#34;&gt;参考文献&lt;/h1&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.shoeisha.co.jp/book/detail/9784798142418&#34;&gt;スターティング Go言語&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;基本構文&#34;&gt;基本構文&lt;/h1&gt;
-
-&lt;h2 id=&#34;変数定義-変数への代入&#34;&gt;変数定義・変数への代入&lt;/h2&gt;
-
-&lt;h3 id=&#34;明示的な変数定義&#34;&gt;明示的な変数定義&lt;/h3&gt;
-
-&lt;p&gt;明示的な変数定義の方法を示す。&lt;br /&gt;
-見て分かるとおり、&lt;code&gt;var 変数名　型名&lt;/code&gt;の順番で定義する。&lt;br /&gt;
-また、複数の変数定義をまとめて行えるようになっている。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// 明示的な定義
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;
-
-&lt;span class=&#34;c1&#34;&gt;// int型の変数x, y, zをまとめて定義する
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;y&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;z&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;
-
-&lt;span class=&#34;c1&#34;&gt;// 異なる型の変数x, y, nameをまとめて定義する
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
-    &lt;span class=&#34;nx&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;
-    &lt;span class=&#34;nx&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;代入&#34;&gt;代入&lt;/h3&gt;
-
-&lt;p&gt;定義した変数に値を代入する方法は下記の通り。&lt;br /&gt;
-代入も、複数個の変数にまとめて代入する構文が用意されている。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// 変数への代入
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;
-
-&lt;span class=&#34;c1&#34;&gt;// 複数個の変数に複数個の値をまとめて代入する
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;
-
-&lt;span class=&#34;c1&#34;&gt;// Error: 異なる個数の代入はコンパイルエラーとなる
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;y&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;z&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;暗黙的な定義-推奨&#34;&gt;暗黙的な定義(推奨)&lt;/h3&gt;
-
-&lt;p&gt;演算子&lt;code&gt;:=&lt;/code&gt;を使用することで、型指定なしで変数が定期可能。&lt;br /&gt;
-この場合、右辺に記述した式の型が、左辺の変数の型として推論される。&lt;br /&gt;
-可能な限り、この方法での変数定義をすること。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;i&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;// int型の変数iに整数3を代入する
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;kc&#34;&gt;true&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// bool型の変数bに真偽値trueを代入する
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;3.14&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// float64型の変数fに実数3.14を代入する
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;s&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;abc&amp;#34;&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;// string型の変数sに文字列&amp;#34;abc&amp;#34;を代入する
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
-&lt;span class=&#34;kd&#34;&gt;func&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;one&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt; &lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
-    &lt;span class=&#34;k&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
-&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;n&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;one&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;  &lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;int型の変数nに整数1を代入する&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;&lt;br /&gt;
-明示的な定義、暗黙的な定義は、当然ながら同一の変数に対しては&lt;strong&gt;ただ1回のみ&lt;/strong&gt;使用できる。&lt;br /&gt;
-2回目以降の定義の箇所でコンパイルエラーとなる。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;&lt;br /&gt;
-&lt;code&gt;var a = 1&lt;/code&gt;と記述することで、変則的だが&lt;code&gt;var&lt;/code&gt;を使った暗黙的な定義も可能。&lt;br /&gt;
-しかし、簡潔さの観点から&lt;code&gt;:=&lt;/code&gt;のほうが好ましい。&lt;/p&gt;
-
-&lt;h3 id=&#34;変数のスコープ&#34;&gt;変数のスコープ&lt;/h3&gt;
-
-&lt;p&gt;Goにおける変数は、定義位置により2種類に分かれる。&lt;/p&gt;
-
-&lt;dl&gt;
-&lt;dt&gt;ローカル変数&lt;/dt&gt;
-&lt;dd&gt;関数定義の中に定義された変数。&lt;br /&gt;
-同一のパッケージ変数がある場合、そのパッケージ変数をシャドウイングする(C言語と同様)。&lt;/dd&gt;
-&lt;dt&gt;パッケージ変数&lt;/dt&gt;
-&lt;dd&gt;関数定義の外に定義された変数。&lt;br /&gt;
-パッケージ変数は、プログラム全体で1つの値が共有される(C言語のグローバル変数と同様)。&lt;/dd&gt;
-&lt;/dl&gt;
-
-&lt;h3 id=&#34;未参照の変数はコンパイルエラーとなる&#34;&gt;未参照の変数はコンパイルエラーとなる&lt;/h3&gt;
-
-&lt;p&gt;Goでは、定義済みであるにも関わらず、何からも参照されていない変数があったらコンパイルエラーとなる。
-煩わしい場合もあるが、誤った変数の使用を防ぐために存在する機能と考えるべき。&lt;/p&gt;
-</description>
-      
-    </item>
-    
-    <item>
-      <title>Go言語入門(出力関数)</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E5%87%BA%E5%8A%9B%E9%96%A2%E6%95%B0/</link>
-      <pubDate>Sat, 13 Apr 2019 05:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E5%87%BA%E5%8A%9B%E9%96%A2%E6%95%B0/</guid>
-      
-        <description>
-
-&lt;h1 id=&#34;目的&#34;&gt;目的&lt;/h1&gt;
-
-&lt;p&gt;Go言語の基本構文を残す。&lt;/p&gt;
-
-&lt;h1 id=&#34;参考文献&#34;&gt;参考文献&lt;/h1&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.shoeisha.co.jp/book/detail/9784798142418&#34;&gt;スターティング Go言語&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;基本構文&#34;&gt;基本構文&lt;/h1&gt;
-
-&lt;h2 id=&#34;出力関数&#34;&gt;出力関数&lt;/h2&gt;
-
-&lt;h3 id=&#34;fmt-println&#34;&gt;&lt;code&gt;fmt.Println()&lt;/code&gt;&lt;/h3&gt;
-
-&lt;p&gt;文字列の最後に改行を付加した文字列を標準出力に出力する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Println&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Hello, Golang!&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;   &lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Hello, Golang!&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;複数の引数を渡した場合、各々の文字列をスペースで区切って1行で表示する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Println&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;Hello&amp;#34;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Golang&amp;#34;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;!&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;   &lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Hello Golang !&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;fmt-printf&#34;&gt;&lt;code&gt;fmt.Printf()&lt;/code&gt;&lt;/h3&gt;
-
-&lt;p&gt;書式指定子を含んだフォーマット文字列と、可変長引数を渡すと、生成した文字列を標準出力に出力する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Printf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;数値=%d\n&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;    &lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;数値=5&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Printf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;10進数=%d 2進数=%b 8進数=%o 16進数=%x\n&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;10進数=17 2進数=10001 8進数=21 16進数=11&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;可変長引数の個数に過不足がある場合、それを下記のように文字列中で知らせる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Printf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;%d年%d月%d日\n&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2015&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;// =&amp;gt; &amp;#34;2015年12月%!d(MISSING)日&amp;#34;
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Printf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;%d年%d月%d日\n&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2015&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;25&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;2015年12月25日%!(EXTRA int=17)&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;Goのデバッグで有用な書式指定子として&lt;code&gt;%v&lt;/code&gt;, &lt;code&gt;%#v&lt;/code&gt;, &lt;code&gt;%T&lt;/code&gt;がある。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;c1&#34;&gt;// %v 様々な型のデータを埋め込む
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Printf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;数値=%v 文字列=%v 配列=%v\n&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Golang&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;})&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;// =&amp;gt; &amp;#34;数値=5 文字列=Golang 配列=[1 2 3]&amp;#34;
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;// %#v Goのリテラル表現でデータを埋め込む
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Printf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;数値=%#v 文字列=%#v 配列=%#v\n&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Golang&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;})&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;// =&amp;gt; &amp;#34;数値=5 文字列=&amp;#34;Golang&amp;#34; 配列=[3]int{1 ,2, 3}&amp;#34;
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
-&lt;span class=&#34;c1&#34;&gt;// %T 型情報を埋め込む
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Printf&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;数値=%v 文字列=%v 配列=%v\n&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;Golang&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;})&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;数値=int 文字列=string 配列=[3]int&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h3 id=&#34;print-println&#34;&gt;&lt;code&gt;print()&lt;/code&gt;, &lt;code&gt;println()&lt;/code&gt;&lt;/h3&gt;
-
-&lt;p&gt;組み込み関数として&lt;code&gt;print()&lt;/code&gt;と&lt;code&gt;println()&lt;/code&gt;がある。これらは、与えられた文字列を&lt;strong&gt;標準エラー出力&lt;/strong&gt;に出力する。&lt;/p&gt;
 </description>
       
     </item>
