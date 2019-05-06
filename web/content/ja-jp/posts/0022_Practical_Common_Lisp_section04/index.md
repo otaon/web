@@ -4,7 +4,7 @@ date:    2019-03-07T00:00:00+09:00
 lastmod: 2019-03-07T00:00:00+09:00
 draft: false
 toc: true
-tags: ["lisp"]
+tags: ["lisp", "実践-Common-Lisp"]
 categories: ["Notes"]
 authors:
 - otaon

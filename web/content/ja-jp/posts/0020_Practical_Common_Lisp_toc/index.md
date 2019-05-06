@@ -4,7 +4,7 @@ date:    2019-03-07T00:00:00+09:00
 lastmod: 2019-03-07T00:00:00+09:00
 draft: false
 toc: true
-tags: ["lisp"]
+tags: ["lisp", "実践-Common-Lisp"]
 categories: ["Notes"]
 authors:
 - otaon
@@ -16,7 +16,7 @@ authors:
 - [第3章 実践：簡単なデータベース]({{<relref "posts/0021_Practical_Common_Lisp_section03/index.md" >}})
 - [第4章 シンタックスとセマンティクス]({{<relref "posts/0022_Practical_Common_Lisp_section04/index.md" >}})
 - [第5章 関数]({{<relref "posts/0023_Practical_Common_Lisp_section05/index.md" >}})
-- 第6章 変数
+- [第6章 変数]({{<relref "posts/0059_Practical_Common_Lisp_section06/index.md" >}})
 - 第7章 マクロ：標準的な制御構文の構築
 - 第8章 マクロ：自分で定義しよう
 - 第9章 実践：ユニットテストフレームワーク
