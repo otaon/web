@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Emacs on Lazy Lambda</title>
+    <link>https://otaon.github.io/web/ja-jp/category/emacs/</link>
+    <description>Recent content in Emacs on Lazy Lambda</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Sat, 18 May 2019 00:00:00 +0900</lastBuildDate>
+    
+	<atom:link href="https://otaon.github.io/web/ja-jp/category/emacs/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Emacsの基本コマンド</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/18/emacs%E3%81%AE%E5%9F%BA%E6%9C%AC%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/</link>
+      <pubDate>Sat, 18 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/18/emacs%E3%81%AE%E5%9F%BA%E6%9C%AC%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/</guid>
+      <description>本稿の目的 自分は普段Vimを使っており、Lispを書くにあたってはSwankとSlimvを利用している。 これでもある程度は書けるが、Slim</description>
+    </item>
+    
+  </channel>
+</rss>

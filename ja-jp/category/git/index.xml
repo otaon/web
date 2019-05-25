@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Git on Lazy Lambda</title>
+    <link>https://otaon.github.io/web/ja-jp/category/git/</link>
+    <description>Recent content in Git on Lazy Lambda</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Wed, 13 Mar 2019 01:00:00 +0900</lastBuildDate>
+    
+	<atom:link href="https://otaon.github.io/web/ja-jp/category/git/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Gitの使い方</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/13/git%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9/</link>
+      <pubDate>Wed, 13 Mar 2019 01:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/13/git%E3%81%AE%E4%BD%BF%E3%81%84%E6%96%B9/</guid>
+      <description>目的 Gitを端末上で使用するため、操作とそのコマンドを記す。 操作の種類一覧 情報更新/情報表示 リモートリポジトリの情報をローカルリポジトリに反</description>
+    </item>
+    
+  </channel>
+</rss>

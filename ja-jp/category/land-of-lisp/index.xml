@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Land-of-Lisp on Lazy Lambda</title>
+    <link>https://otaon.github.io/web/ja-jp/category/land-of-lisp/</link>
+    <description>Recent content in Land-of-Lisp on Lazy Lambda</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja-jp</language>
+    <lastBuildDate>Thu, 07 Mar 2019 00:00:00 +0900</lastBuildDate>
+    
+	<atom:link href="https://otaon.github.io/web/ja-jp/category/land-of-lisp/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>書籍 Land of Lisp 10章 loopマクロ</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-10%E7%AB%A0-loop%E3%83%9E%E3%82%AF%E3%83%AD/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-10%E7%AB%A0-loop%E3%83%9E%E3%82%AF%E3%83%AD/</guid>
+      <description>Loopマクロ周期表 書籍では、loopマクロで使えるトークンを周期表のようにまとめていた。 それだと少々見辛いため、素直な表形式で下記にまとめ</description>
+    </item>
+    
+    <item>
+      <title>書籍 Land of Lisp 11章 format関数でテキストを表示する</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-11%E7%AB%A0-format%E9%96%A2%E6%95%B0%E3%81%A7%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-11%E7%AB%A0-format%E9%96%A2%E6%95%B0%E3%81%A7%E3%83%86%E3%82%AD%E3%82%B9%E3%83%88%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B/</guid>
+      <description>format関数の構文と制御シーケンスを説明する。 11.1 format関数の呼び出し方 下記にformat関数の構文を示す。 (format t &amp;#34;Add onion rings for only ~$ dollars more!&amp;#34; 1.5) 第</description>
+    </item>
+    
+    <item>
+      <title>書籍 Land of Lisp 12章 ストリーム</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-12%E7%AB%A0-%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%A0/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-12%E7%AB%A0-%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%A0/</guid>
+      <description>REPLによる入出力、ディスク上のファイルの読み書き、LANやインターネットの通信において、 Common Lispでは ストリーム を使用する。 本ドキュメン</description>
+    </item>
+    
+    <item>
+      <title>書籍 Land of Lisp 13章 Webサーバを作ろう！</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-13%E7%AB%A0-web%E3%82%B5%E3%83%BC%E3%83%90%E3%82%92%E4%BD%9C%E3%82%8D%E3%81%86/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-13%E7%AB%A0-web%E3%82%B5%E3%83%BC%E3%83%90%E3%82%92%E4%BD%9C%E3%82%8D%E3%81%86/</guid>
+      <description>13.1 Common Lispでのエラー処理 Webサーバのように外部とやりとりする場合、予想外の自体が起きる可能性がある。 Common Lispにはコード内で例外を扱う機</description>
+    </item>
+    
+    <item>
+      <title>書籍 Land of Lisp 15章 ダイスオブドゥーム：関数型スタイルでゲームを書こう</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-15%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E9%96%A2%E6%95%B0%E5%9E%8B%E3%82%B9%E3%82%BF%E3%82%A4%E3%83%AB%E3%81%A7%E3%82%B2%E3%83%BC%E3%83%A0%E3%82%92%E6%9B%B8%E3%81%93%E3%81%86/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-15%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E9%96%A2%E6%95%B0%E5%9E%8B%E3%82%B9%E3%82%BF%E3%82%A4%E3%83%AB%E3%81%A7%E3%82%B2%E3%83%BC%E3%83%A0%E3%82%92%E6%9B%B8%E3%81%93%E3%81%86/</guid>
+      <description>15.5 ダイス・オブ・ドゥームを高速化する クロージャ クロージャは、lambdaで関数が作られるとき、外側の情報を捕獲したものである。 まずは、普通の</description>
+    </item>
+    
+    <item>
+      <title>書籍 Land of Lisp 16章 マクロの魔法</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-16%E7%AB%A0-%E3%83%9E%E3%82%AF%E3%83%AD%E3%81%AE%E9%AD%94%E6%B3%95/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-16%E7%AB%A0-%E3%83%9E%E3%82%AF%E3%83%AD%E3%81%AE%E9%AD%94%E6%B3%95/</guid>
+      <description>マクロプログラミング によって、プログラマはLispのコンパイラ/インタプリタの動作に変更を加え、Lispを独自の言語へと変化させられる。 16.1 簡</description>
+    </item>
+    
+    <item>
+      <title>書籍 Land of Lisp 17章 ドメイン特化言語</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-17%E7%AB%A0-%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E7%89%B9%E5%8C%96%E8%A8%80%E8%AA%9E/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-17%E7%AB%A0-%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E7%89%B9%E5%8C%96%E8%A8%80%E8%AA%9E/</guid>
+      <description>マクロが最も効果的な場面の一つは、 ドメイン特化言語(DSL) を作る場面である。 DSLプログラミングは高度なマクロプログラミングテクニックの1</description>
+    </item>
+    
+    <item>
+      <title>書籍 Land of Lisp 18章 遅延プログラミング</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-18%E7%AB%A0-%E9%81%85%E5%BB%B6%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-18%E7%AB%A0-%E9%81%85%E5%BB%B6%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/</guid>
+      <description>関数型プログラミングによって、コードが簡潔になることが分かった。 数学的な関数は、同じ引数に対して常に同じ結果を返すことによる利点である。 しか</description>
+    </item>
+    
+    <item>
+      <title>書籍 Land of Lisp 19章 ダイスオブドゥームにグラフィカルなWebインターフェースをつける</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-19%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%81%AB%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%82%AB%E3%83%AB%E3%81%AAweb%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%82%92%E3%81%A4%E3%81%91%E3%82%8B/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-19%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%81%AB%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%82%AB%E3%83%AB%E3%81%AAweb%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%82%92%E3%81%A4%E3%81%91%E3%82%8B/</guid>
+      <description>18章で作ったダイスオブドゥームVer2では、Ver1よりも大きなゲーム盤でプレイ可能となった。 この規模だと、コンソールでの可視化には視認性</description>
+    </item>
+    
+    <item>
+      <title>書籍 Land of Lisp 20章 ダイスオブドゥームをさらに面白く</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-20%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%82%92%E3%81%95%E3%82%89%E3%81%AB%E9%9D%A2%E7%99%BD%E3%81%8F/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-20%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%82%92%E3%81%95%E3%82%89%E3%81%AB%E9%9D%A2%E7%99%BD%E3%81%8F/</guid>
+      <description>ダイスオブドゥームのバージョン4を作る。 今までのバージョンでは、プログラムを簡単にするため、重要なルールを省略していた。 本章では、ゲームのプ</description>
+    </item>
+    
+    <item>
+      <title>書籍 Land of Lisp 9章 より進んだデータ型とジェネリックプログラミング</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-9%E7%AB%A0-%E3%82%88%E3%82%8A%E9%80%B2%E3%82%93%E3%81%A0%E3%83%87%E3%83%BC%E3%82%BF%E5%9E%8B%E3%81%A8%E3%82%B8%E3%82%A7%E3%83%8D%E3%83%AA%E3%83%83%E3%82%AF%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-9%E7%AB%A0-%E3%82%88%E3%82%8A%E9%80%B2%E3%82%93%E3%81%A0%E3%83%87%E3%83%BC%E3%82%BF%E5%9E%8B%E3%81%A8%E3%82%B8%E3%82%A7%E3%83%8D%E3%83%AA%E3%83%83%E3%82%AF%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/</guid>
+      <description>Common Lisp では、下記のようなデータ型が使用できる。 コンスセル シンボル 文字列 数値 配列 ハッシュテーブル 構造体 9.1 配列 配列を使う 配列を作成するにはmake</description>
+    </item>
+    
+    <item>
+      <title>書籍 Land of Lisp の学習記録</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-%E3%81%AE%E5%AD%A6%E7%BF%92%E8%A8%98%E9%8C%B2/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-%E3%81%AE%E5%AD%A6%E7%BF%92%E8%A8%98%E9%8C%B2/</guid>
+      <description>勉強記録一覧 09章-より進んだデータ型とジェネリックプログラミング 10章-loopマクロ 11章-format関数でテキストを表示する 12章-</description>
+    </item>
+    
+  </channel>
+</rss>

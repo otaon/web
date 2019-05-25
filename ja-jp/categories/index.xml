@@ -20,11 +20,101 @@
     </item>
     
     <item>
-      <title>Notes</title>
-      <link>https://otaon.github.io/web/ja-jp/category/notes/</link>
+      <title>Emacs</title>
+      <link>https://otaon.github.io/web/ja-jp/category/emacs/</link>
       <pubDate>Sat, 18 May 2019 00:00:00 +0900</pubDate>
       
+      <guid>https://otaon.github.io/web/ja-jp/category/emacs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Git</title>
+      <link>https://otaon.github.io/web/ja-jp/category/git/</link>
+      <pubDate>Wed, 13 Mar 2019 01:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/category/git/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Go</title>
+      <link>https://otaon.github.io/web/ja-jp/category/go/</link>
+      <pubDate>Wed, 01 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/category/go/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Hugo</title>
+      <link>https://otaon.github.io/web/ja-jp/category/hugo/</link>
+      <pubDate>Wed, 01 May 2019 22:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/category/hugo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Land-of-Lisp</title>
+      <link>https://otaon.github.io/web/ja-jp/category/land-of-lisp/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/category/land-of-lisp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Notes</title>
+      <link>https://otaon.github.io/web/ja-jp/category/notes/</link>
+      <pubDate>Fri, 01 Mar 2019 16:01:23 +0900</pubDate>
+      
       <guid>https://otaon.github.io/web/ja-jp/category/notes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>lisp</title>
+      <link>https://otaon.github.io/web/ja-jp/category/lisp/</link>
+      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/category/lisp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>low-level</title>
+      <link>https://otaon.github.io/web/ja-jp/category/low-level/</link>
+      <pubDate>Sun, 24 Mar 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/category/low-level/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>programming</title>
+      <link>https://otaon.github.io/web/ja-jp/category/programming/</link>
+      <pubDate>Sun, 05 May 2019 05:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/category/programming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>vim</title>
+      <link>https://otaon.github.io/web/ja-jp/category/vim/</link>
+      <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/category/vim/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>実践-Common-Lisp</title>
+      <link>https://otaon.github.io/web/ja-jp/category/%E5%AE%9F%E8%B7%B5-common-lisp/</link>
+      <pubDate>Sat, 25 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/category/%E5%AE%9F%E8%B7%B5-common-lisp/</guid>
       <description></description>
     </item>
     

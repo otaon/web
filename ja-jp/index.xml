@@ -24,6 +24,17 @@
     </item>
     
     <item>
+      <title>書籍 実践 Common Lisp 第6章 変数</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/25/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC6%E7%AB%A0-%E5%A4%89%E6%95%B0/</link>
+      <pubDate>Sat, 25 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/25/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC6%E7%AB%A0-%E5%A4%89%E6%95%B0/</guid>
+      
+        <description></description>
+      
+    </item>
+    
+    <item>
       <title>Emacsの基本コマンド</title>
       <link>https://otaon.github.io/web/ja-jp/2019/05/18/emacs%E3%81%AE%E5%9F%BA%E6%9C%AC%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/</link>
       <pubDate>Sat, 18 May 2019 00:00:00 +0900</pubDate>
@@ -335,17 +346,6 @@ windowsにおいては、公式サイトからバイナリをダウンロード�
 &lt;li&gt;&lt;code&gt;C-h w&lt;/code&gt; : コマンド名を指定して、それを呼び出すキーの組わせを表示する。&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-      
-    </item>
-    
-    <item>
-      <title>書籍 実践 Common Lisp 第6章 変数</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/05/06/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC6%E7%AB%A0-%E5%A4%89%E6%95%B0/</link>
-      <pubDate>Mon, 06 May 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/05/06/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC6%E7%AB%A0-%E5%A4%89%E6%95%B0/</guid>
-      
-        <description></description>
       
     </item>
     
