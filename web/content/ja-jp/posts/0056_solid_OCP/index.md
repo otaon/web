@@ -4,8 +4,8 @@ date:    2019-05-05T02:00:00+09:00
 lastmod: 2019-05-05T02:00:00+09:00
 draft: false
 toc: true
-tags: ["オブジェクト指向", "OOP", "SOLID", "OCP"]
-categories: ["Notes"]
+tags: ["programming", "オブジェクト指向", "OOP", "SOLID", "OCP"]
+categories: ["programming"]
 authors:
 - otaon
 ---

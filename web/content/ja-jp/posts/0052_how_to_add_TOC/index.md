@@ -5,7 +5,7 @@ lastmod: 2019-05-01T22:00:00+09:00
 draft: false
 toc: true
 tags: ["TOC", "Hugo"]
-categories: ["Notes"]
+categories: ["Hugo"]
 authors:
 - otaon
 ---

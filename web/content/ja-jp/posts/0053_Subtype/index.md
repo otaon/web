@@ -4,8 +4,8 @@ date:    2019-05-01T23:00:00+09:00
 lastmod: 2019-05-01T23:00:00+09:00
 draft: false
 toc: true
-tags: ["ポリモーフィズム", "部分型付け", "派生型", "リスコフの置換原則", "仮想関数テーブル"]
-categories: ["Notes"]
+tags: ["programming", "ポリモーフィズム", "部分型付け", "派生型", "リスコフの置換原則", "仮想関数テーブル"]
+categories: ["programming"]
 authors:
 - otaon
 ---

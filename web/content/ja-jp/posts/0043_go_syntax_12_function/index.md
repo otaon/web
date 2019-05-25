@@ -5,7 +5,7 @@ lastmod: 2019-04-13T12:00:00+09:00
 draft: false
 toc: true
 tags: ["Go", "Golang"]
-categories: ["Notes"]
+categories: ["Go"]
 authors:
 - otaon
 ---

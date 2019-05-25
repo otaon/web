@@ -5,7 +5,7 @@ lastmod: 2019-03-07T02:00:00+09:00
 draft: false
 toc: true
 tags: ["lisp", "vim", "slimv"]
-categories: ["Notes"]
+categories: ["vim"]
 authors:
 - otaon
 ---
