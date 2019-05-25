@@ -4,8 +4,8 @@ date:    2019-05-05T00:00:00+09:00
 lastmod: 2019-05-05T00:00:00+09:00
 draft: false
 toc: true
-tags: ["オブジェクト指向", "OOP", "SOLID", "SRP", "OCP", "LSP", "ISP", "DIP"]
-categories: ["Notes"]
+tags: ["programming", "オブジェクト指向", "OOP", "SOLID", "SRP", "OCP", "LSP", "ISP", "DIP"]
+categories: ["programming"]
 authors:
 - otaon
 ---

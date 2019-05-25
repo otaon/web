@@ -5,7 +5,7 @@ lastmod: 2019-05-18T00:00:00+09:00
 draft: false
 toc: true
 tags: ["Emacs"]
-categories: ["Notes"]
+categories: ["Emacs"]
 authors:
 - otaon
 ---

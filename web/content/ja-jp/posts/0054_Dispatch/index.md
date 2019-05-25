@@ -4,8 +4,8 @@ date:    2019-05-02T00:00:00+09:00
 lastmod: 2019-05-02T00:00:00+09:00
 draft: false
 toc: true
-tags: ["ディスパッチ", "多重ディスパッチ", "仮想関数テーブル"]
-categories: ["Notes"]
+tags: ["programming", "ディスパッチ", "多重ディスパッチ", "仮想関数テーブル"]
+categories: ["programming"]
 authors:
 - otaon
 ---
