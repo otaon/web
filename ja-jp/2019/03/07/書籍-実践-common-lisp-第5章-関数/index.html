@@ -31,11 +31,11 @@
 
 <meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
 <meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="2699">
+<meta itemprop="wordCount" content="4102">
 
 
 
-<meta itemprop="keywords" content="lisp,basic," />
+<meta itemprop="keywords" content="lisp,実践-Common-Lisp," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="書籍 実践 Common Lisp 第5章 関数"/>
 <meta name="twitter:description" content="5.1 新しい関数の定義 (defun name (parameter*) &#34;省略可能なドキュメンテーション文字列&#34; body-form*) 5.2 関数のパラメータリスト parameterの部分は、関数の"/>
@@ -118,8 +118,8 @@
           <div class="clearfix"></div>
           <p class="float-right header-tags">
               <i class="fas fa-tags" aria-hidden="true"></i>
-              <a href="https://otaon.github.io/web/ja-jp/tag/basic/">basic</a>, 
-                <a href="https://otaon.github.io/web/ja-jp/tag/lisp/">lisp</a>
+              <a href="https://otaon.github.io/web/ja-jp/tag/lisp/">lisp</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/%E5%AE%9F%E8%B7%B5-common-lisp/">実践-Common-Lisp</a>
           </p>
         
         
@@ -145,9 +145,13 @@
 <li><a href="#5-3-オプショナルパラメータ">5.3 オプショナルパラメータ</a></li>
 <li><a href="#5-4-レストパラメータ">5.4 レストパラメータ</a></li>
 <li><a href="#5-5-キーワードパラメータ">5.5 キーワードパラメータ</a></li>
-<li><a href="#5-6-異なるパラメータの併用">5.6 異なるパラメータの併用</a></li>
+<li><a href="#5-6-異なるパラメータの併用は注意すべき">5.6 異なるパラメータの併用は注意すべき</a>
+<ul>
+<li><a href="#optional-と-key-は併用禁止-rest-と-key-は併用ok"><code>&amp;optional</code>と<code>&amp;key</code>は併用禁止・<code>rest</code>と<code>&amp;key</code>は併用OK</a></li>
+</ul></li>
 <li><a href="#5-7-関数の戻り値">5.7 関数の戻り値</a></li>
 <li><a href="#5-8-データとしての関数または高階関数">5.8 データとしての関数または高階関数</a></li>
+<li><a href="#5-9-無名関数">5.9 無名関数</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -274,7 +278,7 @@
 
 <span class="p">(</span><span class="nv">foo</span> <span class="ss">:apple</span> <span class="mi">10</span> <span class="ss">:box</span> <span class="mi">20</span> <span class="ss">:charlie</span> <span class="mi">30</span><span class="p">)</span>
 <span class="c1">; =&gt; (10 20 30 T)</span></code></pre></div>
-<h2 id="5-6-異なるパラメータの併用">5.6 異なるパラメータの併用</h2>
+<h2 id="5-6-異なるパラメータの併用は注意すべき">5.6 異なるパラメータの併用は注意すべき</h2>
 
 <p>上記の、必須パラメータ、オプショナルパラメータ、レストパラメータ、キーワードパラメータは、全て併用することができる。<br />
 ただし、これらには使用して良い順番がある。下記の順番で使用可能である。</p>
@@ -286,8 +290,14 @@
 <li>キーワードパラメータ</li>
 </ol>
 
-<p><strong>NOTE</strong> <code>&amp;optional</code>と<code>&amp;key</code>の組み合わせは、予想外の結果になるため、併用してはいけない。<br />
+<h3 id="optional-と-key-は併用禁止-rest-と-key-は併用ok"><code>&amp;optional</code>と<code>&amp;key</code>は併用禁止・<code>rest</code>と<code>&amp;key</code>は併用OK</h3>
+
+<p><code>&amp;optional</code>と<code>&amp;key</code>の組み合わせは、予想外の結果になるため、併用してはいけない。<br />
 というのも、呼び出し元がオプショナルパラメータを全て与えなかった場合、オプショナルパラメータがキーワードパラメータの値を食ってしまうためである。</p>
+
+<p>下記コードの最後の例では、<code>:z</code>がオプショナルパラメータとして認識されてしまう。
+こうなると、残りは引数3のみである。
+これをキーワードパラメータとして解釈することができないため、エラーとなる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">x</span> <span class="nv">&amp;optional</span> <span class="nv">y</span> <span class="nv">&amp;key</span> <span class="nv">z</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">list</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span><span class="p">))</span>
 
@@ -302,45 +312,99 @@
 <span class="c1">;; これはエラーとなる</span>
 <span class="p">(</span><span class="nv">foo</span> <span class="mi">1</span> <span class="ss">:z</span> <span class="mi">3</span><span class="p">)</span>
 <span class="c1">; =&gt; ERROR</span></code></pre></div>
-<p>最後の例では、<code>:z</code>がオプショナルパラメータとして認識されてしまう。
-こうなると、残りは引数3のみである。
-これをキーワードパラメータとして解釈することができないため、エラーとなる。</p>
-
-<p>レストパラメータとキーワードパラメータの組み合わせは、少々とっつきにくいが、安全に動作する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">&amp;rest</span> <span class="nv">rest</span> <span class="nv">&amp;key</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">list</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">))</span>
-
-<span class="p">(</span><span class="nv">foo</span> <span class="ss">:a</span> <span class="mi">1</span> <span class="ss">:b</span> <span class="mi">2</span> <span class="ss">:c</span> <span class="mi">3</span><span class="p">)</span>
-<span class="c1">; =&gt; ((:A 1 :B 2 :C 3) 1 2 3)</span></code></pre></div>
-<p>上記は、レストパラメータとキーワードパラメータの解釈を素直に理解すれば納得できる。</p>
+<p>レストパラメータとキーワードパラメータの組み合わせは、少々とっつきにくいが、安全に動作する。<br />
+下記コードは、レストパラメータとキーワードパラメータの解釈を素直に理解すれば納得できる。</p>
 
 <ul>
 <li>レストパラメータ…<code>&amp;rest</code>シンボル以降の引数を全て集めてリストに入れる</li>
 <li>キーワードパラメータ…<code>&amp;key</code>シンボル以降の引数を、キーワードの対として集める</li>
 </ul>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">&amp;rest</span> <span class="nv">rest</span> <span class="nv">&amp;key</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">list</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">))</span>
 
+<span class="p">(</span><span class="nv">foo</span> <span class="ss">:a</span> <span class="mi">1</span> <span class="ss">:b</span> <span class="mi">2</span> <span class="ss">:c</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">; =&gt; ((:A 1 :B 2 :C 3) 1 2 3)</span></code></pre></div>
 <h2 id="5-7-関数の戻り値">5.7 関数の戻り値</h2>
 
-<p>関数の戻り値は、その関数を抜ける最後に評価された値となる。
-関数の任意の箇所で、直ちに値を返す場合は、特殊オペレータ<code>return-from</code>を使用する。<br />
-ただし、<code>return-from</code>は関数には直接関係していない。<br />
-これは、<code>block</code>で作られたブロックから抜けるために使用するものである。</p>
+<p>関数の戻り値は、その関数を抜ける最後に評価された値となる。<br />
+関数の任意の箇所で、<strong>直ちに</strong>値を返す場合は、特殊オペレータ<code>return-from</code>を使用する。<br />
+ただし、<code>return-from</code>は関数から抜けるためだけのオペレータ<strong>ではなく</strong>、<code>block</code>で作られた<strong>ブロック</strong>から抜けるために使用するものである。</p>
 
-<p><code>defun</code>は自動的に関数の本文全体を関数と同名のブロックで囲う。<br />
+<p><code>defun</code>は自動的に関数の本文全体を関数と同名の<strong>ブロック</strong>で囲う。<br />
 そのため、<code>return-from</code>を関数の名前で評価することにより、戻したい値と一緒に直ちにその関数から脱出できる。</p>
 
 <p><code>return-from</code>には、脱出したいブロックの名前を最初の引数として指定する。<br />
-この名前は評価されないため、クォート不要である。</p>
+この名前は評価されないため、<strong>クォート不要</strong>である。</p>
 
 <p>例を下記に示す。<br />
-下記の関数は、引数よりも大きな積になる10未満の数のペアを探すためにネストしたループを使用している。
-数のペアが見つかったらすぐに<code>return-from</code>を使ってペアを返している。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+下記の関数は、ネストしたループを使用して、引数よりも大きな積になる10未満の数の<strong>最初の</strong>ペアを探す。
+そして、数のペアが見つかったらすぐに<code>return-from</code>を使ってペアを返している。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">find-less-than-10-pair</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">dotimes</span> <span class="p">(</span><span class="nv">i</span> <span class="mi">10</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">dotimes</span> <span class="p">(</span><span class="nv">j</span> <span class="mi">10</span><span class="p">)</span>
      <span class="p">(</span><span class="nv">when</span> <span class="p">(</span><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">*</span> <span class="nv">i</span> <span class="nv">j</span><span class="p">)</span> <span class="nv">n</span><span class="p">)</span>
-       <span class="p">(</span><span class="nv">return-from</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">list</span> <span class="nv">i</span> <span class="nv">j</span><span class="p">))))))</span></code></pre></div>
+       <span class="p">(</span><span class="nv">return-from</span> <span class="nv">find-less-than-10-pair</span> <span class="p">(</span><span class="nv">list</span> <span class="nv">i</span> <span class="nv">j</span><span class="p">))))))</span></code></pre></div>
 <h2 id="5-8-データとしての関数または高階関数">5.8 データとしての関数または高階関数</h2>
+
+<p>Lispでは関数を第1級オブジェクトとして扱える。つまり、普通のプリミティブなデータのように、変数に代入したりできる。
+つまり、Lispの<code>defun</code>は、新しい関数オブジェクトを生成して、それに名前をつけているだけである。<br />
+<code>lambda</code>を使えば、名前を持たない<strong>無名関数</strong>も作成できる。</p>
+
+<p>ところで、Common Lispは<strong>Lisp-2</strong>と呼ばれている。これは、Common Lispには変数などの為の名前空間と、関数の為の名前空間の2つがあるためである。<br />
+ちなみにSchemeは全てが同一の名前空間に存在するため、<strong>Lisp-1</strong>と呼ばれている。</p>
+
+<p>Lisp-2であるCommon Lispにおいて関数オブジェクトを得るには、特殊オペレータ<code>function</code>を使用する。<br />
+引数に関数名を渡すが、これは評価されないため<strong>クォート不要</strong>。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">function</span> <span class="nv">foo</span><span class="p">)</span>
+<span class="c1">; #&lt;Interpreted Function FOO&gt;</span></code></pre></div>
+<p><code>function</code>を使うのは煩わしいので、シンタックスシュガー<code>#'</code>がよく使われる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="nf">#&#39;</span><span class="nv">foo</span>
+<span class="c1">; #&lt;Interpreted Function FOO&gt;</span></code></pre></div>
+<p>関数オブジェクトを評価する、つまり、関数を呼び出すには、<code>funcall</code>または<code>apply</code>を使う。</p>
+
+<p><code>funcall</code>は、渡す引数の個数が明らかな場合に使用する。
+<code>funcall</code>では、第1引数に関数オブジェクト、第2引数以降には関数オブジェクトに渡す引数(任意個数)を指定する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">funcall</span> <span class="nf">#&#39;</span><span class="nv">foo</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">; (foo 1 2 3) と等価</span></code></pre></div>
+<p>例えば、任意の関数(数学的な意味で)をプロットするには、下記のようにする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defun</span> <span class="nv">plot</span> <span class="p">(</span><span class="nv">fn</span> <span class="nv">min</span> <span class="nv">max</span> <span class="nv">step</span><span class="p">)</span>
+  <span class="s">&#34;fn: プロット対象の関数
+</span><span class="s">   min: xの最小値
+</span><span class="s">   max: xの最大値
+</span><span class="s">   step: 刻み幅&#34;</span>
+  <span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">x</span> <span class="nv">from</span> <span class="nv">min</span> <span class="nv">to</span> <span class="nv">max</span> <span class="nv">by</span> <span class="nv">step</span> <span class="nv">do</span>
+        <span class="p">(</span><span class="nv">loop</span> <span class="nv">repeat</span> <span class="p">(</span><span class="nv">funcall</span> <span class="nv">fn</span> <span class="nv">x</span><span class="p">)</span> <span class="nv">do</span>
+          <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;*&#34;</span><span class="p">))</span>  <span class="c1">; あるxにおけるfn(x)の値</span>
+        <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~%&#34;</span><span class="p">)))</span>  <span class="c1">; 改行</span>
+
+<span class="p">(</span><span class="nv">plot</span> <span class="nf">#&#39;</span><span class="nv">exp</span> <span class="mi">0</span> <span class="mi">4</span> <span class="m">1/2</span><span class="p">)</span></code></pre></div>
+<p><code>apply</code>は、渡す引数の個数が分からない場合に使用する。<br />
+<code>apply</code>では、第1引数に関数オブジェクト、第2引数に関数オブジェクトに渡す引数のリストを指定する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">apply</span> <span class="nf">#&#39;</span><span class="nv">foo</span> <span class="nv">arg-list</span><span class="p">)</span></code></pre></div>
+<p><code>apply</code>は、関数適用の際に、第2引数のリストを展開して、関数オブジェクトの引数に渡してくれる。<br />
+下記の例では、今度は<code>#'plot</code>を関数オブジェクトとして呼び出している。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defparameter</span> <span class="nv">arg-list</span> <span class="o">&#39;</span><span class="p">(</span><span class="nf">#&#39;</span><span class="nv">exp</span> <span class="mi">0</span> <span class="mi">4</span> <span class="m">1/2</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">apply</span> <span class="nf">#&#39;</span><span class="nv">plot</span> <span class="nv">arg-list</span><span class="p">)</span></code></pre></div>
+<p><code>apply</code>では、第2引数に渡される引数リストの中身が第1引数に渡される関数オブジェクトが要求する引数の構成を満たせば良い。
+つまり、渡される関数の取る引数が<code>&amp;optional</code>でも<code>&amp;rest</code>でも<code>&amp;key</code>でも気にしない。</p>
+
+<h2 id="5-9-無名関数">5.9 無名関数</h2>
+
+<p>既に何度か登場しているが、無名関数を<code>lambda</code>で作成できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">parameters</span><span class="p">)</span> <span class="nv">body...</span><span class="p">)</span></code></pre></div>
+<p>無名関数を呼び出すのにも<code>funcall</code>が使える。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">funcall</span> <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">))</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">; =&gt; 5</span></code></pre></div>
+<p><code>funcall</code>を使うとき、歴史的経緯(書籍P.62参照)によって<code>lambda</code>には<code>#'</code>を付けても付けなくても良い。<br />
+これは、<code>lambda</code>が評価されるとき、<code>(lambda ...)</code>が<code>(function (lambda ...))</code>に自動的に展開されることで実現されている。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">funcall</span> <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">))</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">; =&gt; 5</span></code></pre></div>
+<p>また、<code>lambda</code>による関数定義自体を呼び出すこともできる。(使いどころは無いが。)</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">((</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">))</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">; =&gt; 5</span></code></pre></div>
+<p>注意点として、無名関数を使うのは、下記のように、インラインで記述できるくらいシンプルな処理を他の関数に渡す場合にした方が良い。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">plot</span> <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nv">*</span> <span class="mi">2</span> <span class="nv">x</span><span class="p">))</span> <span class="mi">0</span> <span class="mi">10</span> <span class="mi">1</span><span class="p">)</span></code></pre></div>
+<p>他に無名関数の用途としては、クロージャの作成がある。クロージャに関しては次の章に述べる。</p>
 
   </article>
 

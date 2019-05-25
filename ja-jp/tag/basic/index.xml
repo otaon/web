@@ -38,14 +38,5 @@
       <description>本記事の目的 この記事では、文字列表示、および、文字列操作において基本的な関数の使い方について説明する。 文字列出力用の関数 print関数 pri</description>
     </item>
     
-    <item>
-      <title>書籍 実践 Common Lisp 第5章 関数</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC5%E7%AB%A0-%E9%96%A2%E6%95%B0/</link>
-      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC5%E7%AB%A0-%E9%96%A2%E6%95%B0/</guid>
-      <description>5.1 新しい関数の定義 (defun name (parameter*) &amp;#34;省略可能なドキュメンテーション文字列&amp;#34; body-form*) 5.2 関数のパラメータリスト parameterの部分は、関数の</description>
-    </item>
-    
   </channel>
 </rss>

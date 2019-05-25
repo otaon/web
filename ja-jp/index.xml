@@ -24,6 +24,332 @@
     </item>
     
     <item>
+      <title>Emacsの基本コマンド</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/18/emacs%E3%81%AE%E5%9F%BA%E6%9C%AC%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/</link>
+      <pubDate>Sat, 18 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/18/emacs%E3%81%AE%E5%9F%BA%E6%9C%AC%E3%82%B3%E3%83%9E%E3%83%B3%E3%83%89/</guid>
+      
+        <description>
+
+&lt;h1 id=&#34;本稿の目的&#34;&gt;本稿の目的&lt;/h1&gt;
+
+&lt;p&gt;自分は普段Vimを使っており、Lispを書くにあたってはSwankとSlimvを利用している。&lt;br /&gt;
+これでもある程度は書けるが、Slimvは少々buggyだし、設定もかなり面倒だった。&lt;/p&gt;
+
+&lt;p&gt;Emacsを常用する気は無いが、Lispを書く時の選択肢を確保しておくことは重要だと考えている。&lt;br /&gt;
+Emacsとslimeでできることを知っておけば他のエディタのlisp支援プラグインを作りたいときに役に立つだろうし。&lt;/p&gt;
+
+&lt;h1 id=&#34;参考文献&#34;&gt;参考文献&lt;/h1&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.hakodate-ct.ac.jp/~tokai/tokai/research/emacs.html&#34;&gt;emacs 基本操作&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.ep.sci.hokudai.ac.jp/~kk/emacs/emacs_key.html&#34;&gt;Emacsキー操作&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.aise.ics.saitama-u.ac.jp/~gotoh/EmacsKeybind.html#toc7&#34;&gt;Emacsのキーバインド覚書&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://qiita.com/bussorenre/items/bbe757ef87e16c3d31ff&#34;&gt;Qiita - 突然だがEmacs を始めよう&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;使用する環境-portacle&#34;&gt;使用する環境(portacle)&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://portacle.github.io/&#34;&gt;portacle&lt;/a&gt;を使用する。
+portacleは、マルチプラットフォーム対応しているCommon Lisp開発環境。&lt;br /&gt;
+portacleのCommon Lispは普段使っているSBCLではなくCLISPだが、差し当たって不都合はないはずなので、今は許容する。&lt;br /&gt;
+windowsにおいては、公式サイトからバイナリをダウンロードして実行ファイルを起動すればすぐにportacleを使用可能。&lt;/p&gt;
+
+&lt;h1 id=&#34;emacsの操作方法&#34;&gt;Emacsの操作方法&lt;/h1&gt;
+
+&lt;p&gt;コマンドの表記は下記ルールに従う。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-x&lt;/code&gt; : Ctrlキーを押しながらxを押す&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x C-s&lt;/code&gt; : Ctrlキーを押しながらxを押して離し、sを押す&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x i&lt;/code&gt; : Ctrlキーを押しながらxを押して、Ctrlとxを離し、iを&lt;strong&gt;単体で&lt;/strong&gt;押す&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;gt; Help &amp;gt; Emacs Tutorial&lt;/code&gt; : ウィンドウの&lt;code&gt;Help &amp;gt; Emacs Tutorial&lt;/code&gt;メニューを選択する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;コマンドキャンセル&#34;&gt;コマンドキャンセル&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-g&lt;/code&gt; : コマンドをキャンセルする&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;終了&#34;&gt;終了&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-x C-c&lt;/code&gt; : Emacsを閉じる&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;ファイル操作&#34;&gt;ファイル操作&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-x C-f&lt;/code&gt; : ファイル名を指定して開く&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x C-r&lt;/code&gt; : ファイルを読み取り専用として開く&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x C-s&lt;/code&gt; : 上書き保存&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x C-w&lt;/code&gt; : 新規ファイルで保存&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x C-i&lt;/code&gt; : ファイルを挿入&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;バッファ操作&#34;&gt;バッファ操作&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-x k&lt;/code&gt; : バッファを閉じる&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x C-b&lt;/code&gt; : バッファリスト表示&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x b&lt;/code&gt; : バッファ切り替え&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;d&lt;/code&gt; : 削除フラグをつける&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;s&lt;/code&gt; : 保存フラグを付ける&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;x&lt;/code&gt; : 保存/削除を実行する&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;u&lt;/code&gt; : フラグを解除する&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;q&lt;/code&gt; : バッファメニュー終了&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;バッファリストの見方&#34;&gt;バッファリストの見方&lt;/h3&gt;
+
+
+&lt;link rel=&#34;stylesheet&#34; href=&#34;https://otaon.github.io/css/hugo-easy-gallery.css&#34; /&gt;
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:400px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;bufferlist.PNG&#34; alt=&#34;DI1&#34; /&gt;
+    &lt;/div&gt;
+    
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;項目&lt;/th&gt;
+&lt;th&gt;意味&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;C&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;現在見ているバッファ&lt;code&gt;.&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;R&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;読み込み専用バッファ&lt;code&gt;%&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;M&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;変更があったバッファ&lt;code&gt;*&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Buffer&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;バッファの名前。ファイルに紐付いていないものは&lt;code&gt;*バッファ名*&lt;/code&gt;で表記される&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;Mode&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;バッファのモード&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;File&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;バッファに紐付くファイル&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h2 id=&#34;ウィンドウ操作&#34;&gt;ウィンドウ操作&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-x 2&lt;/code&gt; : ウィンドウを水平分割する&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x 1&lt;/code&gt; : ウィンドウを垂直分割する&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x 0&lt;/code&gt; : ウィンドウを閉じる&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x o&lt;/code&gt; : ウィンドウを分割表示中に別ウィンドウに移動&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;カーソル移動&#34;&gt;カーソル移動&lt;/h2&gt;
+
+&lt;p&gt;Linux系の端末では、Emacsと似たようなキーバインドが利用できる。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;文字単位で移動
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-f&lt;/code&gt; : 右に1文字移動(forward)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-b&lt;/code&gt; : 左に1文字移動(backword)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-p&lt;/code&gt; : 上に1文字移動(previous)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-n&lt;/code&gt; : 下に1文字移動(next)&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;単語単位で移動
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;M-f&lt;/code&gt; : 右に1単語移動&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;M-b&lt;/code&gt; : 左に1単語移動&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;行単位で移動
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-a&lt;/code&gt; : 行頭に移動&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-e&lt;/code&gt; : 行末に移動&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;文単位で移動
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;M-a&lt;/code&gt; : 左に1単語移動&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;M-e&lt;/code&gt; : 右に1単語移動&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;ファイル先頭・末尾
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;M-&amp;lt;&lt;/code&gt; : ファイル先頭に移動&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;M-&amp;gt;&lt;/code&gt; : ファイル末尾に移動&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;カーソル行を画面のどこに表示するか
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-l&lt;/code&gt; : カーソル行を画面の中央に表示&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-l C-l&lt;/code&gt; : カーソル行を画面の上部に表示&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-l C-l C-l&lt;/code&gt; : カーソル行を画面の下部に表示&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+&lt;div class=&#34;box aligncenter&#34; style=&#34;max-width:700px;&#34;&gt;
+  &lt;figure  itemprop=&#34;associatedMedia&#34; itemscope itemtype=&#34;http://schema.org/ImageObject&#34;&gt;
+    &lt;div class=&#34;img&#34;&gt;
+      &lt;img  itemprop=&#34;thumbnail&#34; src=&#34;emacs-cursor.svg&#34; alt=&#34;DI1&#34; /&gt;
+    &lt;/div&gt;
+    
+  &lt;/figure&gt;
+&lt;/div&gt;
+
+
+&lt;h2 id=&#34;編集&#34;&gt;編集&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;削除
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-d&lt;/code&gt; : 文字削除&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;M-d&lt;/code&gt; : 文節を削除&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;アンドゥ/リドゥ
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-x u&lt;/code&gt; : アンドゥ&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-g C-/&lt;/code&gt; : リドゥ&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;カット/コピー/ペースト
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-h&lt;/code&gt; : バッファ全体を選択&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-Space&lt;/code&gt; or &lt;code&gt;C-@&lt;/code&gt; : カーソル位置にマークを設定する&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-w&lt;/code&gt; : 選択領域(=マーク位置からカーソル位置まで)をカット&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;M-w&lt;/code&gt; : 選択領域(=マーク位置からカーソル位置まで)をコピー&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-y&lt;/code&gt; : ペースト&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x r k&lt;/code&gt; : 矩形選択領域(=マーク位置からカーソル位置までの矩形)をカット&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x r y&lt;/code&gt; : 選択領域(=マーク位置からカーソル位置までの矩形)をペースト&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x r t&lt;/code&gt; : 矩形選択領域の各行に文字列を挿入&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-k&lt;/code&gt; : カーソル位置から行末までをカット&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-j&lt;/code&gt; : 改行&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-M-\&lt;/code&gt; or &lt;code&gt;M-x indent-region&lt;/code&gt; : 一括インデント&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;検索-置換&#34;&gt;検索・置換&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt; : Emacsでは、デフォルトでは大文字と小文字を区別しない。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-s&lt;/code&gt; : インクリメンタル検索(順方向)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-r&lt;/code&gt; : インクリメンタル検索(逆方向)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;M-%&lt;/code&gt; : 置換(&lt;code&gt;y&lt;/code&gt;:yes, &lt;code&gt;n&lt;/code&gt;:no, &lt;code&gt;!&lt;/code&gt;:all, &lt;code&gt;q&lt;/code&gt;:quit)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;マクロ&#34;&gt;マクロ&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-x (&lt;/code&gt; : マクロを記録開始(lispの開き括弧)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x )&lt;/code&gt; : マクロを記録終了(lispの閉じ括弧)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x e&lt;/code&gt; : マクロを実行(eval)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;文字コード&#34;&gt;文字コード&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-x enter f (文字コード指定)&lt;/code&gt; : 保存する文字コードを指定する(通常はutf-8)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-x enter c (文字コード指定) C-x C-f&lt;/code&gt; : 文字コードを指定してファイルを開く(通常はutf-8)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;emacslisp&#34;&gt;EmacsLisp&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;式の最後にカーソルを移動して Ctrl+j&lt;/code&gt; : 式を評価する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;フォント&#34;&gt;フォント&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;文字の上にカーソルを移動して Ctrl+u Ctrl+x =&lt;/code&gt; : 文字情報を表示する&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;M-x describe-fontset&lt;/code&gt; : フォントセットを表示する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;繰り返し&#34;&gt;繰り返し&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-u 数字 コマンド&lt;/code&gt; : コマンドを「数字」回繰り返す&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;パッケージ管理&#34;&gt;パッケージ管理&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;M-x list packages&lt;/code&gt; パッケージリストを開く
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;p&lt;/code&gt; : 上に移動&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;n&lt;/code&gt; : 下に移動&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;q&lt;/code&gt; : 終了&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;M-x package-refresh-contents&lt;/code&gt; : パッケージリストを更新する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;lisp&#34;&gt;Lisp&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-c C-z&lt;/code&gt; : Lispとの対話用バッファにスイッチする。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-c C-q&lt;/code&gt; : その場で必要な閉じ括弧を全て閉じる。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-c C-c&lt;/code&gt; : カーソル位置の定義をコンパイルする。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-c C-z&lt;/code&gt; : プログラム側からREPLに戻る。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-c C-l&lt;/code&gt; : ファイルをロードする。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;M-x slime&lt;/code&gt; : Slimeを再起動する。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;チュートリアル-マニュアル&#34;&gt;チュートリアル/マニュアル&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-h t&lt;/code&gt; : &lt;code&gt;&amp;gt; Help &amp;gt; Emacs Tutorial&lt;/code&gt; : チュートリアルを開始する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;gt; Help &amp;gt; Emacs Tutorial(choose language)...&lt;/code&gt; : 言語を選択してチュートリアルを開始する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-h i&lt;/code&gt; : マニュアルを表示する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-h ?&lt;/code&gt; : ヘルプのリストを表示する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-h k&lt;/code&gt; : キーの組み合わせと、それによって呼び出されるコマンドを表示する。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-h w&lt;/code&gt; : コマンド名を指定して、それを呼び出すキーの組わせを表示する。&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+      
+    </item>
+    
+    <item>
+      <title>書籍 実践 Common Lisp 第6章 変数</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/06/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC6%E7%AB%A0-%E5%A4%89%E6%95%B0/</link>
+      <pubDate>Mon, 06 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/06/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC6%E7%AB%A0-%E5%A4%89%E6%95%B0/</guid>
+      
+        <description></description>
+      
+    </item>
+    
+    <item>
       <title>オブジェクト指向原則集(SOLID、他):依存性逆転の原理について</title>
       <link>https://otaon.github.io/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E4%BE%9D%E5%AD%98%E6%80%A7%E9%80%86%E8%BB%A2%E3%81%AE%E5%8E%9F%E7%90%86%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/</link>
       <pubDate>Sun, 05 May 2019 05:00:00 +0900</pubDate>
@@ -2801,7 +3127,7 @@ main.main&lt;span class=&#34;o&#34;&gt;()&lt;/span&gt;
 
 &lt;p&gt;Go言語には継承がないと書いたが、継承らしいことを実現できなくはないらしい。&lt;/p&gt;
 
-&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;golang で継承っぽい事をやるのであればこうすると出来るけど、闇しかないのでやめたほうがいい。 &lt;a href=&#34;https://t.co/hHE9vGu6rr&#34;&gt;https://t.co/hHE9vGu6rr&lt;/a&gt;&lt;/p&gt;&amp;mdash; mattn (@mattn_jp) &lt;a href=&#34;https://twitter.com/mattn_jp/status/670415696656883713?ref_src=twsrc%5Etfw&#34;&gt;November 28, 2015&lt;/a&gt;&lt;/blockquote&gt;
+&lt;blockquote class=&#34;twitter-tweet&#34;&gt;&lt;p lang=&#34;ja&#34; dir=&#34;ltr&#34;&gt;golang で継承っぽい事をやるのであればこうすると出来るけど、闇しかないのでやめたほうがいい。 &lt;a href=&#34;https://t.co/hHE9vGu6rr&#34;&gt;https://t.co/hHE9vGu6rr&lt;/a&gt;&lt;/p&gt;&amp;mdash; mattn＠従来型IT人材 (@mattn_jp) &lt;a href=&#34;https://twitter.com/mattn_jp/status/670415696656883713?ref_src=twsrc%5Etfw&#34;&gt;November 28, 2015&lt;/a&gt;&lt;/blockquote&gt;
 &lt;script async src=&#34;https://platform.twitter.com/widgets.js&#34; charset=&#34;utf-8&#34;&gt;&lt;/script&gt;
 
 
@@ -6577,126 +6903,6 @@ Goにおける一般的なエラー処理では、下記のイディオムを用
 
 &lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;
 &lt;code&gt;a = a [演算子] b&lt;/code&gt;という形の2項演算子は&lt;code&gt;a [演算子]= b&lt;/code&gt;という短縮形を持つ。&lt;/p&gt;
-</description>
-      
-    </item>
-    
-    <item>
-      <title>Go言語入門(interface{}型とnil)</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80interface%E5%9E%8B%E3%81%A8nil/</link>
-      <pubDate>Sat, 13 Apr 2019 10:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80interface%E5%9E%8B%E3%81%A8nil/</guid>
-      
-        <description>
-
-&lt;h1 id=&#34;目的&#34;&gt;目的&lt;/h1&gt;
-
-&lt;p&gt;Go言語の基本構文を残す。&lt;/p&gt;
-
-&lt;h1 id=&#34;参考文献&#34;&gt;参考文献&lt;/h1&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.shoeisha.co.jp/book/detail/9784798142418&#34;&gt;スターティング Go言語&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;基本構文&#34;&gt;基本構文&lt;/h1&gt;
-
-&lt;h2 id=&#34;interface-型と-nil&#34;&gt;&lt;code&gt;interface{}&lt;/code&gt;型と&lt;code&gt;nil&lt;/code&gt;&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;interface{}&lt;/code&gt;は、&lt;code&gt;{}&lt;/code&gt;も含めて型名。&lt;br /&gt;
-&lt;code&gt;interface{}&lt;/code&gt;は、Goの全ての型と互換性のある型。
-すなわち、&lt;code&gt;int&lt;/code&gt;, &lt;code&gt;float64&lt;/code&gt;,&lt;code&gt;string&lt;/code&gt;なども全て&lt;code&gt;interface{}&lt;/code&gt;と互換性がある。&lt;br /&gt;
-近いイメージとしては、C言語における汎用ポインタ&lt;code&gt;(void*)&lt;/code&gt;や、JavaやC#における&lt;code&gt;Object&lt;/code&gt;クラスがある。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;interface{}&lt;/code&gt;は他の型と同様に変数定義できる。デフォルト値は&lt;code&gt;nil&lt;/code&gt;。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Println&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;%#v&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;   &lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;&amp;lt;nil&amp;gt;&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;u&gt;&lt;code&gt;nil&lt;/code&gt;とは、Goにおいて&lt;strong&gt;具体的な値を持っていない状態を表す値&lt;/strong&gt;で、C言語、Java、C#における&lt;code&gt;null&lt;/code&gt;のようなもの。&lt;/u&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;interface{}&lt;/code&gt;型の変数であれば、次のように、あらゆる型の値を代入できる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;3.14&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;sc&#34;&gt;&amp;#39;山&amp;#39;&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#34;文字列&amp;#34;&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;uint8&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;一旦&lt;code&gt;interface{}&lt;/code&gt;型に格納されてしまった値は、元の型情報を失ってしまう。&lt;br /&gt;
-そのため、例えば&lt;code&gt;int&lt;/code&gt;型の値を&lt;code&gt;interface{}&lt;/code&gt;型の変数に代入すると、&lt;code&gt;+&lt;/code&gt;演算が出来なくなる。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;kd&#34;&gt;var&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;kd&#34;&gt;interface&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;x&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;y&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;z&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;x&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;+&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;y&lt;/span&gt;  &lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;演算できないためエラーとなる&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
-      
-    </item>
-    
-    <item>
-      <title>Go言語入門(配列型)</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E9%85%8D%E5%88%97%E5%9E%8B/</link>
-      <pubDate>Sat, 13 Apr 2019 09:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E9%85%8D%E5%88%97%E5%9E%8B/</guid>
-      
-        <description>
-
-&lt;h1 id=&#34;目的&#34;&gt;目的&lt;/h1&gt;
-
-&lt;p&gt;Go言語の基本構文を残す。&lt;/p&gt;
-
-&lt;h1 id=&#34;参考文献&#34;&gt;参考文献&lt;/h1&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.shoeisha.co.jp/book/detail/9784798142418&#34;&gt;スターティング Go言語&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;基本構文&#34;&gt;基本構文&lt;/h1&gt;
-
-&lt;h2 id=&#34;配列型&#34;&gt;配列型&lt;/h2&gt;
-
-&lt;p&gt;配列の型名は&lt;code&gt;[要素数]型名&lt;/code&gt;となる。その後に続けた&lt;code&gt;{}&lt;/code&gt;によって初期値を指定できる。&lt;br /&gt;
-インデックスは、一般的な言語と同じく&lt;strong&gt;0始まり&lt;/strong&gt;。&lt;br /&gt;
-&lt;strong&gt;初期値を与えなかった場合、各要素は0で初期化される。&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;fmt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;nf&#34;&gt;Println&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;%v&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// =&amp;gt; &amp;#34;[1, 2, 3, 4, 5]&amp;#34;
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// 1
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// 2
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// 3
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// 4
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// 5
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;    &lt;span class=&#34;c1&#34;&gt;// エラー:範囲外
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// エラー:負数を指定
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// エラー:初期値の個数が要素数を超過
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;b&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;     &lt;span class=&#34;c1&#34;&gt;// == [0, 0, 0, 0, 0]
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;c&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// == [0, 0, 0, 0, 0]
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;ia&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;// == [0, 0, 0]
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;ua&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;uint&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// == [0, 0, 0]
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;ba&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;bool&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// == [false, false, false]
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;fa&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;float64&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;// == [0, 0, 0]
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;ca&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;complex128&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// == [(0+0i), (0+0i), (0+0i)]
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;ra&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;rune&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt; &lt;span class=&#34;c1&#34;&gt;// == [0, 0, 0]
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;sa&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;string&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// == [&amp;#34;&amp;#34;, &amp;#34;&amp;#34;, &amp;#34;&amp;#34;]
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;aa&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;  &lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;要素数が0の配列も定義可能&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;使いどころは無さそうだが&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;要素数を省略するには&lt;code&gt;[要素数]&lt;/code&gt;の部分を&lt;code&gt;[...]&lt;/code&gt;と記述する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;a1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;         &lt;span class=&#34;c1&#34;&gt;// == [3]int{1, 2, 3}
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;a2&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;   &lt;span class=&#34;c1&#34;&gt;// === [5]int{1, 2, 3, 4, 5}
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;a3&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;                &lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;要素へ値を代入するには&lt;code&gt;array[n] = value&lt;/code&gt;の形で記述する。&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-go&#34; data-lang=&#34;go&#34;&gt;&lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;:=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;kt&#34;&gt;int&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;  &lt;span class=&#34;c1&#34;&gt;// == [1, 2, 3]
-&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;&lt;/span&gt;&lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;
-&lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;100&lt;/span&gt;
-&lt;span class=&#34;o&#34;&gt;//&lt;/span&gt; &lt;span class=&#34;nx&#34;&gt;a&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;100&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;&lt;br /&gt;
-配列を、他の配列に代入することも可能。ただし、要素の型と要素数が一致している必要がある。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;&lt;br /&gt;
-配列の代入は、ディープコピーとなる。すなわち、配列の代入後に、片方の配列を書き換えても、もう片方の配列は変化しない。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;NOTE&lt;/strong&gt;&lt;br /&gt;
-Goでは、配列のサイズを拡張することはできない(例えば&lt;code&gt;[]int&lt;/code&gt;は可変長配列ではない)。&lt;br /&gt;
-そのかわり、Goでは&lt;strong&gt;Slice(スライス)&lt;/strong&gt;というデータ構造を可変長配列のように扱うことができる。&lt;/p&gt;
 </description>
       
     </item>

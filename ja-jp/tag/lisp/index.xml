@@ -6,10 +6,19 @@
     <description>Recent content in lisp on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Thu, 07 Mar 2019 02:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 06 May 2019 00:00:00 +0900</lastBuildDate>
     
 	<atom:link href="https://otaon.github.io/web/ja-jp/tag/lisp/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>書籍 実践 Common Lisp 第6章 変数</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/06/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC6%E7%AB%A0-%E5%A4%89%E6%95%B0/</link>
+      <pubDate>Mon, 06 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/06/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC6%E7%AB%A0-%E5%A4%89%E6%95%B0/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Common Lispで継続・継続渡し方式(cps)を学ぶ</title>
@@ -180,15 +189,6 @@
       
       <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E5%8B%89%E5%BC%B7%E8%A8%98%E9%8C%B2/</guid>
       <description>ドキュメント一覧 第1章 序論：なぜLispなのか？ 第2章 お気の済むまで：REPLツアー 第3章 実践：簡単なデータベース 第4章 シンタックスとセマン</description>
-    </item>
-    
-    <item>
-      <title>書籍 実践 Common Lisp 第3章 実践：簡単なデータベース</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC3%E7%AB%A0-%E5%AE%9F%E8%B7%B5%E7%B0%A1%E5%8D%98%E3%81%AA%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9/</link>
-      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC3%E7%AB%A0-%E5%AE%9F%E8%B7%B5%E7%B0%A1%E5%8D%98%E3%81%AA%E3%83%87%E3%83%BC%E3%82%BF%E3%83%99%E3%83%BC%E3%82%B9/</guid>
-      <description>第3章 実践：簡単なデータベース ここでは、CD情報をデータベースのレコードとして残すコードを実装しながら、Lispの基本的なデータ操作方法を学</description>
     </item>
     
   </channel>
