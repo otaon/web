@@ -348,7 +348,7 @@ authors:
 ; ((A (GENSYM)) (B (GENSYM)) (C (GENSYM)))
 ```
 
-`do-primes`を`with-gensym`を展開すると下記の通りになる。
+`do-primes`において`with-gensym`を使った場合、`do-primes`の`defmacro`をコンパイルすると、その`with-gensym`が下記の通りに展開される。
 
 ```lisp
 (let ((ending-value-name (gensym)))
@@ -357,3 +357,57 @@ authors:
        ((> ,var ,ending-value-name))
      ,@body)
 ```
+
+上記は`let`を手動で記述したものと全く等しい。  
+すなわち、`do-primes`を使う関数をコンパイルするときは、**`with-gensyms`で生成されたコード**が`do-primes`の展開系を生成するために実行される。  
+しかし、`with-gensyms`自体は`do-primes`がコンパイルされた時点で既に展開されている。
+
+
+## 8.9 シンプルなマクロの先へ
+次章では、マクロを使ったテストフレームワークについて説明する。
+
+## コラム `once-only` - **マクロを書くマクロ**の例
+ここで挙げる`once-only`は、生成されたコードが特定の順番で一度だけ評価されるようなコードを生成するもの。  
+
+```lisp
+(defmacro once-only ((&rest names) &body body)
+  (let ((gensyms (loop for n in names
+                       collect (gensym))))
+    `(let (,@(loop for g in gensyms
+                   collect `(,g (gensym))))
+       `(let (,,@(loop for g in gensyms
+                       for n in names
+                       collect ``(,,g ,,n)))
+          ,(let (,@(loop for n in names
+                         for g in gensyms
+                         collect `(,n ,g)))
+             ,@body)))))
+```
+
+### マクロの使い方
+`once-only`の引数に渡した値は即座に左から評価され、内部で一時変数に束縛される。(マクロ展開結果を見れば分かる。)
+
+```lisp
+(defmacro do-primes ((var start end) & body body)
+  (once-only (start end)
+    `(do ((,var (next-prime ,start) (next-prime (1+ ,var))))
+         ((> ,var ,end))
+       ,@body)))
+```
+
+### マクロ展開結果
+
+```lisp
+(macroexpand-1 '(once-only (a b c) (princ "Test")))
+; =>
+(let ((#:G543 (gensym)) (#:G544 (gensym)) (#:G545 (gensym))) ; (1)
+  `(let (,`(,#:G543 ,a) ,`(,#:G544 ,b) ,`(,#:G545 ,c)) ; (2)
+     ,(let ((a #:G543) (b #:G544) (c #:G545)) ; (3)
+        (princ "Test")))) ; (4)
+```
+
+1. マクロの引数の個数分の一時変数を用意する
+1. マクロの各々の引数を評価して、一時変数に代入する(束縛する)
+1. マクロの各々の引数と同名の引数を作り、一時変数の値を束縛する
+1. この時点で、`once-only`の第一引数に指定された変数は、同名の変数によってシャドーイングされており、  
+   その値は既に評価済みとなっている。
