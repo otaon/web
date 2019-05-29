@@ -6,10 +6,37 @@
     <description>Recent content in lisp on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sat, 25 May 2019 00:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 28 May 2019 00:00:00 +0900</lastBuildDate>
     
 	<atom:link href="https://otaon.github.io/web/ja-jp/tag/lisp/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>書籍 実践 Common Lisp 第9章 実践：ユニットテストフレームワーク</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/28/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC9%E7%AB%A0-%E5%AE%9F%E8%B7%B5%E3%83%A6%E3%83%8B%E3%83%83%E3%83%88%E3%83%86%E3%82%B9%E3%83%88%E3%83%95%E3%83%AC%E3%83%BC%E3%83%A0%E3%83%AF%E3%83%BC%E3%82%AF/</link>
+      <pubDate>Tue, 28 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/28/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC9%E7%AB%A0-%E5%AE%9F%E8%B7%B5%E3%83%A6%E3%83%8B%E3%83%83%E3%83%88%E3%83%86%E3%82%B9%E3%83%88%E3%83%95%E3%83%AC%E3%83%BC%E3%83%A0%E3%83%AF%E3%83%BC%E3%82%AF/</guid>
+      <description>この章について この章では、マクロを使ってユニットテストフレームワークを作成する。 テストとは、結局のところ承認(accept)か拒否(reje</description>
+    </item>
+    
+    <item>
+      <title>書籍 実践 Common Lisp 第8章 マクロ：自分で定義しよう</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/27/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC8%E7%AB%A0-%E3%83%9E%E3%82%AF%E3%83%AD%E8%87%AA%E5%88%86%E3%81%A7%E5%AE%9A%E7%BE%A9%E3%81%97%E3%82%88%E3%81%86/</link>
+      <pubDate>Mon, 27 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/27/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC8%E7%AB%A0-%E3%83%9E%E3%82%AF%E3%83%AD%E8%87%AA%E5%88%86%E3%81%A7%E5%AE%9A%E7%BE%A9%E3%81%97%E3%82%88%E3%81%86/</guid>
+      <description>この章について この章では、マクロの定義の方法について示す。 8.1 マックはじめて物語 省略。 8.2 マクロ展開時 vs. 実行時 マクロを書く時に自分で記述している</description>
+    </item>
+    
+    <item>
+      <title>書籍 実践 Common Lisp 第7章 マクロ：標準的な制御構文の構築</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/26/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC7%E7%AB%A0-%E3%83%9E%E3%82%AF%E3%83%AD%E6%A8%99%E6%BA%96%E7%9A%84%E3%81%AA%E5%88%B6%E5%BE%A1%E6%A7%8B%E6%96%87%E3%81%AE%E6%A7%8B%E7%AF%89/</link>
+      <pubDate>Sun, 26 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/26/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC7%E7%AB%A0-%E3%83%9E%E3%82%AF%E3%83%AD%E6%A8%99%E6%BA%96%E7%9A%84%E3%81%AA%E5%88%B6%E5%BE%A1%E6%A7%8B%E6%96%87%E3%81%AE%E6%A7%8B%E7%AF%89/</guid>
+      <description>この章について この章では、Common Lispに組み込まれているマクロの例と、その使い方について示す。 7.1 whenとunless 先述の通り、i</description>
+    </item>
     
     <item>
       <title>書籍 実践 Common Lisp 第6章 変数</title>
@@ -17,7 +44,7 @@
       <pubDate>Sat, 25 May 2019 00:00:00 +0900</pubDate>
       
       <guid>https://otaon.github.io/web/ja-jp/2019/05/25/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC6%E7%AB%A0-%E5%A4%89%E6%95%B0/</guid>
-      <description></description>
+      <description>6.1 変数の基礎 Common Lispは、動的型付け(dynamically typed)であり、型エラーは動的に検出される。 また、強い型付け(strongl</description>
     </item>
     
     <item>
@@ -162,33 +189,6 @@
       
       <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-20%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%82%92%E3%81%95%E3%82%89%E3%81%AB%E9%9D%A2%E7%99%BD%E3%81%8F/</guid>
       <description>ダイスオブドゥームのバージョン4を作る。 今までのバージョンでは、プログラムを簡単にするため、重要なルールを省略していた。 本章では、ゲームのプ</description>
-    </item>
-    
-    <item>
-      <title>書籍 Land of Lisp 9章 より進んだデータ型とジェネリックプログラミング</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-9%E7%AB%A0-%E3%82%88%E3%82%8A%E9%80%B2%E3%82%93%E3%81%A0%E3%83%87%E3%83%BC%E3%82%BF%E5%9E%8B%E3%81%A8%E3%82%B8%E3%82%A7%E3%83%8D%E3%83%AA%E3%83%83%E3%82%AF%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/</link>
-      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-9%E7%AB%A0-%E3%82%88%E3%82%8A%E9%80%B2%E3%82%93%E3%81%A0%E3%83%87%E3%83%BC%E3%82%BF%E5%9E%8B%E3%81%A8%E3%82%B8%E3%82%A7%E3%83%8D%E3%83%AA%E3%83%83%E3%82%AF%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/</guid>
-      <description>Common Lisp では、下記のようなデータ型が使用できる。 コンスセル シンボル 文字列 数値 配列 ハッシュテーブル 構造体 9.1 配列 配列を使う 配列を作成するにはmake</description>
-    </item>
-    
-    <item>
-      <title>書籍 Land of Lisp の学習記録</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-%E3%81%AE%E5%AD%A6%E7%BF%92%E8%A8%98%E9%8C%B2/</link>
-      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-%E3%81%AE%E5%AD%A6%E7%BF%92%E8%A8%98%E9%8C%B2/</guid>
-      <description>勉強記録一覧 09章-より進んだデータ型とジェネリックプログラミング 10章-loopマクロ 11章-format関数でテキストを表示する 12章-</description>
-    </item>
-    
-    <item>
-      <title>書籍 実践 Common Lisp 勉強記録</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E5%8B%89%E5%BC%B7%E8%A8%98%E9%8C%B2/</link>
-      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E5%8B%89%E5%BC%B7%E8%A8%98%E9%8C%B2/</guid>
-      <description>ドキュメント一覧 第1章 序論：なぜLispなのか？ 第2章 お気の済むまで：REPLツアー 第3章 実践：簡単なデータベース 第4章 シンタックスとセマン</description>
     </item>
     
   </channel>

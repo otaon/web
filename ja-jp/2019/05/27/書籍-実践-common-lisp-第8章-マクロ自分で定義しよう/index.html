@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>書籍 実践 Common Lisp 第8章 マクロ：自分で定義しよう · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="この章について この章では、マクロの定義の方法について示す。 8.1 マックはじめて物語 省略。 8.2 マクロ展開時 vs. 実行時 マクロを書く時に自分で記述している" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/05/27/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC8%E7%AB%A0-%E3%83%9E%E3%82%AF%E3%83%AD%E8%87%AA%E5%88%86%E3%81%A7%E5%AE%9A%E7%BE%A9%E3%81%97%E3%82%88%E3%81%86/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="書籍 実践 Common Lisp 第8章 マクロ：自分で定義しよう" />
+<meta property="og:description" content="この章について この章では、マクロの定義の方法について示す。 8.1 マックはじめて物語 省略。 8.2 マクロ展開時 vs. 実行時 マクロを書く時に自分で記述している" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/05/27/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC8%E7%AB%A0-%E3%83%9E%E3%82%AF%E3%83%AD%E8%87%AA%E5%88%86%E3%81%A7%E5%AE%9A%E7%BE%A9%E3%81%97%E3%82%88%E3%81%86/" />
+<meta property="article:published_time" content="2019-05-27T00:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-05-27T00:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="書籍 実践 Common Lisp 第8章 マクロ：自分で定義しよう">
+<meta itemprop="description" content="この章について この章では、マクロの定義の方法について示す。 8.1 マックはじめて物語 省略。 8.2 マクロ展開時 vs. 実行時 マクロを書く時に自分で記述している">
+
+
+<meta itemprop="datePublished" content="2019-05-27T00:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-05-27T00:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="4825">
+
+
+
+<meta itemprop="keywords" content="lisp,実践-Common-Lisp," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="書籍 実践 Common Lisp 第8章 マクロ：自分で定義しよう"/>
+<meta name="twitter:description" content="この章について この章では、マクロの定義の方法について示す。 8.1 マックはじめて物語 省略。 8.2 マクロ展開時 vs. 実行時 マクロを書く時に自分で記述している"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">書籍 実践 Common Lisp 第8章 マクロ：自分で定義しよう</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-05-27
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/%E5%AE%9F%E8%B7%B5-common-lisp/">実践-Common-Lisp</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/lisp/">lisp</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/%E5%AE%9F%E8%B7%B5-common-lisp/">実践-Common-Lisp</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+    <section class="js-toc">
+  <div class="toc">
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#この章について">この章について</a></li>
+<li><a href="#8-1-マックはじめて物語">8.1 マックはじめて物語</a></li>
+<li><a href="#8-2-マクロ展開時-vs-実行時">8.2 マクロ展開時 vs. 実行時</a></li>
+<li><a href="#8-3-defmacro">8.3 <code>defmacro</code></a></li>
+<li><a href="#8-4-試しにマクロを書いてみる-8-5-マクロのパラメータ">8.4 試しにマクロを書いてみる &amp; 8.5 マクロのパラメータ</a>
+<ul>
+<li><a href="#1-マクロを呼び出す例を1つ以上記述する">1. マクロを呼び出す例を1つ以上記述する</a></li>
+<li><a href="#2-その例がマクロによって展開されるべきコードを記述する">2. その例がマクロによって展開されるべきコードを記述する</a></li>
+<li><a href="#3-実際にマクロを記述する">3. 実際にマクロを記述する</a></li>
+</ul></li>
+<li><a href="#8-6-展開系の生成">8.6 展開系の生成</a></li>
+<li><a href="#8-6-2-マクロの検証方法-macroexpand-と-macroexpand-1">8.6-2 マクロの検証方法(<code>macroexpand</code>と<code>macroexpand-1</code>)</a></li>
+<li><a href="#8-7-漏れをふさぐ">8.7 漏れをふさぐ</a>
+<ul>
+<li><a href="#多重評価-による漏れ">「多重評価」による漏れ</a></li>
+<li><a href="#異なる評価順序-による漏れ">「異なる評価順序」による漏れ</a></li>
+<li><a href="#変数名の重複-による漏れ">「変数名の重複」による漏れ</a></li>
+<li><a href="#マクロを書くルール">マクロを書くルール</a></li>
+</ul></li>
+<li><a href="#8-8-マクロを書くマクロ">8.8 マクロを書くマクロ</a>
+<ul>
+<li><a href="#1-マクロを呼び出す例を1つ以上記述する-1">1. マクロを呼び出す例を1つ以上記述する</a></li>
+<li><a href="#2-その例がマクロによって展開されるべきコードを記述する-1">2. その例がマクロによって展開されるべきコードを記述する</a></li>
+<li><a href="#3-実際にマクロを記述する-1">3. 実際にマクロを記述する</a></li>
+</ul></li>
+<li><a href="#8-9-シンプルなマクロの先へ">8.9 シンプルなマクロの先へ</a></li>
+<li><a href="#コラム-once-only-マクロを書くマクロ-の例">コラム <code>once-only</code> - <strong>マクロを書くマクロ</strong>の例</a>
+<ul>
+<li><a href="#マクロの使い方">マクロの使い方</a></li>
+<li><a href="#マクロ展開結果">マクロ展開結果</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</section>
+
+  
+  
+
+<h2 id="この章について">この章について</h2>
+
+<p>この章では、マクロの定義の方法について示す。</p>
+
+<h2 id="8-1-マックはじめて物語">8.1 マックはじめて物語</h2>
+
+<p>省略。</p>
+
+<h2 id="8-2-マクロ展開時-vs-実行時">8.2 マクロ展開時 vs. 実行時</h2>
+
+<p>マクロを書く時に自分で記述しているコードは、コンパイラがコンパイルするコードを生成するためのコード。<br />
+全てのマクロが完全に展開されて、初めて結果として得られるコードがコンパイルされて実行される。</p>
+
+<dl>
+<dt><strong>マクロ展開時(macro expansion time)</strong></dt>
+<dd>マクロが動作する時間。</dd>
+<dt><strong>実行時(runtime)</strong></dt>
+<dd>通常のコード(マクロによって生成されたコードも含む)が実行される時間。</dd>
+</dl>
+
+<p>マクロ展開時に動作するコードは、実行時とは全く異なる環境で動作する。
+すなわち、マクロ展開時は、ソースコードに予め存在しているデータのみ扱うことが可能。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">when</span> <span class="p">(</span><span class="nv">&gt;</span> <span class="nv">x</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">print</span> <span class="ss">&#39;big</span><span class="p">)))</span></code></pre></div>
+<p>上記のコードの場合、マクロ展開時にマクロ<code>when</code>に渡されるのは、<code>x</code>が評価された値ではなく、<code>(when (&gt; x 10)</code>や<code>(print 'big)</code>のような「ソースコードを表すLispのリスト」。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">when</span> <span class="p">(</span><span class="nv">condition</span> <span class="nv">&amp;rest</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nv">if</span> <span class="o">,</span><span class="nv">condition</span> <span class="p">(</span><span class="nv">progn</span> <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span>
+
+<span class="c1">; マクロ展開されたコード</span>
+<span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">&gt;</span> <span class="nv">x</span> <span class="mi">10</span><span class="p">)</span> <span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">print</span> <span class="ss">&#39;big</span><span class="p">)))</span></code></pre></div>
+<p>マクロ展開時と実行時は、Lispがインタプリタ上で動作している場合は境界が曖昧。<br />
+更に、言語仕様ではインタプリタのマクロの扱い方について(逐次解釈の間に全マクロが展開されて最終的に出来上がったコードが実行されるor逐次解釈中に出会ったマクロをその場で展開する)を正確に規定していない。</p>
+
+<h2 id="8-3-defmacro">8.3 <code>defmacro</code></h2>
+
+<p>マクロは<code>defmacro</code>を使って定義する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">name</span> <span class="p">(</span><span class="nv">parameter*</span><span class="p">)</span>
+  <span class="s">&#34;documentation comment&#34;</span>
+  <span class="p">(</span><span class="nv">body-form*</span><span class="p">))</span></code></pre></div>
+<dl>
+<dt><strong>マクロフォーム</strong></dt>
+<dd>先頭の要素がマクロの名前になっているLispフォーム。</dd>
+</dl>
+
+<p>マクロは、マクロフォームを変換して、実行可能なコードに仕上げる。<br />
+すなわち、マクロを作成するときは、下記の通りに進めるのが分かりやすい。<br />
+下記の1.と2.は逆転させても良い。</p>
+
+<ol>
+<li>マクロを呼び出す例を1つ以上記述する。</li>
+<li>その例がマクロによって展開されるべきコードを記述する。</li>
+<li>実際にマクロを記述する。</li>
+</ol>
+
+<h2 id="8-4-試しにマクロを書いてみる-8-5-マクロのパラメータ">8.4 試しにマクロを書いてみる &amp; 8.5 マクロのパラメータ</h2>
+
+<p>実際に、素数をイテレートする<code>do-primes</code>というマクロを定義してみる。<br />
+準備として、下記の2つの補助関数を定義する。</p>
+
+<dl>
+<dt><strong><code>primep</code></strong></dt>
+<dd>与えられた数が素数かどうかを判定する。</dd>
+</dl>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">primep</span> <span class="p">(</span><span class="nv">number</span><span class="p">)</span>
+  <span class="s">&#34;与えられた数が素数かどうかを判定する&#34;</span>
+  <span class="p">(</span><span class="nv">when</span> <span class="p">(</span><span class="nv">&gt;</span> <span class="nv">number</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">fac</span> <span class="nv">from</span> <span class="mi">2</span> <span class="nv">to</span> <span class="p">(</span><span class="nv">isqrt</span> <span class="nv">number</span><span class="p">)</span>
+          <span class="nv">never</span> <span class="p">(</span><span class="nv">zerop</span> <span class="p">(</span><span class="nv">mod</span> <span class="nv">number</span> <span class="nv">fac</span><span class="p">)))))</span></code></pre></div>
+<dl>
+<dt><strong><code>next-prime</code></strong></dt>
+<dd>与えられた数以上の素数を返す。</dd>
+</dl>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">next-prime</span> <span class="p">(</span><span class="nv">number</span><span class="p">)</span>
+  <span class="s">&#34;与えられた数以上の素数を返す&#34;</span>
+  <span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">n</span> <span class="nv">from</span> <span class="nv">number</span>
+        <span class="nv">when</span> <span class="p">(</span><span class="nv">primep</span> <span class="nv">n</span><span class="p">)</span> <span class="nv">return</span> <span class="nv">n</span><span class="p">))</span></code></pre></div>
+<h3 id="1-マクロを呼び出す例を1つ以上記述する">1. マクロを呼び出す例を1つ以上記述する</h3>
+
+<p>ここでは、例えば、0以上19以下の素数それぞれに対してループの本体が1回だけ実行されるような呼び出しを記述する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">do-primes</span> <span class="p">(</span><span class="nv">p</span> <span class="mi">0</span> <span class="mi">19</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~d &#34;</span> <span class="nv">p</span><span class="p">))</span></code></pre></div>
+<h3 id="2-その例がマクロによって展開されるべきコードを記述する">2. その例がマクロによって展開されるべきコードを記述する</h3>
+
+<p>上記の<code>do-primes</code>コードが展開された状態を記述する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">do</span> <span class="p">((</span><span class="nv">p</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">p</span><span class="p">))))</span>
+    <span class="p">((</span><span class="nv">&gt;</span> <span class="nv">p</span> <span class="mi">19</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~d &#34;</span> <span class="nv">p</span><span class="p">))</span></code></pre></div>
+<h3 id="3-実際にマクロを記述する">3. 実際にマクロを記述する</h3>
+
+<p>上記の1.から2.に変換するマクロを記述する。<br />
+両者を見比べると、それぞれ対応する箇所が分かる。これを、字句的に変換すれば良い。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">do-primes</span> <span class="p">(</span><span class="nv">var-and-range</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">var</span>   <span class="p">(</span><span class="nv">first</span> <span class="nv">var-and-range</span><span class="p">))</span>
+        <span class="p">(</span><span class="nv">start</span> <span class="p">(</span><span class="nv">second</span> <span class="nv">var-and-range</span><span class="p">))</span>
+        <span class="p">(</span><span class="nv">end</span>   <span class="p">(</span><span class="nv">third</span> <span class="nv">var-and-range</span><span class="p">)))</span>
+  <span class="o">`</span><span class="p">(</span><span class="nv">do</span> <span class="p">((</span><span class="o">,</span><span class="nv">var</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="o">,</span><span class="nv">start</span><span class="p">)</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="p">(</span><span class="nv">1+</span> <span class="o">,</span><span class="nv">var</span><span class="p">))))</span>
+       <span class="p">((</span><span class="nv">&gt;</span> <span class="o">,</span><span class="nv">var</span> <span class="o">,</span><span class="nv">end</span><span class="p">))</span>
+    <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span></code></pre></div>
+<p><strong>NOTE:</strong><br />
+マクロの引数の<code>&amp;body</code>と<code>&amp;rest</code>は等価だが、大抵の開発環境では<code>&amp;body</code>パラメータがあるとマクロで使うインデントを調整してくれるようになる。</p>
+
+<p>上記の例は、引数にリストを与えて、それをマクロ内部でわざわざ分配して束縛する必要がある。これを簡略化する方法がある。<br />
+マクロのパラメータのリストは<strong>分配パラメータリスト(destructuring parameter list)</strong>と呼ばれ、パラメータリストを入れ子にして指定できる。<br />
+すなわち、入れ子にしたパラメータリスト内のパラメータは、それぞれに対応する位置の値に束縛される。<br />
+これにより、例えば上記のマクロ定義は下記のように簡略化できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">do-primes</span> <span class="p">((</span><span class="nv">var</span> <span class="nv">start</span> <span class="nv">end</span><span class="p">)</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nv">do</span> <span class="p">((</span><span class="o">,</span><span class="nv">var</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="o">,</span><span class="nv">start</span><span class="p">)</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="p">(</span><span class="nv">1+</span> <span class="o">,</span><span class="nv">var</span><span class="p">))))</span>
+       <span class="p">((</span><span class="nv">&gt;</span> <span class="o">,</span><span class="nv">var</span> <span class="o">,</span><span class="nv">end</span><span class="p">))</span>
+    <span class="o">,@</span><span class="nv">body</span><span class="p">))</span></code></pre></div>
+<p><strong>NOTE:</strong><br />
+さらに、分配パラメータリストを用いると、下記のような恩恵を受けられる。
+- 自動的に引数の個数や構造が誤っていた時にエラーを発生させてくれる。
+- SLIMEなどの開発環境で引数をサジェストしてくれるようになる。</p>
+
+<h2 id="8-6-展開系の生成">8.6 展開系の生成</h2>
+
+<p>シンプルなマクロでは、上記のようにバッククォート式を用いたシンタックスが適している。<br />
+バッククォート式(`で始まるリスト)はクォート式(&lsquo;で始まるリスト)に似ているが、<code>,</code>(または<code>,@</code>)を使って部分式を「アンクォート」できる。アンクォートのそれぞれの違いは下記の通り。</p>
+
+<ul>
+<li><code>,</code>を用いた場合、<code>,</code>に続く部分式は単純にその場所に埋め込まれる。</li>
+<li><code>,@</code>を用いた場合、<code>,@</code>に続く部分式(リストである必要がある)は、その括弧が外れて埋め込まれる。</li>
+</ul>
+
+<p>下記にバッククォート式の使用例を示す。</p>
+
+<table>
+<thead>
+<tr>
+<th>バッククォートシンタックス&nbsp;</th>
+<th>&nbsp;等価なリスト構築コード&nbsp;</th>
+<th>&nbsp;結果</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>`(a (+ 1 2) c)</code>&nbsp;</td>
+<td>&nbsp;<code>(list 'a '(+ 1 2) 'c)</code>&nbsp;</td>
+<td>&nbsp;<code>(a (+ 1 2) c)</code></td>
+</tr>
+
+<tr>
+<td><code>`(a ,(+ 1 2) c)</code>&nbsp;</td>
+<td>&nbsp;<code>(list 'a (+ 1 2) 'c)</code>&nbsp;</td>
+<td>&nbsp;<code>(a 3 c)</code></td>
+</tr>
+
+<tr>
+<td><code>`(a (list 1 2) c)</code>&nbsp;</td>
+<td>&nbsp;<code>(list 'a '(list 1 2) 'c)</code>&nbsp;</td>
+<td>&nbsp;<code>(a (list 1 2) c)</code></td>
+</tr>
+
+<tr>
+<td><code>`(a ,(list 1 2) c)</code>&nbsp;</td>
+<td>&nbsp;<code>(list 'a (list 1 2) 'c)</code>&nbsp;</td>
+<td>&nbsp;<code>(a (1 2) c)</code></td>
+</tr>
+
+<tr>
+<td><code>`(a ,@(list 1 2) c)</code>&nbsp;</td>
+<td>&nbsp;<code>(append (list 'a) (list 1 2) (list 'c)</code>&nbsp;</td>
+<td>&nbsp;<code>(a 1 2 c)</code></td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="8-6-2-マクロの検証方法-macroexpand-と-macroexpand-1">8.6-2 マクロの検証方法(<code>macroexpand</code>と<code>macroexpand-1</code>)</h2>
+
+<p>マクロは<code>macroexpand</code>関数または<code>macroexpand-1</code>関数を使って展開できる。</p>
+
+<ul>
+<li><code>macroexpand</code> : マクロを多段的に展開する。</li>
+<li><code>macroexpand-1</code> : マクロを1段階だけ展開する。</li>
+</ul>
+
+<p>これらの使用方法は下記の通り。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">macroexpand</span> <span class="ss">&#39;macro-form</span><span class="p">)</span>
+
+<span class="c1">; 使用例</span>
+<span class="p">(</span><span class="nv">macroexpand</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">do-primes</span> <span class="p">(</span><span class="nv">p</span> <span class="mi">0</span> <span class="mi">19</span><span class="p">)</span> <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~d &#34;</span> <span class="nv">p</span><span class="p">)))</span>
+<span class="c1">; =&gt;</span>
+<span class="c1">; (do ((p (next-prime 0) (next-prime (1+ p))))</span>
+<span class="c1">;     ((&gt; p 19))</span>
+<span class="c1">;   (format t &#34;~d &#34; p))</span></code></pre></div>
+<h2 id="8-7-漏れをふさぐ">8.7 漏れをふさぐ</h2>
+
+<p>ここでは、マクロで抽象化しきれていないことを「漏れ」と呼ぶ。</p>
+
+<h3 id="多重評価-による漏れ">「多重評価」による漏れ</h3>
+
+<p>マクロは字句的な変換であるため、1回のみ評価されることを期待する式を、予期せず複数回評価するようにマクロ展開してしまうことがある。<br />
+例えば、<code>do-primes</code>の引数に、<code>19</code>のような<strong>リテラル</strong>ではなく、<code>(random 100)</code>のような評価するたびに値が変わる<strong>式</strong>を渡したとする。<br />
+このときの<code>do-primes</code>のマクロ展開結果を確認すると、下記の通りになる。<br />
+この例では、<code>end-test</code>部分に<code>(random 100)</code>があるため、終了判定の度に<code>(random 100)</code>が評価されることになる。<br />
+したがって、下記のループは、<br />
+「<strong>ループ中の現在の素数が、100以下のある数(乱数で最初に決定)以下になるまで繰り返す</strong>」<br />
+ではなく、<br />
+「<strong>ループ中の現在の素数が、100以下の乱数(毎ループ変化する)以下になるまで繰り返す</strong>」<br />
+という挙動になる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">macroexpand</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">do-primes</span> <span class="p">(</span><span class="nv">p</span> <span class="mi">0</span> <span class="p">(</span><span class="nv">random</span> <span class="mi">100</span><span class="p">))</span> <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~d &#34;</span> <span class="nv">p</span><span class="p">)))</span>
+<span class="c1">; =&gt;</span>
+<span class="c1">; (do ((p (next-prime 0) (next-prime (1+ p))))</span>
+<span class="c1">;     ((&gt; p (random 100)))</span>
+<span class="c1">;   (format t &#34;~d &#34; p))</span></code></pre></div>
+<p>上記のような多重評価を防ぐには、最初に評価済みの値を別の変数に束縛すれば良い。<br />
+<code>do</code>マクロには<code>init-form</code>部分があるから、この部分で値を評価させて変数に束縛させれば良い。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">do-primes</span> <span class="p">((</span><span class="nv">var</span> <span class="nv">start</span> <span class="nv">end</span><span class="p">)</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nv">do</span> <span class="p">((</span><span class="o">,</span><span class="nv">var</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="o">,</span><span class="nv">start</span><span class="p">)</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="p">(</span><span class="nv">1+</span> <span class="o">,</span><span class="nv">var</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nv">ending-value</span> <span class="o">,</span><span class="nv">end</span><span class="p">))</span> <span class="c1">; init-form部でendを評価</span>
+       <span class="p">((</span><span class="nv">&gt;</span> <span class="o">,</span><span class="nv">var</span> <span class="nv">ending-value</span><span class="p">))</span>
+    <span class="o">,@</span><span class="nv">body</span><span class="p">))</span></code></pre></div>
+<h3 id="異なる評価順序-による漏れ">「異なる評価順序」による漏れ</h3>
+
+<p>マクロに渡した引数と同じ順番で値を評価されるようにする必要がある。<br />
+さもなくば、副作用があったときに予期しない評価結果になる。</p>
+
+<p>⭕️ <strong>引数と本体の評価順序が一致しているコード</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">do-primes</span> <span class="p">((</span><span class="nv">var</span> <span class="nv">start</span> <span class="nv">end</span><span class="p">)</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nv">do</span> <span class="p">((</span><span class="o">,</span><span class="nv">var</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="o">,</span><span class="nv">start</span><span class="p">)</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="p">(</span><span class="nv">1+</span> <span class="o">,</span><span class="nv">var</span><span class="p">)))</span>
+        <span class="p">(</span><span class="nv">ending-value</span> <span class="o">,</span><span class="nv">end</span><span class="p">))</span> <span class="c1">; init-form部でendを評価</span>
+       <span class="p">((</span><span class="nv">&gt;</span> <span class="o">,</span><span class="nv">var</span> <span class="nv">ending-value</span><span class="p">))</span>
+    <span class="o">,@</span><span class="nv">body</span><span class="p">))</span></code></pre></div>
+<p>❌ <strong>引数と本体の評価順序が一致していないコード</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">do-primes</span> <span class="p">((</span><span class="nv">var</span> <span class="nv">start</span> <span class="nv">end</span><span class="p">)</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nv">do</span> <span class="p">((</span><span class="nv">ending-value</span> <span class="o">,</span><span class="nv">end</span><span class="p">)</span> <span class="c1">; init-form部でendを評価</span>
+        <span class="p">(</span><span class="o">,</span><span class="nv">var</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="o">,</span><span class="nv">start</span><span class="p">)</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="p">(</span><span class="nv">1+</span> <span class="o">,</span><span class="nv">var</span><span class="p">))))</span>
+       <span class="p">((</span><span class="nv">&gt;</span> <span class="o">,</span><span class="nv">var</span> <span class="nv">ending-value</span><span class="p">))</span>
+    <span class="o">,@</span><span class="nv">body</span><span class="p">))</span></code></pre></div>
+<h3 id="変数名の重複-による漏れ">「変数名の重複」による漏れ</h3>
+
+<p>単純にマクロ中で変数名を定義すると、変数名がマクロに渡されたコードやマクロ呼出しのコンテキストに影響してしまう。<br />
+例えば、下記のコードはマクロで使用している<code>ending-value</code>を引数に渡してしまっているため正しく動作しない。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">do-primes</span> <span class="p">(</span><span class="nv">ending-value</span> <span class="mi">0</span> <span class="mi">10</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">print</span> <span class="nv">ending-value</span><span class="p">))</span>
+<span class="c1">; =&gt;</span>
+<span class="c1">; (do ((ending-value (next-prime 0) (next-prime (1+ ending-value)))</span>
+<span class="c1">;      (ending-value 10))</span>
+<span class="c1">;     ((&gt; ending-value ending-value))</span>
+<span class="c1">;   (print ending-value))</span></code></pre></div>
+<p>これを解決するには<code>gensym</code>関数を用いる。<code>gensym</code>は、呼び出される度にユニークなシンボルを返すことを保証している。<br />
+このシンボルはLispの読み取り器には決して読み取られないため、どのパッケージでもインターンされない。<br />
+この関数を使えば、<code>ending-value</code>のようなリテラル名ではなく、<code>do-primes</code>が展開される度に新しいシンボルを生成できる。</p>
+
+<p>⭕️ 全ての「漏れ」が塞がれたコード</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">do-primes</span> <span class="p">((</span><span class="nv">var</span> <span class="nv">start</span> <span class="nv">end</span><span class="p">)</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">ending-value-name</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">)))</span>
+      <span class="o">`</span><span class="p">(</span><span class="nv">do</span> <span class="p">((</span><span class="o">,</span><span class="nv">var</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="o">,</span><span class="nv">start</span><span class="p">)</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="p">(</span><span class="nv">1+</span> <span class="o">,</span><span class="nv">var</span><span class="p">)))</span>
+            <span class="p">(</span><span class="o">,</span><span class="nv">ending-value-name</span> <span class="o">,</span><span class="nv">end</span><span class="p">))</span>
+       <span class="p">((</span><span class="nv">&gt;</span> <span class="o">,</span><span class="nv">var</span> <span class="o">,</span><span class="nv">ending-value-name</span><span class="p">))</span>
+    <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span></code></pre></div>
+<p><code>gensym</code>を呼び出している箇所が、展開系に含まれていないことに注意。<br />
+<code>gensym</code>はマクロ展開の一部として実行されるため、マクロが展開される度に新しいシンボルが生成される。</p>
+
+<p><code>var</code>の値はマクロフォームが読み込まれた時に読み取り器によって作られるが、<code>ending-value-name</code>の値はマクロのコードが実行される時にプログラムで生成される。</p>
+
+<p><strong>マクロのコードが実行されるとき</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">do-primes</span> <span class="p">((</span><span class="nv">var</span> <span class="nv">start</span> <span class="nv">end</span><span class="p">)</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span> <span class="c1">; var start endが束縛される</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">ending-value-name</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">)))</span> <span class="c1">; gensymが評価された値を束縛される</span>
+    <span class="o">`</span><span class="p">(</span><span class="nv">do</span> <span class="p">((</span><span class="o">,</span><span class="nv">var</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="o">,</span><span class="nv">start</span><span class="p">)</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="p">(</span><span class="nv">1+</span> <span class="o">,</span><span class="nv">var</span><span class="p">)))</span>
+          <span class="p">(</span><span class="o">,</span><span class="nv">ending-value-name</span> <span class="o">,</span><span class="nv">end</span><span class="p">))</span>
+         <span class="p">((</span><span class="nv">&gt;</span> <span class="o">,</span><span class="nv">var</span> <span class="o">,</span><span class="nv">ending-value-name</span><span class="p">))</span>
+      <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span></code></pre></div>
+<p><strong>マクロフォームが読み込まれたとき</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">do-primes</span> <span class="p">(</span><span class="nv">ending-value</span> <span class="mi">0</span> <span class="mi">10</span><span class="p">)</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">ending-value</span><span class="p">))</span>
+<span class="c1">; ↓マクロ展開</span>
+<span class="p">(</span><span class="nv">do</span> <span class="p">((</span><span class="nv">ending-value</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">ending-value</span><span class="p">)))</span>
+     <span class="p">(</span><span class="ss">#:G567</span> <span class="mi">10</span><span class="p">))</span>
+    <span class="p">((</span><span class="nv">&gt;</span> <span class="nv">ending-value</span> <span class="ss">#:G567</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">print</span> <span class="nv">ending-value</span><span class="p">))</span></code></pre></div>
+<h3 id="マクロを書くルール">マクロを書くルール</h3>
+
+<ul>
+<li>基本的には、マクロ呼び出し時に、出現時と同じ順序で評価されるように、全ての部分フォームを配置する。</li>
+<li>部分フォームが一度だけ評価されるようにする。<br />
+このためには、展開形の中で引数のフォームを評価した値を保持する変数を作り、展開形の別の場所で引数を使う必要がある場合はその変数を使うようにする。</li>
+<li>展開系の中で使う変数の名前は、マクロ展開時に<code>gensym</code>を使って作る。</li>
+</ul>
+
+<h2 id="8-8-マクロを書くマクロ">8.8 マクロを書くマクロ</h2>
+
+<p>関数を定義する際に補助関数を使用するように、もちろん、マクロを定義する際に補助のマクロを定義することもできる。<br />
+ここでは、指定した変数を<code>gensym</code>で束縛させる処理を簡単に記述するためのマクロを定義する。</p>
+
+<h3 id="1-マクロを呼び出す例を1つ以上記述する-1">1. マクロを呼び出す例を1つ以上記述する</h3>
+
+<p>マクロ<code>with-gensyms</code>を呼び出す例を下記の通り記述する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">do-primes</span> <span class="p">((</span><span class="nv">var</span> <span class="nv">start</span> <span class="nv">end</span><span class="p">)</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">with-gensyms</span> <span class="p">(</span><span class="nv">ending-value-name</span><span class="p">)</span>
+    <span class="o">`</span><span class="p">(</span><span class="nv">do</span> <span class="p">((</span><span class="o">,</span><span class="nv">var</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="o">,</span><span class="nv">start</span><span class="p">)</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="p">(</span><span class="nv">1+</span> <span class="o">,</span><span class="nv">var</span><span class="p">)))</span>
+          <span class="p">(</span><span class="o">,</span><span class="nv">ending-value-name</span> <span class="o">,</span><span class="nv">end</span><span class="p">))</span>
+         <span class="p">((</span><span class="nv">&gt;</span> <span class="o">,</span><span class="nv">var</span> <span class="o">,</span><span class="nv">ending-value-name</span><span class="p">))</span>
+      <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span></code></pre></div>
+<h3 id="2-その例がマクロによって展開されるべきコードを記述する-1">2. その例がマクロによって展開されるべきコードを記述する</h3>
+
+<p>マクロ展開した結果を下記の通り記述する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">do-primes</span> <span class="p">((</span><span class="nv">var</span> <span class="nv">start</span> <span class="nv">end</span><span class="p">)</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">ending-value-name</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">)))</span>
+      <span class="o">`</span><span class="p">(</span><span class="nv">do</span> <span class="p">((</span><span class="o">,</span><span class="nv">var</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="o">,</span><span class="nv">start</span><span class="p">)</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="p">(</span><span class="nv">1+</span> <span class="o">,</span><span class="nv">var</span><span class="p">)))</span>
+            <span class="p">(</span><span class="o">,</span><span class="nv">ending-value-name</span> <span class="o">,</span><span class="nv">end</span><span class="p">))</span>
+       <span class="p">((</span><span class="nv">&gt;</span> <span class="o">,</span><span class="nv">var</span> <span class="o">,</span><span class="nv">ending-value-name</span><span class="p">))</span>
+    <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span></code></pre></div>
+<h3 id="3-実際にマクロを記述する-1">3. 実際にマクロを記述する</h3>
+
+<p><code>with-gensyms</code>を定義する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">with-gensyms</span> <span class="p">((</span><span class="nv">&amp;rest</span> <span class="nv">names</span><span class="p">)</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nv">let</span> <span class="o">,</span><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">n</span> <span class="nv">in</span> <span class="nv">names</span> <span class="nv">collect</span> <span class="o">`</span><span class="p">(</span><span class="o">,</span><span class="nv">n</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">)))</span>
+     <span class="o">,@</span><span class="nv">body</span><span class="p">))</span></code></pre></div>
+<p><code>with-gensyms</code>で使用した<code>loop</code>は下記の通りの挙動をする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">n</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span> <span class="nv">collect</span> <span class="o">`</span><span class="p">(</span><span class="o">,</span><span class="nv">n</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">)))</span>
+<span class="c1">; =&gt;</span>
+<span class="c1">; ((A (GENSYM)) (B (GENSYM)) (C (GENSYM)))</span></code></pre></div>
+<p><code>do-primes</code>において<code>with-gensym</code>を使った場合、<code>do-primes</code>の<code>defmacro</code>をコンパイルすると、その<code>with-gensym</code>が下記の通りに展開される。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">ending-value-name</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">)))</span>
+  <span class="o">`</span><span class="p">(</span><span class="nv">do</span> <span class="p">((</span><span class="o">,</span><span class="nv">var</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="o">,</span><span class="nv">start</span><span class="p">)</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="p">(</span><span class="nv">1+</span> <span class="o">,</span><span class="nv">var</span><span class="p">)))</span>
+        <span class="p">(</span><span class="o">,</span><span class="nv">ending-value-name</span> <span class="o">,</span><span class="nv">end</span><span class="p">))</span>
+       <span class="p">((</span><span class="nv">&gt;</span> <span class="o">,</span><span class="nv">var</span> <span class="o">,</span><span class="nv">ending-value-name</span><span class="p">))</span>
+     <span class="o">,@</span><span class="nv">body</span><span class="p">)</span></code></pre></div>
+<p>上記は<code>let</code>を手動で記述したものと全く等しい。<br />
+すなわち、<code>do-primes</code>を使う関数をコンパイルするときは、<strong><code>with-gensyms</code>で生成されたコード</strong>が<code>do-primes</code>の展開系を生成するために実行される。<br />
+しかし、<code>with-gensyms</code>自体は<code>do-primes</code>がコンパイルされた時点で既に展開されている。</p>
+
+<h2 id="8-9-シンプルなマクロの先へ">8.9 シンプルなマクロの先へ</h2>
+
+<p>次章では、マクロを使ったテストフレームワークについて説明する。</p>
+
+<h2 id="コラム-once-only-マクロを書くマクロ-の例">コラム <code>once-only</code> - <strong>マクロを書くマクロ</strong>の例</h2>
+
+<p>ここで挙げる<code>once-only</code>は、生成されたコードが特定の順番で一度だけ評価されるようなコードを生成するもの。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">once-only</span> <span class="p">((</span><span class="nv">&amp;rest</span> <span class="nv">names</span><span class="p">)</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">gensyms</span> <span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">n</span> <span class="nv">in</span> <span class="nv">names</span>
+                       <span class="nv">collect</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">))))</span>
+    <span class="o">`</span><span class="p">(</span><span class="nv">let</span> <span class="p">(</span><span class="o">,@</span><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">g</span> <span class="nv">in</span> <span class="nv">gensyms</span>
+                   <span class="nv">collect</span> <span class="o">`</span><span class="p">(</span><span class="o">,</span><span class="nv">g</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">))))</span>
+       <span class="o">`</span><span class="p">(</span><span class="nv">let</span> <span class="p">(</span><span class="o">,,@</span><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">g</span> <span class="nv">in</span> <span class="nv">gensyms</span>
+                       <span class="nv">for</span> <span class="nv">n</span> <span class="nv">in</span> <span class="nv">names</span>
+                       <span class="nv">collect</span> <span class="o">``</span><span class="p">(</span><span class="o">,,</span><span class="nv">g</span> <span class="o">,,</span><span class="nv">n</span><span class="p">)))</span>
+          <span class="o">,</span><span class="p">(</span><span class="nv">let</span> <span class="p">(</span><span class="o">,@</span><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">n</span> <span class="nv">in</span> <span class="nv">names</span>
+                         <span class="nv">for</span> <span class="nv">g</span> <span class="nv">in</span> <span class="nv">gensyms</span>
+                         <span class="nv">collect</span> <span class="o">`</span><span class="p">(</span><span class="o">,</span><span class="nv">n</span> <span class="o">,</span><span class="nv">g</span><span class="p">)))</span>
+             <span class="o">,@</span><span class="nv">body</span><span class="p">)))))</span></code></pre></div>
+<h3 id="マクロの使い方">マクロの使い方</h3>
+
+<p><code>once-only</code>の引数に渡した値は即座に左から評価され、内部で一時変数に束縛される。(マクロ展開結果を見れば分かる。)</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">do-primes</span> <span class="p">((</span><span class="nv">var</span> <span class="nv">start</span> <span class="nv">end</span><span class="p">)</span> <span class="nv">&amp;</span> <span class="nv">body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">once-only</span> <span class="p">(</span><span class="nv">start</span> <span class="nv">end</span><span class="p">)</span>
+    <span class="o">`</span><span class="p">(</span><span class="nv">do</span> <span class="p">((</span><span class="o">,</span><span class="nv">var</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="o">,</span><span class="nv">start</span><span class="p">)</span> <span class="p">(</span><span class="nv">next-prime</span> <span class="p">(</span><span class="nv">1+</span> <span class="o">,</span><span class="nv">var</span><span class="p">))))</span>
+         <span class="p">((</span><span class="nv">&gt;</span> <span class="o">,</span><span class="nv">var</span> <span class="o">,</span><span class="nv">end</span><span class="p">))</span>
+       <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span></code></pre></div>
+<h3 id="マクロ展開結果">マクロ展開結果</h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">macroexpand-1</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">once-only</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span> <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;Test&#34;</span><span class="p">)))</span>
+<span class="c1">; =&gt;</span>
+<span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="ss">#:G543</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">))</span> <span class="p">(</span><span class="ss">#:G544</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">))</span> <span class="p">(</span><span class="ss">#:G545</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">)))</span> <span class="c1">; (1)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nv">let</span> <span class="p">(</span><span class="o">,`</span><span class="p">(</span><span class="o">,</span><span class="ss">#:G543</span> <span class="o">,</span><span class="nv">a</span><span class="p">)</span> <span class="o">,`</span><span class="p">(</span><span class="o">,</span><span class="ss">#:G544</span> <span class="o">,</span><span class="nv">b</span><span class="p">)</span> <span class="o">,`</span><span class="p">(</span><span class="o">,</span><span class="ss">#:G545</span> <span class="o">,</span><span class="nv">c</span><span class="p">))</span> <span class="c1">; (2)</span>
+     <span class="o">,</span><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">a</span> <span class="ss">#:G543</span><span class="p">)</span> <span class="p">(</span><span class="nv">b</span> <span class="ss">#:G544</span><span class="p">)</span> <span class="p">(</span><span class="nv">c</span> <span class="ss">#:G545</span><span class="p">))</span> <span class="c1">; (3)</span>
+        <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;Test&#34;</span><span class="p">))))</span> <span class="c1">; (4)</span></code></pre></div>
+<ol>
+<li>マクロの引数の個数分の一時変数を用意する</li>
+<li>マクロの各々の引数を評価して、一時変数に代入する(束縛する)</li>
+<li>マクロの各々の引数と同名の引数を作り、一時変数の値を束縛する</li>
+<li>この時点で、<code>once-only</code>の第一引数に指定された変数は、同名の変数によってシャドーイングされており、<br />
+その値は既に評価済みとなっている。</li>
+</ol>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="/web/asset/mermaid/mermaid.js"></script>
+
+</body>
+</html>
