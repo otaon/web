@@ -265,3 +265,152 @@ Common Lispには小数のサブタイプが4種類あり、サブタイプご�
 ```
 
 ## 10.4 数値比較
+### `=`
+`=`は、数の等値を、**型の違いを無視して**判定する。  
+引数が3つ以上ある場合は、全てが等しいときのみ`t`を返す。
+
+```lisp
+(= 1 1) ; t
+(= 10 20/2) ; t
+(= 1 1.0 #c(1.0 0.0) #c(1 0)) ; t
+```
+
+### `/=`
+`/=`は、2引数の場合は`(not (= a b))`と等価だが、引数が3つ以上ある場合は、全てが異なるときのみ`t`を返す。
+
+```lisp
+(/= 1 1) ; nil
+(/= 1 2) ; t
+(/= 1 2 3) ; t
+(/= 1 2 3 1) ; nil
+(/= 1 2 3 1.0) ; nil
+```
+
+### `<` `>` `>=` `<=`
+`<` `>` `>=` `<=`は有理数と浮動小数点数に対する順序関数。  
+引数が3つ以上ある場合は、それぞれの引数を左から右に向かって比較する。
+
+```lisp
+(< 2 3) ; t
+(> 2 3) ; nil
+(> 3 2) ; t
+(< 2 3 4) ; t
+(< 2 3 3) ; nil
+(<= 2 3 3) ; t
+(<= 2 3 3 4) ; t
+(<= 2 3 4 3) ; nil
+```
+
+### `max` `min`
+`max` `min`は、引数のうち最大または最小の値を選ぶ。
+
+```lisp
+(max 10 11) ; 11
+(min -12 -10) ; -12
+(max -1 2 -3) ; 2
+```
+
+### `zerop` `plusp` `minusp` `oddp` `evenp`
+`zerop`は単一の実数が`0`に等しいかを評価する。  
+`plusp`は単一の実数が正数かを評価する。  
+`minusp`は単一の実数が負数かを評価する。  
+`oddp`は単一の整数が奇数かを評価する。  
+`evenp`は単一の整数が偶数かを評価する。
+
+## 10.5 高度な数学
+下記のような数学的な関数も標準でサポートしている。
+
+- 対数関係の関数`log` `exp` `expt`
+- 三角関数`sin` `cos` `tan`
+- 三角関数の逆関数`asin` `acos` `atan`
+- 双曲線関数`sinh` `cosh` `tanh`
+- 双曲線関数の逆関数`asinh` `acosh` `atanh`
+
+## 10.6 文字
+文字は`#\任意の文字`で表される。  
+例： `#\a` `#\X` `#\)`
+
+特殊な文字を表すためのキーワードが設定されている。
+
+- `Space` : スペース
+- `Tab` : タブ
+- `Page` : 改頁
+- `NewLine` : 改行(LF)
+- `Linefeed` : 改行(LF)
+- `Return` : 改行(CR)
+- `Rubout` : 削除(右)
+- `Backspace` : 削除(左)
+
+参考: [バッファ内の Common Lisp の特殊文字を #xyzzy Lisp 用に変換する](https://gist.github.com/miyamuko/1202374)
+
+```lisp
+;;   Common Lisp    xyzzy Lisp    char-code
+;;   --------------------------------------
+;;   #\Backspace    #\C-h                 8
+;;   #\Tab          #\TAB                 9
+;;   #\Newline      #\LFD                10
+;;   #\Linefeed     #\LFD                10
+;;   #\Page         #\C-l                12
+;;   #\Return       #\RET                13
+;;   #\Space        #\SPC                32
+;;   #\Rubout       #\DEL               127
+```
+
+## 10.8 文字列
+文字列リテラルは`"`で囲う。`\`は、次の文字をエスケープする。  
+`"`と`\`を文字列リテラルに含めるには、これらの文字を`\`でエスケープする必要がある。
+
+```lisp
+"foobar" ; foobar
+"foo\"bar" ; foo"bar
+"foo\\bar" ; foo\bar
+"\"foobar\"" ; "foobar"
+"foo\bar" ; foobar
+```
+
+**NOTE:**  
+REPLでは通常読み込み可能なフォームで文字列を印字する。つまり全体をダブルクォートで囲い、エスケープが必要なものにはバックスラッシュを漬ける。  
+したがって、文字列の実際の見た目を確認するには`format`関数などを使用する必要がある。  
+```lisp
+(format t "~a" str) ; 文字列リテラルstrが印字される
+```
+
+## 10.7 文字比較 10.9 文字列比較
+### 
+|対応する数の比較関数|&nbsp;文字<br/>大/小文字区別|&nbsp;文字<br/>大/小文字無視|&nbsp;文字列<br/>大/小文字区別|&nbsp;文字列<br/>大/小文字無視|
+|--------------------|----------------------------|----------------------------|------------------------------|------------------------------|
+|`=`                 |&nbsp;`char=`               |&nbsp;`char-equal`          |&nbsp;`string=`               |&nbsp;`string-equal`          |
+|`/=`                |&nbsp;`char/=`              |&nbsp;`char-not-equal`      |&nbsp;`string/=`              |&nbsp;`string-not-equal`      |
+|`<`                 |&nbsp;`char<`               |&nbsp;`char-lessp`          |&nbsp;`string<`               |&nbsp;`string-lessp`          |
+|`>`                 |&nbsp;`char>`               |&nbsp;`char-greaterp`       |&nbsp;`string>`               |&nbsp;`string-greaterp`       |
+|`<=`                |&nbsp;`char<=`              |&nbsp;`char-not-greaterp`   |&nbsp;`string<=`              |&nbsp;`string-not-greaterp`   |
+|`>=`                |&nbsp;`char>=`              |&nbsp;`char-not-lessp`      |&nbsp;`string>=`              |&nbsp;`string-not-lessp`      |
+
+部分文字列を比較したい場合は、`string=`に下記のようにキーワード引数を利用する。
+
+```lisp
+(string= "foobarbaz" "quuxbarfoo" :start1 3 :end1 6 :start2 4 :end2 7)
+; barを比較してtを返す
+```
+
+- `start1` 左の文字列の比較開始文字のインデックス
+- `end1` 左の文字列の比較終了文字の**次の**インデックス
+- `start2` 右の文字列の比較開始文字のインデックス
+- `end2` 右の文字列の比較終了文字の**次の**インデックス
+
+上表の比較関数のうち、文字列が異なる場合に`t`になるもの(つまり`string=`と`string-equal`以外)は、文字列に違いが見つかった最初のインデックスを返す。
+
+```lisp
+(string/= "lisp" "lissome") ; 3
+(string< "lisp" "lisper") ; 4
+```
+
+**NOTE:**  
+部分文字列を比較した時に返ってくる値は、**全体文字列**に対するインデックス。
+
+```lisp
+(string< "foobar" "abaz" :start1 3 :start2 1) ; 5
+```
+
+**NOTE:**  
+文字列をシーケンスとして扱う事もできる。
