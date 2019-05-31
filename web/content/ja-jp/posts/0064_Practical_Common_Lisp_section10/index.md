@@ -343,18 +343,16 @@ Common Lispには小数のサブタイプが4種類あり、サブタイプご�
 
 参考: [バッファ内の Common Lisp の特殊文字を #xyzzy Lisp 用に変換する](https://gist.github.com/miyamuko/1202374)
 
-```lisp
-;;   Common Lisp    xyzzy Lisp    char-code
-;;   --------------------------------------
-;;   #\Backspace    #\C-h                 8
-;;   #\Tab          #\TAB                 9
-;;   #\Newline      #\LFD                10
-;;   #\Linefeed     #\LFD                10
-;;   #\Page         #\C-l                12
-;;   #\Return       #\RET                13
-;;   #\Space        #\SPC                32
-;;   #\Rubout       #\DEL               127
-```
+|Common Lisp    |&nbsp;xyzzy Lisp    |&nbsp;char-code|
+|:-------------:|:------------------:|--------------:|
+|`#\Backspace`  |&nbsp;`#\C-h`       |&nbsp;        8|
+|`#\Tab`        |&nbsp;`#\TAB`       |&nbsp;        9|
+|`#\Newline`    |&nbsp;`#\LFD`       |&nbsp;       10|
+|`#\Linefeed`   |&nbsp;`#\LFD`       |&nbsp;       10|
+|`#\Page`       |&nbsp;`#\C-l`       |&nbsp;       12|
+|`#\Return`     |&nbsp;`#\RET`       |&nbsp;       13|
+|`#\Space`      |&nbsp;`#\SPC`       |&nbsp;       32|
+|`#\Rubout`     |&nbsp;`#\DEL`       |&nbsp;      127|
 
 ## 10.8 文字列
 文字列リテラルは`"`で囲う。`\`は、次の文字をエスケープする。  
