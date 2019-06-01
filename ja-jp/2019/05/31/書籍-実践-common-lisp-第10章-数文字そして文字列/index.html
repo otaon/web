@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
+<head>
+  <meta name="generator" content="Hugo 0.54.0" />
+  <meta charset="utf-8">
+  <title>書籍 実践 Common Lisp 第10章 数、文字、そして文字列 · Lazy Lambda</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="この章について この章では、Lispのスカラーのデータ型である数、文字、文字列(の一部の仕様)について説明する。 10.1 数 Common Lispでは、分数、浮動" />
+
+  <meta name="keywords" content="programming, make" />
+
+<link rel="canonical" href="https://otaon.github.io/web/ja-jp/2019/05/31/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC10%E7%AB%A0-%E6%95%B0%E6%96%87%E5%AD%97%E3%81%9D%E3%81%97%E3%81%A6%E6%96%87%E5%AD%97%E5%88%97/" />
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+<link rel="stylesheet" href="https://otaon.github.io/web/css/den.css">
+
+
+
+
+<meta property="og:title" content="書籍 実践 Common Lisp 第10章 数、文字、そして文字列" />
+<meta property="og:description" content="この章について この章では、Lispのスカラーのデータ型である数、文字、文字列(の一部の仕様)について説明する。 10.1 数 Common Lispでは、分数、浮動" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/05/31/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC10%E7%AB%A0-%E6%95%B0%E6%96%87%E5%AD%97%E3%81%9D%E3%81%97%E3%81%A6%E6%96%87%E5%AD%97%E5%88%97/" />
+<meta property="article:published_time" content="2019-05-31T00:00:00&#43;09:00"/>
+<meta property="article:modified_time" content="2019-05-31T00:00:00&#43;09:00"/>
+
+<meta itemprop="name" content="書籍 実践 Common Lisp 第10章 数、文字、そして文字列">
+<meta itemprop="description" content="この章について この章では、Lispのスカラーのデータ型である数、文字、文字列(の一部の仕様)について説明する。 10.1 数 Common Lispでは、分数、浮動">
+
+
+<meta itemprop="datePublished" content="2019-05-31T00:00:00&#43;09:00" />
+<meta itemprop="dateModified" content="2019-05-31T00:00:00&#43;09:00" />
+<meta itemprop="wordCount" content="3641">
+
+
+
+<meta itemprop="keywords" content="lisp,実践-Common-Lisp," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="書籍 実践 Common Lisp 第10章 数、文字、そして文字列"/>
+<meta name="twitter:description" content="この章について この章では、Lispのスカラーのデータ型である数、文字、文字列(の一部の仕様)について説明する。 10.1 数 Common Lispでは、分数、浮動"/>
+</head>
+<body>
+  
+  <div class="header-container" style="background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url('https://otaon.github.io/web/images/background.jpg'); background-position: center; background-size: cover;">
+  <div class="container">
+  <nav class="header-nav navbar navbar-expand-md navbar-dark light-dark">
+    <div class="header-logo navbar-brand">
+      
+        <a class="float-left" href="https://otaon.github.io/web/ja-jp/">
+      
+        
+        <img class="mr20 header-logo-image" src="https://otaon.github.io/web/images/night.svg" alt="logo">
+        
+        
+          LL
+         
+      </a>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="nav-menu collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/notes/">ノート</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              
+                <a class="nav-link" href="https://otaon.github.io/web/ja-jp/category/demos/">デモ</a>
+              
+            
+          </li>
+        
+          <li class="nav-item">
+            
+              <a class="nav-link" href="https://otaon.github.io/web/ja-jp/about/">このサイトについて</a>
+            
+          </li>
+        
+        
+          
+            <li class="nav-item">
+              <a class="nav-link" href="https://otaon.github.io/web/en/"><i class="fas fa-globe"></i> English</a>
+            </li>
+          
+          
+          
+          
+        
+      </ul>
+    </div>
+  </nav>
+</div>
+
+<div class="container header-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="header-content">
+        <h1 class="header-title">書籍 実践 Common Lisp 第10章 数、文字、そして文字列</h1>
+        <p class="header-date">著者：
+          otaon /
+        
+        2019-05-31
+          / カテゴリ：
+          <a href="https://otaon.github.io/web/ja-jp/category/%E5%AE%9F%E8%B7%B5-common-lisp/">実践-Common-Lisp</a>
+        </p>
+        
+        <div class="header-underline"></div>
+        
+          <div class="clearfix"></div>
+          <p class="float-right header-tags">
+              <i class="fas fa-tags" aria-hidden="true"></i>
+              <a href="https://otaon.github.io/web/ja-jp/tag/lisp/">lisp</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/%E5%AE%9F%E8%B7%B5-common-lisp/">実践-Common-Lisp</a>
+          </p>
+        
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+  <main>
+<div class="container content">
+  <article>
+  
+    <section class="js-toc">
+  <div class="toc">
+  <nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#この章について">この章について</a></li>
+<li><a href="#10-1-数">10.1 数</a></li>
+<li><a href="#10-2-数値リテラル">10.2 数値リテラル</a>
+<ul>
+<li><a href="#整数">整数</a></li>
+<li><a href="#分数">分数</a></li>
+<li><a href="#有理数">有理数</a></li>
+<li><a href="#浮動小数点数">浮動小数点数</a></li>
+<li><a href="#複素数">複素数</a></li>
+</ul></li>
+<li><a href="#10-3-基本的な数学">10.3 基本的な数学</a>
+<ul>
+<li><a href="#加算-1">加算 <code>+</code> <code>1+</code></a></li>
+<li><a href="#減算-1">減算 <code>-</code> <code>1-</code></a></li>
+<li><a href="#乗算">乗算 <code>*</code></a></li>
+<li><a href="#除算">除算 <code>/</code></a></li>
+<li><a href="#剰余を求める演算-mod-rem">剰余を求める演算 <code>mod</code> <code>rem</code></a></li>
+<li><a href="#数値を丸める演算-floor-ceiling-truncate-round">数値を丸める演算 <code>floor</code> <code>ceiling</code> <code>truncate</code> <code>round</code></a></li>
+</ul></li>
+<li><a href="#10-4-数値比較">10.4 数値比較</a>
+<ul>
+<li><a href="#toc_16"><code>=</code></a></li>
+<li><a href="#toc_17"><code>/=</code></a></li>
+<li><a href="#toc_18"><code>&lt;</code> <code>&gt;</code> <code>&gt;=</code> <code>&lt;=</code></a></li>
+<li><a href="#max-min"><code>max</code> <code>min</code></a></li>
+<li><a href="#zerop-plusp-minusp-oddp-evenp"><code>zerop</code> <code>plusp</code> <code>minusp</code> <code>oddp</code> <code>evenp</code></a></li>
+</ul></li>
+<li><a href="#10-5-高度な数学">10.5 高度な数学</a></li>
+<li><a href="#10-6-文字">10.6 文字</a></li>
+<li><a href="#10-8-文字列">10.8 文字列</a></li>
+<li><a href="#10-7-文字比較-10-9-文字列比較">10.7 文字比較 10.9 文字列比較</a></li>
+</ul></li>
+</ul>
+</nav>
+  </div>
+</section>
+
+  
+  
+
+<h2 id="この章について">この章について</h2>
+
+<p>この章では、Lispの<strong>スカラー</strong>のデータ型である数、文字、文字列(の一部の仕様)について説明する。</p>
+
+<h2 id="10-1-数">10.1 数</h2>
+
+<p>Common Lispでは、分数、浮動小数点数、複素数など、数学に必要な基本的なデータ型を標準でサポートしている。</p>
+
+<h2 id="10-2-数値リテラル">10.2 数値リテラル</h2>
+
+<p>ある方の数値には、テキストでの表現がいくつも存在する。その全てがLispの読み取り器で同じオブジェクトの表現に変換される。<br />
+例えば整数の<code>10</code>は、<code>10</code>や<code>20/2</code>や<code>#xA</code>の様に記述できるが、これらを読み取り器では全て同じオブジェクトに変換する。<br />
+さらに、数が書き戻される(=REPLで印字される)ときは、標準的な文字列からなるシンタックス(= <strong>canonical textual syntax</strong>)で印字される。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">CL-USER&gt;</span> <span class="mi">10</span>
+<span class="mi">10</span>
+<span class="nv">CL-USER&gt;</span> <span class="m">20/2</span>
+<span class="mi">10</span>
+<span class="nv">CL-USER&gt;</span> <span class="mh">#xa</span>
+<span class="nv">10</span></code></pre></div>
+<h3 id="整数">整数</h3>
+
+<p>整数値のシンタックスは、正規表現で<code>[+-]?[0-9]+</code>となる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 整数の例</span>
+<span class="mi">123</span>  <span class="c1">; 123</span>
+<span class="mi">+123</span> <span class="c1">; 123</span>
+<span class="mi">-123</span> <span class="c1">; -213</span>
+<span class="mi">123.</span> <span class="c1">; 123</span></code></pre></div>
+<h3 id="分数">分数</h3>
+
+<p>分数は、正規表現で<code>[+-]?[0-9]+/[1-9][0-9]*\.*</code>となる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 分数の例</span>
+<span class="m">2/3</span>  <span class="c1">; 2/3</span>
+<span class="m">-2/3</span> <span class="c1">; -2/3</span>
+<span class="m">4/6</span>  <span class="c1">; 2/3</span>
+<span class="m">6/3</span>  <span class="c1">; 2</span></code></pre></div>
+<h3 id="有理数">有理数</h3>
+
+<p>有理数は全て、読み込まれる時に<strong>正規化</strong>される。すなわち約分される。</p>
+
+<p>有理数は基数を<code>10</code>以外にすることも可能。</p>
+
+<ul>
+<li><code>#B</code>か<code>#b</code>で始まる場合、有理数リテラルは各桁が<code>[01]</code>のみの2進数として読み込まれる。</li>
+<li><code>#O</code>か<code>#o</code>で始まる場合、有理数リテラルは各桁が<code>[0-7]</code>の8進数として読み込まれる。</li>
+<li><code>#X</code>か<code>#x</code>で始まる場合、有理数リテラルは各桁が<code>[0-9A-Fa-f]</code>の8進数として読み込まれる。</li>
+<li><code>#nR</code>(<code>n</code>は10進の数)始まる場合、有理数リテラルは各桁が<code>[0-9A-Za-z]</code>のn進数として読み込まれる。</li>
+</ul>
+
+<p>指定した基数は、分子と分母の両方を同時に規定する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 有理数</span>
+<span class="mb">#b10101</span>     <span class="c1">; 21</span>
+<span class="mb">#b1010/1011</span> <span class="c1">; 10/11</span>
+<span class="mo">#o777</span>       <span class="c1">; 511</span>
+<span class="mh">#xDADA</span>      <span class="c1">; 56026</span>
+<span class="m">#36rABCDEFG</span> <span class="c1">; 22453731916</span></code></pre></div>
+<h3 id="浮動小数点数">浮動小数点数</h3>
+
+<p>有理数とは違い、小数のシンタックスは読み込まれる数値の実際の型に影響する。<br />
+Common Lispには小数のサブタイプが4種類あり、サブタイプごとに異なるビット列で数を表している。</p>
+
+<ul>
+<li><code>short</code></li>
+<li><code>single</code></li>
+<li><code>double</code></li>
+<li><code>long</code></li>
+</ul>
+
+<p>これらのサブタイプごとに表せる数の範囲と精度が異なる。<br />
+使うビットが多いほど広範囲かつ高精度に表現できる。</p>
+
+<p>浮動小数点数は、正規表現で<code>[+-]?[0-9]+\.[0-9]+</code>となる。<br />
+また、指数表現も可能。(<code>[+-]?[0-9]+\.?[0-9]*[Ee][+-][0-9]+</code>)<br />
+指数部のマーカーには上記の<code>[Ee]</code>以外にも<code>[Ss]</code>(short)、<code>[Ff]</code>(single)、<code>[Dd]</code>(double)、<code>[Ll]</code>(long)が使用できる。<br />
+これらのマーカーを使うと、どの精度を用いるのかを指定できる。<br />
+<code>[Ee]</code>は標準(デフォルトでは<code>short</code>)の精度を意味する。</p>
+
+<p>浮動小数点数に使われる数字は、常に<strong>10進数</strong>として扱われる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 浮動小数点数の例</span>
+<span class="mf">1.0</span>      <span class="c1">; 1.0</span>
+<span class="mf">1e0</span>      <span class="c1">; 1.0</span>
+<span class="mf">1d0</span>      <span class="c1">; 1.0d0</span>
+<span class="mf">123.0</span>    <span class="c1">; 123.0</span>
+<span class="mf">123e0</span>    <span class="c1">; 123.0</span>
+<span class="mf">0.123</span>    <span class="c1">; 0.123</span>
+<span class="mf">.123</span>     <span class="c1">; 0.123</span>
+<span class="mf">123e-3</span>   <span class="c1">; 0.123</span>
+<span class="mf">123E-3</span>   <span class="c1">; 0.123</span>
+<span class="mf">0.123e20</span> <span class="c1">; 1.23e+19</span>
+<span class="mf">123d23</span>   <span class="c1">; 1.23d+25</span></code></pre></div>
+<h3 id="複素数">複素数</h3>
+
+<p>複素数は、正規表現<code>#[Cc](有理数 有理数)</code>または<code>#[Cc](浮動小数点数 浮動小数点数)</code>となる。<br />
+もし実部と虚部それぞれに有理数と浮動小数点数を混合したら、有理数が適切な表現の浮動小数点数に変換される。<br />
+もし実部と虚部それぞれに異なる精度の浮動小数点数を混合したら、より制度の高い浮動小数点数の方に統一される。<br />
+虚部が有理数で<code>0</code>の場合は、実数に等しいため、実数として扱われる。ただし、虚部が浮動小数点数で<code>0.0</code>の場合は、複素数として扱われる。(精度を考慮した結果なのか？)</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 複素数の例</span>
+<span class="m">#c</span><span class="p">(</span><span class="mi">2</span> <span class="mi">1</span><span class="p">)</span>       <span class="c1">; #c(2 1)</span>
+<span class="m">#c</span><span class="p">(</span><span class="m">2/3</span> <span class="m">3/4</span><span class="p">)</span>   <span class="c1">; #c(2/3 3/4)</span>
+<span class="m">#c</span><span class="p">(</span><span class="mi">2</span> <span class="mf">1.0</span><span class="p">)</span>     <span class="c1">; #c(2.0 1.0)</span>
+<span class="m">#c</span><span class="p">(</span><span class="mf">2.0</span> <span class="mf">1.0d0</span><span class="p">)</span> <span class="c1">; #c(2.0d0 1.0d0)</span>
+<span class="m">#c</span><span class="p">(</span><span class="m">1/2</span> <span class="mf">1.0</span><span class="p">)</span>   <span class="c1">; #c(0.5 2.0)</span>
+<span class="m">#c</span><span class="p">(</span><span class="mi">3</span> <span class="mi">0</span><span class="p">)</span>       <span class="c1">; 3</span>
+<span class="m">#c</span><span class="p">(</span><span class="mf">3.0</span> <span class="mf">0.0</span><span class="p">)</span>   <span class="c1">; #c(3.0 0.0)</span>
+<span class="m">#c</span><span class="p">(</span><span class="m">1/2</span> <span class="mi">0</span><span class="p">)</span>     <span class="c1">; 1/2</span>
+<span class="m">#c</span><span class="p">(</span><span class="m">-6/3</span> <span class="mi">0</span><span class="p">)</span>    <span class="c1">; -2</span></code></pre></div>
+<h2 id="10-3-基本的な数学">10.3 基本的な数学</h2>
+
+<p>基本的な算術演算を示す。</p>
+
+<h3 id="加算-1">加算 <code>+</code> <code>1+</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span>              <span class="c1">; 3</span>
+<span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>            <span class="c1">; 6</span>
+<span class="p">(</span><span class="nv">+</span> <span class="mf">10.0</span> <span class="mf">3.0</span><span class="p">)</span>         <span class="c1">; 13.0</span>
+<span class="p">(</span><span class="nv">+</span> <span class="m">#c</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="m">#c</span><span class="p">(</span><span class="mi">3</span> <span class="mi">4</span><span class="p">))</span>  <span class="c1">; #c(4 6)</span>
+<span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mf">2.0</span><span class="p">)</span>            <span class="c1">; 3.0</span>
+<span class="p">(</span><span class="nv">+</span> <span class="m">#c</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>        <span class="c1">; #c(4 2)</span>
+<span class="p">(</span><span class="nv">+</span> <span class="m">#c</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="m">3/2</span><span class="p">)</span>      <span class="c1">; #c(5/2 2)</span>
+<span class="p">(</span><span class="nv">+</span> <span class="m">#c</span><span class="p">(</span><span class="mi">1</span> <span class="mi">1</span><span class="p">)</span> <span class="m">#c</span><span class="p">(</span><span class="mi">2</span> <span class="mi">-1</span><span class="p">))</span> <span class="c1">; 3</span>
+
+<span class="p">(</span><span class="nv">1+</span> <span class="mi">20</span><span class="p">)</span>              <span class="c1">; 21</span></code></pre></div>
+<h3 id="減算-1">減算 <code>-</code> <code>1-</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">-</span> <span class="mi">5</span> <span class="mi">4</span><span class="p">)</span>    <span class="c1">; 1</span>
+<span class="p">(</span><span class="nv">-</span> <span class="mi">2</span><span class="p">)</span>      <span class="c1">; -2</span>
+<span class="p">(</span><span class="nv">-</span> <span class="mi">10</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span> <span class="c1">; 3</span>
+
+<span class="p">(</span><span class="nv">1-</span> <span class="mi">20</span><span class="p">)</span>    <span class="c1">; 19</span></code></pre></div>
+<h3 id="乗算">乗算 <code>*</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">*</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>   <span class="c1">; 6</span>
+<span class="p">(</span><span class="nv">*</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)</span> <span class="c1">; 24</span></code></pre></div>
+<h3 id="除算">除算 <code>/</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">/</span> <span class="mi">10</span> <span class="mi">5</span><span class="p">)</span>   <span class="c1">; 2</span>
+<span class="p">(</span><span class="nv">/</span> <span class="mi">10</span> <span class="mi">5</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">; 1</span>
+<span class="p">(</span><span class="nv">/</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>    <span class="c1">; 2/3</span>
+<span class="p">(</span><span class="nv">/</span> <span class="mi">4</span><span class="p">)</span>      <span class="c1">; 1/4</span>
+<span class="p">(</span><span class="nv">/</span> <span class="mi">2</span> <span class="mf">3.0</span><span class="p">)</span>  <span class="c1">; 0.6666667</span></code></pre></div>
+<h3 id="剰余を求める演算-mod-rem">剰余を求める演算 <code>mod</code> <code>rem</code></h3>
+
+<p><code>mod</code>と<code>rem</code>の両方とも、剰余を求める関数だが、詳細が異なるため、負の数での結果が異なる。</p>
+
+<p><code>mod</code>は、割られる数 - 割られる数より小さい、最大の<strong>割る数の倍数</strong>で計算される。<br />
+すなわち、後述する丸め演算の関数を使用すると下記の通りの関係がある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">*</span> <span class="p">(</span><span class="nv">floor</span> <span class="p">(</span><span class="nv">/</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">))</span> <span class="nv">y</span><span class="p">)</span> <span class="p">(</span><span class="nv">mod</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">))</span> <span class="c1">; = x</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">mod</span> <span class="mi">7</span> <span class="mi">5</span><span class="p">)</span>
+<span class="c1">; 2</span>
+<span class="p">(</span><span class="nv">mod</span> <span class="mi">-7</span> <span class="mi">5</span><span class="p">)</span>
+<span class="c1">; 3</span></code></pre></div>
+<p><code>rem</code>は、割られる数 - 割られる数より絶対値が小さい、絶対値最大の<strong>割る数の倍数</strong>で計算される。
+すなわち、後述する丸め演算の関数を使用すると下記の通りの関係がある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">*</span> <span class="p">(</span><span class="nv">truncate</span> <span class="p">(</span><span class="nv">/</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">))</span> <span class="nv">y</span><span class="p">)</span> <span class="p">(</span><span class="nv">rem</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">))</span> <span class="c1">; = x</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">rem</span> <span class="mi">7</span> <span class="mi">5</span><span class="p">)</span>
+<span class="c1">; 2</span>
+<span class="p">(</span><span class="nv">rem</span> <span class="mi">-7</span> <span class="mi">5</span><span class="p">)</span>
+<span class="c1">; -2</span></code></pre></div>
+<h3 id="数値を丸める演算-floor-ceiling-truncate-round">数値を丸める演算 <code>floor</code> <code>ceiling</code> <code>truncate</code> <code>round</code></h3>
+
+<p><code>floor</code>は負の無限大の方向に切り捨てて、引数と等しいか小さい値のうち一番大きな整数を返す。(床関数)<br />
+また、<code>floor</code>は返り値を2つ持つ。2つ目の返り値には、丸めた値を持つ。<br />
+したがって、<code>第1戻り値+第2戻り値=丸め対象の値</code>となる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">floor</span> <span class="mf">2.3</span><span class="p">)</span>
+<span class="c1">; 2</span>
+<span class="c1">; 0.29999995</span>
+<span class="p">(</span><span class="nv">floor</span> <span class="mf">-1.25</span><span class="p">)</span>
+<span class="c1">; -2</span>
+<span class="c1">; 0.75</span></code></pre></div>
+<p><code>ceiling</code>は正の無限大の方向に切り上げて、引数と等しいか大きい値のうち一番小さな整数を返す。(天井関数)<br />
+また、<code>ceiling</code>も返り値を2つ持つ。2つ目の返り値には、丸めた値を持つ。<br />
+したがって、<code>第1戻り値+第2戻り値=丸め対象の値</code>となる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">ceiling</span> <span class="mf">2.3</span><span class="p">)</span>
+<span class="c1">; 3</span>
+<span class="c1">; -0.70000005</span>
+<span class="p">(</span><span class="nv">ceiling</span> <span class="mf">-2.3</span><span class="p">)</span>
+<span class="c1">; -2</span>
+<span class="c1">; -0.29999995</span></code></pre></div>
+<p><code>truncate</code>は<code>0</code>の方向に丸める。<br />
+また、<code>truncate</code>も返り値を2つ持つ。2つ目の返り値には、丸めた値を持つ。<br />
+したがって、<code>第1戻り値+第2戻り値=丸め対象の値</code>となる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">truncate</span> <span class="mf">2.3</span><span class="p">)</span>
+<span class="c1">; 2</span>
+<span class="c1">; 0.29999995</span>
+<span class="p">(</span><span class="nv">truncate</span> <span class="mf">-2.3</span><span class="p">)</span>
+<span class="c1">; -2</span>
+<span class="c1">; -0.29999995</span>
+<span class="p">(</span><span class="nv">truncate</span> <span class="mf">2.7</span><span class="p">)</span>
+<span class="c1">; 2</span>
+<span class="c1">; 0.70000005</span>
+<span class="p">(</span><span class="nv">truncate</span> <span class="mf">-2.7</span><span class="p">)</span>
+<span class="c1">; -2</span>
+<span class="c1">; -0.70000005</span></code></pre></div>
+<p><code>round</code>は最も近い整数に丸める。<br />
+また、<code>round</code>も返り値を2つ持つ。2つ目の返り値には、丸めた値を持つ。<br />
+したがって、<code>第1戻り値+第2戻り値=丸め対象の値</code>となる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">round</span> <span class="mf">2.3</span><span class="p">)</span>
+<span class="c1">; 2</span>
+<span class="c1">; 0.29999995</span>
+<span class="p">(</span><span class="nv">round</span> <span class="mf">-2.3</span><span class="p">)</span>
+<span class="c1">; -2</span>
+<span class="c1">; -0.29999995</span>
+<span class="p">(</span><span class="nv">round</span> <span class="mf">2.7</span><span class="p">)</span>
+<span class="c1">; 3</span>
+<span class="c1">; -0.29999995</span>
+<span class="p">(</span><span class="nv">round</span> <span class="mf">-2.7</span><span class="p">)</span>
+<span class="c1">; -3</span>
+<span class="c1">; 0.29999995</span></code></pre></div>
+<h2 id="10-4-数値比較">10.4 数値比較</h2>
+
+<h3 id="toc_16"><code>=</code></h3>
+
+<p><code>=</code>は、数の等値を、<strong>型の違いを無視して</strong>判定する。<br />
+引数が3つ以上ある場合は、全てが等しいときのみ<code>t</code>を返す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">=</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">; t</span>
+<span class="p">(</span><span class="nv">=</span> <span class="mi">10</span> <span class="m">20/2</span><span class="p">)</span> <span class="c1">; t</span>
+<span class="p">(</span><span class="nv">=</span> <span class="mi">1</span> <span class="mf">1.0</span> <span class="m">#c</span><span class="p">(</span><span class="mf">1.0</span> <span class="mf">0.0</span><span class="p">)</span> <span class="m">#c</span><span class="p">(</span><span class="mi">1</span> <span class="mi">0</span><span class="p">))</span> <span class="c1">; t</span></code></pre></div>
+<h3 id="toc_17"><code>/=</code></h3>
+
+<p><code>/=</code>は、2引数の場合は<code>(not (= a b))</code>と等価だが、引数が3つ以上ある場合は、全てが異なるときのみ<code>t</code>を返す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">/=</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">; nil</span>
+<span class="p">(</span><span class="nv">/=</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">; t</span>
+<span class="p">(</span><span class="nv">/=</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">; t</span>
+<span class="p">(</span><span class="nv">/=</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">; nil</span>
+<span class="p">(</span><span class="nv">/=</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mf">1.0</span><span class="p">)</span> <span class="c1">; nil</span></code></pre></div>
+<h3 id="toc_18"><code>&lt;</code> <code>&gt;</code> <code>&gt;=</code> <code>&lt;=</code></h3>
+
+<p><code>&lt;</code> <code>&gt;</code> <code>&gt;=</code> <code>&lt;=</code>は有理数と浮動小数点数に対する順序関数。<br />
+引数が3つ以上ある場合は、それぞれの引数を左から右に向かって比較する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">&lt;</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">; t</span>
+<span class="p">(</span><span class="nv">&gt;</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">; nil</span>
+<span class="p">(</span><span class="nv">&gt;</span> <span class="mi">3</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">; t</span>
+<span class="p">(</span><span class="nv">&lt;</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)</span> <span class="c1">; t</span>
+<span class="p">(</span><span class="nv">&lt;</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">; nil</span>
+<span class="p">(</span><span class="nv">&lt;=</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">; t</span>
+<span class="p">(</span><span class="nv">&lt;=</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">)</span> <span class="c1">; t</span>
+<span class="p">(</span><span class="nv">&lt;=</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span> <span class="mi">3</span><span class="p">)</span> <span class="c1">; nil</span></code></pre></div>
+<h3 id="max-min"><code>max</code> <code>min</code></h3>
+
+<p><code>max</code> <code>min</code>は、引数のうち最大または最小の値を選ぶ。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">max</span> <span class="mi">10</span> <span class="mi">11</span><span class="p">)</span> <span class="c1">; 11</span>
+<span class="p">(</span><span class="nv">min</span> <span class="mi">-12</span> <span class="mi">-10</span><span class="p">)</span> <span class="c1">; -12</span>
+<span class="p">(</span><span class="nv">max</span> <span class="mi">-1</span> <span class="mi">2</span> <span class="mi">-3</span><span class="p">)</span> <span class="c1">; 2</span></code></pre></div>
+<h3 id="zerop-plusp-minusp-oddp-evenp"><code>zerop</code> <code>plusp</code> <code>minusp</code> <code>oddp</code> <code>evenp</code></h3>
+
+<p><code>zerop</code>は単一の実数が<code>0</code>に等しいかを評価する。<br />
+<code>plusp</code>は単一の実数が正数かを評価する。<br />
+<code>minusp</code>は単一の実数が負数かを評価する。<br />
+<code>oddp</code>は単一の整数が奇数かを評価する。<br />
+<code>evenp</code>は単一の整数が偶数かを評価する。</p>
+
+<h2 id="10-5-高度な数学">10.5 高度な数学</h2>
+
+<p>下記のような数学的な関数も標準でサポートしている。</p>
+
+<ul>
+<li>対数関係の関数<code>log</code> <code>exp</code> <code>expt</code></li>
+<li>三角関数<code>sin</code> <code>cos</code> <code>tan</code></li>
+<li>三角関数の逆関数<code>asin</code> <code>acos</code> <code>atan</code></li>
+<li>双曲線関数<code>sinh</code> <code>cosh</code> <code>tanh</code></li>
+<li>双曲線関数の逆関数<code>asinh</code> <code>acosh</code> <code>atanh</code></li>
+</ul>
+
+<h2 id="10-6-文字">10.6 文字</h2>
+
+<p>文字は<code>#\任意の文字</code>で表される。<br />
+例： <code>#\a</code> <code>#\X</code> <code>#\)</code></p>
+
+<p>特殊な文字を表すためのキーワードが設定されている。</p>
+
+<ul>
+<li><code>Space</code> : スペース</li>
+<li><code>Tab</code> : タブ</li>
+<li><code>Page</code> : 改頁</li>
+<li><code>NewLine</code> : 改行(LF)</li>
+<li><code>Linefeed</code> : 改行(LF)</li>
+<li><code>Return</code> : 改行(CR)</li>
+<li><code>Rubout</code> : 削除(右)</li>
+<li><code>Backspace</code> : 削除(左)</li>
+</ul>
+
+<p>参考: <a href="https://gist.github.com/miyamuko/1202374">バッファ内の Common Lisp の特殊文字を #xyzzy Lisp 用に変換する</a></p>
+
+<table>
+<thead>
+<tr>
+<th align="center">Common Lisp</th>
+<th align="center">&nbsp;xyzzy Lisp</th>
+<th align="right">&nbsp;char-code</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td align="center"><code>#\Backspace</code></td>
+<td align="center">&nbsp;<code>#\C-h</code></td>
+<td align="right">&nbsp;        8</td>
+</tr>
+
+<tr>
+<td align="center"><code>#\Tab</code></td>
+<td align="center">&nbsp;<code>#\TAB</code></td>
+<td align="right">&nbsp;        9</td>
+</tr>
+
+<tr>
+<td align="center"><code>#\Newline</code></td>
+<td align="center">&nbsp;<code>#\LFD</code></td>
+<td align="right">&nbsp;       10</td>
+</tr>
+
+<tr>
+<td align="center"><code>#\Linefeed</code></td>
+<td align="center">&nbsp;<code>#\LFD</code></td>
+<td align="right">&nbsp;       10</td>
+</tr>
+
+<tr>
+<td align="center"><code>#\Page</code></td>
+<td align="center">&nbsp;<code>#\C-l</code></td>
+<td align="right">&nbsp;       12</td>
+</tr>
+
+<tr>
+<td align="center"><code>#\Return</code></td>
+<td align="center">&nbsp;<code>#\RET</code></td>
+<td align="right">&nbsp;       13</td>
+</tr>
+
+<tr>
+<td align="center"><code>#\Space</code></td>
+<td align="center">&nbsp;<code>#\SPC</code></td>
+<td align="right">&nbsp;       32</td>
+</tr>
+
+<tr>
+<td align="center"><code>#\Rubout</code></td>
+<td align="center">&nbsp;<code>#\DEL</code></td>
+<td align="right">&nbsp;      127</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="10-8-文字列">10.8 文字列</h2>
+
+<p>文字列リテラルは<code>&quot;</code>で囲う。<code>\</code>は、次の文字をエスケープする。<br />
+<code>&quot;</code>と<code>\</code>を文字列リテラルに含めるには、これらの文字を<code>\</code>でエスケープする必要がある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="s">&#34;foobar&#34;</span> <span class="c1">; foobar</span>
+<span class="s">&#34;foo\&#34;bar&#34;</span> <span class="c1">; foo&#34;bar</span>
+<span class="s">&#34;foo\\bar&#34;</span> <span class="c1">; foo\bar</span>
+<span class="s">&#34;\&#34;foobar\&#34;&#34;</span> <span class="c1">; &#34;foobar&#34;</span>
+<span class="s">&#34;foo\bar&#34;</span> <span class="c1">; foobar</span></code></pre></div>
+<p><strong>NOTE:</strong><br />
+REPLでは通常読み込み可能なフォームで文字列を印字する。つまり全体をダブルクォートで囲い、エスケープが必要なものにはバックスラッシュを付ける。<br />
+したがって、文字列の実際の見た目を確認するには<code>format</code>関数などを使用する必要がある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~a&#34;</span> <span class="nv">str</span><span class="p">)</span> <span class="c1">; 文字列リテラルstrが印字される</span></code></pre></div>
+<h2 id="10-7-文字比較-10-9-文字列比較">10.7 文字比較 10.9 文字列比較</h2>
+
+<table>
+<thead>
+<tr>
+<th>対応する数の比較関数</th>
+<th>&nbsp;文字<br/>大/小文字区別</th>
+<th>&nbsp;文字<br/>大/小文字無視</th>
+<th>&nbsp;文字列<br/>大/小文字区別</th>
+<th>&nbsp;文字列<br/>大/小文字無視</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>=</code></td>
+<td>&nbsp;<code>char=</code></td>
+<td>&nbsp;<code>char-equal</code></td>
+<td>&nbsp;<code>string=</code></td>
+<td>&nbsp;<code>string-equal</code></td>
+</tr>
+
+<tr>
+<td><code>/=</code></td>
+<td>&nbsp;<code>char/=</code></td>
+<td>&nbsp;<code>char-not-equal</code></td>
+<td>&nbsp;<code>string/=</code></td>
+<td>&nbsp;<code>string-not-equal</code></td>
+</tr>
+
+<tr>
+<td><code>&lt;</code></td>
+<td>&nbsp;<code>char&lt;</code></td>
+<td>&nbsp;<code>char-lessp</code></td>
+<td>&nbsp;<code>string&lt;</code></td>
+<td>&nbsp;<code>string-lessp</code></td>
+</tr>
+
+<tr>
+<td><code>&gt;</code></td>
+<td>&nbsp;<code>char&gt;</code></td>
+<td>&nbsp;<code>char-greaterp</code></td>
+<td>&nbsp;<code>string&gt;</code></td>
+<td>&nbsp;<code>string-greaterp</code></td>
+</tr>
+
+<tr>
+<td><code>&lt;=</code></td>
+<td>&nbsp;<code>char&lt;=</code></td>
+<td>&nbsp;<code>char-not-greaterp</code></td>
+<td>&nbsp;<code>string&lt;=</code></td>
+<td>&nbsp;<code>string-not-greaterp</code></td>
+</tr>
+
+<tr>
+<td><code>&gt;=</code></td>
+<td>&nbsp;<code>char&gt;=</code></td>
+<td>&nbsp;<code>char-not-lessp</code></td>
+<td>&nbsp;<code>string&gt;=</code></td>
+<td>&nbsp;<code>string-not-lessp</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>部分文字列を比較したい場合は、<code>string=</code>に下記のようにキーワード引数を利用する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">string=</span> <span class="s">&#34;foobarbaz&#34;</span> <span class="s">&#34;quuxbarfoo&#34;</span> <span class="ss">:start1</span> <span class="mi">3</span> <span class="ss">:end1</span> <span class="mi">6</span> <span class="ss">:start2</span> <span class="mi">4</span> <span class="ss">:end2</span> <span class="mi">7</span><span class="p">)</span>
+<span class="c1">; barを比較してtを返す</span></code></pre></div>
+<ul>
+<li><code>start1</code> 左の文字列の比較開始文字のインデックス</li>
+<li><code>end1</code> 左の文字列の比較終了文字の<strong>次の</strong>インデックス</li>
+<li><code>start2</code> 右の文字列の比較開始文字のインデックス</li>
+<li><code>end2</code> 右の文字列の比較終了文字の<strong>次の</strong>インデックス</li>
+</ul>
+
+<p>上表の比較関数のうち、文字列が異なる場合に<code>t</code>になるもの(つまり<code>string=</code>と<code>string-equal</code>以外)は、文字列に違いが見つかった最初のインデックスを返す。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">string/=</span> <span class="s">&#34;lisp&#34;</span> <span class="s">&#34;lissome&#34;</span><span class="p">)</span> <span class="c1">; 3</span>
+<span class="p">(</span><span class="nv">string&lt;</span> <span class="s">&#34;lisp&#34;</span> <span class="s">&#34;lisper&#34;</span><span class="p">)</span> <span class="c1">; 4</span></code></pre></div>
+<p><strong>NOTE:</strong><br />
+部分文字列を比較した時に返ってくる値は、<strong>全体文字列</strong>に対するインデックス。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">string&lt;</span> <span class="s">&#34;foobar&#34;</span> <span class="s">&#34;abaz&#34;</span> <span class="ss">:start1</span> <span class="mi">3</span> <span class="ss">:start2</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">; 5</span></code></pre></div>
+<p><strong>NOTE:</strong><br />
+文字列をシーケンスとして扱う事もできる。</p>
+
+  </article>
+
+  
+  
+    
+    <div class="author-card">
+    <div class="underline"></div>
+    <div class="author-box">
+      <div class="author-image"><a href="https://github.com/otaon"><img src="/web/images/otaon.png" alt="otaon" /></a></div>
+      <div class="author-content">
+      <p class="author-title">著者</p>
+      <p class="author-name">otaon</p>
+      <p class="author-desc">こんにちは</p>
+      </div>
+    </div>
+  </div>
+    
+  
+  
+
+
+</div>
+
+  </main><div class="footer gradient-2">
+  <div class="container footer-container ">
+    <div class="row">
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        <div class="footer-title">サイトマップ</div>
+        <ul class="list-unstyled">
+            
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/tags/">タグ</a></li>
+              
+              
+                <li><a href="https://otaon.github.io/web/ja-jp/categories/">カテゴリ</a></li>
+              
+            
+            
+            
+            <li><a rel="alternate" type="application/rss&#43;xml" href="https://otaon.github.io/web/ja-jp/index.xml"><i class="fas fa-rss-square"></i> RSS Feed</a></li>
+            
+            
+            
+        </ul>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">SNS</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">GitHub</a></li>
+          
+        </ul>
+        
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3">
+        
+        <div class="footer-title">リンク</div>
+        <ul class="list-unstyled">
+          
+          <li><a href="https://github.com/otaon" rel="noopener" target="_blank">著者について</a></li>
+          
+        </ul>
+        
+      </div> 
+      <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+        <p class="pull-right text-right">
+          <small><em>Powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo</a></em></small><br/>
+          <small><em>Theme - <a href="https://github.com/shaform/hugo-theme-den" rel="noopener" target="_blank">Den</a></em></small><br/>
+          <small>
+            &copy; 
+            otaon
+            2019
+          </small>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="/web/asset/mermaid/mermaid.js"></script>
+
+</body>
+</html>

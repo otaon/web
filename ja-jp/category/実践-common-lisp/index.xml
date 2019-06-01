@@ -6,10 +6,28 @@
     <description>Recent content in 実践-Common-Lisp on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Tue, 28 May 2019 00:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 01 Jun 2019 00:00:00 +0900</lastBuildDate>
     
 	<atom:link href="https://otaon.github.io/web/ja-jp/category/%E5%AE%9F%E8%B7%B5-common-lisp/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>書籍 実践 Common Lisp 第11章 コレクション</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/06/01/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC11%E7%AB%A0-%E3%82%B3%E3%83%AC%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3/</link>
+      <pubDate>Sat, 01 Jun 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/06/01/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC11%E7%AB%A0-%E3%82%B3%E3%83%AC%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3/</guid>
+      <description>この章について この章では、複数の値を1つのオブジェクトにまとめたデータ型(コレクション)について説明する。 11.1 ベクタ ベクタは、整数でインデック</description>
+    </item>
+    
+    <item>
+      <title>書籍 実践 Common Lisp 第10章 数、文字、そして文字列</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/31/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC10%E7%AB%A0-%E6%95%B0%E6%96%87%E5%AD%97%E3%81%9D%E3%81%97%E3%81%A6%E6%96%87%E5%AD%97%E5%88%97/</link>
+      <pubDate>Fri, 31 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/31/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC10%E7%AB%A0-%E6%95%B0%E6%96%87%E5%AD%97%E3%81%9D%E3%81%97%E3%81%A6%E6%96%87%E5%AD%97%E5%88%97/</guid>
+      <description>この章について この章では、Lispのスカラーのデータ型である数、文字、文字列(の一部の仕様)について説明する。 10.1 数 Common Lispでは、分数、浮動</description>
+    </item>
     
     <item>
       <title>書籍 実践 Common Lisp 第9章 実践：ユニットテストフレームワーク</title>

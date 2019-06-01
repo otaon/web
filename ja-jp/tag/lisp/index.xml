@@ -6,10 +6,28 @@
     <description>Recent content in lisp on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Tue, 28 May 2019 00:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 01 Jun 2019 00:00:00 +0900</lastBuildDate>
     
 	<atom:link href="https://otaon.github.io/web/ja-jp/tag/lisp/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>書籍 実践 Common Lisp 第11章 コレクション</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/06/01/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC11%E7%AB%A0-%E3%82%B3%E3%83%AC%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3/</link>
+      <pubDate>Sat, 01 Jun 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/06/01/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC11%E7%AB%A0-%E3%82%B3%E3%83%AC%E3%82%AF%E3%82%B7%E3%83%A7%E3%83%B3/</guid>
+      <description>この章について この章では、複数の値を1つのオブジェクトにまとめたデータ型(コレクション)について説明する。 11.1 ベクタ ベクタは、整数でインデック</description>
+    </item>
+    
+    <item>
+      <title>書籍 実践 Common Lisp 第10章 数、文字、そして文字列</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/31/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC10%E7%AB%A0-%E6%95%B0%E6%96%87%E5%AD%97%E3%81%9D%E3%81%97%E3%81%A6%E6%96%87%E5%AD%97%E5%88%97/</link>
+      <pubDate>Fri, 31 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/31/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC10%E7%AB%A0-%E6%95%B0%E6%96%87%E5%AD%97%E3%81%9D%E3%81%97%E3%81%A6%E6%96%87%E5%AD%97%E5%88%97/</guid>
+      <description>この章について この章では、Lispのスカラーのデータ型である数、文字、文字列(の一部の仕様)について説明する。 10.1 数 Common Lispでは、分数、浮動</description>
+    </item>
     
     <item>
       <title>書籍 実践 Common Lisp 第9章 実践：ユニットテストフレームワーク</title>
@@ -171,24 +189,6 @@
       
       <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-18%E7%AB%A0-%E9%81%85%E5%BB%B6%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0/</guid>
       <description>関数型プログラミングによって、コードが簡潔になることが分かった。 数学的な関数は、同じ引数に対して常に同じ結果を返すことによる利点である。 しか</description>
-    </item>
-    
-    <item>
-      <title>書籍 Land of Lisp 19章 ダイスオブドゥームにグラフィカルなWebインターフェースをつける</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-19%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%81%AB%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%82%AB%E3%83%AB%E3%81%AAweb%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%82%92%E3%81%A4%E3%81%91%E3%82%8B/</link>
-      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-19%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%81%AB%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%82%AB%E3%83%AB%E3%81%AAweb%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%82%92%E3%81%A4%E3%81%91%E3%82%8B/</guid>
-      <description>18章で作ったダイスオブドゥームVer2では、Ver1よりも大きなゲーム盤でプレイ可能となった。 この規模だと、コンソールでの可視化には視認性</description>
-    </item>
-    
-    <item>
-      <title>書籍 Land of Lisp 20章 ダイスオブドゥームをさらに面白く</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-20%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%82%92%E3%81%95%E3%82%89%E3%81%AB%E9%9D%A2%E7%99%BD%E3%81%8F/</link>
-      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-20%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%82%92%E3%81%95%E3%82%89%E3%81%AB%E9%9D%A2%E7%99%BD%E3%81%8F/</guid>
-      <description>ダイスオブドゥームのバージョン4を作る。 今までのバージョンでは、プログラムを簡単にするため、重要なルールを省略していた。 本章では、ゲームのプ</description>
     </item>
     
   </channel>
