@@ -288,7 +288,7 @@ $ git checkout how-to-use-git
 ローカルブランチ `file-system` を作成する。
 
 ```bash
-git branch -b file-system
+git branch file-system
 ```
 
 ローカルブランチに対応するリモートブランチを作成する。
