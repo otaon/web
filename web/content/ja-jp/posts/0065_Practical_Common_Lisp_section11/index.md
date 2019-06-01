@@ -505,3 +505,107 @@ Common Lispには高階関数(`xxx-if`,`xxx-if-not`)が用意されている。
 - `:initial-value` : シーケンスの先頭よりも論理的に前に来る値を指定する
 
 ## 11.11 ハッシュテーブル
+ベクタは整数でインデックスを付けられたデータ構造。  
+これに対して、ハッシュテーブルは任意のオブジェクトでインデックス(キー)を付けられたデータ構造。
+
+### ハッシュテーブル作成
+`make-hash-table`関数でハッシュテーブルを作成する。  
+引数なしの`make-hash-table`関数を使うと、**キーの比較に`eql`を使う**ハッシュテーブルを作成する(デフォルト)。  
+※`eql`は、(シンボル・数値・文字・リストを含む)任意のオブジェクトの**同一性**を判定する。
+
+```lisp
+(defparameter *h* (make-hash-table))
+```
+
+文字列は`eql`だと異なるオブジェクトとして判定されるため、デフォルトのハッシュテーブルを使用できない。  
+そこで、`equal`を使用するハッシュテーブルを生成したい。下記のように`:test`を使用して作成する。  
+`:test`には、下記関数のみ指定できる。
+
+- `eq`
+- `eql`
+- `equal`
+- `eqals`
+
+```lisp
+(defparameter *h* (make-hash-table :test #'equal))
+```
+
+### ハッシュテーブルの要素にアクセス
+ハッシュテーブルの要素にアクセスするには`gethash`関数を使用する。  
+この関数は指定されたキーに対応する値があればそれを返し、なければ`nil`を返す。
+
+```lisp
+(gethash 'foo *h*)
+; nil
+(setf (gethash 'foo *h*) 'quux)
+; QUUX
+(gethash 'foo *h*)
+; QUUX
+; T
+```
+
+**NOTE** `gethash`の引数の順序は、インデックス・コレクションの順番で、これは`elt`と逆になってしまっている。
+
+指定されたキーに`nil`が格納されていた場合を考えると、`gethash`で取得した値が、キーに対応した値なのか、キーに対応した値がなかったときの`nil`なのか判断できない。  
+実は、`gethash`が返す値は**多値**で、第1戻り値は先述の通り、キーに対応する値か、なければ`nil`。第2戻り値は、キーがハッシュテーブルに存在したら`t`、しなければ`nil`になる。  
+`gethash`の戻り値を多値として取得するには`multiple-value-bind`マクロを使用する。
+
+```lisp
+(multiple-value-bind (value present) (gethash 'foo *h*)
+  (print value)
+  (print present))
+; QUUX
+; T
+```
+
+### ハッシュテーブルの要素を削除
+ハッシュテーブルからエントリを削除するには`remhash`を使用する。  
+エントリを削除したら`t`が返り、削除しなかったら`nil`が返る。
+
+```lisp
+(remhash キー　コレクション)
+
+(gethash 'foo *h*)
+; QUUX
+(remhash 'foo *h*)
+; T
+(gethash 'foo *h*)
+; NIL
+; NIL
+(remhash 'bar *h*)
+; NIL
+```
+
+
+### ハッシュテーブルの初期化
+`clrhash`で、ハッシュテーブルの全てのキーと値のペアを削除する。
+
+```lisp
+(clrhash *h*)
+; #<HASH-TABLE :TEST EQL :COUNT 0 {1004B772C3}>
+```
+
+## 11.2 ハッシュテーブル上の反復
+ハッシュテーブルのエントリを走査するには、`maphash`関数を使う。
+
+
+```lisp
+(maphash #'(lambda (key value) (format t "~a => ~a~%" key value)) *h*)
+```
+
+ハッシュテーブルの走査中に、ハッシュテーブルに要素を追加/削除したときの結果は未定義であるため、実行してはいけない。  
+ただし、現在のエントリの値を`(setf (gethash key hash-table) value)`で変更しても良い。  
+また、現在のエントリを`(remhash key hash-table)`で削除しても良い。
+
+```lisp
+; 値が10より小さなエントリをすべて削除する
+(maphash #'(lambda (key value) (when (< value 10) (remhash key *h*))) *h*)
+```
+
+`loop`マクロを使用してもハッシュテーブルを操作できる。
+
+```lisp
+(loop for key being the hash-keys in *h*
+          using (hash-value value)
+  do (format t "~a => ~a~%" key value))
+```
