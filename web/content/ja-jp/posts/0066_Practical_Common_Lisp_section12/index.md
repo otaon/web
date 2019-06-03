@@ -164,3 +164,184 @@ Common Lispにおいては、リストを操作する関数は、リストを無
 1. 古い値を保持しているコンスセルの`car`を新しい値に`setf`する。
 
 上記のように、副作用が明確に規定されたものもあるが、通常はこの副作用を期待したコードは書くべきではない。
+
+## 12.4 リサイクルな関数と構造共有の組み合わせ
+リサイクルな関数を使う際には、その入力となるデータ構造が変更されることに注意する必要がある。  
+しかし、大抵の場合、メモリ使用量の節約などのために、プログラムはデータ構造を共有している。
+
+データ構造を共有している状況でリサイクルな関数を使用するには、リサイクルされたデータを今後使用しないことを注意深く確認する必要がある。しかし、リサイクルな関数の仕様、挙動を全て理解するのは難しい。  
+そこで、安全な使用方法をイディオムとして覚えてしまうのが一番効率が良い。
+
+### イディオム1:リストを`push`と`nreverse`で作る
+下記に示すように、空のリストの先頭に対してどんどん`cons`(`push`も用いられる)していき、最後に`nreverse`することで、追加した順番になったリストを得る事ができる。  
+`nreverse`は、リストの先頭から、コンスセルの`cdr`を直前のコンスセルへの参照に変更しながらトラバースする。
+したがって、`nreverse`のオーダは、要素を追加していくときのオーダと等しくO(n)のため、この方法はそれなりに効率が良い。
+
+```lisp
+(defun upto (max)
+  (let ((result nil))
+    (dotimes (i max)
+      (push i result))
+    (nreverse result)))
+
+(upto 10) ; (0 1 2 3 4 5 6 7 8 9)
+```
+
+### イディオム2:リサイクルな関数の戻り値を、入力となっていた値のメモリ領域に即`setf`する
+これは、「関数的なスタイルで変数を束縛するように見せて、実は同じメモリ領域を使い回す」ということを実現するためのイディオム。
+
+```lisp
+(setf foo (delete nil foo))
+```
+
+**注意**  
+上記の`foo`が、どこか他のデータと構造を共有していた場合、そのデータを破壊してしまう可能性がある。  
+例として、先述のリスト`*list-2`と`*list-3*`を例に挙げる。
+
+```lisp
+*list-2* ; (0 4)
+*list-3* ; (1 2 0 4) ; (0 4) の部分は*list-2*と共有している
+
+(setf *list-3* (delete 4 *list-3*)) ; (1 2 0)
+
+*list-2* ; (0) ←*list-2*のデータ構造が壊れた
+```
+
+`delete`ではなく`remove`を使用していれば、`*list-3*`のデータ構造は一切変更されず、新規に`(1 2 0)`が作成されることになる(一部のデータ構造が共有されるかもしれないが)。  
+上記のように、`setf`を用いたイディオムは絶対に安全というわけではなく、使用状況をよく理解する必要がある。
+
+### `sort`,`stable-srot`,`merge`もリサイクルな関数
+11章に登場した`sort`,`stable-srot`,`merge`もリサイクルな関数だ。  
+さらに、これらの関数には、非破壊的なバージョンが存在しない。  
+したがって、これらの関数の入力となるデータを破壊したくなければ、`copy-list`で予めデータのコピーを作成しておく必要がある。
+
+```lisp
+(defparameter *list* (list 4 3 2 1))
+(sort *list* #'<) ; (1 2 3 4)
+*list* ; (4) ←破壊されている
+```
+
+## 12.5 リスト操作関数
+Common Lispには、リストを操作する関数群が豊富に用意されている。  
+
+- `first`, `second`, `third`, ...., `ninth`, `tenth`で、1-10番目の要素を取得できる
+- `(nth n list)`は、任意の場所の値を取得できる
+  - **`n`は0始まり**
+  - `(elt list n)`も同様の事が可能だが、`nth`の方がリスト専用であるため高速
+- `(nthcdr n list)`は、`cdr`を`n`回呼び出したのと同じ値を返す
+  - `(nthcdr 0 list)`は`list`と等しい
+  - `(nthcdr 1 list`は`(cdr list)`や`(rest list)`と等しい
+- `(last list n)`は、後ろからn番目の要素を取得できる
+  - **`n`は1始まり**
+  - `n`を省略すると末尾要素
+  - `(last '(0 1 2 3 4 5) 4) ; (2 3 4 5)`
+
+`car`と`cdr`を合成した関数も存在する。例えば`cadr`は、`(car (cdr list))`と等しい。  
+合成関数は合計28個存在する。
+
+
+### `(last list [n])`
+リストの末尾要素を返す。オプションの`n`指定で最後のn個のコンスセルを返す。
+
+### `(butlast list [n])`
+最後のコンスセルを除いたリストの**コピー**を返す。  
+オプションの`n`指定で最後のn個のコンスセルを含めない。
+
+### `(nbutlast list [n])`
+`butlast`のリサイクルバージョン。
+
+### `(ldiff list object)`
+指定された`object`までのリストのコピーを返す。
+`object`が`list`を構成するコンスセルそのものの場合に真となる。*1
+
+- *1[Common Lisp Hyper Spec - ldiff](http://clhs.lisp.se/Body/f_ldiffc.htm)
+
+```lisp
+(let ((lists '#((a b c) (a b c . d))))
+  (dotimes (i (length lists)) ()
+    (let ((list (aref lists i)))
+      (format t "~2&list=~S ~21T(tailp object list)~
+                 ~44T(ldiff list object)~%" list)
+      (let ((objects (vector list ; (a b c)
+                             (cddr list) ; (c)
+                             (copy-list (cddr list)) ; (c) (a b c)と別のコンスセル
+                             '(f g h)
+                             '()
+                             'd
+                             'x)))
+        (dotimes (j (length objects)) ()
+          (let ((object (aref objects j)))
+            (format t "~& object=~S ~21T~S ~44T~S"
+                    object (tailp object list) (ldiff list object))))))))
+
+>>  list=(A B C)         (tailp object list)    (ldiff list object)
+>>   object=(A B C)      T                      NIL
+>>   object=(C)          T                      (A B)
+>>   object=(C)          NIL                    (A B C)
+>>   object=(F G H)      NIL                    (A B C)
+>>   object=NIL          T                      (A B C)
+>>   object=D            NIL                    (A B C)
+>>   object=X            NIL                    (A B C)
+>>  
+>>  list=(A B C . D)     (tailp object list)    (ldiff list object)
+>>   object=(A B C . D)  T                      NIL
+>>   object=(C . D)      T                      (A B)
+>>   object=(C . D)      NIL                    (A B C . D)
+>>   object=(F G H)      NIL                    (A B C . D)
+>>   object=NIL          NIL                    (A B C . D)
+>>   object=D            T                      (A B C)
+>>   object=X            NIL                    (A B C . D)
+=>  NIL
+```
+
+### `(tailp object list)`
+指定された`object`がリストを構成するコンスセルの一部である時真を返す。*1
+
+### `(list* list+)`
+1. 指定された引数のうち最後のもの以外をすべて含むリストを生成する。
+1. 最後の引数を、生成したリストの最後のセルの`cdr`にする。*2
+
+- \*2[Common Lisp Hyper Spec - list*](http://clhs.lisp.se/Body/f_list_.htm)
+
+{{<figure src="list.svg" alt="litst" width="400" align="aligncenter">}}
+
+### `(make-list size [:initial-element elm])`
+n個の要素から成るリストを生成する。  
+`:initial-element`で初期値を指定(既定値は`nil`)
+
+### `(revappend list object)`
+`reverse`と`append`の合成関数。  
+最初の引数を反転し、2つ目の引数を結合する。
+
+```lisp
+(revappend '(1 2 3) '(a b c)) =>  (3 2 1 a b c)
+(revappend '(1 2 3) '()) =>  (3 2 1)
+```
+
+### `(nreconc list object)`
+`revappend`のリサイクルバージョン。
+
+```lisp
+ (let ((list-1 '(1 2 3))
+       (list-2 '(a b c)))
+   (print (nreconc list-1 list-2))
+   (print (equal list-1 '(1 2 3)))
+   (print (equal list-2 '(a b c))))
+>>  (3 2 1 A B C)
+>>  NIL
+>>  T
+=>  T
+```
+
+### `(consp object)`
+オブジェクトがコンスセルのときに真を返す述語。
+
+### `(atom object)`
+オブジェクトがコンスセルでないときに真を返す述語。
+
+### `(listp object)`
+オブジェクトがコンスセルか`nil`のときに真を返す述語。
+
+### `(null object)`
+オブジェクトが`nil`のときに真を返す述語。  
+`not`と等価だが、空リストか否かのテストの際には、意図を表すためにこちらを使うべき。
