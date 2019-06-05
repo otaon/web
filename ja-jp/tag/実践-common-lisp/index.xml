@@ -6,10 +6,19 @@
     <description>Recent content in 実践-Common-Lisp on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sat, 01 Jun 2019 00:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 02 Jun 2019 00:00:00 +0900</lastBuildDate>
     
 	<atom:link href="https://otaon.github.io/web/ja-jp/tag/%E5%AE%9F%E8%B7%B5-common-lisp/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>書籍 実践 Common Lisp 第12章 リスト処理：やつらがLISPと呼ぶ理由</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/06/02/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC12%E7%AB%A0-%E3%83%AA%E3%82%B9%E3%83%88%E5%87%A6%E7%90%86%E3%82%84%E3%81%A4%E3%82%89%E3%81%8Clisp%E3%81%A8%E5%91%BC%E3%81%B6%E7%90%86%E7%94%B1/</link>
+      <pubDate>Sun, 02 Jun 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/06/02/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC12%E7%AB%A0-%E3%83%AA%E3%82%B9%E3%83%88%E5%87%A6%E7%90%86%E3%82%84%E3%81%A4%E3%82%89%E3%81%8Clisp%E3%81%A8%E5%91%BC%E3%81%B6%E7%90%86%E7%94%B1/</guid>
+      <description>この章について この章では、リストついて説明する。 12.1 「リストなんてない」 Common Lispにおいては、リストというデータ構造が構築されているわけではな</description>
+    </item>
     
     <item>
       <title>書籍 実践 Common Lisp 第11章 コレクション</title>
