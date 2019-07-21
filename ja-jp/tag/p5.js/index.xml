@@ -6,10 +6,19 @@
     <description>Recent content in p5.js on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sat, 20 Jul 2019 16:16:45 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 20 Jul 2019 23:00:00 +0900</lastBuildDate>
     
 	<atom:link href="https://otaon.github.io/web/ja-jp/tag/p5.js/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>p5.js Demo01 Rotating lines</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/07/20/p5.js-demo01-rotating-lines/</link>
+      <pubDate>Sat, 20 Jul 2019 23:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/07/20/p5.js-demo01-rotating-lines/</guid>
+      <description>デモ 概要 3色の線(=点の集まり)をY軸に対して回転させながら表示するだけの単純なプログラム。 単純だけど、blendMode(SCREEN);</description>
+    </item>
     
     <item>
       <title>p5.jsをHugoの記事に埋め込む方法</title>
