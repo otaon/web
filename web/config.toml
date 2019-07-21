@@ -115,13 +115,18 @@ defaultContentLanguageInSubdir = true
   weight = 1
 
   [[languages.en.menu.main]]
-    name = "Notes"
+    name = "Categories"
     weight = 10
+    identifier = "categories"
+    url = "categories/"
+  [[languages.en.menu.main]]
+    name = "Notes"
+    weight = 20
     identifier = "notes"
     url = "category/notes/"
   [[languages.en.menu.main]]
     name = "Demos"
-    weight = 20
+    weight = 30
     identifier = "demos"
     url = "category/demos/"
 
@@ -147,13 +152,18 @@ defaultContentLanguageInSubdir = true
     description = "れんらくちょう・じゆうちょう"
 
   [[languages.ja-jp.menu.main]]
-    name = "ノート"
+    name = "カテゴリ"
     weight = 10
+    identifier = "categories"
+    url = "categories/"
+  [[languages.ja-jp.menu.main]]
+    name = "ノート"
+    weight = 20
     identifier = "notes"
     url = "category/notes/"
   [[languages.ja-jp.menu.main]]
     name = "デモ"
-    weight = 20
+    weight = 30
     identifier = "demos"
     url = "category/demos/"
 
@@ -164,7 +174,7 @@ defaultContentLanguageInSubdir = true
     url = "https://github.com/otaon"
 
   [[languages.ja-jp.menu.links]]
-    name = "著者について"
+    name = "サイト作者"
     weight = 10
     identifier = "about-me"
     url = "https://github.com/otaon"
