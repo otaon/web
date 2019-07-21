@@ -157,7 +157,7 @@
 <h1 id="実例">実例</h1>
 
 <div class="p5js-canvas">
-	<script src="https://otaon.github.io/webasset/p5/p5.min.js"></script>
+	<script src="https://otaon.github.io/web/asset/p5/p5.min.js"></script>
 	<script src="sketch.js"></script>
 </div>
 
@@ -203,13 +203,13 @@
 
 <p><strong><code>web\web\themes\hugo-theme-den\layouts\shortcodes\p5js.html</code></strong></p>
 <div class="highlight"><pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&#34;p5js-canvas&#34;</span><span class="p">&gt;</span>
-    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;{{ .Site.BaseURL }}asset/p5/p5.min.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;{{ .Site.BaseURL }}/asset/p5/p5.min.js&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
     <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&#34;{{ .Get &#34;</span><span class="na">sketch</span><span class="err">&#34;</span> <span class="err">}}&#34;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
 <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></code></pre></div>
 <dl>
 <dt><code>class=&quot;p5js-canvas&quot;</code></dt>
 <dd>クラス名は適当。他の設定などに被らなければ何でも良い。</dd>
-<dt><code>&lt;script src=&quot;{{ .Site.BaseURL }}asset/p5/p5.min.js&quot;&gt;&lt;/script&gt;</code></dt>
+<dt><code>&lt;script src=&quot;{{ .Site.BaseURL }}/asset/p5/p5.min.js&quot;&gt;&lt;/script&gt;</code></dt>
 <dd>これが記事内で展開されることで、<code>static/</code>に格納した<code>p5.min.js</code>が読み込まれる。</dd>
 <dt><code>&lt;script src=&quot;{{ .Get &quot;sketch&quot; }}&quot;&gt;&lt;/script&gt;</code></dt>
 <dd>ショートコードの<code>sketch</code>属性に実行したいスケッチを指定することで、それが記事内に展開される。<br /></dd>

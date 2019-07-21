@@ -35,7 +35,7 @@
 &lt;h1 id=&#34;実例&#34;&gt;実例&lt;/h1&gt;
 
 &lt;div class=&#34;p5js-canvas&#34;&gt;
-	&lt;script src=&#34;https://otaon.github.io/webasset/p5/p5.min.js&#34;&gt;&lt;/script&gt;
+	&lt;script src=&#34;https://otaon.github.io/web/asset/p5/p5.min.js&#34;&gt;&lt;/script&gt;
 	&lt;script src=&#34;sketch.js&#34;&gt;&lt;/script&gt;
 &lt;/div&gt;
 
@@ -81,13 +81,13 @@
 
 &lt;p&gt;&lt;strong&gt;&lt;code&gt;web\web\themes\hugo-theme-den\layouts\shortcodes\p5js.html&lt;/code&gt;&lt;/strong&gt;&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-html&#34; data-lang=&#34;html&#34;&gt;&lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;class&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;p5js-canvas&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
-    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;script&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;{{ .Site.BaseURL }}asset/p5/p5.min.js&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;script&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;script&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;{{ .Site.BaseURL }}/asset/p5/p5.min.js&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;script&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
     &lt;span class=&#34;p&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;script&lt;/span&gt; &lt;span class=&#34;na&#34;&gt;src&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;&amp;#34;{{ .Get &amp;#34;&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;sketch&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;&amp;#34;&lt;/span&gt; &lt;span class=&#34;err&#34;&gt;}}&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;script&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;
 &lt;span class=&#34;p&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;div&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;dl&gt;
 &lt;dt&gt;&lt;code&gt;class=&amp;quot;p5js-canvas&amp;quot;&lt;/code&gt;&lt;/dt&gt;
 &lt;dd&gt;クラス名は適当。他の設定などに被らなければ何でも良い。&lt;/dd&gt;
-&lt;dt&gt;&lt;code&gt;&amp;lt;script src=&amp;quot;{{ .Site.BaseURL }}asset/p5/p5.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;&lt;/code&gt;&lt;/dt&gt;
+&lt;dt&gt;&lt;code&gt;&amp;lt;script src=&amp;quot;{{ .Site.BaseURL }}/asset/p5/p5.min.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;&lt;/code&gt;&lt;/dt&gt;
 &lt;dd&gt;これが記事内で展開されることで、&lt;code&gt;static/&lt;/code&gt;に格納した&lt;code&gt;p5.min.js&lt;/code&gt;が読み込まれる。&lt;/dd&gt;
 &lt;dt&gt;&lt;code&gt;&amp;lt;script src=&amp;quot;{{ .Get &amp;quot;sketch&amp;quot; }}&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;&lt;/code&gt;&lt;/dt&gt;
 &lt;dd&gt;ショートコードの&lt;code&gt;sketch&lt;/code&gt;属性に実行したいスケッチを指定することで、それが記事内に展開される。&lt;br /&gt;&lt;/dd&gt;
