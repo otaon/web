@@ -5,7 +5,7 @@ lastmod: 2019-07-20T16:16:45+09:00
 draft: false
 toc: true
 tags: ["p5.js", "Hugo"]
-categories: ["Demos"]
+categories: ["Hugo"]
 authors:
 - otaon
 ---
