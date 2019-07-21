@@ -58,7 +58,7 @@ web/web/static/asset$ tree
 
 ```html
 <div class="p5js-canvas">
-	<script src="{{ .Site.BaseURL }}asset/p5/p5.min.js"></script>
+	<script src="{{ .Site.BaseURL }}/asset/p5/p5.min.js"></script>
 	<script src="{{ .Get "sketch" }}"></script>
 </div>
 ```
@@ -66,7 +66,7 @@ web/web/static/asset$ tree
 `class="p5js-canvas"`
 : クラス名は適当。他の設定などに被らなければ何でも良い。
 
-`<script src="{{ .Site.BaseURL }}asset/p5/p5.min.js"></script>`
+`<script src="{{ .Site.BaseURL }}/asset/p5/p5.min.js"></script>`
 : これが記事内で展開されることで、`static/`に格納した`p5.min.js`が読み込まれる。
 
 `<script src="{{ .Get "sketch" }}"></script>`
