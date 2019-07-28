@@ -56,7 +56,7 @@ Hugoで`mermaid.js`を使用できるようにする設定手順を示す。
 
 **追記対象ファイル**
 
-- `scriptをthemes/theme/layouts/partials`
+- `themes/theme/layouts/partials`
   - `header.html` or `footer.html` or `scripts.html`
 
 `scripts.html`に`jquery`や`bootstrap`などの読み込みも行っているため、ここに記述するのが良さそう。
