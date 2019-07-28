@@ -6,10 +6,19 @@
     <description>Recent content in Posts on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sat, 20 Jul 2019 23:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 28 Jul 2019 21:00:00 +0900</lastBuildDate>
     
 	<atom:link href="https://otaon.github.io/web/ja-jp/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>roswellとvimとslimvでlisp環境を作る</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/07/28/roswell%E3%81%A8vim%E3%81%A8slimv%E3%81%A7lisp%E7%92%B0%E5%A2%83%E3%82%92%E4%BD%9C%E3%82%8B/</link>
+      <pubDate>Sun, 28 Jul 2019 21:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/07/28/roswell%E3%81%A8vim%E3%81%A8slimv%E3%81%A7lisp%E7%92%B0%E5%A2%83%E3%82%92%E4%BD%9C%E3%82%8B/</guid>
+      <description>この記事について Vimでlispのコーディングと実行を行うための環境を作成する手順を示す。 参考文献 以下以外にも適宜リンクを記載する。 Common Lis</description>
+    </item>
     
     <item>
       <title>p5.js Demo01 Rotating lines</title>
@@ -180,15 +189,6 @@
       
       <guid>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9/</guid>
       <description>目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 ポインタ・構造体・インターフェース インターフェース ここではinterface{}</description>
-    </item>
-    
-    <item>
-      <title>Go言語入門(構造体・メソッド)</title>
-      <link>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E6%A7%8B%E9%80%A0%E4%BD%93%E3%83%A1%E3%82%BD%E3%83%83%E3%83%89/</link>
-      <pubDate>Sat, 13 Apr 2019 18:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E6%A7%8B%E9%80%A0%E4%BD%93%E3%83%A1%E3%82%BD%E3%83%83%E3%83%89/</guid>
-      <description>目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 ポインタ・構造体・インターフェース 構造体 Goにおける構造体は、C言語と同様に、デ</description>
     </item>
     
   </channel>

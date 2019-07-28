@@ -6,10 +6,19 @@
     <description>Recent content in vim on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Thu, 07 Mar 2019 02:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 28 Jul 2019 21:00:00 +0900</lastBuildDate>
     
 	<atom:link href="https://otaon.github.io/web/ja-jp/tag/vim/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>roswellとvimとslimvでlisp環境を作る</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/07/28/roswell%E3%81%A8vim%E3%81%A8slimv%E3%81%A7lisp%E7%92%B0%E5%A2%83%E3%82%92%E4%BD%9C%E3%82%8B/</link>
+      <pubDate>Sun, 28 Jul 2019 21:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/07/28/roswell%E3%81%A8vim%E3%81%A8slimv%E3%81%A7lisp%E7%92%B0%E5%A2%83%E3%82%92%E4%BD%9C%E3%82%8B/</guid>
+      <description>この記事について Vimでlispのコーディングと実行を行うための環境を作成する手順を示す。 参考文献 以下以外にも適宜リンクを記載する。 Common Lis</description>
+    </item>
     
     <item>
       <title>Vimをビルドする</title>
