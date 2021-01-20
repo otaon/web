@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>書籍 Land of Lisp 12章 ストリーム · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,16 +22,13 @@
 <meta property="og:description" content="REPLによる入出力、ディスク上のファイルの読み書き、LANやインターネットの通信において、 Common Lispでは ストリーム を使用する。 本ドキュメン" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-12%E7%AB%A0-%E3%82%B9%E3%83%88%E3%83%AA%E3%83%BC%E3%83%A0/" />
-<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-03-07T00:00:00+09:00" />
+<meta property="article:modified_time" content="2019-03-07T00:00:00+09:00" />
 <meta itemprop="name" content="書籍 Land of Lisp 12章 ストリーム">
 <meta itemprop="description" content="REPLによる入出力、ディスク上のファイルの読み書き、LANやインターネットの通信において、 Common Lispでは ストリーム を使用する。 本ドキュメン">
-
-
-<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="5477">
+<meta itemprop="datePublished" content="2019-03-07T00:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00+09:00" />
+<meta itemprop="wordCount" content="5176">
 
 
 
@@ -144,101 +141,61 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#12-1-ストリームの種類">12.1 ストリームの種類</a>
-<ul>
-<li><a href="#リソースの種類による分類">リソースの種類による分類</a></li>
-<li><a href="#ストリームの向きによる分類">ストリームの向きによる分類</a>
-<ul>
-<li><a href="#出力ストリーム">出力ストリーム</a>
-<ul>
-<li><a href="#出力ストリームか否かを調べる">出力ストリームか否かを調べる</a></li>
-<li><a href="#データをストリームへと送る">データをストリームへと送る</a></li>
-</ul></li>
-<li><a href="#入力ストリーム">入力ストリーム</a>
-<ul>
-<li><a href="#入力ストリームか否かを調べる">入力ストリームか否かを調べる</a></li>
-<li><a href="#入力ストリームから1文字取り出す">入力ストリームから1文字取り出す</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li><a href="#12-2-ファイルの読み書き">12.2 ファイルの読み書き</a>
-<ul>
-<li><a href="#リストをファイルに読み書きする">リストをファイルに読み書きする</a></li>
-<li><a href="#ファイルが既に存在するか否かをチェックする">ファイルが既に存在するか否かをチェックする</a></li>
-</ul></li>
-<li><a href="#12-3-ソケットを使う">12.3 ソケットを使う</a>
-<ul>
-<li><a href="#ソケットアドレス">ソケットアドレス</a></li>
-<li><a href="#コネクション">コネクション</a></li>
-<li><a href="#ソケット上でメッセージを送る">ソケット上でメッセージを送る</a></li>
-<li><a href="#遊んだ後はお片付け-ストリームを閉じる">遊んだ後はお片付け（ストリームを閉じる）</a></li>
-</ul></li>
-<li><a href="#12-4-異端児の文字列ストリーム">12.4 異端児の文字列ストリーム</a>
-<ul>
-<li><a href="#関数にストリームを渡す">関数にストリームを渡す</a></li>
-<li><a href="#長い文字列を作る">長い文字列を作る</a></li>
-<li><a href="#コードの読みやすさとデバッグ">コードの読みやすさとデバッグ</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#121-ストリームの種類">12.1 ストリームの種類</a>
+      <ul>
+        <li><a href="#リソースの種類による分類">リソースの種類による分類</a></li>
+        <li><a href="#ストリームの向きによる分類">ストリームの向きによる分類</a></li>
+      </ul>
+    </li>
+    <li><a href="#122-ファイルの読み書き">12.2 ファイルの読み書き</a>
+      <ul>
+        <li><a href="#リストをファイルに読み書きする">リストをファイルに読み書きする</a></li>
+        <li><a href="#ファイルが既に存在するか否かをチェックする">ファイルが既に存在するか否かをチェックする</a></li>
+      </ul>
+    </li>
+    <li><a href="#123-ソケットを使う">12.3 ソケットを使う</a>
+      <ul>
+        <li><a href="#ソケットアドレス">ソケットアドレス</a></li>
+        <li><a href="#コネクション">コネクション</a></li>
+        <li><a href="#ソケット上でメッセージを送る">ソケット上でメッセージを送る</a></li>
+        <li><a href="#遊んだ後はお片付けストリームを閉じる">遊んだ後はお片付け（ストリームを閉じる）</a></li>
+      </ul>
+    </li>
+    <li><a href="#124-異端児の文字列ストリーム">12.4 異端児の文字列ストリーム</a>
+      <ul>
+        <li><a href="#関数にストリームを渡す">関数にストリームを渡す</a></li>
+        <li><a href="#長い文字列を作る">長い文字列を作る</a></li>
+        <li><a href="#コードの読みやすさとデバッグ">コードの読みやすさとデバッグ</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<p>REPLによる入出力、ディスク上のファイルの読み書き、LANやインターネットの通信において、<br />
+  <p>REPLによる入出力、ディスク上のファイルの読み書き、LANやインターネットの通信において、<br>
 Common Lispでは <strong>ストリーム</strong> を使用する。</p>
-
 <p>本ドキュメントでは、ストリームの種類、使い方を説明する。</p>
-
-<h2 id="12-1-ストリームの種類">12.1 ストリームの種類</h2>
-
-<p>Common Lispでは、リソースの種類に合わせて、いくつかのストリーム型が用意されている。<br />
+<h2 id="121-ストリームの種類">12.1 ストリームの種類</h2>
+<p>Common Lispでは、リソースの種類に合わせて、いくつかのストリーム型が用意されている。<br>
 また、ストリームの向きにも種類がある。</p>
-
 <ul>
 <li>リソースにデータを書き出す(write)</li>
 <li>リソースからデータを読み込む(read)</li>
 <li>リソースとデータを読み書きする(read/write)</li>
 </ul>
-
 <h3 id="リソースの種類による分類">リソースの種類による分類</h3>
-
 <p>リソースの種類に応じて、ストリームの型を分類する。</p>
-
-<dl>
-  <dt>コンソールストリーム</dt>
-  <dd>標準入出力。</br>REPLとやりよりするのに使っていたストリーム。</dd>
-  <dt>ファイルストリーム</dt>
-  <dd>ディスク上のファイルの読み書きに使うストリーム。</dd>
-  <dt>ソケットストリーム</dt>
-  <dd>ネットワークを通じて他のコンピュータと通信するのに使うストリーム。</dd>
-  <dt>文字列ストリーム</dt>
-  <dd>Lispの文字列からテキストを読み出したり、文字列へと書き込んだりするストリーム。</dd>
-</dl>
-
+<!-- raw HTML omitted -->
 <h3 id="ストリームの向きによる分類">ストリームの向きによる分類</h3>
-
 <p>リソースに対するストリームの向きによってストリームを分類する。</p>
-
-<dl>
-  <dt>出力ストリーム</dt>
-  <dd>リソースにデータを書き出すストリーム。</dd>
-  <dt>入力ストリーム</dt>
-  <dd>リソースからデータを読み込むストリーム。</dd>
-</dl>
-
+<!-- raw HTML omitted -->
 <h4 id="出力ストリーム">出力ストリーム</h4>
-
-<p>出力ストリームは、REPLに文字を表示したり、ファイルに書き出したり、ソケットを通じてデータを送ったりするのに使われる。<br />
-出力ストリームの最も基本的な操作は下記の2つのみである。<br />
+<p>出力ストリームは、REPLに文字を表示したり、ファイルに書き出したり、ソケットを通じてデータを送ったりするのに使われる。<br>
+出力ストリームの最も基本的な操作は下記の2つのみである。<br>
 他のLispのデータ型に比べると、できる操作が限られているが、むしろこれによりストリームが色々と応用できる。</p>
-
 <table>
 <thead>
 <tr>
@@ -246,42 +203,33 @@ Common Lispでは <strong>ストリーム</strong> を使用する。</p>
 <th>コマンド</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>出力ストリームか否かを調べる</td>
 <td><code>output-stream-p</code></td>
 </tr>
-
 <tr>
 <td>データをストリームへと送る</td>
 <td><code>write-char</code></td>
 </tr>
 </tbody>
 </table>
-
 <h5 id="出力ストリームか否かを調べる">出力ストリームか否かを調べる</h5>
-
-<p>REPLには<code>*standard-output*</code>と呼ばれる出力ストリームが結び付けられている。<br />
+<p>REPLには<code>*standard-output*</code>と呼ばれる出力ストリームが結び付けられている。<br>
 次のコードにより、これが有効な出力ストリームか否かを調べることができる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">output-stream</span> <span class="vg">*standard-output*</span><span class="p">)</span>
-<span class="nv">T</span></code></pre></div>
-<h5 id="データをストリームへと送る">データをストリームへと送る</h5>
-
-<p>Lispの文字は<code>write-char</code>を使って出力ストリームに送ることができる。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nv">output-stream</span> <span class="vg">*standard-output*</span><span class="p">)</span>
+<span class="no">T</span>
+</code></pre></div><h5 id="データをストリームへと送る">データをストリームへと送る</h5>
+<p>Lispの文字は<code>write-char</code>を使って出力ストリームに送ることができる。<br>
 文字<code>#\x</code>を<code>*standard-output*</code>ストリームに送り出すには、次のコードを実行する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">write-char</span> <span class="sc">#\x</span> <span class="vg">*standard-output*</span><span class="p">)</span>
-<span class="nv">xNIL</span></code></pre></div>
-<p>このコードは、<code>x</code>を標準出力に書き出す。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nf">write-char</span> <span class="sc">#\x</span> <span class="vg">*standard-output*</span><span class="p">)</span>
+<span class="nv">xNIL</span>
+</code></pre></div><p>このコードは、<code>x</code>を標準出力に書き出す。<br>
 この関数の戻り値<code>nil</code>が<code>x</code>のすぐ次に表示されているが、これは単なる<code>write-char</code>の戻り値。</p>
-
 <p>他にも、バイナリデータなどを操作することもできる。</p>
-
 <h4 id="入力ストリーム">入力ストリーム</h4>
-
-<p>入力ストリームは、データを読み出すために使う。<br />
+<p>入力ストリームは、データを読み出すために使う。<br>
 出力ストリームと同様、入力ストリームに対して行える操作も限られている。</p>
-
 <table>
 <thead>
 <tr>
@@ -289,238 +237,192 @@ Common Lispでは <strong>ストリーム</strong> を使用する。</p>
 <th>コマンド</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>入力ストリームか否かを調べる</td>
 <td><code>input-stream-p</code></td>
 </tr>
-
 <tr>
 <td>ストリームからデータを1つ取り出す</td>
 <td><code>read-char</code></td>
 </tr>
 </tbody>
 </table>
-
 <h5 id="入力ストリームか否かを調べる">入力ストリームか否かを調べる</h5>
-
-<p>REPLには<code>*standard-input*</code>と呼ばれる入力ストリームが結び付けられている。<br />
+<p>REPLには<code>*standard-input*</code>と呼ばれる入力ストリームが結び付けられている。<br>
 次のコードにより、これが有効な入力ストリームか否かを調べることができる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">input-stream-p</span> <span class="vg">*standard-input*</span><span class="p">)</span>
-<span class="nv">T</span></code></pre></div>
-<h5 id="入力ストリームから1文字取り出す">入力ストリームから1文字取り出す</h5>
-
-<p><code>read-char</code>を使って入力ストリームから1文字取り出すことができる。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nf">input-stream-p</span> <span class="vg">*standard-input*</span><span class="p">)</span>
+<span class="no">T</span>
+</code></pre></div><h5 id="入力ストリームから1文字取り出す">入力ストリームから1文字取り出す</h5>
+<p><code>read-char</code>を使って入力ストリームから1文字取り出すことができる。<br>
 次のコードでは、REPLから読み込んでいるため、<code>[enter]</code>キーを押すまでデータが標準入力ストリームに届かないことに注意。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">read-char</span> <span class="vg">*standard-input*</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nf">read-char</span> <span class="vg">*standard-input*</span><span class="p">)</span>
 <span class="nv">123[enter]</span>
-<span class="sc">#\1</span></code></pre></div>
-<p><code>[enter]</code>を押すと、入力ストリームの先頭にある<code>#\1</code>が<code>read-char</code>により返される。</p>
-
-<p><em>ストリームに使える他のコマンド</em><br />
-<code>write-char</code>や<code>read-char</code>以外にも、Common Lispにはストリームを扱うコマンドが多く備わっている。<br />
+<span class="sc">#\1</span>
+</code></pre></div><p><code>[enter]</code>を押すと、入力ストリームの先頭にある<code>#\1</code>が<code>read-char</code>により返される。</p>
+<p><em>ストリームに使える他のコマンド</em><br>
+<code>write-char</code>や<code>read-char</code>以外にも、Common Lispにはストリームを扱うコマンドが多く備わっている。<br>
 例えば、<code>print</code>コマンドに<code>*standart-output*</code>を渡して出力先を指定することができる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">print</span> <span class="ss">&#39;foo</span> <span class="vg">*standard-output*</span><span class="p">)</span>
-<span class="nv">FOO</span></code></pre></div>
-<h2 id="12-2-ファイルの読み書き">12.2 ファイルの読み書き</h2>
-
-<p>ストリームを使うことで、ファイルの読み書きもできる。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nf">print</span> <span class="ss">&#39;foo</span> <span class="vg">*standard-output*</span><span class="p">)</span>
+<span class="nv">FOO</span>
+</code></pre></div><h2 id="122-ファイルの読み書き">12.2 ファイルの読み書き</h2>
+<p>ストリームを使うことで、ファイルの読み書きもできる。<br>
 Common Lispでファイルストリームを作成するのに良い方法としては、<code>with-open-file</code>コマンドを使うことである。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">with-open-file</span> <span class="p">(</span><span class="nv">my-stream</span> <span class="s">&#34;data.txt&#34;</span> <span class="ss">:direction</span> <span class="ss">:output</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;my data&#34;</span> <span class="nv">my-stream</span><span class="p">))</span></code></pre></div>
-<p>この例では、出力ストリームを作って<code>my-stream</code>という変数に格納している。<br />
-このストリームは<code>with-open-file</code>の閉じ括弧まで有効である。<br />
-そして、このストリームに送られたデータは、ディスク上の&rdquo;data.txt&rdquo;というファイルに書き出される。</p>
-
-<p><strong><code>with-open-file</code>の<code>:direction</code>に<code>:output</code>を渡すと出力ストリームが作られる。</strong><br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nb">with-open-file</span> <span class="p">(</span><span class="nv">my-stream</span> <span class="s">&#34;data.txt&#34;</span> <span class="ss">:direction</span> <span class="ss">:output</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;my data&#34;</span> <span class="nv">my-stream</span><span class="p">))</span>
+</code></pre></div><p>この例では、出力ストリームを作って<code>my-stream</code>という変数に格納している。<br>
+このストリームは<code>with-open-file</code>の閉じ括弧まで有効である。<br>
+そして、このストリームに送られたデータは、ディスク上の&quot;data.txt&quot;というファイルに書き出される。</p>
+<p><strong><code>with-open-file</code>の<code>:direction</code>に<code>:output</code>を渡すと出力ストリームが作られる。</strong><br>
 <strong><code>with-open-file</code>の<code>:direction</code>に<code>:input</code>を渡すと入力ストリームが作られる。</strong></p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">with-open-file</span> <span class="p">(</span><span class="nv">my-stream</span> <span class="s">&#34;data.txt&#34;</span> <span class="ss">:direction</span> <span class="ss">:input</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">read</span> <span class="nv">my-stream</span><span class="p">))</span></code></pre></div>
-<p>もう少し複雑な例を次に示す。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nb">with-open-file</span> <span class="p">(</span><span class="nv">my-stream</span> <span class="s">&#34;data.txt&#34;</span> <span class="ss">:direction</span> <span class="ss">:input</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">read</span> <span class="nv">my-stream</span><span class="p">))</span>
+</code></pre></div><p>もう少し複雑な例を次に示す。</p>
 <h3 id="リストをファイルに読み書きする">リストをファイルに読み書きする</h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">animal-noises</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">dog</span> <span class="o">.</span> <span class="nv">woof</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">animal-noises</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">dog</span> <span class="o">.</span> <span class="nv">woof</span><span class="p">)</span>
                          <span class="p">(</span><span class="nv">cat</span> <span class="o">.</span> <span class="nv">meow</span><span class="p">))))</span>
-    <span class="p">(</span><span class="nv">with-open-file</span> <span class="p">(</span><span class="nv">my-stream</span> <span class="s">&#34;animal-noises.txt&#34;</span> <span class="ss">:direction</span> <span class="ss">:output</span><span class="p">)</span>
-       <span class="p">(</span><span class="nv">print</span> <span class="nv">animal-noises</span> <span class="nv">my-stream</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nb">with-open-file</span> <span class="p">(</span><span class="nv">my-stream</span> <span class="s">&#34;animal-noises.txt&#34;</span> <span class="ss">:direction</span> <span class="ss">:output</span><span class="p">)</span>
+       <span class="p">(</span><span class="nf">print</span> <span class="nv">animal-noises</span> <span class="nv">my-stream</span><span class="p">)))</span>
 <span class="p">((</span><span class="nv">DOG</span> <span class="o">.</span> <span class="nv">WOOF</span><span class="p">)(</span><span class="nv">CAT</span> <span class="o">.</span> <span class="nv">MEOW</span><span class="p">))</span>
-<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">with-open-file</span> <span class="p">(</span><span class="nv">my-stream</span> <span class="s">&#34;animal-noises.txt&#34;</span> <span class="ss">:direction</span> <span class="ss">:input</span><span class="p">)</span>
-     <span class="p">(</span><span class="nv">read</span> <span class="nv">my-stream</span><span class="p">))</span>
-<span class="p">((</span><span class="nv">DOG</span> <span class="o">.</span> <span class="nv">WOOF</span><span class="p">)(</span><span class="nv">CAT</span> <span class="o">.</span> <span class="nv">MEOW</span><span class="p">))</span></code></pre></div>
-<h3 id="ファイルが既に存在するか否かをチェックする">ファイルが既に存在するか否かをチェックする</h3>
-
+<span class="nf">&gt;</span> <span class="p">(</span><span class="nb">with-open-file</span> <span class="p">(</span><span class="nv">my-stream</span> <span class="s">&#34;animal-noises.txt&#34;</span> <span class="ss">:direction</span> <span class="ss">:input</span><span class="p">)</span>
+     <span class="p">(</span><span class="nf">read</span> <span class="nv">my-stream</span><span class="p">))</span>
+<span class="p">((</span><span class="nv">DOG</span> <span class="o">.</span> <span class="nv">WOOF</span><span class="p">)(</span><span class="nv">CAT</span> <span class="o">.</span> <span class="nv">MEOW</span><span class="p">))</span>
+</code></pre></div><h3 id="ファイルが既に存在するか否かをチェックする">ファイルが既に存在するか否かをチェックする</h3>
 <p>作ろうとしたファイルが既に存在した場合にどうするかを指定するには<code>:if-exists</code>キーワードを指定する。</p>
-
 <p><strong>ファイルが既に存在した場合はエラーとする</strong></p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">with-open-file</span> <span class="p">(</span><span class="nv">my-stream</span> <span class="s">&#34;data.txt&#34;</span> <span class="ss">:direction</span> <span class="ss">:output</span> <span class="ss">:if-exists</span> <span class="ss">:error</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;my data&#34;</span> <span class="nv">my-stream</span><span class="p">))</span>
-<span class="vg">***</span> <span class="nv">-</span> <span class="nv">OPEN:</span> <span class="nv">file</span> <span class="l">#P&#34;/home/user/data.txt&#34;</span> <span class="nv">already</span> <span class="nv">exists</span></code></pre></div>
-<p><strong>ファイルが既に存在した場合でも強制的に上書きする</strong></p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">with-open-file</span> <span class="p">(</span><span class="nv">my-stream</span> <span class="s">&#34;data.txt&#34;</span> <span class="ss">:direction</span> <span class="ss">:output</span> <span class="ss">:if-exists</span> <span class="ss">:supersede</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;my data&#34;</span> <span class="nv">my-stream</span><span class="p">))</span>
-<span class="s">&#34;my data&#34;</span></code></pre></div>
-<p>実はCommon Lispにもファイルをオープンしたりクローズする低レベルコマンドはある。<br />
-<code>with-open-file</code>はそれらを隠蔽している。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nb">with-open-file</span> <span class="p">(</span><span class="nv">my-stream</span> <span class="s">&#34;data.txt&#34;</span> <span class="ss">:direction</span> <span class="ss">:output</span> <span class="ss">:if-exists</span> <span class="ss">:error</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;my data&#34;</span> <span class="nv">my-stream</span><span class="p">))</span>
+<span class="vg">***</span> <span class="nf">-</span> <span class="nv">OPEN:</span> <span class="nv">file</span> <span class="l">#P&#34;/home/user/data.txt&#34;</span> <span class="nv">already</span> <span class="nv">exists</span>
+</code></pre></div><p><strong>ファイルが既に存在した場合でも強制的に上書きする</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nb">with-open-file</span> <span class="p">(</span><span class="nv">my-stream</span> <span class="s">&#34;data.txt&#34;</span> <span class="ss">:direction</span> <span class="ss">:output</span> <span class="ss">:if-exists</span> <span class="ss">:supersede</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;my data&#34;</span> <span class="nv">my-stream</span><span class="p">))</span>
+<span class="s">&#34;my data&#34;</span>
+</code></pre></div><p>実はCommon Lispにもファイルをオープンしたりクローズする低レベルコマンドはある。<br>
+<code>with-open-file</code>はそれらを隠蔽している。<br>
 もしも<code>with-open-file</code>中でエラーが発生してもファイルを確実にクローズして、リソースを開放してくれる。</p>
-
-<h2 id="12-3-ソケットを使う">12.3 ソケットを使う</h2>
-
-<p>標準的なネットワークにあるコンピュータと通信するためには、ソケットを用意する必要がある。<br />
-ANSI Common Lispの仕様化にソケットの標準化は間に合わなかったため、標準の方法は存在しない。<br />
+<h2 id="123-ソケットを使う">12.3 ソケットを使う</h2>
+<p>標準的なネットワークにあるコンピュータと通信するためには、ソケットを用意する必要がある。<br>
+ANSI Common Lispの仕様化にソケットの標準化は間に合わなかったため、標準の方法は存在しない。<br>
 ここでは、CLISPののソケットコマンドについて説明する。</p>
-
 <h3 id="ソケットアドレス">ソケットアドレス</h3>
-
-<p>ネットワーク上のソケットには <strong>ソケットアドレス</strong> が割り当てられている。<br />
+<p>ネットワーク上のソケットには <strong>ソケットアドレス</strong> が割り当てられている。<br>
 ソケットアドレスは、次の2つの要素からなる。</p>
-
-<dl>
-  <dt>IPアドレス</dt>
-  <dd>ネットワーク上でコンピュータ（厳密にはNIC）を一意に指定する番号</dd>
-  <dt>ポート番号</dt>
-  <dd>プログラムが、同じコンピュータ上の他のプログラムと区別するために使用する番号</dd>
-</dl>
-
+<!-- raw HTML omitted -->
 <h3 id="コネクション">コネクション</h3>
-
 <p>2つのプログラム間でソケットを使ってメッセージをやりとりするには、<strong>コネクション</strong> を初期化する必要がある。</p>
-
 <ol>
-<li>一方のプログラムがソケットを作ってそれをListenすることで、もう一方のプログラムが通信を始めるのを待つ<br />
+<li>一方のプログラムがソケットを作ってそれをListenすることで、もう一方のプログラムが通信を始めるのを待つ<br>
 (ソケットをListenするプログラムはサーバと呼ばれている)</li>
 <li>もう一方のプログラムはクライアントと呼ばれ、自分自身が使うソケットを作った後、サーバとコネクションを確立する</li>
 </ol>
-
 <h3 id="ソケット上でメッセージを送る">ソケット上でメッセージを送る</h3>
-
-<p>まず、2つのCLISPを立ち上げる。<br />
+<p>まず、2つのCLISPを立ち上げる。<br>
 一方をクライアント、もう一方をサーバとする。</p>
-
 <p><strong>NOTE</strong> 必ずCLISPを使用すること。</p>
-
 <p>サーバ側では、<code>socket-server</code>を呼ぶことで、指定したポートの使用権を得る。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="nv">my-socket</span> <span class="p">(</span><span class="nv">socket-server</span> <span class="mi">4321</span><span class="p">))</span>	<span class="c1">; ON THE SERVER</span>
-<span class="nv">MY-SOCKET</span></code></pre></div>
-<p>このコマンドでは、オペレーティングシステムからポート4321を得て、ソケットをそのポートに束縛する。<br />
-作られたソケットは変数<code>my-socket</code>に格納され、この後の例で使えるようになる。</p>
-
-<p><strong>NOTE</strong> このコマンドは危険である。<br />
-なぜなら、ソケットを使用し終えた後、自分でOSに返却する必要がある。<br />
-さもなくば、他の誰もソケットに結び付けられたポートを使えなくなる。<br />
-もしも何か手違いがありポートに束縛したソケットをおかしくしてしまったら、新しくソケットを作るときは別のポート番号を選ぶか、コンピュータを再起動しなければならないかもしれない。<br />
-（Common Lispの例外システムにより、この問題を回避することはできる。）<br />
-（CLISPプロセスを一度終了すれば、いずれOSはこのポートを再利用するが、ポートの状態によっては再利用できるようになるまでしばらく時間がかかるかもしれない。）</p>
-
-<p>次に、サーバ側で、このソケットに接続したクライアントとの通信を扱うストリームを作る。<br />
-<code>socket-accept</code>を実行すると、サーバ側はREPLプロンプトに戻ってこず、クライアントが接続してくるまでlisten中となる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="nv">my-stream</span> <span class="p">(</span><span class="nv">socket-accept</span> <span class="nv">my-socket</span><span class="p">))</span> <span class="c1">; ON THE SERVER</span>
-<span class="nv">MY-STREAM</span></code></pre></div>
-<p>次は、クライアント側で<code>socket-connect</code>コマンドを使ってサーバのソケットに接続する。<br />
-このコマンドを実行したら、すぐにサーバ側の<code>socket-accept</code>関数が戻ってきて、<code>my-stream</code>変数がセットされる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="nv">my-stream</span> <span class="p">(</span><span class="nv">socket-connect</span> <span class="mi">4321</span> <span class="s">&#34;127.0.0.1&#34;</span><span class="p">))</span> <span class="c1">; ON THE CLIENT</span>
-<span class="nv">MY-STREAM</span></code></pre></div>
-<p><strong>NOTE</strong> IPアドレス<code>127.0.0.1</code>は常に現在のコンピュータ自身を指している特殊なIPアドレスである。</p>
-
-<p>ここでCLISPによって作成されたこれらのストリームは、 <strong>双方向ストリーム</strong> である。<br />
-つまり、入力ストリームとしても出力ストリームとしても振る舞い、通信するためにどちらのストリーム用のコマンドも使用できる。</p>
-
-<p>クライアントからサーバに気軽な挨拶を送ってみる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;Yo Server!&#34;</span> <span class="nv">my-stream</span><span class="p">)</span>
-<span class="s">&#34;Yo Server!&#34;</span></code></pre></div>
-<p>そしてサーバ側では次のコマンドを実行する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">read</span> <span class="nv">my-stream</span><span class="p">)</span>
-<span class="s">&#34;Yo Server!&#34;</span></code></pre></div>
-<p>次は、サーバ側で次のようにタイプする。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;What up, Client!&#34;</span> <span class="nv">my-stream</span><span class="p">)</span>
-<span class="s">&#34;What up, Client!&#34;</span></code></pre></div>
-<p>クライアント側に戻って、これを実行する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">read</span> <span class="nv">my-stream</span><span class="p">)</span>
-<span class="s">&#34;What up, Client!&#34;</span></code></pre></div>
-<p>一連の手順を終えると、サーバ側、クライアント側のプロンプトには次のようになっている。</p>
-
-<p><strong>サーバ側</strong></p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="nv">my-socket</span> <span class="p">(</span><span class="nv">socket-server</span> <span class="mi">4321</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="nv">my-socket</span> <span class="p">(</span><span class="nv">socket-server</span> <span class="mi">4321</span><span class="p">))</span>	<span class="c1">; ON THE SERVER</span>
 <span class="nv">MY-SOCKET</span>
-<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="nv">my-stream</span> <span class="p">(</span><span class="nv">socket-accept</span> <span class="nv">my-socket</span><span class="p">))</span>
+</code></pre></div><p>このコマンドでは、オペレーティングシステムからポート4321を得て、ソケットをそのポートに束縛する。<br>
+作られたソケットは変数<code>my-socket</code>に格納され、この後の例で使えるようになる。</p>
+<p><strong>NOTE</strong> このコマンドは危険である。<br>
+なぜなら、ソケットを使用し終えた後、自分でOSに返却する必要がある。<br>
+さもなくば、他の誰もソケットに結び付けられたポートを使えなくなる。<br>
+もしも何か手違いがありポートに束縛したソケットをおかしくしてしまったら、新しくソケットを作るときは別のポート番号を選ぶか、コンピュータを再起動しなければならないかもしれない。<br>
+（Common Lispの例外システムにより、この問題を回避することはできる。）<br>
+（CLISPプロセスを一度終了すれば、いずれOSはこのポートを再利用するが、ポートの状態によっては再利用できるようになるまでしばらく時間がかかるかもしれない。）</p>
+<p>次に、サーバ側で、このソケットに接続したクライアントとの通信を扱うストリームを作る。<br>
+<code>socket-accept</code>を実行すると、サーバ側はREPLプロンプトに戻ってこず、クライアントが接続してくるまでlisten中となる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="nv">my-stream</span> <span class="p">(</span><span class="nv">socket-accept</span> <span class="nv">my-socket</span><span class="p">))</span> <span class="c1">; ON THE SERVER</span>
 <span class="nv">MY-STREAM</span>
-<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">read</span> <span class="nv">my-stream</span><span class="p">)</span>
-<span class="s">&#34;Yo Server!&#34;</span>
-<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;What up, Client!&#34;</span> <span class="nv">my-stream</span><span class="p">)</span>
-<span class="s">&#34;What up, Client!&#34;</span></code></pre></div>
-<p><strong>クライアント側</strong></p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="nv">my-stream</span> <span class="p">(</span><span class="nv">socket-connect</span> <span class="mi">4321</span> <span class="s">&#34;127.0.0.1&#34;</span><span class="p">))</span> <span class="c1">; ON THE CLIENT</span>
+</code></pre></div><p>次は、クライアント側で<code>socket-connect</code>コマンドを使ってサーバのソケットに接続する。<br>
+このコマンドを実行したら、すぐにサーバ側の<code>socket-accept</code>関数が戻ってきて、<code>my-stream</code>変数がセットされる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="nv">my-stream</span> <span class="p">(</span><span class="nv">socket-connect</span> <span class="mi">4321</span> <span class="s">&#34;127.0.0.1&#34;</span><span class="p">))</span> <span class="c1">; ON THE CLIENT</span>
 <span class="nv">MY-STREAM</span>
-<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;Yo Server!&#34;</span> <span class="nv">my-stream</span><span class="p">)</span>
+</code></pre></div><p><strong>NOTE</strong> IPアドレス<code>127.0.0.1</code>は常に現在のコンピュータ自身を指している特殊なIPアドレスである。</p>
+<p>ここでCLISPによって作成されたこれらのストリームは、 <strong>双方向ストリーム</strong> である。<br>
+つまり、入力ストリームとしても出力ストリームとしても振る舞い、通信するためにどちらのストリーム用のコマンドも使用できる。</p>
+<p>クライアントからサーバに気軽な挨拶を送ってみる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;Yo Server!&#34;</span> <span class="nv">my-stream</span><span class="p">)</span>
 <span class="s">&#34;Yo Server!&#34;</span>
-<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">read</span> <span class="nv">my-stream</span><span class="p">)</span>
-<span class="s">&#34;What up, Client!&#34;</span></code></pre></div>
-<p>今ソケットで送信したのは文字列だったが、他にも標準のLispデータ構造なら何でも全く同じようにやりとりできる。</p>
-
-<h3 id="遊んだ後はお片付け-ストリームを閉じる">遊んだ後はお片付け（ストリームを閉じる）</h3>
-
-<p>以上の例で作成したリソースをきちんと開放しておくことは重要である。<br />
+</code></pre></div><p>そしてサーバ側では次のコマンドを実行する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nf">read</span> <span class="nv">my-stream</span><span class="p">)</span>
+<span class="s">&#34;Yo Server!&#34;</span>
+</code></pre></div><p>次は、サーバ側で次のようにタイプする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;What up, Client!&#34;</span> <span class="nv">my-stream</span><span class="p">)</span>
+<span class="s">&#34;What up, Client!&#34;</span>
+</code></pre></div><p>クライアント側に戻って、これを実行する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nf">read</span> <span class="nv">my-stream</span><span class="p">)</span>
+<span class="s">&#34;What up, Client!&#34;</span>
+</code></pre></div><p>一連の手順を終えると、サーバ側、クライアント側のプロンプトには次のようになっている。</p>
+<p><strong>サーバ側</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="nv">my-socket</span> <span class="p">(</span><span class="nv">socket-server</span> <span class="mi">4321</span><span class="p">))</span>
+<span class="nv">MY-SOCKET</span>
+<span class="nf">&gt;</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="nv">my-stream</span> <span class="p">(</span><span class="nv">socket-accept</span> <span class="nv">my-socket</span><span class="p">))</span>
+<span class="nv">MY-STREAM</span>
+<span class="nf">&gt;</span> <span class="p">(</span><span class="nf">read</span> <span class="nv">my-stream</span><span class="p">)</span>
+<span class="s">&#34;Yo Server!&#34;</span>
+<span class="nf">&gt;</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;What up, Client!&#34;</span> <span class="nv">my-stream</span><span class="p">)</span>
+<span class="s">&#34;What up, Client!&#34;</span>
+</code></pre></div><p><strong>クライアント側</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="nv">my-stream</span> <span class="p">(</span><span class="nv">socket-connect</span> <span class="mi">4321</span> <span class="s">&#34;127.0.0.1&#34;</span><span class="p">))</span> <span class="c1">; ON THE CLIENT</span>
+<span class="nv">MY-STREAM</span>
+<span class="nf">&gt;</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;Yo Server!&#34;</span> <span class="nv">my-stream</span><span class="p">)</span>
+<span class="s">&#34;Yo Server!&#34;</span>
+<span class="nf">&gt;</span> <span class="p">(</span><span class="nf">read</span> <span class="nv">my-stream</span><span class="p">)</span>
+<span class="s">&#34;What up, Client!&#34;</span>
+</code></pre></div><p>今ソケットで送信したのは文字列だったが、他にも標準のLispデータ構造なら何でも全く同じようにやりとりできる。</p>
+<h3 id="遊んだ後はお片付けストリームを閉じる">遊んだ後はお片付け（ストリームを閉じる）</h3>
+<p>以上の例で作成したリソースをきちんと開放しておくことは重要である。<br>
 次のコマンドをクライアントとサーバ双方で実行して、両端のストリームを閉じる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">close</span> <span class="nv">my-stream</span><span class="p">)</span>
-<span class="nv">T</span></code></pre></div>
-<p>次に、サーバ側で<code>socket-server-close</code>を実行し、ポートを返却してソケットを開放する。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nf">close</span> <span class="nv">my-stream</span><span class="p">)</span>
+<span class="no">T</span>
+</code></pre></div><p>次に、サーバ側で<code>socket-server-close</code>を実行し、ポートを返却してソケットを開放する。<br>
 さもなくば、リブートするまでポート4321が使えなくなる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">socket-server-close</span> <span class="nv">my-socket</span><span class="p">)</span>
-<span class="nv">NIL</span></code></pre></div>
-<h2 id="12-4-異端児の文字列ストリーム">12.4 異端児の文字列ストリーム</h2>
-
-<p>大抵のストリームは、Lispプログラムが <em>外の世界</em> とやりとりするために使うものである。<br />
-しかし、文字列ストリームは例外で、これは単に文字列をストリームのように見せるだけのものである。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nv">socket-server-close</span> <span class="nv">my-socket</span><span class="p">)</span>
+<span class="no">NIL</span>
+</code></pre></div><h2 id="124-異端児の文字列ストリーム">12.4 異端児の文字列ストリーム</h2>
+<p>大抵のストリームは、Lispプログラムが <em>外の世界</em> とやりとりするために使うものである。<br>
+しかし、文字列ストリームは例外で、これは単に文字列をストリームのように見せるだけのものである。<br>
 他のストリームが外部のリソースを読み書きするのと同じ方法で、文字列ストリームは文字列を読み書きできる。</p>
-
-<p>文字列ストリームは<code>make-string-output-stream</code>と、<code>make-string-input-stream</code>で作ることができる。<br />
+<p>文字列ストリームは<code>make-string-output-stream</code>と、<code>make-string-input-stream</code>で作ることができる。<br>
 次の例では、<code>make-string-output-stream</code>を使っている。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">make-string-output-stream</span><span class="p">))</span>
-<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;This will go into foo. &#34;</span> <span class="nv">foo</span><span class="p">)</span>
-<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;This will also go into foo. &#34;</span> <span class="nv">foo</span><span class="p">)</span>
-<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">get-output-stream-string</span> <span class="nv">foo</span><span class="p">)</span>
-<span class="s">&#34;This will go into foo. This will also go into foo.&#34;</span></code></pre></div>
-<p>Lispは文字列を直接操作できるのに、なぜこのような機能が必要なのか？<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="nv">foo</span> <span class="p">(</span><span class="nf">make-string-output-stream</span><span class="p">))</span>
+<span class="nf">&gt;</span> <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;This will go into foo. &#34;</span> <span class="nv">foo</span><span class="p">)</span>
+<span class="nf">&gt;</span> <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;This will also go into foo. &#34;</span> <span class="nv">foo</span><span class="p">)</span>
+<span class="nf">&gt;</span> <span class="p">(</span><span class="nf">get-output-stream-string</span> <span class="nv">foo</span><span class="p">)</span>
+<span class="s">&#34;This will go into foo. This will also go into foo.&#34;</span>
+</code></pre></div><p>Lispは文字列を直接操作できるのに、なぜこのような機能が必要なのか？<br>
 しかし、文字列ストリームには利点がある。これらの利点を次に示す。</p>
-
 <h3 id="関数にストリームを渡す">関数にストリームを渡す</h3>
-
-<p>ストリームを引数に期待している関数に対して、文字列ストリームを渡すことができる。<br />
-これは、ファイルやソケットを読み書きする関数をデバッグする際にとても役立つ。<br />
+<p>ストリームを引数に期待している関数に対して、文字列ストリームを渡すことができる。<br>
+これは、ファイルやソケットを読み書きする関数をデバッグする際にとても役立つ。<br>
 なぜなら、本物のファイルやソケットの代わりに文字列を入出力データとして与えたり受け取ったりできるからである。</p>
-
-<p>例えば、<code>write-to-log</code>という関数があったとする。<br />
-普通はログ情報はファイルストリームへと送って、ファイルにセーブされるようにするだろう。<br />
-しかし、この関数をデバッグする際には、代わりに文字列ストリームを渡してやれば出力された文字列を読むことで動作確認できる。<br />
-<code>write-to-log</code>が常にファイルに出力されるようにハードコードしてしまうと、こういった柔軟性がなくなってしまう。<br />
+<p>例えば、<code>write-to-log</code>という関数があったとする。<br>
+普通はログ情報はファイルストリームへと送って、ファイルにセーブされるようにするだろう。<br>
+しかし、この関数をデバッグする際には、代わりに文字列ストリームを渡してやれば出力された文字列を読むことで動作確認できる。<br>
+<code>write-to-log</code>が常にファイルに出力されるようにハードコードしてしまうと、こういった柔軟性がなくなってしまう。<br>
 <strong>関数を書くときは、外部リソースを直接リソースを直接アクセスするのではなく、可能な限りストリームを使うように書いておく方が良い。</strong></p>
-
 <h3 id="長い文字列を作る">長い文字列を作る</h3>
-
-<p>非常に長い文字列を作る場合、文字列ストリームを使う方が効率の良いコードになる。<br />
-たくさんの文字列を1つずつ繋いでいくのは非常に効率が悪くなる。これは、文字列を繋ぐ度に文字列用のメモリをアロケートするからだ。<br />
+<p>非常に長い文字列を作る場合、文字列ストリームを使う方が効率の良いコードになる。<br>
+たくさんの文字列を1つずつ繋いでいくのは非常に効率が悪くなる。これは、文字列を繋ぐ度に文字列用のメモリをアロケートするからだ。<br>
 <strong>NOTE</strong> このため、多くのプログラミング言語では <strong>文字列ビルダ</strong> と呼ばれる機能を用意して、このオーバヘッドを避けている(Javaの<code>StringBuilder</code>など)。</p>
-
 <h3 id="コードの読みやすさとデバッグ">コードの読みやすさとデバッグ</h3>
-
-<p>文字列ストリームを、特に<code>with-output-to-string</code>と一緒に使うと、読みやすくデバッグしやすいコードが書ける。<br />
+<p>文字列ストリームを、特に<code>with-output-to-string</code>と一緒に使うと、読みやすくデバッグしやすいコードが書ける。<br>
 ここで、<code>with-output-to-string</code>を使ったコードを次に示す。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">with-output-to-string</span> <span class="p">(</span><span class="vg">*standard-output*</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;the sum of &#34;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">princ</span> <span class="mi">5</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34; and &#34;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">princ</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34; is &#34;</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">princ</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">2</span> <span class="mi">5</span><span class="p">)))</span>
-<span class="s">&#34;the sum of 5 and 2 is 7&#34;</span></code></pre></div>
-<p><code>with-output-to-string</code>マクロは、コンソール、REPL、他のストリームに向かうはずだった出力を横取りして、それを文字列として格納して返す。<br />
-上の例では<code>with-output-to-string</code>の本体内で<code>princ</code>により出力されるデータが自動的に文字列ストリームへと向けられる。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nb">with-output-to-string</span> <span class="p">(</span><span class="vg">*standard-output*</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;the sum of &#34;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">princ</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34; and &#34;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">princ</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34; is &#34;</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">princ</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">2</span> <span class="mi">5</span><span class="p">)))</span>
+<span class="s">&#34;the sum of 5 and 2 is 7&#34;</span>
+</code></pre></div><p><code>with-output-to-string</code>マクロは、コンソール、REPL、他のストリームに向かうはずだった出力を横取りして、それを文字列として格納して返す。<br>
+上の例では<code>with-output-to-string</code>の本体内で<code>princ</code>により出力されるデータが自動的に文字列ストリームへと向けられる。<br>
 <code>with-output-to-string</code>の本体の実行が終わると、文字列ストリームに蓄積された出力が文字列として返される。</p>
-
-<p><code>with-output-to-string</code>は、また、長く複雑な文字列を組み立てるときにも使える。<br />
-本体中で文字列の部分部分を<code>print</code>していって、最後に集められた出力を文字列として得られる。<br />
+<p><code>with-output-to-string</code>は、また、長く複雑な文字列を組み立てるときにも使える。<br>
+本体中で文字列の部分部分を<code>print</code>していって、最後に集められた出力を文字列として得られる。<br>
 文字列の断片を<code>concatenate</code>していくよりも読みやすく効率の良いコードになる。</p>
-
 <p><strong>NOTE</strong> <code>with-output-to-string</code>は関数プログラミングの精神とは逆行している。</p>
 
   </article>
@@ -595,7 +497,9 @@ ANSI Common Lispの仕様化にソケットの標準化は間に合わなかっ�
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

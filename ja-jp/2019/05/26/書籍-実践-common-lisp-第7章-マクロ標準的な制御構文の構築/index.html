@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>書籍 実践 Common Lisp 第7章 マクロ：標準的な制御構文の構築 · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,16 +22,13 @@
 <meta property="og:description" content="この章について この章では、Common Lispに組み込まれているマクロの例と、その使い方について示す。 7.1 whenとunless 先述の通り、i" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/05/26/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC7%E7%AB%A0-%E3%83%9E%E3%82%AF%E3%83%AD%E6%A8%99%E6%BA%96%E7%9A%84%E3%81%AA%E5%88%B6%E5%BE%A1%E6%A7%8B%E6%96%87%E3%81%AE%E6%A7%8B%E7%AF%89/" />
-<meta property="article:published_time" content="2019-05-26T00:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-05-26T00:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-05-26T00:00:00+09:00" />
+<meta property="article:modified_time" content="2019-05-26T00:00:00+09:00" />
 <meta itemprop="name" content="書籍 実践 Common Lisp 第7章 マクロ：標準的な制御構文の構築">
 <meta itemprop="description" content="この章について この章では、Common Lispに組み込まれているマクロの例と、その使い方について示す。 7.1 whenとunless 先述の通り、i">
-
-
-<meta itemprop="datePublished" content="2019-05-26T00:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-05-26T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="2247">
+<meta itemprop="datePublished" content="2019-05-26T00:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-05-26T00:00:00+09:00" />
+<meta itemprop="wordCount" content="2250">
 
 
 
@@ -145,183 +142,161 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#この章について">この章について</a></li>
-<li><a href="#7-1-when-と-unless">7.1 <code>when</code>と<code>unless</code></a></li>
-<li><a href="#7-2-cond">7.2 <code>cond</code></a></li>
-<li><a href="#7-3-and-or-not">7.3 <code>and</code>, <code>or</code>, <code>not</code></a></li>
-<li><a href="#7-4-繰り返し">7.4 繰り返し</a></li>
-<li><a href="#7-5-dolist-と-dotimes">7.5 <code>dolist</code>と<code>dotimes</code></a></li>
-<li><a href="#7-6-do">7.6 <code>do</code></a></li>
-<li><a href="#7-7-loop">7.7 <code>loop</code></a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#この章について">この章について</a></li>
+    <li><a href="#71-whenとunless">7.1 <code>when</code>と<code>unless</code></a></li>
+    <li><a href="#72-cond">7.2 <code>cond</code></a></li>
+    <li><a href="#73-and-or-not">7.3 <code>and</code>, <code>or</code>, <code>not</code></a></li>
+    <li><a href="#74-繰り返し">7.4 繰り返し</a></li>
+    <li><a href="#75-dolistとdotimes">7.5 <code>dolist</code>と<code>dotimes</code></a></li>
+    <li><a href="#76-do">7.6 <code>do</code></a></li>
+    <li><a href="#77-loop">7.7 <code>loop</code></a></li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h2 id="この章について">この章について</h2>
-
+  <h2 id="この章について">この章について</h2>
 <p>この章では、Common Lispに組み込まれているマクロの例と、その使い方について示す。</p>
-
-<h2 id="7-1-when-と-unless">7.1 <code>when</code>と<code>unless</code></h2>
-
-<p>先述の通り、<code>if</code>は特殊オペレータによって提供される。<br />
-<code>condition</code>が評価され、その値が非<code>nil</code>なら<code>then-form</code>が評価されてその値が返る。<br />
+<h2 id="71-whenとunless">7.1 <code>when</code>と<code>unless</code></h2>
+<p>先述の通り、<code>if</code>は特殊オペレータによって提供される。<br>
+<code>condition</code>が評価され、その値が非<code>nil</code>なら<code>then-form</code>が評価されてその値が返る。<br>
 <code>nil</code>なら、<code>else-form</code>が評価されてその値が返る。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">if</span> <span class="nv">condition</span> <span class="nv">then-form</span> <span class="nv">[else-form]</span><span class="p">)</span></code></pre></div>
-<p>この構文の欠点としては、<code>then-form</code>と<code>else-form</code>にそれぞれ1つのフォームしか記述できない点。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="k">if</span> <span class="kt">condition</span> <span class="nv">then-form</span> <span class="nv">[else-form]</span><span class="p">)</span>
+</code></pre></div><p>この構文の欠点としては、<code>then-form</code>と<code>else-form</code>にそれぞれ1つのフォームしか記述できない点。<br>
 愚直に解決するなら、<code>progn</code>を用いて、下記の通り記述する必要がある。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">spam-p</span> <span class="nv">current-message</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">progn</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">spam-p</span> <span class="nv">current-message</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">progn</span>
     <span class="p">(</span><span class="nv">file-in-spam-folder</span> <span class="nv">current-message</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">update-spam-database</span> <span class="nv">current-message</span><span class="p">)))</span></code></pre></div>
-<p>Common Lispには、<code>when</code>という標準のマクロが存在する。これを使うと、上記の式は下記の通り記述できる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">when</span> <span class="p">(</span><span class="nv">spam-p</span> <span class="nv">current-message</span><span class="p">)</span>
+    <span class="p">(</span><span class="nv">update-spam-database</span> <span class="nv">current-message</span><span class="p">)))</span>
+</code></pre></div><p>Common Lispには、<code>when</code>という標準のマクロが存在する。これを使うと、上記の式は下記の通り記述できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nv">spam-p</span> <span class="nv">current-message</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">file-in-spam-folder</span> <span class="nv">current-message</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">update-spam-database</span> <span class="nv">current-message</span><span class="p">))</span></code></pre></div>
-<p><code>when</code>に対応するマクロとして<code>unless</code>がある。これは条件が<code>when</code>と反転しており、<code>condition</code>が<code>nil</code>のときに本体のフォームが評価される。すなわち、下記と同等。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">unless</span> <span class="p">(</span><span class="nv">condition</span> <span class="nv">&amp;rest</span> <span class="nv">body</span><span class="p">)</span>
-  <span class="o">`</span><span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">not</span> <span class="o">,</span><span class="nv">condition</span><span class="p">)</span> <span class="p">(</span><span class="nv">progn</span> <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span></code></pre></div>
-<h2 id="7-2-cond">7.2 <code>cond</code></h2>
-
-<p>条件分岐が複数ある場合は、<code>cond</code>を用いると便利。<br />
+  <span class="p">(</span><span class="nv">update-spam-database</span> <span class="nv">current-message</span><span class="p">))</span>
+</code></pre></div><p><code>when</code>に対応するマクロとして<code>unless</code>がある。これは条件が<code>when</code>と反転しており、<code>condition</code>が<code>nil</code>のときに本体のフォームが評価される。すなわち、下記と同等。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nb">unless</span> <span class="p">(</span><span class="kt">condition</span> <span class="k">&amp;rest</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">not</span> <span class="o">,</span><span class="kt">condition</span><span class="p">)</span> <span class="p">(</span><span class="k">progn</span> <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span>
+</code></pre></div><h2 id="72-cond">7.2 <code>cond</code></h2>
+<p>条件分岐が複数ある場合は、<code>cond</code>を用いると便利。<br>
 デフォルトの場合(必ず実行される場合)を用意する場合は、testに<code>t</code>つまり必ず真と評価される式を記述すれば良い。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">cond</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">cond</span>
   <span class="p">(</span><span class="nv">test-1</span> <span class="nv">form*</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">test-2</span> <span class="nv">form*</span><span class="p">)</span>
   <span class="o">...</span>
-  <span class="p">(</span><span class="nv">test-N</span> <span class="nv">form*</span><span class="p">))</span></code></pre></div>
-<h2 id="7-3-and-or-not">7.3 <code>and</code>, <code>or</code>, <code>not</code></h2>
-
-<p><code>and</code>, <code>or</code>, <code>not</code>のうち、<code>not</code>は関数で、残りはマクロ。<br />
+  <span class="p">(</span><span class="nv">test-N</span> <span class="nv">form*</span><span class="p">))</span>
+</code></pre></div><h2 id="73-and-or-not">7.3 <code>and</code>, <code>or</code>, <code>not</code></h2>
+<p><code>and</code>, <code>or</code>, <code>not</code>のうち、<code>not</code>は関数で、残りはマクロ。<br>
 <code>and</code>, <code>or</code>はマクロであるため、短絡評価できる(関数だと評価を途中で止めることはできない)。</p>
-
-<h2 id="7-4-繰り返し">7.4 繰り返し</h2>
-
-<p>Common Lispにおける特殊オペレータには、ループ構文を直接サポートするものは一つもない。<br />
+<h2 id="74-繰り返し">7.4 繰り返し</h2>
+<p>Common Lispにおける特殊オペレータには、ループ構文を直接サポートするものは一つもない。<br>
 全てのループ制御構造は、原始的な<code>goto</code>の機能を提供する2つの特殊オペレータ(<code>tagbody</code>と<code>go</code>)を用いて、多重に抽象化されて構成されている。</p>
-
-<p>上記の２つの特殊オペレータを別にすると、抽象化の最下層は非常に汎用的(で難解)なループ構文である<code>do</code>だ(7.6章参照)。<br />
-この<code>do</code>を用いて、幾分か使いやすい<code>dolist</code>や<code>dotimes</code>が定義されている。<br />
+<p>上記の２つの特殊オペレータを別にすると、抽象化の最下層は非常に汎用的(で難解)なループ構文である<code>do</code>だ(7.6章参照)。<br>
+この<code>do</code>を用いて、幾分か使いやすい<code>dolist</code>や<code>dotimes</code>が定義されている。<br>
 また、さらに多機能なマクロとして<code>loop</code>がある。</p>
-
-<h2 id="7-5-dolist-と-dotimes">7.5 <code>dolist</code>と<code>dotimes</code></h2>
-
-<p><code>dolist</code>は、<code>list-form</code>から次々に変数値を取り出しながら<code>var</code>に代入し、<code>body-form*</code>を実行していく。<br />
+<h2 id="75-dolistとdotimes">7.5 <code>dolist</code>と<code>dotimes</code></h2>
+<p><code>dolist</code>は、<code>list-form</code>から次々に変数値を取り出しながら<code>var</code>に代入し、<code>body-form*</code>を実行していく。<br>
 これをリスト全体に対してループする。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">dolist</span> <span class="p">(</span><span class="nv">var</span> <span class="nv">list-form</span><span class="p">)</span>
-  <span class="nv">body-form*</span><span class="p">)</span></code></pre></div>
-<p>リストの途中でループから抜けたいなら、<code>return</code>を使用する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">dolist</span> <span class="p">(</span><span class="nv">x</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">print</span> <span class="nv">x</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">evenp</span> <span class="nv">x</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">return</span><span class="p">)))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">dolist</span> <span class="p">(</span><span class="nv">var</span> <span class="nv">list-form</span><span class="p">)</span>
+  <span class="nv">body-form*</span><span class="p">)</span>
+</code></pre></div><p>リストの途中でループから抜けたいなら、<code>return</code>を使用する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">dolist</span> <span class="p">(</span><span class="nv">x</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">print</span> <span class="nv">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">evenp</span> <span class="nv">x</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">return</span><span class="p">)))</span>
 <span class="c1">; =&gt;</span>
 <span class="c1">; 1</span>
 <span class="c1">; 2</span>
-<span class="c1">; NIL</span></code></pre></div>
-<p><code>dotimes</code>は、指定回数(<code>count-form</code>)だけループする。<br />
+<span class="c1">; NIL</span>
+</code></pre></div><p><code>dotimes</code>は、指定回数(<code>count-form</code>)だけループする。<br>
 <code>count-form</code>は必ず整数値に評価される必要がある。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 0からcount-form - 1までループする</span>
-<span class="p">(</span><span class="nv">dotimes</span> <span class="p">(</span><span class="nv">var</span> <span class="nv">count-form</span><span class="p">)</span>
-  <span class="nv">body-form*</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">dotimes</span> <span class="p">(</span><span class="nv">i</span> <span class="mi">4</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">dotimes</span> <span class="p">(</span><span class="nv">var</span> <span class="nv">count-form</span><span class="p">)</span>
+  <span class="nv">body-form*</span><span class="p">)</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">dotimes</span> <span class="p">(</span><span class="nv">i</span> <span class="mi">4</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">))</span>
 <span class="c1">; =&gt;</span>
 <span class="c1">; 0</span>
 <span class="c1">; 1</span>
 <span class="c1">; 2</span>
 <span class="c1">; 3</span>
-<span class="c1">; NIL</span></code></pre></div>
-<h2 id="7-6-do">7.6 <code>do</code></h2>
-
+<span class="c1">; NIL</span>
+</code></pre></div><h2 id="76-do">7.6 <code>do</code></h2>
 <p><code>do</code>は汎用的なループを提供するマクロだが、シンタックスが少々複雑。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">do</span> <span class="p">(</span><span class="nv">variable-definition*</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">do</span> <span class="p">(</span><span class="nv">variable-definition*</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">end-test-form</span> <span class="nv">result-form*</span><span class="p">)</span>
-  <span class="nv">statement*</span><span class="p">)</span></code></pre></div>
-<p>各<code>variable-definition</code>では、ループの本体で使用する変数を定義する。<br />
+  <span class="nv">statement*</span><span class="p">)</span>
+</code></pre></div><p>各<code>variable-definition</code>では、ループの本体で使用する変数を定義する。<br>
 <code>variable-definition</code>一つの定義は下記の通り。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; variable-definition</span>
-<span class="p">(</span><span class="nv">var</span> <span class="nv">init-form</span> <span class="nv">step-form</span><span class="p">)</span></code></pre></div>
-<p><code>init-form</code>がループの開始時に評価されて、その値が<code>var</code>に入る。<br />
-次のループの繰り返し毎に<code>step-form</code>が評価され、その新しい値が<code>var</code>に代入される。<br />
+<span class="p">(</span><span class="nv">var</span> <span class="nv">init-form</span> <span class="nv">step-form</span><span class="p">)</span>
+</code></pre></div><p><code>init-form</code>がループの開始時に評価されて、その値が<code>var</code>に入る。<br>
+次のループの繰り返し毎に<code>step-form</code>が評価され、その新しい値が<code>var</code>に代入される。<br>
 <code>init-form</code>を省略すると、<code>var</code>は<code>nil</code>に束縛される。</p>
-
 <p><code>step-form</code>は省略可能で、省略した場合は、<code>body-form</code>で新たに値を代入するまで<code>var</code>の値は変化しない。</p>
-
-<p>毎回のループ開始時には、全てのループ変数に新しい値が与えられてから<code>end-test-form</code>が評価される。<br />
-その値が<strong><code>nil</code></strong>である限りループが繰り返され、<code>statements</code>が順番に実行される。</p>
-
+<p>毎回のループ開始時には、全てのループ変数に新しい値が与えられてから<code>end-test-form</code>が評価される。<br>
+その値が**<code>nil</code>**である限りループが繰り返され、<code>statements</code>が順番に実行される。</p>
 <p><code>end-test-form</code>が真になったら<code>result-form</code>が評価されて、その最後のフォームの値が<code>do</code>の値として返される。</p>
-
 <p><code>do</code>の構文は以上のとおり覚えにくい。ここで、<strong><code>do</code>において絶対に必要となる括弧</strong>を下記に示す。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">do</span> <span class="p">(</span><span class="nv">variable-definition*</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">do</span> <span class="p">(</span><span class="nv">variable-definition*</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">end-tet-form</span> <span class="nv">result-form*</span><span class="p">)</span>
-  <span class="nv">statement*</span><span class="p">)</span></code></pre></div>
-<p><code>result-form</code>を省略した<code>do</code>も記述できる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">do</span> <span class="p">((</span><span class="nv">i</span> <span class="mi">0</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">i</span><span class="p">)))</span>
-    <span class="p">((</span><span class="nv">&gt;=</span> <span class="nv">i</span> <span class="mi">4</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">))</span>
+  <span class="nv">statement*</span><span class="p">)</span>
+</code></pre></div><p><code>result-form</code>を省略した<code>do</code>も記述できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">do</span> <span class="p">((</span><span class="nv">i</span> <span class="mi">0</span> <span class="p">(</span><span class="nf">1+</span> <span class="nv">i</span><span class="p">)))</span>
+    <span class="p">((</span><span class="nf">&gt;=</span> <span class="nv">i</span> <span class="mi">4</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">))</span>
 
 <span class="c1">; 上記と同等のコード</span>
-<span class="p">(</span><span class="nv">dotimes</span> <span class="p">(</span><span class="nv">i</span> <span class="mi">4</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">))</span></code></pre></div>
-<p><code>statement</code>を省略した<code>do</code>も記述できる。<br />
+<span class="p">(</span><span class="nb">dotimes</span> <span class="p">(</span><span class="nv">i</span> <span class="mi">4</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">))</span>
+</code></pre></div><p><code>statement</code>を省略した<code>do</code>も記述できる。<br>
 下記は10番目のフィボナッチ数を返す例。</p>
-<div class="highlight"><pre class="chroma"><code class="language-do" data-lang="do">(do ((n 0 (1+ n)) ; variable-definition : index
+<pre><code class="language-do" data-lang="do">(do ((n 0 (1+ n)) ; variable-definition : index
      (cur 0 next) ; variable-definition : 現在のフィボナッチ数
      (next 1 (+ cur next))) ; variable-definition : 次のフィボナッチ数
-    ((= 10 n) cur)) ; result-form : 10番目のフィボナッチ数を返す</code></pre></div>
-<p>変数を一つも束縛しない<code>do</code>も記述できる。<br />
-下記は現在時刻がダイナミック変数の値より小さい間、1分に1回&rdquo;Waiting&rdquo;と表示する。<br />
+    ((= 10 n) cur))	; result-form : 10番目のフィボナッチ数を返す
+</code></pre><p>変数を一つも束縛しない<code>do</code>も記述できる。<br>
+下記は現在時刻がダイナミック変数の値より小さい間、1分に1回&quot;Waiting&quot;と表示する。<br>
 <strong>1つもループ変数を使わなくとも、空の変数リストが必要である点に注意。</strong></p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">do</span> <span class="p">()</span>
-    <span class="p">((</span><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">get-universal-time</span><span class="p">)</span> <span class="vg">*some-future-date*</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;Waiting~%&#34;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">sleep</span> <span class="mi">60</span><span class="p">))</span></code></pre></div>
-<h2 id="7-7-loop">7.7 <code>loop</code></h2>
-
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">do</span> <span class="p">()</span>
+    <span class="p">((</span><span class="nf">&gt;</span> <span class="p">(</span><span class="nf">get-universal-time</span><span class="p">)</span> <span class="vg">*some-future-date*</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34;Waiting~%&#34;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">sleep</span> <span class="mi">60</span><span class="p">))</span>
+</code></pre></div><h2 id="77-loop">7.7 <code>loop</code></h2>
 <p><code>loop</code>マクロは、できる事が多い。多すぎて全てを把握し切るには時間と労力が必要となる。</p>
-
 <p>非常に単純なループは、何も変数を束縛しない無限ループで、下記の通り。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span>
-  <span class="nv">body-form*</span><span class="p">)</span></code></pre></div>
-<p>先述の<code>do</code>の無限ループを<code>loop</code>で書き直すと下記の通り。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span>
-  <span class="p">(</span><span class="nv">when</span> <span class="p">(</span><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">get-universal-time</span><span class="p">)</span> <span class="vg">*some-future-date*</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">return</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;Waiting~%&#34;</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">sleep</span> <span class="mi">60</span><span class="p">))</span></code></pre></div>
-<p>「ループキーワード」と呼ばれる<code>loop</code>マクロ特有のキーワードを使用すると、<code>loop</code>でかなり複雑な繰り返しを実現できる。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span>
+  <span class="nv">body-form*</span><span class="p">)</span>
+</code></pre></div><p>先述の<code>do</code>の無限ループを<code>loop</code>で書き直すと下記の通り。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span>
+  <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">&gt;</span> <span class="p">(</span><span class="nf">get-universal-time</span><span class="p">)</span> <span class="vg">*some-future-date*</span><span class="p">)</span>
+    <span class="p">(</span><span class="nb">return</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34;Waiting~%&#34;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">sleep</span> <span class="mi">60</span><span class="p">))</span>
+</code></pre></div><p>「ループキーワード」と呼ばれる<code>loop</code>マクロ特有のキーワードを使用すると、<code>loop</code>でかなり複雑な繰り返しを実現できる。</p>
 <p>例として、1から10までの数をリストに集めるループを示す。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="mi">10</span> <span class="nv">collecting</span> <span class="nv">i</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="mi">10</span> <span class="nv">collecting</span> <span class="nv">i</span><span class="p">)</span>
 <span class="c1">; =&gt; (1 2 3 4 5 6 7 8 9 10)</span>
 
 <span class="c1">; 上記と同等のdoループ</span>
-<span class="p">(</span><span class="nv">do</span> <span class="p">((</span><span class="nv">nums</span> <span class="no">nil</span><span class="p">)</span>
-     <span class="p">(</span><span class="nv">i</span> <span class="mi">1</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">i</span><span class="p">)))</span>
-    <span class="p">((</span><span class="nv">&gt;</span> <span class="nv">i</span> <span class="mi">10</span><span class="p">)</span> <span class="p">(</span><span class="nv">nreverse</span> <span class="nv">nums</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">push</span> <span class="nv">i</span> <span class="nv">nums</span><span class="p">))</span>
-<span class="c1">; =&gt; (1 2 3 4 5 6 7 8 9 10)</span></code></pre></div>
-<p><strong>最初の10個の平方数を合計する例</strong></p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">x</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="mi">10</span> <span class="nv">summing</span> <span class="p">(</span><span class="nv">expt</span> <span class="nv">x</span> <span class="mi">2</span><span class="p">))</span>
-<span class="c1">; =&gt; 385</span></code></pre></div>
-<p><strong>文字列中の母音を数える例</strong></p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">x</span> <span class="nv">across</span> <span class="s">&#34;the quick brown fox jumps over the lazy dog&#34;</span>
-      <span class="nv">counting</span> <span class="p">(</span><span class="nv">find</span> <span class="nv">x</span> <span class="s">&#34;aeiou&#34;</span><span class="p">))</span>
-<span class="c1">; =&gt; 11</span></code></pre></div>
-<p><strong>11番目のフィボナッチ数を計算する例</strong></p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">10</span>
-      <span class="nv">and</span> <span class="nv">a</span> <span class="nv">=</span> <span class="mi">0</span> <span class="nv">then</span> <span class="nv">b</span>
-      <span class="nv">and</span> <span class="nv">b</span> <span class="nv">=</span> <span class="mi">1</span> <span class="nv">then</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">b</span> <span class="nv">a</span><span class="p">)</span>
-      <span class="nv">finally</span> <span class="p">(</span><span class="nv">return</span> <span class="nv">a</span><span class="p">))</span></code></pre></div>
-<p>上記の通り、<code>loop</code>マクロには様々なループキーワードを用いることができる。</p>
+<span class="p">(</span><span class="nb">do</span> <span class="p">((</span><span class="nv">nums</span> <span class="no">nil</span><span class="p">)</span>
+     <span class="p">(</span><span class="nv">i</span> <span class="mi">1</span> <span class="p">(</span><span class="nf">1+</span> <span class="nv">i</span><span class="p">)))</span>
+    <span class="p">((</span><span class="nf">&gt;</span> <span class="nv">i</span> <span class="mi">10</span><span class="p">)</span> <span class="p">(</span><span class="nf">nreverse</span> <span class="nv">nums</span><span class="p">))</span>
+  <span class="p">(</span><span class="nb">push</span> <span class="nv">i</span> <span class="nv">nums</span><span class="p">))</span>
+<span class="c1">; =&gt; (1 2 3 4 5 6 7 8 9 10)</span>
+</code></pre></div><p><strong>最初の10個の平方数を合計する例</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">x</span> <span class="nv">from</span> <span class="mi">1</span> <span class="nv">to</span> <span class="mi">10</span> <span class="nv">summing</span> <span class="p">(</span><span class="nf">expt</span> <span class="nv">x</span> <span class="mi">2</span><span class="p">))</span>
+<span class="c1">; =&gt; 385</span>
+</code></pre></div><p><strong>文字列中の母音を数える例</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">x</span> <span class="nv">across</span> <span class="s">&#34;the quick brown fox jumps over the lazy dog&#34;</span>
+      <span class="nv">counting</span> <span class="p">(</span><span class="nf">find</span> <span class="nv">x</span> <span class="s">&#34;aeiou&#34;</span><span class="p">))</span>
+<span class="c1">; =&gt; 11</span>
+</code></pre></div><p><strong>11番目のフィボナッチ数を計算する例</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">10</span>
+      <span class="nb">and</span> <span class="nv">a</span> <span class="nf">=</span> <span class="mi">0</span> <span class="nv">then</span> <span class="nv">b</span>
+      <span class="nb">and</span> <span class="nv">b</span> <span class="nf">=</span> <span class="mi">1</span> <span class="nv">then</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">b</span> <span class="nv">a</span><span class="p">)</span>
+      <span class="nv">finally</span> <span class="p">(</span><span class="nb">return</span> <span class="nv">a</span><span class="p">))</span>
+</code></pre></div><p>上記の通り、<code>loop</code>マクロには様々なループキーワードを用いることができる。</p>
 
   </article>
 
@@ -395,7 +370,9 @@
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

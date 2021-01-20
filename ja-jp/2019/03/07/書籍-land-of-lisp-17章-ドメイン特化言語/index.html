@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>書籍 Land of Lisp 17章 ドメイン特化言語 · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,16 +22,13 @@
 <meta property="og:description" content="マクロが最も効果的な場面の一つは、 ドメイン特化言語(DSL) を作る場面である。 DSLプログラミングは高度なマクロプログラミングテクニックの1" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-17%E7%AB%A0-%E3%83%89%E3%83%A1%E3%82%A4%E3%83%B3%E7%89%B9%E5%8C%96%E8%A8%80%E8%AA%9E/" />
-<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-03-07T00:00:00+09:00" />
+<meta property="article:modified_time" content="2019-03-07T00:00:00+09:00" />
 <meta itemprop="name" content="書籍 Land of Lisp 17章 ドメイン特化言語">
 <meta itemprop="description" content="マクロが最も効果的な場面の一つは、 ドメイン特化言語(DSL) を作る場面である。 DSLプログラミングは高度なマクロプログラミングテクニックの1">
-
-
-<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="7183">
+<meta itemprop="datePublished" content="2019-03-07T00:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00+09:00" />
+<meta itemprop="wordCount" content="7181">
 
 
 
@@ -144,62 +141,50 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#17-1-ドメインとは何か">17.1 ドメインとは何か</a></li>
-<li><a href="#17-2-svgファイルを書き出す">17.2 SVGファイルを書き出す</a>
-<ul>
-<li><a href="#タグマクロを使ってxmlとhtmlを生成する">タグマクロを使ってXMLとHTMLを生成する</a>
-<ul>
-<li><a href="#マクロの補助関数を書く">マクロの補助関数を書く</a></li>
-<li><a href="#tagマクロを作る">tagマクロを作る</a></li>
-<li><a href="#tagマクロを使ってhtmlを生成する">tagマクロを使ってHTMLを生成する</a></li>
-<li><a href="#svg特有のマクロと関数を作る">SVG特有のマクロと関数を作る</a></li>
-<li><a href="#もっと複雑なsvg画像を描画する">もっと複雑なSVG画像を描画する</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#17-3-魔法使いのアドベンチャーゲームに新コマンドを追加する">17.3 魔法使いのアドベンチャーゲームに新コマンドを追加する</a>
-<ul>
-<li><a href="#ゲームコマンドを直接定義する">ゲームコマンドを直接定義する</a>
-<ul>
-<li><a href="#溶接-コマンド">「溶接」コマンド</a></li>
-<li><a href="#投げ入れる-コマンド">「投げ入れる」コマンド</a></li>
-</ul></li>
-<li><a href="#game-action-マクロ"><code>game-action</code>マクロ</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#タグマクロを使ってxmlとhtmlを生成する">タグマクロを使ってXMLとHTMLを生成する</a>
+      <ul>
+        <li><a href="#マクロの補助関数を書く">マクロの補助関数を書く</a></li>
+        <li><a href="#tagマクロを作る">tagマクロを作る</a></li>
+        <li><a href="#tagマクロを使ってhtmlを生成する">tagマクロを使ってHTMLを生成する</a></li>
+        <li><a href="#svg特有のマクロと関数を作る">SVG特有のマクロと関数を作る</a></li>
+        <li><a href="#もっと複雑なsvg画像を描画する">もっと複雑なSVG画像を描画する</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#ゲームコマンドを直接定義する">ゲームコマンドを直接定義する</a>
+      <ul>
+        <li><a href="#溶接コマンド">「溶接」コマンド</a></li>
+        <li><a href="#投げ入れるコマンド">「投げ入れる」コマンド</a></li>
+      </ul>
+    </li>
+    <li><a href="#game-actionマクロ"><code>game-action</code>マクロ</a></li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<p>マクロが最も効果的な場面の一つは、 <strong>ドメイン特化言語(DSL)</strong> を作る場面である。
+  <p>マクロが最も効果的な場面の一つは、 <strong>ドメイン特化言語(DSL)</strong> を作る場面である。
 DSLプログラミングは高度なマクロプログラミングテクニックの1つで、難しい問題を解くために、Lispの構造をその問題に最適な言語へと大幅に変更するというものである。
 DSLプログラミングにマクロが必須というわけではないが、Lispではいくつかのマクロを書くことで簡単にDSLを作ることができる。</p>
-
-<h1 id="17-1-ドメインとは何か">17.1 ドメインとは何か</h1>
-
+<h1 id="171-ドメインとは何か">17.1 ドメインとは何か</h1>
 <p>例えば、「平均的なプログラム」というものを思い浮かべたとしても、個々のプログラムはその「平均」からは外れている。
 すなわち、各プログラムは、特定の問題を解くために作られる。
 そして、人が考えを及ぼす領域( <strong>ドメイン</strong> )には、それぞれ、その領域でこれまでに考え出された様々な枠組みがあり、それが問題を解くプログラムの書き方にも影響を与える。
 <strong>DSL</strong> を使うと、元のプログラミング言語を、ドメイン特有の枠組みに合わせた言語へ拡張できる。</p>
-
 <p>ここからは、特定のドメインを取り上げて、そのドメインでLispを使いやすくするDSLを2つ作ってみる。</p>
-
 <p><strong>作成するDSL</strong></p>
-
 <ul>
 <li>SVG(scalable vector graphics)ファイルを書き出すためのDSL</li>
 <li>魔法使いのアドベンチャーゲームのコマンドのためのDSL</li>
 </ul>
-
-<h1 id="17-2-svgファイルを書き出す">17.2 SVGファイルを書き出す</h1>
-
+<h1 id="172-svgファイルを書き出す">17.2 SVGファイルを書き出す</h1>
 <p>SVGフォーマットは、グラフィクスの描画のためのファイルフォーマットである。
 円や多角形といったオブジェクトを配置し、コンピュータによってそれを描画する。
 SVGフォーマットでは、画像をピクセルではなくベクタによって記述するため、SVGイメージは任意の大きさに拡大縮小して描画できる。</p>
-
 <p>SVGフォーマットはWebブラウザで描画できる。
 実際に、SVGフォーマットのファイルをWebブラウザで描画してみる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;svg</span> <span class="na">xmlns=</span><span class="s">&#34;http://www.w3.org/2000/svg&#34;</span><span class="nt">&gt;</span>
@@ -207,9 +192,8 @@ SVGフォーマットでは、画像をピクセルではなくベクタによ�
 	<span class="nt">&lt;/circle&gt;</span>
 	<span class="nt">&lt;circle</span> <span class="na">cx=</span><span class="s">&#34;100&#34;</span> <span class="na">cy=</span><span class="s">&#34;100&#34;</span> <span class="na">r=</span><span class="s">&#34;50&#34;</span> <span class="na">style=</span><span class="s">&#34;fill:rgb(0,0,255);stroke:rgb(0,0,155)&#34;</span><span class="nt">&gt;</span>
 	<span class="nt">&lt;/circle&gt;</span>
-<span class="nt">&lt;/svg&gt;</span></code></pre></div>
-<h2 id="タグマクロを使ってxmlとhtmlを生成する">タグマクロを使ってXMLとHTMLを生成する</h2>
-
+<span class="nt">&lt;/svg&gt;</span>
+</code></pre></div><h2 id="タグマクロを使ってxmlとhtmlを生成する">タグマクロを使ってXMLとHTMLを生成する</h2>
 <p>XMLフォーマットは(HTMLフォーマットと同様に)入れ子になったタグによって構成されている。
 開きタグは、それぞれ、閉じタグと対になっている。
 閉じタグは、開きタグと同じ名前だが、先頭に<code>/</code>がついている。
@@ -217,43 +201,39 @@ SVGフォーマットでは、画像をピクセルではなくベクタによ�
 <div class="highlight"><pre class="chroma"><code class="language-xml" data-lang="xml"><span class="nt">&lt;mytag</span> <span class="na">color=</span><span class="s">&#34;BLUE&#34;</span> <span class="na">height=</span><span class="s">&#34;9&#34;</span><span class="nt">&gt;</span>
 	<span class="nt">&lt;inner_tag&gt;</span>
 	<span class="nt">&lt;/inner_tag&gt;</span>
-<span class="nt">&lt;/mytag&gt;</span></code></pre></div>
-<h3 id="マクロの補助関数を書く">マクロの補助関数を書く</h3>
-
+<span class="nt">&lt;/mytag&gt;</span>
+</code></pre></div><h3 id="マクロの補助関数を書く">マクロの補助関数を書く</h3>
 <p>マクロを作成していると、マクロの仕事の大部分は関数でこなせると気付く場面が多々ある。
 実際、マクロの仕事の殆どは補助関数に任せて、それからマクロを実装する方が良い。
 そうすれば、マクロそのものはシンプルに保てる。</p>
-
 <p>ここからは、LispからXML形式のタグを出力するための補助関数を先に作成する。
 まず、補助関数<code>print-tag</code>を作成する。
 この関数は、1つの開きタグ、または閉じタグを出力する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">print-tag</span> <span class="p">(</span><span class="nv">name</span> <span class="nv">alst</span> <span class="nv">closingp</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">print-tag</span> <span class="p">(</span><span class="nv">name</span> <span class="nv">alst</span> <span class="nv">closingp</span><span class="p">)</span>
   <span class="s">&#34;xmlフォーマットの開きタグ、または、閉じタグを出力する
 </span><span class="s">   name: タグ名
 </span><span class="s">   alst: 属性名と属性値のコンスセルのリスト
 </span><span class="s">   closingp: 閉じタグか否か&#34;</span>
-  <span class="p">(</span><span class="nv">princ</span> <span class="sc">#\&lt;</span><span class="p">)</span>  <span class="c1">; タグの開き角括弧</span>
+  <span class="p">(</span><span class="nf">princ</span> <span class="sc">#\&lt;</span><span class="p">)</span>  <span class="c1">; タグの開き角括弧</span>
   <span class="c1">;; 閉じタグならタグ名の頭に/をつける</span>
-  <span class="p">(</span><span class="nv">when</span> <span class="nv">closingp</span>
-    <span class="p">(</span><span class="nv">princ</span> <span class="sc">#\/</span><span class="p">))</span>
+  <span class="p">(</span><span class="nb">when</span> <span class="nv">closingp</span>
+    <span class="p">(</span><span class="nf">princ</span> <span class="sc">#\/</span><span class="p">))</span>
   <span class="c1">;; タグ名を小文字に変換する</span>
-  <span class="p">(</span><span class="nv">princ</span> <span class="p">(</span><span class="nv">string-downcase</span> <span class="nv">name</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">princ</span> <span class="p">(</span><span class="nf">string-downcase</span> <span class="nv">name</span><span class="p">))</span>
   <span class="c1">;; 小文字の属性名と属性値を出力する</span>
-  <span class="p">(</span><span class="nv">mapc</span> <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">att</span><span class="p">)</span>
-          <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34; ~a=\&#34;~a\&#34;&#34;</span> <span class="p">(</span><span class="nv">string-downcase</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">att</span><span class="p">))</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">att</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nf">mapc</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">att</span><span class="p">)</span>
+          <span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34; ~a=\&#34;~a\&#34;&#34;</span> <span class="p">(</span><span class="nf">string-downcase</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">att</span><span class="p">))</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">att</span><span class="p">)))</span>
         <span class="nv">alst</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">princ</span> <span class="sc">#\&gt;</span><span class="p">))</span>  <span class="c1">; タグの閉じ角括弧</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">print-tag</span> <span class="ss">&#39;mytag</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">color</span> <span class="o">.</span> <span class="nv">blue</span><span class="p">)</span> <span class="p">(</span><span class="nv">height</span> <span class="o">.</span> <span class="mi">9</span><span class="p">))</span> <span class="no">nil</span><span class="p">)</span>
-<span class="nv">&lt;mytag</span> <span class="nv">color=</span><span class="s">&#34;BLUE&#34;</span> <span class="nv">height=</span><span class="s">&#34;9&#34;</span><span class="nv">&gt;</span></code></pre></div>
-<p>この通り、XMLタグを出力するだけであればこの関数で十分である。
+  <span class="p">(</span><span class="nf">princ</span> <span class="sc">#\&gt;</span><span class="p">))</span>  <span class="c1">; タグの閉じ角括弧</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nv">print-tag</span> <span class="ss">&#39;mytag</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">color</span> <span class="o">.</span> <span class="nv">blue</span><span class="p">)</span> <span class="p">(</span><span class="nv">height</span> <span class="o">.</span> <span class="mi">9</span><span class="p">))</span> <span class="no">nil</span><span class="p">)</span>
+<span class="nv">&lt;mytag</span> <span class="nv">color=</span><span class="s">&#34;BLUE&#34;</span> <span class="nv">height=</span><span class="s">&#34;9&#34;</span><span class="nf">&gt;</span>
+</code></pre></div><p>この通り、XMLタグを出力するだけであればこの関数で十分である。
 しかし、全てのタグ出力をこのように出力するのは手間がかかる。
 そこで、<code>tag</code>マクロを書いて効率化を図る。</p>
-
 <h3 id="tagマクロを作る">tagマクロを作る</h3>
-
 <p>これから書く<code>tag</code>マクロは、 <strong>Paul Graham</strong> によるLisp方言Arcにある同名のマクロを採用したものである。
 このマクロでは、<code>print-tag</code>を次の3点において改善する。
 どれも、マクロでなければ改善できないものばかりである。</p>
-
 <ul>
 <li>タグは常に対になっている必要がある。
 しかし、タグがネストしていると、1つの関数だけでは閉じタグと開きタグの間に、内側の要素のタグを表記できない。
@@ -263,153 +243,145 @@ SVGフォーマットでは、画像をピクセルではなくベクタによ�
 <li>タグ名と違い、属性値の方は一般的に動的に変えられる。
 したがって、ここで作るマクロでは、属性値はコードモードとする。そして、Lispコードを書いておけばその実行結果が属性値として使えるようにする。</li>
 </ul>
-
 <p>これらをまとめると、例えばREPL上で<code>tag</code>マクロを使ったら次のように実行されてほしいわけである。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">tag</span> <span class="nv">mytag</span> <span class="p">(</span><span class="nv">color</span> <span class="ss">&#39;blue</span> <span class="nv">height</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)))</span>
-<span class="nv">&lt;mytag</span> <span class="nv">color=</span><span class="s">&#34;BLUE&#34;</span> <span class="nv">height=</span><span class="s">&#34;9&#34;</span><span class="nv">&gt;&lt;/mytag&gt;</span></code></pre></div>
-<p>タグ名と属性リストがクオートされていないことに注目すること。
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nv">tag</span> <span class="nv">mytag</span> <span class="p">(</span><span class="nv">color</span> <span class="ss">&#39;blue</span> <span class="nv">height</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">4</span> <span class="mi">5</span><span class="p">)))</span>
+<span class="nv">&lt;mytag</span> <span class="nv">color=</span><span class="s">&#34;BLUE&#34;</span> <span class="nv">height=</span><span class="s">&#34;9&#34;</span><span class="nv">&gt;&lt;/mytag&gt;</span>
+</code></pre></div><p>タグ名と属性リストがクオートされていないことに注目すること。
 また、属性値にLispコードを書いて計算させていることにも注目すること。</p>
-
 <p>これを実現する<code>tag</code>マクロのコードを次に示す。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">tag</span> <span class="p">(</span><span class="nv">name</span> <span class="nv">atts</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
-  <span class="o">`</span><span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">print-tag</span> <span class="ss">&#39;,name</span>
-                     <span class="p">(</span><span class="nv">list</span> <span class="o">,@</span><span class="p">(</span><span class="nv">mapcar</span> <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-                                       <span class="o">`</span><span class="p">(</span><span class="nv">cons</span> <span class="ss">&#39;,</span><span class="p">(</span><span class="nv">car</span> <span class="nv">x</span><span class="p">)</span> <span class="o">,</span><span class="p">(</span><span class="nv">cdr</span> <span class="nv">x</span><span class="p">)))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">tag</span> <span class="p">(</span><span class="nv">name</span> <span class="nv">atts</span> <span class="k">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nv">print-tag</span> <span class="ss">&#39;,name</span>
+                     <span class="p">(</span><span class="nc">list</span> <span class="o">,@</span><span class="p">(</span><span class="nf">mapcar</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+                                       <span class="o">`</span><span class="p">(</span><span class="nc">cons</span> <span class="ss">&#39;,</span><span class="p">(</span><span class="nf">car</span> <span class="nv">x</span><span class="p">)</span> <span class="o">,</span><span class="p">(</span><span class="nf">cdr</span> <span class="nv">x</span><span class="p">)))</span>
                                      <span class="p">(</span><span class="nv">pairs</span> <span class="nv">atts</span><span class="p">)))</span>
                      <span class="no">nil</span><span class="p">)</span>
           <span class="o">,@</span><span class="nv">body</span>
-          <span class="p">(</span><span class="nv">print-tag</span> <span class="ss">&#39;,name</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)))</span></code></pre></div>
-<p>マクロは、まず<code>print-tag</code>を呼んで開きタグを生成する。
+          <span class="p">(</span><span class="nv">print-tag</span> <span class="ss">&#39;,name</span> <span class="no">nil</span> <span class="no">t</span><span class="p">)))</span>
+</code></pre></div><p>マクロは、まず<code>print-tag</code>を呼んで開きタグを生成する。
 この部分は、属性の<code>alist</code>を作成する必要があり、しかも属性の部分はコードモードにする必要があるため、少々複雑なコードとなっている。
 まず、属性リスト属性名と属性値の組を<code>pairs</code>関数(前章で作成した)で切り出し、それに対して<code>mapcar</code>を適用して、<code>print-tag</code>関数に渡す属性リストを生成している。
 属性名の方はクオートし、属性値の方は式のままとしている。
 <code>tag</code>マクロの残りの引数に渡されたコードを開きタグの次に実行するようにして、最後に閉じタグを出力している。</p>
-
 <p>ネストしたタグの例を次に示す。
 みやすさを考慮して改行とインデントを入れている。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">tag</span> <span class="nv">mytag</span> <span class="p">(</span><span class="nv">color</span> <span class="ss">&#39;blue</span> <span class="nv">size</span> <span class="ss">&#39;big</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nv">tag</span> <span class="nv">mytag</span> <span class="p">(</span><span class="nv">color</span> <span class="ss">&#39;blue</span> <span class="nv">size</span> <span class="ss">&#39;big</span><span class="p">)</span>
        <span class="p">(</span><span class="nv">tag</span> <span class="nv">first_inner_tag</span> <span class="p">())</span>
        <span class="p">(</span><span class="nv">tag</span> <span class="nv">second_inner_tag</span> <span class="p">()))</span>
-<span class="nv">&lt;mytag</span> <span class="nv">color=</span><span class="s">&#34;BLUE&#34;</span> <span class="nv">height=</span><span class="s">&#34;9&#34;</span><span class="nv">&gt;</span>
+<span class="nv">&lt;mytag</span> <span class="nv">color=</span><span class="s">&#34;BLUE&#34;</span> <span class="nv">height=</span><span class="s">&#34;9&#34;</span><span class="nf">&gt;</span>
 	<span class="nv">&lt;first_inner_tag&gt;</span>
 	<span class="nv">&lt;/first_inner_tag&gt;</span>
 	<span class="nv">&lt;second_inner_tag&gt;</span>
 	<span class="nv">&lt;/second_inner_tag&gt;</span>
-<span class="nv">&lt;/mytag&gt;</span></code></pre></div>
-<h3 id="tagマクロを使ってhtmlを生成する">tagマクロを使ってHTMLを生成する</h3>
-
+<span class="nv">&lt;/mytag&gt;</span>
+</code></pre></div><h3 id="tagマクロを使ってhtmlを生成する">tagマクロを使ってHTMLを生成する</h3>
 <p>当然だが、<code>tag</code>マクロはXMLにもHTLにも使える。
-例えば、&rdquo;Hello World&rdquo;を表示するHTMLドキュメントを生成するコードは次のとおりである。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">tag</span> <span class="nv">html</span> <span class="p">()</span>
+例えば、&ldquo;Hello World&quot;を表示するHTMLドキュメントを生成するコードは次のとおりである。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nv">tag</span> <span class="nv">html</span> <span class="p">()</span>
     <span class="p">(</span><span class="nv">tag</span> <span class="nv">body</span> <span class="p">()</span>
-      <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;Hello World!&#34;</span><span class="p">)))</span>
-<span class="nv">&lt;html&gt;&lt;body&gt;Hello</span> <span class="nv">World!&lt;/body&gt;&lt;/html&gt;</span></code></pre></div>
-<p>HTMLはXMLと異なり、使えるタグ名が既に定まっている。
+      <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;Hello World!&#34;</span><span class="p">)))</span>
+<span class="nv">&lt;html&gt;&lt;body&gt;Hello</span> <span class="nv">World!&lt;/body&gt;&lt;/html&gt;</span>
+</code></pre></div><p>HTMLはXMLと異なり、使えるタグ名が既に定まっている。
 したがって、それぞれのHTMLタグを出力する簡易マクロを定義しておけば、LispからHTMLを生成するのが更に簡単になる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">html</span> <span class="p">(</span><span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">html</span> <span class="p">(</span><span class="k">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
   <span class="o">`</span><span class="p">(</span><span class="nv">tag</span> <span class="nv">html</span> <span class="p">()</span>
         <span class="o">,@</span><span class="nv">body</span><span class="p">))</span>
 
-<span class="p">(</span><span class="nv">defmacro</span> <span class="nv">body</span> <span class="p">(</span><span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defmacro</span> <span class="nv">body</span> <span class="p">(</span><span class="k">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
   <span class="o">`</span><span class="p">(</span><span class="nv">tag</span> <span class="nv">body</span> <span class="p">()</span>
-        <span class="o">,@</span><span class="nv">body</span><span class="p">))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">html</span>
+        <span class="o">,@</span><span class="nv">body</span><span class="p">))</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nv">html</span>
     <span class="p">(</span><span class="nv">body</span>
-      <span class="p">(</span><span class="nv">princ</span> <span class="err">&#34;</span><span class="nv">Hello</span> <span class="nv">World!</span><span class="p">)))</span>
-<span class="nv">&lt;html&gt;&lt;body&gt;Hello</span> <span class="nv">World!&lt;/body&gt;&lt;/html&gt;</span></code></pre></div>
-<h3 id="svg特有のマクロと関数を作る">SVG特有のマクロと関数を作る</h3>
-
+      <span class="p">(</span><span class="nf">princ</span> <span class="err">&#34;</span><span class="nv">Hello</span> <span class="nv">World!</span><span class="p">)))</span>
+<span class="nv">&lt;html&gt;&lt;body&gt;Hello</span> <span class="nv">World!&lt;/body&gt;&lt;/html&gt;</span>
+</code></pre></div><h3 id="svg特有のマクロと関数を作る">SVG特有のマクロと関数を作る</h3>
 <p>ここからは、DSLをSVGのドメインに向けて拡張していく。
 まず、SVGの画像全体を囲む<code>svg</code>マクロを書いてみる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">svg</span> <span class="p">(</span><span class="nv">width</span> <span class="nv">height</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">svg</span> <span class="p">(</span><span class="nv">width</span> <span class="nv">height</span> <span class="k">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
   <span class="o">`</span><span class="p">(</span><span class="nv">tag</span> <span class="nv">svg</span> <span class="p">(</span><span class="nv">xmlns</span> <span class="s">&#34;http://www.w3.org/2000/svg&#34;</span>
                    <span class="s">&#34;xmlns:xlink&#34;</span>
                    <span class="s">&#34;http://www.w3.org/1999/xlink&#34;</span>
                    <span class="nv">height</span> <span class="o">,</span><span class="nv">height</span> <span class="nv">width</span> <span class="o">,</span><span class="nv">width</span><span class="p">)</span>
-        <span class="o">,@</span><span class="nv">body</span><span class="p">))</span></code></pre></div>
-<p>SVGイメージには、次の2つの属性を用意する。</p>
-
+        <span class="o">,@</span><span class="nv">body</span><span class="p">))</span>
+</code></pre></div><p>SVGイメージには、次の2つの属性を用意する。</p>
 <ul>
 <li>1つ目の属性・・・<code>xmlns</code>属性。SVGビューワ(例えばWebブラウザ)がSVGフォーマットのための適切なドキュメントを参照できるようにする。</li>
 <li>2つ目の属性・・・画像の中にハイパーリンクを置けるようにする。</li>
 </ul>
-
 <p>画像を描くためには色を扱えなければならない。
 簡単のために、色はRGBのリストとして表現することとする。
 つまり、<code>(255 0 0)</code>は真っ赤な色を表す。
 特定の色を基準に、より明るい色やより暗い色が必要になる場合がある。
 そういった場合のために、<code>brightness</code>関数を定義する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">brightness</span> <span class="p">(</span><span class="nv">col</span> <span class="nv">amt</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">mapcar</span> <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-            <span class="p">(</span><span class="nv">min</span> <span class="mi">255</span> <span class="p">(</span><span class="nv">max</span> <span class="mi">0</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">x</span> <span class="nv">amt</span><span class="p">))))</span>
-          <span class="nv">col</span><span class="p">))</span></code></pre></div>
-<p>明るい赤をこの関数に渡し、輝度調整値<code>amt</code>に<code>-100</code>を渡せば、暗い赤が返される。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">brightness</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">255</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span> <span class="mi">-100</span><span class="p">)</span>
-<span class="p">(</span><span class="mi">155</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span></code></pre></div>
-<p>次に、SVGの描画要素のスタイルを生成する関数を実装する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">svg-style</span> <span class="p">(</span><span class="nv">color</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">brightness</span> <span class="p">(</span><span class="nv">col</span> <span class="nv">amt</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">mapcar</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+            <span class="p">(</span><span class="nf">min</span> <span class="mi">255</span> <span class="p">(</span><span class="nf">max</span> <span class="mi">0</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">x</span> <span class="nv">amt</span><span class="p">))))</span>
+          <span class="nv">col</span><span class="p">))</span>
+</code></pre></div><p>明るい赤をこの関数に渡し、輝度調整値<code>amt</code>に<code>-100</code>を渡せば、暗い赤が返される。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nv">brightness</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">255</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span> <span class="mi">-100</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">155</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></div><p>次に、SVGの描画要素のスタイルを生成する関数を実装する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">svg-style</span> <span class="p">(</span><span class="nv">color</span><span class="p">)</span>
   <span class="s">&#34;表面の色と、枠線の色のスタイルを出力する
 </span><span class="s">   スタイルは、枠線の色=表面の色-100&#34;</span>
-  <span class="p">(</span><span class="nv">format</span> <span class="no">nil</span>
+  <span class="p">(</span><span class="nf">format</span> <span class="no">nil</span>
           <span class="s">&#34;~{fill:rgb(~a,~a,~a);stroke:rgb(~a,~a,~a)~}&#34;</span>
-          <span class="p">(</span><span class="nv">append</span> <span class="nv">color</span> <span class="p">(</span><span class="nv">brightness</span> <span class="nv">color</span> <span class="mi">-100</span><span class="p">))))</span></code></pre></div>
-<p>次に、円を描く関数を実装する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">circle</span> <span class="p">(</span><span class="nv">center</span> <span class="nv">radius</span> <span class="nv">color</span><span class="p">)</span>
+          <span class="p">(</span><span class="nf">append</span> <span class="nv">color</span> <span class="p">(</span><span class="nv">brightness</span> <span class="nv">color</span> <span class="mi">-100</span><span class="p">))))</span>
+</code></pre></div><p>次に、円を描く関数を実装する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">circle</span> <span class="p">(</span><span class="nv">center</span> <span class="nv">radius</span> <span class="nv">color</span><span class="p">)</span>
   <span class="s">&#34;円を描画する
 </span><span class="s">   center: 円の中心の座標(コンスセル)
 </span><span class="s">   radius: 円の半径
 </span><span class="s">   color: 円の色(r,g,b)&#34;</span>
-  <span class="p">(</span><span class="nv">tag</span> <span class="nv">circle</span> <span class="p">(</span><span class="nv">cx</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">center</span><span class="p">)</span>
-               <span class="nv">cy</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">center</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">tag</span> <span class="nv">circle</span> <span class="p">(</span><span class="nv">cx</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">center</span><span class="p">)</span>
+               <span class="nv">cy</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">center</span><span class="p">)</span>
                <span class="nv">r</span> <span class="nv">radius</span>
-               <span class="nv">style</span> <span class="p">(</span><span class="nv">svg-style</span> <span class="nv">color</span><span class="p">))))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">svg</span> <span class="mi">150</span> <span class="mi">150</span>
+               <span class="nv">style</span> <span class="p">(</span><span class="nv">svg-style</span> <span class="nv">color</span><span class="p">))))</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nv">svg</span> <span class="mi">150</span> <span class="mi">150</span>
        <span class="p">(</span><span class="nv">circle</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">50</span> <span class="o">.</span> <span class="mi">50</span><span class="p">)</span> <span class="mi">50</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">255</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">))</span>
        <span class="p">(</span><span class="nv">circle</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">100</span> <span class="o">.</span> <span class="mi">100</span><span class="p">)</span> <span class="mi">50</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">0</span> <span class="mi">255</span><span class="p">)))</span>
 
-<span class="nv">&lt;svg</span> <span class="nv">xmlns=</span><span class="s">&#34;http://www.w3.org/2000/svg&#34;</span> <span class="nv">xmlns:xlink=</span><span class="s">&#34;http://www.w3.org/1999/xlink&#34;</span> <span class="nv">height=</span><span class="s">&#34;150&#34;</span> <span class="nv">width=</span><span class="s">&#34;150&#34;</span><span class="nv">&gt;</span>
+<span class="nv">&lt;svg</span> <span class="nv">xmlns=</span><span class="s">&#34;http://www.w3.org/2000/svg&#34;</span> <span class="nv">xmlns:xlink=</span><span class="s">&#34;http://www.w3.org/1999/xlink&#34;</span> <span class="nv">height=</span><span class="s">&#34;150&#34;</span> <span class="nv">width=</span><span class="s">&#34;150&#34;</span><span class="nf">&gt;</span>
 	<span class="nv">&lt;circle</span> <span class="nv">cx=</span><span class="s">&#34;50&#34;</span> <span class="nv">cy=</span><span class="s">&#34;50&#34;</span> <span class="nv">r=</span><span class="s">&#34;50&#34;</span> <span class="nv">style=</span><span class="s">&#34;fill:rgb(255,0,0);stroke:rgb(155,0,0)&#34;</span><span class="nv">&gt;&lt;/circle&gt;</span>
 	<span class="nv">&lt;circle</span> <span class="nv">cx=</span><span class="s">&#34;100&#34;</span> <span class="nv">cy=</span><span class="s">&#34;100&#34;</span> <span class="nv">r=</span><span class="s">&#34;50&#34;</span> <span class="nv">style=</span><span class="s">&#34;fill:rgb(0,0,255);stroke:rgb(0,0,155)&#34;</span><span class="nv">&gt;&lt;/circle&gt;</span>
-<span class="nv">&lt;/svg&gt;</span></code></pre></div>
-<p><img src="circles.svg" alt="circles" /></p>
-
+<span class="nv">&lt;/svg&gt;</span>
+</code></pre></div><p><img src="circles.svg" alt="circles"></p>
 <p>これで、基本的なSVG DSLは作成できた。
 ここからは、機能をどんどん追加していく。</p>
-
 <h3 id="もっと複雑なsvg画像を描画する">もっと複雑なSVG画像を描画する</h3>
-
 <p>SVG DSLに、任意の多角形(ポリゴン)を描く関数を追加する。
 SVGのポリゴンは頂点座標を<code>points</code>属性に格納する。
 頂点のリストは、<code>format</code>関数の<code>~{~}</code>制御文字列を使って生成している。
 11章の「<code>format</code>関数でテキストを表示する」で見たように、この制御文字列は引数に渡されたリストをループする。
-ここでは頂点をループするためにまず、座標値のペアのリストを<code>mapcan</code>によってネストのないリストへと <em>スプライス</em> している。<br />
+ここでは頂点をループするためにまず、座標値のペアのリストを<code>mapcan</code>によってネストのないリストへと <em>スプライス</em> している。<br>
 すなわち、<code>mapcan</code>=<code>mapcar</code>+<code>append</code>である。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">polygon</span> <span class="p">(</span><span class="nv">points</span> <span class="nv">color</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">tag</span> <span class="nv">polygon</span> <span class="p">(</span><span class="nv">points</span> <span class="p">(</span><span class="nv">format</span> <span class="no">nil</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">polygon</span> <span class="p">(</span><span class="nv">points</span> <span class="nv">color</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">tag</span> <span class="nv">polygon</span> <span class="p">(</span><span class="nv">points</span> <span class="p">(</span><span class="nf">format</span> <span class="no">nil</span>
                                <span class="s">&#34;~{~a,~a ~}&#34;</span>
-                               <span class="p">(</span><span class="nv">mapcan</span> <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">tp</span><span class="p">)</span>
-                                         <span class="p">(</span><span class="nv">list</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tp</span><span class="p">)</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tp</span><span class="p">)))</span>
+                               <span class="p">(</span><span class="nf">mapcan</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">tp</span><span class="p">)</span>
+                                         <span class="p">(</span><span class="nc">list</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">tp</span><span class="p">)</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">tp</span><span class="p">)))</span>
                                        <span class="nv">points</span><span class="p">))</span>
-                       <span class="nv">style</span> <span class="p">(</span><span class="nv">svg-style</span> <span class="nv">color</span><span class="p">))))</span></code></pre></div>
-<p>次の例は、 <strong>ランダムウォーク</strong> を表現する関数である。
+                       <span class="nv">style</span> <span class="p">(</span><span class="nv">svg-style</span> <span class="nv">color</span><span class="p">))))</span>
+</code></pre></div><p>次の例は、 <strong>ランダムウォーク</strong> を表現する関数である。
 ランダムウォークとは、1歩進む度に方向をランダムに変えながら歩く軌跡を表すグラフである。
 横方向は右に一定に進み、上下のみランダムにすれば、株価変動のようなグラフが表現できる。
 実際に、金融市場のモデルの初期値として使用されることもある。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">random-walk</span> <span class="p">(</span><span class="nv">value</span> <span class="nv">length</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">random-walk</span> <span class="p">(</span><span class="nv">value</span> <span class="nf">length</span><span class="p">)</span>
   <span class="s">&#34;1次元のランダムウォークの軌跡をリストで返す
 </span><span class="s">   value: 初期値
 </span><span class="s">   length: ランダムウォークの長さ
 </span><span class="s">   ret: ランダムウォークの軌跡のリスト&#34;</span>
-  <span class="p">(</span><span class="nv">unless</span> <span class="p">(</span><span class="nv">zerop</span> <span class="nv">length</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">cons</span> <span class="nv">value</span>
-      <span class="p">(</span><span class="nv">random-walk</span> <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">zerop</span> <span class="p">(</span><span class="nv">random</span> <span class="mi">2</span><span class="p">))</span>
-                       <span class="p">(</span><span class="nv">1-</span> <span class="nv">value</span><span class="p">)</span>
-                       <span class="p">(</span><span class="nv">1+</span> <span class="nv">value</span><span class="p">))</span>
-                   <span class="p">(</span><span class="nv">1-</span> <span class="nv">length</span><span class="p">)))))</span></code></pre></div>
-<p>実行結果は次のとおりである。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">random-walk</span> <span class="mi">100</span> <span class="mi">10</span><span class="p">)</span>
-<span class="p">(</span><span class="mi">100</span> <span class="mi">101</span> <span class="mi">100</span> <span class="mi">99</span> <span class="mi">100</span> <span class="mi">101</span> <span class="mi">102</span> <span class="mi">101</span> <span class="mi">102</span> <span class="mi">101</span><span class="p">)</span></code></pre></div>
-<p>では、SVG DSLを使って、いくつかのランダムウォークをSVG画像として表示してみる。</p>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nf">zerop</span> <span class="nf">length</span><span class="p">)</span>
+    <span class="p">(</span><span class="nc">cons</span> <span class="nv">value</span>
+      <span class="p">(</span><span class="nv">random-walk</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">zerop</span> <span class="p">(</span><span class="nf">random</span> <span class="mi">2</span><span class="p">))</span>
+                       <span class="p">(</span><span class="nf">1-</span> <span class="nv">value</span><span class="p">)</span>
+                       <span class="p">(</span><span class="nf">1+</span> <span class="nv">value</span><span class="p">))</span>
+                   <span class="p">(</span><span class="nf">1-</span> <span class="nf">length</span><span class="p">)))))</span>
+</code></pre></div><p>実行結果は次のとおりである。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nv">random-walk</span> <span class="mi">100</span> <span class="mi">10</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">100</span> <span class="mi">101</span> <span class="mi">100</span> <span class="mi">99</span> <span class="mi">100</span> <span class="mi">101</span> <span class="mi">102</span> <span class="mi">101</span> <span class="mi">102</span> <span class="mi">101</span><span class="p">)</span>
+</code></pre></div><p>では、SVG DSLを使って、いくつかのランダムウォークをSVG画像として表示してみる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">;; ランダムウォークを描画したSVGファイルを作成する</span>
-<span class="p">(</span><span class="nv">with-open-file</span> <span class="p">(</span><span class="vg">*standard-output*</span> <span class="s">&#34;random-walk.svg&#34;</span>
+<span class="p">(</span><span class="nb">with-open-file</span> <span class="p">(</span><span class="vg">*standard-output*</span> <span class="s">&#34;random-walk.svg&#34;</span>
                                    <span class="ss">:direction</span> <span class="ss">:output</span>
                                    <span class="ss">:if-exists</span> <span class="ss">:supersede</span><span class="p">)</span>
   <span class="c1">;; svg画像を描画する</span>
@@ -417,199 +389,175 @@ SVGのポリゴンは頂点座標を<code>points</code>属性に格納する。
   <span class="c1">;; 縦: 200</span>
   <span class="c1">;; 描画対象: 上辺がランダムウォークの多角形10個</span>
   <span class="c1">;; 色: ランダム</span>
-  <span class="p">(</span><span class="nv">svg</span> <span class="mi">400</span> <span class="mi">200</span> <span class="p">(</span><span class="nv">loop</span> <span class="nv">repeat</span> <span class="mi">10</span>
-                <span class="nv">do</span> <span class="p">(</span><span class="nv">polygon</span> <span class="p">(</span><span class="nv">append</span>
+  <span class="p">(</span><span class="nv">svg</span> <span class="mi">400</span> <span class="mi">200</span> <span class="p">(</span><span class="nb">loop</span> <span class="nv">repeat</span> <span class="mi">10</span>
+                <span class="nb">do</span> <span class="p">(</span><span class="nv">polygon</span> <span class="p">(</span><span class="nf">append</span>
                               <span class="c1">;; 左下の頂点</span>
                               <span class="o">&#39;</span><span class="p">((</span><span class="mi">0</span> <span class="o">.</span> <span class="mi">200</span><span class="p">))</span>
                               <span class="c1">;; 左上から右上までの頂点</span>
-                              <span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">x</span>
+                              <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">x</span>
                                     <span class="nv">for</span> <span class="nv">y</span> <span class="nv">in</span> <span class="p">(</span><span class="nv">random-walk</span> <span class="mi">100</span> <span class="mi">400</span><span class="p">)</span>
-                                    <span class="nv">collect</span> <span class="p">(</span><span class="nv">cons</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">))</span>
+                                    <span class="nv">collect</span> <span class="p">(</span><span class="nc">cons</span> <span class="nv">x</span> <span class="nv">y</span><span class="p">))</span>
                               <span class="c1">;; 右下の頂点</span>
                               <span class="o">&#39;</span><span class="p">((</span><span class="mi">400</span> <span class="o">.</span> <span class="mi">200</span><span class="p">)))</span>
                             <span class="c1">;; 多角形の色</span>
-                            <span class="p">(</span><span class="nv">loop</span> <span class="nv">repeat</span> <span class="mi">3</span>
-                                  <span class="nv">collect</span> <span class="p">(</span><span class="nv">random</span> <span class="mi">256</span><span class="p">))))))</span></code></pre></div>
-<p><img src="random-walk.svg" alt="random-walk" /></p>
-
+                            <span class="p">(</span><span class="nb">loop</span> <span class="nv">repeat</span> <span class="mi">3</span>
+                                  <span class="nv">collect</span> <span class="p">(</span><span class="nf">random</span> <span class="mi">256</span><span class="p">))))))</span>
+</code></pre></div><p><img src="random-walk.svg" alt="random-walk"></p>
 <p>ここまでで、Lispによって簡単にXML,HTML,SVGのためのDSLが書けることが分かった。
 これらのDSLは、どれも、Lispのリスト構造そのものを、見た目を表現するためのマークアップ言語に変換するものだった。</p>
-
 <p>次の章では、全く別の種類のDSLを作成する。</p>
-
-<h1 id="17-3-魔法使いのアドベンチャーゲームに新コマンドを追加する">17.3 魔法使いのアドベンチャーゲームに新コマンドを追加する</h1>
-
+<h1 id="173-魔法使いのアドベンチャーゲームに新コマンドを追加する">17.3 魔法使いのアドベンチャーゲームに新コマンドを追加する</h1>
 <p>この章では、ゲームにありがちな問題を解決するためのDSLを実装する。
 つまり、特定のアイテム、特定の場所、それらの組み合わせによって、特別なコマンドが起動できるようにする。</p>
-
 <p>コマンドの実現方針としては、次のとおりである。</p>
-
 <ul>
 <li>ゲームとして共通の部分は、何度も記述したくない</li>
 <li>特定のアイテムに特有の処理については、Lispで直接コーディングしたい</li>
 </ul>
-
 <p>これらを実現するためのDSLについて、ここから学んでいく。
 まずは、<a href="https://github.com/otaon/LandOfLisp-AdventureGame/blob/master/AdventureGame.lisp">魔法使いのアドベンチャーゲーム</a>をREPLにロードしておくこと。
 さもなければ本章のコードは実行できない。</p>
-
 <p><strong>NOTE:</strong> <code>game-repl</code>コマンドと使って直接コマンドを入力できること、および、<code>game-repl</code>から抜けるには<code>quit</code>コマンドを使うように実装したことを思い出すこと。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">;; ゲームの実行例</span>
-<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">load</span> <span class="s">&#34;AdventureGame.lisp&#34;</span><span class="p">)</span>
+<span class="nf">&gt;</span> <span class="p">(</span><span class="nf">load</span> <span class="s">&#34;AdventureGame.lisp&#34;</span><span class="p">)</span>
 <span class="c1">;; Loading file AdventureGame.lisp ...</span>
 <span class="c1">;; Loaded file AdventureGame.lisp</span>
 <span class="no">T</span>
-<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">game-repl</span><span class="p">)</span>
-<span class="nv">You</span> <span class="nv">are</span> <span class="nv">in</span> <span class="nv">the</span> <span class="nv">living-room.</span> <span class="nv">Awizard</span> <span class="nv">is</span> <span class="nv">snoring</span> <span class="nv">loudly</span> <span class="nv">on</span> <span class="nv">the</span> <span class="nv">couch.</span> <span class="o">.......</span>
-<span class="nv">quit</span></code></pre></div>
-<h2 id="ゲームコマンドを直接定義する">ゲームコマンドを直接定義する</h2>
-
+<span class="nf">&gt;</span> <span class="p">(</span><span class="nv">game-repl</span><span class="p">)</span>
+<span class="nv">You</span> <span class="nv">are</span> <span class="nv">in</span> <span class="k">the</span> <span class="nv">living-room.</span> <span class="nv">Awizard</span> <span class="nv">is</span> <span class="nv">snoring</span> <span class="nv">loudly</span> <span class="nv">on</span> <span class="k">the</span> <span class="nv">couch.</span> <span class="o">.......</span>
+<span class="nv">quit</span>
+</code></pre></div><h2 id="ゲームコマンドを直接定義する">ゲームコマンドを直接定義する</h2>
 <p>ゲームDSLは、結局の所どのようにあるべきか。
 それを知るために、まずはいくつかのコマンドを直接LSIPで書いてみることにする。
 その後、異なるコマンドの間に存在する <strong>共通パターン</strong> を見つけ出して、それを基礎としてDSLを作成することにする。</p>
-
-<h3 id="溶接-コマンド">「溶接」コマンド</h3>
-
+<h3 id="溶接コマンド">「溶接」コマンド</h3>
 <p>魔法使いの屋敷の屋根裏には、溶接機がある。
 プレイヤーが鎖とバケツを屋根裏に持っていき、バケツに鎖を溶接できる(<code>weld</code>)ようにしてみる。</p>
-
 <p>まず、プレイヤーが特定のアイテムを持っているか否かを調べやすくするため、<code>have</code>関数を定義している。
 プレイヤーの持ち物全てを返す<code>inventory</code>コマンドの返り値に引数のアイテムが含まれていれば、プレイヤーはそのアイテムを持っていることになる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">have</span> <span class="p">(</span><span class="nv">object</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">member</span> <span class="nv">object</span> <span class="p">(</span><span class="nv">cdr</span> <span class="p">(</span><span class="nv">inventory</span><span class="p">))))</span></code></pre></div>
-<p>次に、鎖とバケツが溶接されているかどうかという情報を保持する必要がある。
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">have</span> <span class="p">(</span><span class="nv">object</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">member</span> <span class="nv">object</span> <span class="p">(</span><span class="nf">cdr</span> <span class="p">(</span><span class="nv">inventory</span><span class="p">))))</span>
+</code></pre></div><p>次に、鎖とバケツが溶接されているかどうかという情報を保持する必要がある。
 ゲームにおいて、これらのアイテムが溶接されているときのみ可能なアクションがあるかもしれない。
 この目的のためにグローバル変数<code>*chain-welded*</code>を用意する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*chain-welded*</span> <span class="no">nil</span><span class="p">)</span></code></pre></div>
-<p>最後に、溶接(<code>weld</code>)コマンドを定義している。
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*chain-welded*</span> <span class="no">nil</span><span class="p">)</span>
+</code></pre></div><p>最後に、溶接(<code>weld</code>)コマンドを定義している。
 溶接は、次の条件を全て満たす時に可能となる。</p>
-
 <ul>
 <li>プレイヤーが屋根裏にいる</li>
 <li><code>weld</code>コマンドでは、「バケツ<strong>を</strong>」「鎖<strong>に</strong>」溶接する、というアクションのみを処理する</li>
 <li>プレイヤーは、既に鎖とバケツを持っている必要がある</li>
 <li>鎖とバケツはまだ溶接されていない状態である必要がある</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">weld</span> <span class="p">(</span><span class="nv">subject</span> <span class="nv">object</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">and</span> <span class="p">(</span><span class="nv">eq</span> <span class="vg">*location*</span> <span class="ss">&#39;attic</span><span class="p">)</span>
-           <span class="p">(</span><span class="nv">eq</span> <span class="nv">subject</span> <span class="ss">&#39;chain</span><span class="p">)</span>
-           <span class="p">(</span><span class="nv">eq</span> <span class="nv">object</span> <span class="ss">&#39;bucket</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">weld</span> <span class="p">(</span><span class="nv">subject</span> <span class="nv">object</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nf">eq</span> <span class="vg">*location*</span> <span class="ss">&#39;attic</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">eq</span> <span class="nv">subject</span> <span class="ss">&#39;chain</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">eq</span> <span class="nv">object</span> <span class="ss">&#39;bucket</span><span class="p">)</span>
            <span class="p">(</span><span class="nv">have</span> <span class="ss">&#39;chain</span><span class="p">)</span>
            <span class="p">(</span><span class="nv">have</span> <span class="ss">&#39;bucket</span><span class="p">)</span>
-           <span class="p">(</span><span class="nv">not</span> <span class="vg">*chain-welded*</span><span class="p">))</span>
-    <span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">setf</span> <span class="vg">*chain-welded*</span> <span class="no">t</span><span class="p">)</span>
-           <span class="o">&#39;</span><span class="p">(</span><span class="nv">the</span> <span class="nv">chain</span> <span class="nv">is</span> <span class="nv">now</span> <span class="nv">securely</span> <span class="nv">welded</span> <span class="nv">to</span> <span class="nv">the</span> <span class="nv">bucket.</span><span class="p">))</span>
-    <span class="o">&#39;</span><span class="p">(</span><span class="nv">you</span> <span class="nv">cannot</span> <span class="nv">weld</span> <span class="nv">like</span> <span class="nv">that.</span><span class="p">)))</span></code></pre></div>
-<p><code>game-repl</code>には、予め登録されているコマンドのみ実行可能にしている。
+           <span class="p">(</span><span class="nf">not</span> <span class="vg">*chain-welded*</span><span class="p">))</span>
+    <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="vg">*chain-welded*</span> <span class="no">t</span><span class="p">)</span>
+           <span class="o">&#39;</span><span class="p">(</span><span class="k">the</span> <span class="nv">chain</span> <span class="nv">is</span> <span class="nv">now</span> <span class="nv">securely</span> <span class="nv">welded</span> <span class="nv">to</span> <span class="k">the</span> <span class="nv">bucket.</span><span class="p">))</span>
+    <span class="o">&#39;</span><span class="p">(</span><span class="nv">you</span> <span class="nv">cannot</span> <span class="nv">weld</span> <span class="nv">like</span> <span class="nv">that.</span><span class="p">)))</span>
+</code></pre></div><p><code>game-repl</code>には、予め登録されているコマンドのみ実行可能にしている。
 したがって、<code>weld</code>コマンドを使用するために、許可コマンドリストに<code>weld</code>を追加する必要がある。
 <code>pushnew</code>コマンドを使うことで、<code>weld</code>がまだ許可コマンドリストに追加されていない場合にのみ<code>push</code>されるようになる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">pushnew</span> <span class="ss">&#39;weld</span> <span class="vg">*allowed-commands*</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nb">pushnew</span> <span class="ss">&#39;weld</span> <span class="vg">*allowed-commands*</span><span class="p">)</span>
 <span class="p">(</span><span class="nv">WELD</span> <span class="nv">LOOK</span> <span class="nv">WALK</span> <span class="nv">PICKUP</span> <span class="nv">INVENTORY</span><span class="p">)</span>
-<span class="nv">&gt;</span> <span class="p">(</span><span class="nv">game-repl</span><span class="p">)</span>
+<span class="nf">&gt;</span> <span class="p">(</span><span class="nv">game-repl</span><span class="p">)</span>
 <span class="nv">weld</span> <span class="nv">chain</span> <span class="nv">bucket</span>
-<span class="nv">You</span> <span class="nv">cannot</span> <span class="nv">weld</span> <span class="nv">like</span> <span class="nv">that.</span></code></pre></div>
-<h3 id="投げ入れる-コマンド">「投げ入れる」コマンド</h3>
-
+<span class="nv">You</span> <span class="nv">cannot</span> <span class="nv">weld</span> <span class="nv">like</span> <span class="nv">that.</span>
+</code></pre></div><h3 id="投げ入れるコマンド">「投げ入れる」コマンド</h3>
 <p>魔法使いの野屋敷の庭には井戸がある。
 プレイヤーがバケツを投げ入れて(dunk)、水を汲めるようにする。</p>
-
 <p><code>weld</code>と同様に、まずバケツに水が入っているかどうかを覚えておく変数を用意する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*bucket-filled*</span> <span class="no">nil</span><span class="p">)</span></code></pre></div>
-<p>次に、<code>dunk</code>関数を定義する。
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*bucket-filled*</span> <span class="no">nil</span><span class="p">)</span>
+</code></pre></div><p>次に、<code>dunk</code>関数を定義する。
 <code>weld</code>同様に、<code>dunk</code>にも「投げ入れる」動作をしても良いか判断するための条件式がある。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">dunk</span> <span class="p">(</span><span class="nv">subject</span> <span class="nv">object</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">and</span> <span class="p">(</span><span class="nv">eq</span> <span class="vg">*location*</span> <span class="ss">&#39;garden</span><span class="p">)</span>
-           <span class="p">(</span><span class="nv">eq</span> <span class="nv">subject</span> <span class="ss">&#39;bucket</span><span class="p">)</span>
-           <span class="p">(</span><span class="nv">eq</span> <span class="nv">object</span> <span class="ss">&#39;well</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">dunk</span> <span class="p">(</span><span class="nv">subject</span> <span class="nv">object</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nf">eq</span> <span class="vg">*location*</span> <span class="ss">&#39;garden</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">eq</span> <span class="nv">subject</span> <span class="ss">&#39;bucket</span><span class="p">)</span>
+           <span class="p">(</span><span class="nf">eq</span> <span class="nv">object</span> <span class="ss">&#39;well</span><span class="p">)</span>
            <span class="p">(</span><span class="nv">have</span> <span class="ss">&#39;bucket</span><span class="p">)</span>
            <span class="vg">*chain-welded*</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">setf</span> <span class="vg">*bucket-filled*</span> <span class="no">t</span><span class="p">)</span>
-             <span class="o">&#39;</span><span class="p">(</span><span class="nv">the</span> <span class="nv">bucket</span> <span class="nv">is</span> <span class="nv">now</span> <span class="nv">full</span> <span class="nv">of</span> <span class="nv">water</span><span class="p">))</span>
-      <span class="o">&#39;</span><span class="p">(</span><span class="nv">You</span> <span class="nv">cannot</span> <span class="nv">dunk</span> <span class="nv">like</span> <span class="nv">that.</span><span class="p">)))</span></code></pre></div>
-<p>最後に、<code>dunk</code>関数を許可コマンドリストに追加する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">pushnew</span> <span class="ss">&#39;dunk</span> <span class="vg">*allowed-commands*</span><span class="p">)</span></code></pre></div>
-<h2 id="game-action-マクロ"><code>game-action</code>マクロ</h2>
-
+      <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="vg">*bucket-filled*</span> <span class="no">t</span><span class="p">)</span>
+             <span class="o">&#39;</span><span class="p">(</span><span class="k">the</span> <span class="nv">bucket</span> <span class="nv">is</span> <span class="nv">now</span> <span class="nv">full</span> <span class="nv">of</span> <span class="nv">water</span><span class="p">))</span>
+      <span class="o">&#39;</span><span class="p">(</span><span class="nv">You</span> <span class="nv">cannot</span> <span class="nv">dunk</span> <span class="nv">like</span> <span class="nv">that.</span><span class="p">)))</span>
+</code></pre></div><p>最後に、<code>dunk</code>関数を許可コマンドリストに追加する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">pushnew</span> <span class="ss">&#39;dunk</span> <span class="vg">*allowed-commands*</span><span class="p">)</span>
+</code></pre></div><h2 id="game-actionマクロ"><code>game-action</code>マクロ</h2>
 <p>先述の<code>weld</code>コマンドと<code>dunk</code>コマンドを実装したことで、これらに似た処理の部分があることが分かった。
 また、それぞれのコマンドには、コマンド固有の処理というものが存在することも分かった。
 これらを上手くまとめ上げるために、<code>game-action</code>マクロを作成する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">game-action</span> <span class="p">(</span><span class="nv">command</span> <span class="nv">subj</span> <span class="nv">obj</span> <span class="nv">place</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">game-action</span> <span class="p">(</span><span class="nv">command</span> <span class="nv">subj</span> <span class="nv">obj</span> <span class="nv">place</span> <span class="k">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
   <span class="c1">;; ゲームアクションを定義するマクロ</span>
   <span class="c1">;; command: コマンド名</span>
   <span class="c1">;; subj: コマンド実行に必要な主体</span>
   <span class="c1">;; obj: コマンド実行に必要な客体</span>
   <span class="c1">;; place: コマンド実行に適した場所</span>
   <span class="c1">;; body: コマンド処理本体</span>
-  <span class="o">`</span><span class="p">(</span><span class="nv">progn</span>
+  <span class="o">`</span><span class="p">(</span><span class="k">progn</span>
      <span class="c1">;; コマンド定義</span>
-     <span class="p">(</span><span class="nv">defun</span> <span class="o">,</span><span class="nv">command</span> <span class="p">(</span><span class="nv">subject</span> <span class="nv">object</span><span class="p">)</span>
+     <span class="p">(</span><span class="nb">defun</span> <span class="o">,</span><span class="nv">command</span> <span class="p">(</span><span class="nv">subject</span> <span class="nv">object</span><span class="p">)</span>
        <span class="c1">;; コマンド実行可能条件</span>
-       <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">and</span> <span class="p">(</span><span class="nv">eq</span> <span class="vg">*location*</span> <span class="ss">&#39;,place</span><span class="p">)</span>  <span class="c1">; 有効な場所</span>
-                <span class="p">(</span><span class="nv">eq</span> <span class="nv">subject</span> <span class="ss">&#39;,subj</span><span class="p">)</span>  <span class="c1">; 有効な主体</span>
-                <span class="p">(</span><span class="nv">eq</span> <span class="nv">object</span> <span class="ss">&#39;,obj</span><span class="p">)</span>  <span class="c1">; 有効な客体</span>
+       <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nf">eq</span> <span class="vg">*location*</span> <span class="ss">&#39;,place</span><span class="p">)</span>  <span class="c1">; 有効な場所</span>
+                <span class="p">(</span><span class="nf">eq</span> <span class="nv">subject</span> <span class="ss">&#39;,subj</span><span class="p">)</span>  <span class="c1">; 有効な主体</span>
+                <span class="p">(</span><span class="nf">eq</span> <span class="nv">object</span> <span class="ss">&#39;,obj</span><span class="p">)</span>  <span class="c1">; 有効な客体</span>
                 <span class="p">(</span><span class="nv">have</span> <span class="ss">&#39;,subj</span><span class="p">))</span>  <span class="c1">; 主体を持っている</span>
            <span class="c1">;; コマンド実行 </span>
            <span class="o">,@</span><span class="nv">body</span>
            <span class="c1">;; コマンド実行不可時のメッセージ</span>
            <span class="o">&#39;</span><span class="p">(</span><span class="nv">i</span> <span class="nv">cant</span> <span class="o">,</span><span class="nv">command</span> <span class="nv">like</span> <span class="nv">that.</span><span class="p">)))</span>
      <span class="c1">;; 許可コマンドリストに定義したコマンドを追加</span>
-     <span class="p">(</span><span class="nv">pushnew</span> <span class="ss">&#39;,command</span> <span class="vg">*allowed-commands*</span><span class="p">)))</span></code></pre></div>
-<p><code>game-action</code>マクロの主な仕事は、コマンドを実現する新たな関数を定義することである。
+     <span class="p">(</span><span class="nb">pushnew</span> <span class="ss">&#39;,command</span> <span class="vg">*allowed-commands*</span><span class="p">)))</span>
+</code></pre></div><p><code>game-action</code>マクロの主な仕事は、コマンドを実現する新たな関数を定義することである。
 このように、マクロはその中で関数定義することも可能である。</p>
-
 <p>このマクロの中では、場所、主体となるアイテムの有無、客体となるアイテムの有無、主体を持っているか否かのチェック機構を入れている。
 しかし、それ以外の条件は、コマンドごとに本体の中でチェックするようにしている。</p>
-
 <p>共通部分の条件が満たされたら、追加のチェックは各コマンドのロジックの中で書くようにする。
 共通部分の条件が満たされなかったら、「コマンド実行不可時のメッセージ」を返す。
 最後に<code>pushnew</code>を使って、作成したコマンドを<code>game-repl</code>の「許可コマンドリスト」に追加する。</p>
-
 <p>このマクロで実装していないのは、状態を管理するグローバル変数を定義したり変数したりする処理である。
 すなわち、<code>*chain-welded*</code>や<code>*bucket-filled*</code>といった変数を作るなら、マクロとは別に実装する必要がある。
 何故別々に実装するようにするのか。
 理由は、特定のコマンドと、特定の状態を管理する変数が1対1対応するとは限らないからである。
 コマンドによっては、状態を持たずに実行できるものもあるだろうし、反対に、複数の状態に依存するものもあるだろう。</p>
-
 <p>このマクロによって、新しいゲームアクションを作るための簡単なDSLが完成した。
 すなわち、このコマンドによって、ゲームコマンドのドメインに特化した新たなプログラミング言語が作り出されたということになる。</p>
-
 <p><code>weld</code>と<code>dunk</code>を、このDSLを使って書き直してみる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*chain-weided*</span> <span class="no">nil</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*chain-weided*</span> <span class="no">nil</span><span class="p">)</span>
 
 <span class="p">(</span><span class="nv">game-action</span> <span class="nv">weld</span> <span class="nv">chain</span> <span class="nv">bucket</span> <span class="nv">attic</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">and</span> <span class="p">(</span><span class="nv">have</span> <span class="ss">&#39;bucket</span><span class="p">)</span> <span class="p">(</span><span class="nv">not</span> <span class="vg">*chain-welded*</span><span class="p">))</span>
-      <span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">setf</span> <span class="vg">*chain-welded*</span> <span class="ss">&#39;t</span><span class="p">)</span>
-             <span class="o">&#39;</span><span class="p">(</span><span class="nv">the</span> <span class="nv">chain</span> <span class="nv">is</span> <span class="nv">now</span> <span class="nv">securely</span> <span class="nv">welded</span> <span class="nv">to</span> <span class="nv">the</span> <span class="nv">bucket.</span><span class="p">))</span>
-             <span class="o">&#39;</span><span class="p">(</span><span class="nv">you</span> <span class="nv">do</span> <span class="nv">not</span> <span class="nv">have</span> <span class="nv">a</span>  <span class="nv">bucket.</span><span class="p">)))</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nv">have</span> <span class="ss">&#39;bucket</span><span class="p">)</span> <span class="p">(</span><span class="nf">not</span> <span class="vg">*chain-welded*</span><span class="p">))</span>
+      <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="vg">*chain-welded*</span> <span class="ss">&#39;t</span><span class="p">)</span>
+             <span class="o">&#39;</span><span class="p">(</span><span class="k">the</span> <span class="nv">chain</span> <span class="nv">is</span> <span class="nv">now</span> <span class="nv">securely</span> <span class="nv">welded</span> <span class="nv">to</span> <span class="k">the</span> <span class="nv">bucket.</span><span class="p">))</span>
+             <span class="o">&#39;</span><span class="p">(</span><span class="nv">you</span> <span class="nb">do</span> <span class="nf">not</span> <span class="nv">have</span> <span class="nv">a</span>  <span class="nv">bucket.</span><span class="p">)))</span>
 
-<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*bucket-filled*</span> <span class="no">nil</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*bucket-filled*</span> <span class="no">nil</span><span class="p">)</span>
 
 <span class="p">(</span><span class="nv">game-action</span> <span class="nv">dunk</span> <span class="nv">bucket</span> <span class="nv">well</span> <span class="nv">garden</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="vg">*chain-welded*</span>
-      <span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">setf</span> <span class="vg">*bucket-filled*</span> <span class="ss">&#39;t</span><span class="p">)</span>
-             <span class="o">&#39;</span><span class="p">(</span><span class="nv">the</span> <span class="nv">bucket</span> <span class="nv">is</span> <span class="nv">now</span> <span class="nv">full</span> <span class="nv">of</span> <span class="nv">water</span><span class="p">))</span>
-             <span class="o">&#39;</span><span class="p">(</span><span class="nv">the</span> <span class="nv">water</span> <span class="nv">level</span> <span class="nv">is</span> <span class="nv">too</span> <span class="nv">low</span> <span class="nv">to</span> <span class="nv">reach.</span><span class="p">)))</span></code></pre></div>
-<p>見て分かる通り、各コマンドのロジックが簡潔に表されている。
+  <span class="p">(</span><span class="k">if</span> <span class="vg">*chain-welded*</span>
+      <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">setf</span> <span class="vg">*bucket-filled*</span> <span class="ss">&#39;t</span><span class="p">)</span>
+             <span class="o">&#39;</span><span class="p">(</span><span class="k">the</span> <span class="nv">bucket</span> <span class="nv">is</span> <span class="nv">now</span> <span class="nv">full</span> <span class="nv">of</span> <span class="nv">water</span><span class="p">))</span>
+             <span class="o">&#39;</span><span class="p">(</span><span class="k">the</span> <span class="nv">water</span> <span class="nv">level</span> <span class="nv">is</span> <span class="nv">too</span> <span class="nv">low</span> <span class="nv">to</span> <span class="nv">reach.</span><span class="p">)))</span>
+</code></pre></div><p>見て分かる通り、各コマンドのロジックが簡潔に表されている。
 <code>weld</code>はバケツを持っていることをチェックしているが、<code>dunk</code>ではwellをチェックする必要はないことが分かりやすい。</p>
-
 <p>マクロでゲームコマンドDSLを作る利点をもっと示すために、より複雑なコマンドを実装してみる。
 次に示すコマンドは、状況によって3つの異なる結果を返す。</p>
-
 <ul>
 <li>バケツが空の場合、特に何も起こらない。(メッセージ:バケツは空だ)</li>
 <li>バケツが一杯で既にカエルを取っていた場合、プレイヤーの負けとなる。</li>
 <li>バケツが一杯でカエルを取っていなかった場合、プレイヤーの勝利となる。</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">game-action</span> <span class="nv">splash</span> <span class="nv">bucket</span> <span class="nv">wizard</span> <span class="nv">living-room</span>
-  <span class="p">(</span><span class="nv">cond</span> <span class="p">((</span><span class="nv">not</span> <span class="vg">*bucket-filled*</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">the</span> <span class="nv">bucket</span> <span class="nv">has</span> <span class="nv">nothing</span> <span class="nv">in</span> <span class="nv">it.</span><span class="p">))</span>
-        <span class="p">((</span><span class="nv">have</span> <span class="ss">&#39;frog</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">the</span> <span class="nv">wizard</span> <span class="nv">awakens</span> <span class="nv">and</span> <span class="nv">sees</span> <span class="nv">that</span> <span class="nv">you</span> <span class="nv">stole</span> <span class="nv">his</span> <span class="nv">frog.</span>
-                        <span class="nv">he</span> <span class="nv">is</span> <span class="nv">so</span> <span class="nv">upset</span> <span class="nv">he</span> <span class="nv">banishes</span> <span class="nv">you</span> <span class="nv">to</span> <span class="nv">the</span> <span class="nv">netherworlds-</span> <span class="nv">you</span> <span class="nv">lose!</span> <span class="nv">the</span> <span class="nv">end.</span><span class="p">))</span>
-        <span class="p">(</span><span class="no">t</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">the</span> <span class="nv">wizard</span> <span class="nv">awakens</span> <span class="nv">from</span> <span class="nv">his</span> <span class="nv">slumber</span> <span class="nv">and</span> <span class="nv">greets</span> <span class="nv">you</span> <span class="nv">warmly.</span>
-             <span class="nv">he</span> <span class="nv">hands</span> <span class="nv">you</span> <span class="nv">the</span> <span class="nv">magic</span> <span class="nv">low-carb</span> <span class="nv">donut-</span> <span class="nv">you</span> <span class="nv">win!</span> <span class="nv">the</span> <span class="nv">end.</span><span class="p">))))</span></code></pre></div>
-<p><code>game-action</code>マクロを使えば、それぞれの特徴的なゲームアクションコマンドをたくさん作成できる。
+  <span class="p">(</span><span class="nb">cond</span> <span class="p">((</span><span class="nf">not</span> <span class="vg">*bucket-filled*</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="k">the</span> <span class="nv">bucket</span> <span class="nv">has</span> <span class="nv">nothing</span> <span class="nv">in</span> <span class="nv">it.</span><span class="p">))</span>
+        <span class="p">((</span><span class="nv">have</span> <span class="ss">&#39;frog</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="k">the</span> <span class="nv">wizard</span> <span class="nv">awakens</span> <span class="nb">and</span> <span class="nv">sees</span> <span class="nv">that</span> <span class="nv">you</span> <span class="nv">stole</span> <span class="nv">his</span> <span class="nv">frog.</span>
+                        <span class="nv">he</span> <span class="nv">is</span> <span class="nv">so</span> <span class="nv">upset</span> <span class="nv">he</span> <span class="nv">banishes</span> <span class="nv">you</span> <span class="nv">to</span> <span class="k">the</span> <span class="nv">netherworlds-</span> <span class="nv">you</span> <span class="nv">lose!</span> <span class="k">the</span> <span class="nv">end.</span><span class="p">))</span>
+        <span class="p">(</span><span class="no">t</span> <span class="o">&#39;</span><span class="p">(</span><span class="k">the</span> <span class="nv">wizard</span> <span class="nv">awakens</span> <span class="nv">from</span> <span class="nv">his</span> <span class="nv">slumber</span> <span class="nb">and</span> <span class="nv">greets</span> <span class="nv">you</span> <span class="nv">warmly.</span>
+             <span class="nv">he</span> <span class="nv">hands</span> <span class="nv">you</span> <span class="k">the</span> <span class="nv">magic</span> <span class="nv">low-carb</span> <span class="nv">donut-</span> <span class="nv">you</span> <span class="nv">win!</span> <span class="k">the</span> <span class="nv">end.</span><span class="p">))))</span>
+</code></pre></div><p><code>game-action</code>マクロを使えば、それぞれの特徴的なゲームアクションコマンドをたくさん作成できる。
 しかも、似たようなコードを繰り返し書く手間を省ける。</p>
-
-<p><strong>NOTE:</strong><br />
+<p><strong>NOTE:</strong><br>
 <code>game-action</code>コマンドは、捜査の対象となるアイテムを束縛した変数<code>subject</code>と<code>object</code>をマクロのボディ中で使えるようにする。
 ゲームコマンドはこれらの変数で情報にアクセスできるようになるが、<code>game-action</code>コマンドを作り出すコードが<code>subject</code>や<code>object</code>という名前の変数を既に使用している場合は、名前衝突を起こす。
 安全を期すなら、<code>gensym</code>コマンドを用いたマクロに書き直したほうが良い。</p>
@@ -686,7 +634,9 @@ SVGのポリゴンは頂点座標を<code>points</code>属性に格納する。
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

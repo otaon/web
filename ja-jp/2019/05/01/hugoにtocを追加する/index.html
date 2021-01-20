@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>HugoにTOCを追加する · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,15 +22,12 @@
 <meta property="og:description" content="目的 HugoにTOC(目次)を追加する方法を残す。 参考文献 わからないから調べるブログ - Hugoに開閉式の目次を実装する方法 Qiita - HUGOで作れ" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/05/01/hugo%E3%81%ABtoc%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B/" />
-<meta property="article:published_time" content="2019-05-01T22:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-05-01T22:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-05-01T22:00:00+09:00" />
+<meta property="article:modified_time" content="2019-05-01T22:00:00+09:00" />
 <meta itemprop="name" content="HugoにTOCを追加する">
 <meta itemprop="description" content="目的 HugoにTOC(目次)を追加する方法を残す。 参考文献 わからないから調べるブログ - Hugoに開閉式の目次を実装する方法 Qiita - HUGOで作れ">
-
-
-<meta itemprop="datePublished" content="2019-05-01T22:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-05-01T22:00:00&#43;09:00" />
+<meta itemprop="datePublished" content="2019-05-01T22:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-05-01T22:00:00+09:00" />
 <meta itemprop="wordCount" content="491">
 
 
@@ -145,41 +142,27 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#目的">目的</a></li>
-<li><a href="#参考文献">参考文献</a></li>
-<li><a href="#設定ファイルと設定箇所の一覧">設定ファイルと設定箇所の一覧</a>
-<ul>
-<li><a href="#記事の基本情報のデフォルト値を変更">記事の基本情報のデフォルト値を変更</a></li>
-<li><a href="#tocを記事に追加するように設定を変更">TOCを記事に追加するように設定を変更</a></li>
-<li><a href="#toc用のcssクラス-toc-のデザイン設定">TOC用のcssクラス<code>toc</code>のデザイン設定</a></li>
-<li><a href="#記事にtocを追加するための設定方法">記事にTOCを追加するための設定方法</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#記事の基本情報のデフォルト値を変更">記事の基本情報のデフォルト値を変更</a></li>
+    <li><a href="#tocを記事に追加するように設定を変更">TOCを記事に追加するように設定を変更</a></li>
+    <li><a href="#toc用のcssクラスtocのデザイン設定">TOC用のcssクラス<code>toc</code>のデザイン設定</a></li>
+    <li><a href="#記事にtocを追加するための設定方法">記事にTOCを追加するための設定方法</a></li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h1 id="目的">目的</h1>
-
+  <h1 id="目的">目的</h1>
 <p>HugoにTOC(目次)を追加する方法を残す。</p>
-
 <h1 id="参考文献">参考文献</h1>
-
 <ul>
 <li><a href="https://akisnote.com/2018/11/table-of-contents/">わからないから調べるブログ - Hugoに開閉式の目次を実装する方法</a></li>
 <li><a href="https://qiita.com/y_hokkey/items/f9d8b66b3770a82d4c1c">Qiita - HUGOで作れるCMSっぽいパーツ:関連記事・目次・JSON-LDなど</a></li>
 </ul>
-
 <h1 id="設定ファイルと設定箇所の一覧">設定ファイルと設定箇所の一覧</h1>
-
 <p>上記の参考文献を見つつ、下記のとおり設定すれば、記事の頭にTOCが挿入されるはず。</p>
-
 <h2 id="記事の基本情報のデフォルト値を変更">記事の基本情報のデフォルト値を変更</h2>
-
 <ul>
 <li><code>web\archetypes\default.md</code> 変更</li>
 </ul>
@@ -188,16 +171,13 @@
   draft: true
 <span class="gi">+ toc: true
 </span><span class="gi"></span>  ---
-</code></pre></div>
-<ul>
+</code></pre></div><ul>
 <li><code>web\themes\hugo-theme-den\archetypes\default.md</code> 変更</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff">  +++
 <span class="gi">+ toc = true
 </span><span class="gi"></span>  +++
-</code></pre></div>
-<h2 id="tocを記事に追加するように設定を変更">TOCを記事に追加するように設定を変更</h2>
-
+</code></pre></div><h2 id="tocを記事に追加するように設定を変更">TOCを記事に追加するように設定を変更</h2>
 <ul>
 <li><code>web\themes\hugo-theme-den\layouts\posts\single.html</code> 変更</li>
 </ul>
@@ -209,8 +189,7 @@
 </span><span class="gi">+ {{ end }}
 </span><span class="gi"></span>  {{ .Content }}
   &lt;/article&gt;
-</code></pre></div>
-<ul>
+</code></pre></div><ul>
 <li><code>web\themes\hugo-theme-den\layouts\partials\toc.html</code> 新規追加</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gi">+ &lt;section class=&#34;js-toc&#34;&gt;
@@ -218,9 +197,7 @@
 </span><span class="gi">+   {{ .TableOfContents }}
 </span><span class="gi">+   &lt;/div&gt;
 </span><span class="gi">+ &lt;/section&gt;
-</span></code></pre></div>
-<h2 id="toc用のcssクラス-toc-のデザイン設定">TOC用のcssクラス<code>toc</code>のデザイン設定</h2>
-
+</span></code></pre></div><h2 id="toc用のcssクラスtocのデザイン設定">TOC用のcssクラス<code>toc</code>のデザイン設定</h2>
 <ul>
 <li><code>web\themes\hugo-theme-den\static\css\den.css</code> 変更</li>
 </ul>
@@ -231,8 +208,7 @@
 </span><span class="gi"></span>  
   /* Responsive */
   @media (min-width: 768px) {
-</code></pre></div>
-<ul>
+</code></pre></div><ul>
 <li><code>web\themes\hugo-theme-den\static\css\style.css</code> 新規作成</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gi">+ .toc ul {
@@ -252,17 +228,14 @@
 </span><span class="gi">+     border-radius: 5px;
 </span><span class="gi">+     padding: 1em;
 </span><span class="gi">+ }
-</span></code></pre></div>
-<ul>
+</span></code></pre></div><ul>
 <li><code>web\themes\hugo-theme-den\static\js\script.js</code> 新規作成(これは必要なのか不明)</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-diff" data-lang="diff"><span class="gi">+ var $tocPlace = $(&#39;#js-toc-place&#39;);
 </span><span class="gi">+ if ($tocPlace.length === 1) {
 </span><span class="gi">+     $(&#39;.js-toc&#39;).appendTo($tocPlace);
 </span><span class="gi">+ }
-</span></code></pre></div>
-<h2 id="記事にtocを追加するための設定方法">記事にTOCを追加するための設定方法</h2>
-
+</span></code></pre></div><h2 id="記事にtocを追加するための設定方法">記事にTOCを追加するための設定方法</h2>
 <ul>
 <li><code>web\content\ja-jp\posts\0051_go_steup_01_oop\index.md</code> 変更</li>
 </ul>
@@ -346,7 +319,9 @@
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

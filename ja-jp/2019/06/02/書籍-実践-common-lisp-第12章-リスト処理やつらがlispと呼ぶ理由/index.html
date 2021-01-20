@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>書籍 実践 Common Lisp 第12章 リスト処理：やつらがLISPと呼ぶ理由 · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,16 +22,13 @@
 <meta property="og:description" content="この章について この章では、リストついて説明する。 12.1 「リストなんてない」 Common Lispにおいては、リストというデータ構造が構築されているわけではな" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/06/02/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC12%E7%AB%A0-%E3%83%AA%E3%82%B9%E3%83%88%E5%87%A6%E7%90%86%E3%82%84%E3%81%A4%E3%82%89%E3%81%8Clisp%E3%81%A8%E5%91%BC%E3%81%B6%E7%90%86%E7%94%B1/" />
-<meta property="article:published_time" content="2019-06-02T00:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-06-02T00:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-06-02T00:00:00+09:00" />
+<meta property="article:modified_time" content="2019-06-02T00:00:00+09:00" />
 <meta itemprop="name" content="書籍 実践 Common Lisp 第12章 リスト処理：やつらがLISPと呼ぶ理由">
 <meta itemprop="description" content="この章について この章では、リストついて説明する。 12.1 「リストなんてない」 Common Lispにおいては、リストというデータ構造が構築されているわけではな">
-
-
-<meta itemprop="datePublished" content="2019-06-02T00:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-06-02T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="5549">
+<meta itemprop="datePublished" content="2019-06-02T00:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-06-02T00:00:00+09:00" />
+<meta itemprop="wordCount" content="5537">
 
 
 
@@ -145,111 +142,102 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#この章について">この章について</a></li>
-<li><a href="#12-1-リストなんてない">12.1 「リストなんてない」</a></li>
-<li><a href="#12-2-関数プログラミングとリスト">12.2 関数プログラミングとリスト</a></li>
-<li><a href="#12-3-破壊的な操作">12.3 破壊的な操作</a>
-<ul>
-<li><a href="#副作用を目的に使用される操作">副作用を目的に使用される操作</a></li>
-<li><a href="#リサイクルする-操作">「リサイクルする」操作</a></li>
-<li><a href="#関数的な操作と破壊的な操作の対応">関数的な操作と破壊的な操作の対応</a></li>
-</ul></li>
-<li><a href="#12-4-リサイクルな関数と構造共有の組み合わせ">12.4 リサイクルな関数と構造共有の組み合わせ</a>
-<ul>
-<li><a href="#イディオム1-リストを-push-と-nreverse-で作る">イディオム1:リストを<code>push</code>と<code>nreverse</code>で作る</a></li>
-<li><a href="#イディオム2-リサイクルな関数の戻り値を-入力となっていた値のメモリ領域に即-setf-する">イディオム2:リサイクルな関数の戻り値を、入力となっていた値のメモリ領域に即<code>setf</code>する</a></li>
-<li><a href="#sort-stable-srot-merge-もリサイクルな関数"><code>sort</code>,<code>stable-srot</code>,<code>merge</code>もリサイクルな関数</a></li>
-</ul></li>
-<li><a href="#12-5-リスト操作関数">12.5 リスト操作関数</a>
-<ul>
-<li><a href="#last-list-n"><code>(last list [n])</code></a></li>
-<li><a href="#butlast-list-n"><code>(butlast list [n])</code></a></li>
-<li><a href="#nbutlast-list-n"><code>(nbutlast list [n])</code></a></li>
-<li><a href="#ldiff-list-object"><code>(ldiff list object)</code></a></li>
-<li><a href="#tailp-object-list"><code>(tailp object list)</code></a></li>
-<li><a href="#list-list"><code>(list* list+)</code></a></li>
-<li><a href="#make-list-size-initial-element-elm"><code>(make-list size [:initial-element elm])</code></a></li>
-<li><a href="#revappend-list-object"><code>(revappend list object)</code></a></li>
-<li><a href="#nreconc-list-object"><code>(nreconc list object)</code></a></li>
-<li><a href="#consp-object"><code>(consp object)</code></a></li>
-<li><a href="#atom-object"><code>(atom object)</code></a></li>
-<li><a href="#listp-object"><code>(listp object)</code></a></li>
-<li><a href="#null-object"><code>(null object)</code></a></li>
-</ul></li>
-<li><a href="#12-6-マッピング">12.6 マッピング</a>
-<ul>
-<li><a href="#mapcar"><code>mapcar</code></a></li>
-<li><a href="#maplist"><code>maplist</code></a></li>
-<li><a href="#mapcan"><code>mapcan</code></a></li>
-<li><a href="#mapcon"><code>mapcon</code></a></li>
-<li><a href="#maplist-mapcar-mapcon-mapcan-のまとめ"><code>maplist</code> <code>mapcar</code> <code>mapcon</code> <code>mapcan</code> のまとめ</a></li>
-<li><a href="#mapc-と-mapl"><code>mapc</code>と<code>mapl</code></a></li>
-</ul></li>
-<li><a href="#12-7-その他のデータ構造">12.7 その他のデータ構造</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#この章について">この章について</a></li>
+    <li><a href="#121-リストなんてない">12.1 「リストなんてない」</a></li>
+    <li><a href="#122-関数プログラミングとリスト">12.2 関数プログラミングとリスト</a></li>
+    <li><a href="#123-破壊的な操作">12.3 破壊的な操作</a>
+      <ul>
+        <li><a href="#副作用を目的に使用される操作">副作用を目的に使用される操作</a></li>
+        <li><a href="#リサイクルする操作">「リサイクルする」操作</a></li>
+        <li><a href="#関数的な操作と破壊的な操作の対応">関数的な操作と破壊的な操作の対応</a></li>
+      </ul>
+    </li>
+    <li><a href="#124-リサイクルな関数と構造共有の組み合わせ">12.4 リサイクルな関数と構造共有の組み合わせ</a>
+      <ul>
+        <li><a href="#イディオム1リストをpushとnreverseで作る">イディオム1:リストを<code>push</code>と<code>nreverse</code>で作る</a></li>
+        <li><a href="#イディオム2リサイクルな関数の戻り値を入力となっていた値のメモリ領域に即setfする">イディオム2:リサイクルな関数の戻り値を、入力となっていた値のメモリ領域に即<code>setf</code>する</a></li>
+        <li><a href="#sortstable-srotmergeもリサイクルな関数"><code>sort</code>,<code>stable-srot</code>,<code>merge</code>もリサイクルな関数</a></li>
+      </ul>
+    </li>
+    <li><a href="#125-リスト操作関数">12.5 リスト操作関数</a>
+      <ul>
+        <li><a href="#last-list-n"><code>(last list [n])</code></a></li>
+        <li><a href="#butlast-list-n"><code>(butlast list [n])</code></a></li>
+        <li><a href="#nbutlast-list-n"><code>(nbutlast list [n])</code></a></li>
+        <li><a href="#ldiff-list-object"><code>(ldiff list object)</code></a></li>
+        <li><a href="#tailp-object-list"><code>(tailp object list)</code></a></li>
+        <li><a href="#list-list"><code>(list* list+)</code></a></li>
+        <li><a href="#make-list-size-initial-element-elm"><code>(make-list size [:initial-element elm])</code></a></li>
+        <li><a href="#revappend-list-object"><code>(revappend list object)</code></a></li>
+        <li><a href="#nreconc-list-object"><code>(nreconc list object)</code></a></li>
+        <li><a href="#consp-object"><code>(consp object)</code></a></li>
+        <li><a href="#atom-object"><code>(atom object)</code></a></li>
+        <li><a href="#listp-object"><code>(listp object)</code></a></li>
+        <li><a href="#null-object"><code>(null object)</code></a></li>
+      </ul>
+    </li>
+    <li><a href="#126-マッピング">12.6 マッピング</a>
+      <ul>
+        <li><a href="#mapcar"><code>mapcar</code></a></li>
+        <li><a href="#maplist"><code>maplist</code></a></li>
+        <li><a href="#mapcan"><code>mapcan</code></a></li>
+        <li><a href="#mapcon"><code>mapcon</code></a></li>
+        <li><a href="#maplist-mapcar-mapcon-mapcan-のまとめ"><code>maplist</code> <code>mapcar</code> <code>mapcon</code> <code>mapcan</code> のまとめ</a></li>
+        <li><a href="#mapcとmapl"><code>mapc</code>と<code>mapl</code></a></li>
+      </ul>
+    </li>
+    <li><a href="#127-その他のデータ構造">12.7 その他のデータ構造</a></li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h2 id="この章について">この章について</h2>
-
+  <h2 id="この章について">この章について</h2>
 <p>この章では、リストついて説明する。</p>
-
-<h2 id="12-1-リストなんてない">12.1 「リストなんてない」</h2>
-
-<p>Common Lispにおいては、リストというデータ構造が構築されているわけではない。<br />
+<h2 id="121-リストなんてない">12.1 「リストなんてない」</h2>
+<p>Common Lispにおいては、リストというデータ構造が構築されているわけではない。<br>
 実際には、コンスセルによって構築されたデータ構造があり、それをリスト操作用の関数群によってそう見せているに過ぎない。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; コンスセルの生成</span>
-<span class="p">(</span><span class="nv">cons</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">; (1 . 2)</span></code></pre></div>
-<p>コンスセルを構成する各値を<code>(a . b)</code>のように括弧とドットで区切って表現したものをドット対(dotted pair)と呼ぶ。<br />
+<span class="p">(</span><span class="nc">cons</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">; (1 . 2)</span>
+</code></pre></div><p>コンスセルを構成する各値を<code>(a . b)</code>のように括弧とドットで区切って表現したものをドット対(dotted pair)と呼ぶ。<br>
 なお、コンスの語源はconstruct。</p>
-
-<p>コンスセルの左側の値にアクセスするには<code>car</code>を用いる。<br />
+<p>コンスセルの左側の値にアクセスするには<code>car</code>を用いる。<br>
 コンスセルの右側の値にアクセスするには<code>cdr</code>を用いる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">car</span> <span class="p">(</span><span class="nv">cons</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">))</span> <span class="c1">; 1</span>
-<span class="p">(</span><span class="nv">cdr</span> <span class="p">(</span><span class="nv">cons</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">))</span> <span class="c1">; 2</span></code></pre></div>
-<p><code>car</code>も<code>cdr</code>も<code>setf</code>可能。すなわち、下記のような記述ができる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*cons*</span> <span class="p">(</span><span class="nv">cons</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nf">car</span> <span class="p">(</span><span class="nc">cons</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">))</span> <span class="c1">; 1</span>
+<span class="p">(</span><span class="nf">cdr</span> <span class="p">(</span><span class="nc">cons</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">))</span> <span class="c1">; 2</span>
+</code></pre></div><p><code>car</code>も<code>cdr</code>も<code>setf</code>可能。すなわち、下記のような記述ができる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*cons*</span> <span class="p">(</span><span class="nc">cons</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">))</span>
 <span class="vg">*cons*</span>
 <span class="c1">; (1 . 2)</span>
-<span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">car</span> <span class="vg">*cons*</span><span class="p">)</span> <span class="mi">10</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nf">car</span> <span class="vg">*cons*</span><span class="p">)</span> <span class="mi">10</span><span class="p">)</span>
 <span class="c1">; 10</span>
 <span class="vg">*cons*</span>
 <span class="c1">; (10 . 2)</span>
-<span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">cdr</span> <span class="vg">*cons*</span><span class="p">)</span> <span class="mi">20</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nf">cdr</span> <span class="vg">*cons*</span><span class="p">)</span> <span class="mi">20</span><span class="p">)</span>
 <span class="c1">; 20</span>
 <span class="vg">*cons*</span>
-<span class="c1">; (10 . 20)</span></code></pre></div>
-<p><strong>NOTE</strong> <code>setf</code>マクロの中では<code>car</code>は<code>rplaca</code>に、<code>cdr</code>は<code>rplacd</code>に変換される。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">macroexpand-1</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">car</span> <span class="vg">*x*</span><span class="p">)</span> <span class="mi">100</span><span class="p">))</span>
+<span class="c1">; (10 . 20)</span>
+</code></pre></div><p><strong>NOTE</strong> <code>setf</code>マクロの中では<code>car</code>は<code>rplaca</code>に、<code>cdr</code>は<code>rplacd</code>に変換される。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nf">macroexpand-1</span> <span class="o">&#39;</span><span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nf">car</span> <span class="vg">*x*</span><span class="p">)</span> <span class="mi">100</span><span class="p">))</span>
 <span class="c1">; (SB-KERNEL:%RPLACA *X* 100)</span>
-<span class="p">(</span><span class="nv">macroexpand-1</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">cdr</span> <span class="vg">*x*</span><span class="p">)</span> <span class="mi">100</span><span class="p">))</span>
-<span class="c1">; (SB-KERNEL:%RPLACD *X* 100)</span></code></pre></div>
-<p>リストとは、コンスセルを鎖の様に連結することで得られるデータ構造だと言える。<br />
-リスト中の特定の要素の値は、その要素のコンスセルの<code>car</code>によって参照され、次の要素はコンスセルの<code>cdr</code>によって参照される。<br />
-最後の要素のコンスセルは<code>cdr</code>に<code>nil</code>を持つ。<br />
+<span class="p">(</span><span class="nf">macroexpand-1</span> <span class="o">&#39;</span><span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nf">cdr</span> <span class="vg">*x*</span><span class="p">)</span> <span class="mi">100</span><span class="p">))</span>
+<span class="c1">; (SB-KERNEL:%RPLACD *X* 100)</span>
+</code></pre></div><p>リストとは、コンスセルを鎖の様に連結することで得られるデータ構造だと言える。<br>
+リスト中の特定の要素の値は、その要素のコンスセルの<code>car</code>によって参照され、次の要素はコンスセルの<code>cdr</code>によって参照される。<br>
+最後の要素のコンスセルは<code>cdr</code>に<code>nil</code>を持つ。<br>
 したがって、あるデータがリストであるとは、そのデータが<code>nil</code>(空リスト)かコンスセルへの参照を持っていることと同義だ。</p>
-
 <p>リストを扱うときに<code>car</code>と<code>cdr</code>を使用すると意味が伝わりにくいため、<code>car</code>には<code>first</code>を<code>rest</code>には<code>rest</code>を代わりに使うほうが良い。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*list*</span> <span class="p">(</span><span class="nv">list</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">car</span> <span class="vg">*list*</span><span class="p">)</span> <span class="c1">; 1</span>
-<span class="p">(</span><span class="nv">first</span> <span class="vg">*list*</span><span class="p">)</span> <span class="c1">; 1</span>
-<span class="p">(</span><span class="nv">cdr</span> <span class="vg">*list*</span><span class="p">)</span> <span class="c1">; (2 3 4)</span>
-<span class="p">(</span><span class="nv">rest</span> <span class="vg">*list*</span><span class="p">)</span> <span class="c1">; (2 3 4)</span></code></pre></div>
-<h2 id="12-2-関数プログラミングとリスト">12.2 関数プログラミングとリスト</h2>
-
-<p>Common Lispにおいては、リストを操作する関数は、リストを無駄に生成しないように、リストを構成するコンスセルの一部を共有してリストを生成することがある。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*list*</span> <span class="p">(</span><span class="nc">list</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">))</span>
+<span class="p">(</span><span class="nf">car</span> <span class="vg">*list*</span><span class="p">)</span> <span class="c1">; 1</span>
+<span class="p">(</span><span class="nf">first</span> <span class="vg">*list*</span><span class="p">)</span> <span class="c1">; 1</span>
+<span class="p">(</span><span class="nf">cdr</span> <span class="vg">*list*</span><span class="p">)</span> <span class="c1">; (2 3 4)</span>
+<span class="p">(</span><span class="nf">rest</span> <span class="vg">*list*</span><span class="p">)</span> <span class="c1">; (2 3 4)</span>
+</code></pre></div><h2 id="122-関数プログラミングとリスト">12.2 関数プログラミングとリスト</h2>
+<p>Common Lispにおいては、リストを操作する関数は、リストを無駄に生成しないように、リストを構成するコンスセルの一部を共有してリストを生成することがある。<br>
 したがって、共有されたリストを変更すると、意図しないリストに対しても影響してしまう可能性がある。</p>
-
 <p>例えば、<code>append</code>は、与えられた引数のうち、最後の引数に対してはリストの複製を行わず、そのリストの先頭に対して、他の引数のリストの<code>cdr</code>の参照を繋げるのみの操作をする。これにより、下図のようなデータ構造が作成される。</p>
-
 
 <link rel="stylesheet" href="https://otaon.github.io/css/hugo-easy-gallery.css" />
 <div class="box aligncenter" style="max-width:400px;">
@@ -261,203 +249,165 @@
   </figure>
 </div>
 
-
 <p>このデータ構造を考慮せずに<code>*list-2*</code>を変更すると、意図せずして<code>*list-3*</code>も変更してしまう。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*list-1*</span> <span class="p">(</span><span class="nv">list</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*list-2*</span> <span class="p">(</span><span class="nv">list</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*list-3*</span> <span class="p">(</span><span class="nv">append</span> <span class="vg">*list-1*</span> <span class="vg">*list-2*</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*list-1*</span> <span class="p">(</span><span class="nc">list</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*list-2*</span> <span class="p">(</span><span class="nc">list</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*list-3*</span> <span class="p">(</span><span class="nf">append</span> <span class="vg">*list-1*</span> <span class="vg">*list-2*</span><span class="p">))</span>
 <span class="c1">; (1 2 3 4)</span>
-<span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">first</span> <span class="vg">*list-2*</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nf">first</span> <span class="vg">*list-2*</span><span class="p">)</span> <span class="mi">0</span><span class="p">)</span>
 <span class="c1">; 0</span>
 <span class="vg">*list-2*</span>
 <span class="c1">; (0 4)</span>
 <span class="vg">*list-3*</span>
-<span class="c1">; (1 2 0 4) ; *list-3*も変更されている</span></code></pre></div>
-<h2 id="12-3-破壊的な操作">12.3 破壊的な操作</h2>
-
-<p>関数には、副作用によってリストを破壊するものがある。これを破壊的な操作と呼ぶことにする。<br />
+<span class="c1">; (1 2 0 4) ; *list-3*も変更されている</span>
+</code></pre></div><h2 id="123-破壊的な操作">12.3 破壊的な操作</h2>
+<p>関数には、副作用によってリストを破壊するものがある。これを破壊的な操作と呼ぶことにする。<br>
 これは2種類に大別できる。</p>
-
 <h3 id="副作用を目的に使用される操作">副作用を目的に使用される操作</h3>
-
-<p>そもそも副作用を目的として使用される操作がある。これは<strong>非</strong>関数プログラミングのスタイルの操作。<br />
+<p>そもそも副作用を目的として使用される操作がある。これは<strong>非</strong>関数プログラミングのスタイルの操作。<br>
 12.1で示した例のとおり、この種類の操作は、共有されているリストを書き換えてしまわないように注意する必要がある。</p>
-
-<p>代表的なものには<code>setf</code>がある。<br />
+<p>代表的なものには<code>setf</code>がある。<br>
 また、<code>vertor-push</code>や<code>vector-pop</code>のように、内部で<code>setf</code>を呼ぶような操作も破壊的な操作。</p>
-
-<h3 id="リサイクルする-操作">「リサイクルする」操作</h3>
-
-<p>リサイクル操作はこの本の造語。<br />
-この種類の操作は、操作の結果を生成する際に、引数に渡されたリストのメモリ領域を再利用する。<br />
+<h3 id="リサイクルする操作">「リサイクルする」操作</h3>
+<p>リサイクル操作はこの本の造語。<br>
+この種類の操作は、操作の結果を生成する際に、引数に渡されたリストのメモリ領域を再利用する。<br>
 また、この種類の操作は、<strong>関数的</strong>なコードの中で利用することを想定されている。</p>
-
-<p>例えば<code>reverse</code>は関数的な操作だ。すなわち、引数に渡されたリストは変更されない。<br />
+<p>例えば<code>reverse</code>は関数的な操作だ。すなわち、引数に渡されたリストは変更されない。<br>
 一方、これのリサイクル版の<code>nreverse</code>は破壊的な操作だ。すなわち、結果が、引数に渡されたリストのメモリ領域に上書きされる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*list*</span> <span class="p">(</span><span class="nv">list</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*list*</span> <span class="p">(</span><span class="nc">list</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">))</span>
 
 <span class="c1">; reverse</span>
 <span class="c1">; 新しいメモリ領域にデータを格納して、参照を付け替えている</span>
-<span class="p">(</span><span class="nv">setf</span> <span class="vg">*list*</span> <span class="p">(</span><span class="nv">reverse</span> <span class="vg">*list*</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">setf</span> <span class="vg">*list*</span> <span class="p">(</span><span class="nf">reverse</span> <span class="vg">*list*</span><span class="p">))</span>
 <span class="vg">*list*</span> <span class="c1">; (4 3 2 1)</span>
 
-<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*list*</span> <span class="p">(</span><span class="nv">list</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*list*</span> <span class="p">(</span><span class="nc">list</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">4</span><span class="p">))</span>
 
 <span class="c1">; nreverse</span>
-<span class="p">(</span><span class="nv">nreverse</span> <span class="vg">*list*</span><span class="p">)</span>
-<span class="vg">*list*</span> <span class="c1">; (4 3 2 1)</span></code></pre></div>
-<p>上記コードにおいて、<code>(setf *list* (reverse *list*))</code>の方も<code>*list*</code>を上書きしているには違いない。<br />
-しかし、こちらは<code>*list*</code>を新しいメモリ領域にアサインし、そこに<code>reverse</code>の戻り値を格納している。<br />
-したがって、元々の<code>*list*</code>のメモリ領域もガベージコレクションが働くまで確保された状態になる。<br />
+<span class="p">(</span><span class="nf">nreverse</span> <span class="vg">*list*</span><span class="p">)</span>
+<span class="vg">*list*</span> <span class="c1">; (4 3 2 1)</span>
+</code></pre></div><p>上記コードにおいて、<code>(setf *list* (reverse *list*))</code>の方も<code>*list*</code>を上書きしているには違いない。<br>
+しかし、こちらは<code>*list*</code>を新しいメモリ領域にアサインし、そこに<code>reverse</code>の戻り値を格納している。<br>
+したがって、元々の<code>*list*</code>のメモリ領域もガベージコレクションが働くまで確保された状態になる。<br>
 一方で<code>nreverse</code>は元々の<code>*list*</code>のメモリ領域のみ使用しているため、無駄にメモリを消費することがない。</p>
-
 <h3 id="関数的な操作と破壊的な操作の対応">関数的な操作と破壊的な操作の対応</h3>
-
 <p>大抵の破壊的な操作には、共通して語頭に<code>n</code>がついている。<code>n</code>は<code>non-consing</code>、すなわち、新しいコンスセルを確保しないという意味。</p>
-
 <p>大抵の破壊的な操作には、同じ演算結果を返す非破壊的な関数が存在し、その関数名の語頭には<code>n</code>がついていない。
 しかし、下記のように例外もある。</p>
-
 <ul>
-<li>関数的な操作 : <code>append</code><br />
+<li>関数的な操作 : <code>append</code><br>
 破壊バージョン : <code>nconc</code></li>
-<li>関数的な関数 : <code>remove</code>,<code>remove-if</code>,<code>remove-if-not</code>,&hellip;<br />
+<li>関数的な関数 : <code>remove</code>,<code>remove-if</code>,<code>remove-if-not</code>,&hellip;<br>
 破壊バージョン : <code>delete</code>,<code>delete-if</code>,<code>delete-if-not</code>,&hellip;</li>
 </ul>
-
-<p>大抵の破壊的な操作は、その操作による副作用が厳密に規定されていないため、その副作用を目的に使用できない。<br />
+<p>大抵の破壊的な操作は、その操作による副作用が厳密に規定されていないため、その副作用を目的に使用できない。<br>
 ただし、例外があり、<code>nconc</code>,<code>nsubstitute</code>,<code>nsubstitute-if</code>,&hellip;などは副作用の結果が規定されており、それを利用できる。</p>
-
 <p><code>nconc</code>は、下記の通り動作する。</p>
-
 <ol>
 <li>渡された空ではない全てのリストについて、そのリストの最後のコンスセルの<code>cdr</code>に、次の引数のリストの先頭を参照させる。</li>
 <li>上記を繰り返す。</li>
 <li>最後に最初のリストの先頭を返す。</li>
 </ol>
-
 <p><code>nsubstutute</code>とその亜種は、下記の通り動作する。</p>
-
 <ol>
 <li>引数のリストをトラバースする。</li>
 <li>古い値を保持しているコンスセルの<code>car</code>を新しい値に<code>setf</code>する。</li>
 </ol>
-
 <p>上記のように、副作用が明確に規定されたものもあるが、通常はこの副作用を期待したコードは書くべきではない。</p>
-
-<h2 id="12-4-リサイクルな関数と構造共有の組み合わせ">12.4 リサイクルな関数と構造共有の組み合わせ</h2>
-
-<p>リサイクルな関数を使う際には、その入力となるデータ構造が変更されることに注意する必要がある。<br />
+<h2 id="124-リサイクルな関数と構造共有の組み合わせ">12.4 リサイクルな関数と構造共有の組み合わせ</h2>
+<p>リサイクルな関数を使う際には、その入力となるデータ構造が変更されることに注意する必要がある。<br>
 しかし、大抵の場合、メモリ使用量の節約などのために、プログラムはデータ構造を共有している。</p>
-
-<p>データ構造を共有している状況でリサイクルな関数を使用するには、リサイクルされたデータを今後使用しないことを注意深く確認する必要がある。しかし、リサイクルな関数の仕様、挙動を全て理解するのは難しい。<br />
+<p>データ構造を共有している状況でリサイクルな関数を使用するには、リサイクルされたデータを今後使用しないことを注意深く確認する必要がある。しかし、リサイクルな関数の仕様、挙動を全て理解するのは難しい。<br>
 そこで、安全な使用方法をイディオムとして覚えてしまうのが一番効率が良い。</p>
-
-<h3 id="イディオム1-リストを-push-と-nreverse-で作る">イディオム1:リストを<code>push</code>と<code>nreverse</code>で作る</h3>
-
-<p>下記に示すように、空のリストの先頭に対してどんどん<code>cons</code>(<code>push</code>も用いられる)していき、最後に<code>nreverse</code>することで、追加した順番になったリストを得る事ができる。<br />
+<h3 id="イディオム1リストをpushとnreverseで作る">イディオム1:リストを<code>push</code>と<code>nreverse</code>で作る</h3>
+<p>下記に示すように、空のリストの先頭に対してどんどん<code>cons</code>(<code>push</code>も用いられる)していき、最後に<code>nreverse</code>することで、追加した順番になったリストを得る事ができる。<br>
 <code>nreverse</code>は、リストの先頭から、コンスセルの<code>cdr</code>を直前のコンスセルへの参照に変更しながらトラバースする。
 したがって、<code>nreverse</code>のオーダは、要素を追加していくときのオーダと等しくO(n)のため、この方法はそれなりに効率が良い。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">upto</span> <span class="p">(</span><span class="nv">max</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">result</span> <span class="no">nil</span><span class="p">))</span>
-    <span class="p">(</span><span class="nv">dotimes</span> <span class="p">(</span><span class="nv">i</span> <span class="nv">max</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">push</span> <span class="nv">i</span> <span class="nv">result</span><span class="p">))</span>
-    <span class="p">(</span><span class="nv">nreverse</span> <span class="nv">result</span><span class="p">)))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">upto</span> <span class="p">(</span><span class="nf">max</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">result</span> <span class="no">nil</span><span class="p">))</span>
+    <span class="p">(</span><span class="nb">dotimes</span> <span class="p">(</span><span class="nv">i</span> <span class="nf">max</span><span class="p">)</span>
+      <span class="p">(</span><span class="nb">push</span> <span class="nv">i</span> <span class="nv">result</span><span class="p">))</span>
+    <span class="p">(</span><span class="nf">nreverse</span> <span class="nv">result</span><span class="p">)))</span>
 
-<span class="p">(</span><span class="nv">upto</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">; (0 1 2 3 4 5 6 7 8 9)</span></code></pre></div>
-<h3 id="イディオム2-リサイクルな関数の戻り値を-入力となっていた値のメモリ領域に即-setf-する">イディオム2:リサイクルな関数の戻り値を、入力となっていた値のメモリ領域に即<code>setf</code>する</h3>
-
+<span class="p">(</span><span class="nv">upto</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">; (0 1 2 3 4 5 6 7 8 9)</span>
+</code></pre></div><h3 id="イディオム2リサイクルな関数の戻り値を入力となっていた値のメモリ領域に即setfする">イディオム2:リサイクルな関数の戻り値を、入力となっていた値のメモリ領域に即<code>setf</code>する</h3>
 <p>これは、「関数的なスタイルで変数を束縛するように見せて、実は同じメモリ領域を使い回す」ということを実現するためのイディオム。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">setf</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">delete</span> <span class="no">nil</span> <span class="nv">foo</span><span class="p">))</span></code></pre></div>
-<p><strong>注意</strong><br />
-上記の<code>foo</code>が、どこか他のデータと構造を共有していた場合、そのデータを破壊してしまう可能性がある。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">setf</span> <span class="nv">foo</span> <span class="p">(</span><span class="nf">delete</span> <span class="no">nil</span> <span class="nv">foo</span><span class="p">))</span>
+</code></pre></div><p><strong>注意</strong><br>
+上記の<code>foo</code>が、どこか他のデータと構造を共有していた場合、そのデータを破壊してしまう可能性がある。<br>
 例として、先述のリスト<code>*list-2</code>と<code>*list-3*</code>を例に挙げる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="vg">*list-2*</span> <span class="c1">; (0 4)</span>
 <span class="vg">*list-3*</span> <span class="c1">; (1 2 0 4) ; (0 4) の部分は*list-2*と共有している</span>
 
-<span class="p">(</span><span class="nv">setf</span> <span class="vg">*list-3*</span> <span class="p">(</span><span class="nv">delete</span> <span class="mi">4</span> <span class="vg">*list-3*</span><span class="p">))</span> <span class="c1">; (1 2 0)</span>
+<span class="p">(</span><span class="nb">setf</span> <span class="vg">*list-3*</span> <span class="p">(</span><span class="nf">delete</span> <span class="mi">4</span> <span class="vg">*list-3*</span><span class="p">))</span> <span class="c1">; (1 2 0)</span>
 
-<span class="vg">*list-2*</span> <span class="c1">; (0) ←*list-2*のデータ構造が壊れた</span></code></pre></div>
-<p><code>delete</code>ではなく<code>remove</code>を使用していれば、<code>*list-3*</code>のデータ構造は一切変更されず、新規に<code>(1 2 0)</code>が作成されることになる(一部のデータ構造が共有されるかもしれないが)。<br />
+<span class="vg">*list-2*</span> <span class="c1">; (0) ←*list-2*のデータ構造が壊れた</span>
+</code></pre></div><p><code>delete</code>ではなく<code>remove</code>を使用していれば、<code>*list-3*</code>のデータ構造は一切変更されず、新規に<code>(1 2 0)</code>が作成されることになる(一部のデータ構造が共有されるかもしれないが)。<br>
 上記のように、<code>setf</code>を用いたイディオムは絶対に安全というわけではなく、使用状況をよく理解する必要がある。</p>
-
-<h3 id="sort-stable-srot-merge-もリサイクルな関数"><code>sort</code>,<code>stable-srot</code>,<code>merge</code>もリサイクルな関数</h3>
-
-<p>11章に登場した<code>sort</code>,<code>stable-srot</code>,<code>merge</code>もリサイクルな関数だ。<br />
-さらに、これらの関数には、非破壊的なバージョンが存在しない。<br />
+<h3 id="sortstable-srotmergeもリサイクルな関数"><code>sort</code>,<code>stable-srot</code>,<code>merge</code>もリサイクルな関数</h3>
+<p>11章に登場した<code>sort</code>,<code>stable-srot</code>,<code>merge</code>もリサイクルな関数だ。<br>
+さらに、これらの関数には、非破壊的なバージョンが存在しない。<br>
 したがって、これらの関数の入力となるデータを破壊したくなければ、<code>copy-list</code>で予めデータのコピーを作成しておく必要がある。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*list*</span> <span class="p">(</span><span class="nv">list</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">sort</span> <span class="vg">*list*</span> <span class="nf">#&#39;</span><span class="nv">&lt;</span><span class="p">)</span> <span class="c1">; (1 2 3 4)</span>
-<span class="vg">*list*</span> <span class="c1">; (4) ←破壊されている</span></code></pre></div>
-<h2 id="12-5-リスト操作関数">12.5 リスト操作関数</h2>
-
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*list*</span> <span class="p">(</span><span class="nc">list</span> <span class="mi">4</span> <span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">))</span>
+<span class="p">(</span><span class="nf">sort</span> <span class="vg">*list*</span> <span class="nf">#&#39;&lt;</span><span class="p">)</span> <span class="c1">; (1 2 3 4)</span>
+<span class="vg">*list*</span> <span class="c1">; (4) ←破壊されている</span>
+</code></pre></div><h2 id="125-リスト操作関数">12.5 リスト操作関数</h2>
 <p>Common Lispには、リストを操作する関数群が豊富に用意されている。</p>
-
 <ul>
 <li><code>first</code>, <code>second</code>, <code>third</code>, &hellip;., <code>ninth</code>, <code>tenth</code>で、1-10番目の要素を取得できる</li>
 <li><code>(nth n list)</code>は、任意の場所の値を取得できる
-
 <ul>
 <li><strong><code>n</code>は0始まり</strong></li>
 <li><code>(elt list n)</code>も同様の事が可能だが、<code>nth</code>の方がリスト専用であるため高速</li>
-</ul></li>
+</ul>
+</li>
 <li><code>(nthcdr n list)</code>は、<code>cdr</code>を<code>n</code>回呼び出したのと同じ値を返す
-
 <ul>
 <li><code>(nthcdr 0 list)</code>は<code>list</code>と等しい</li>
 <li><code>(nthcdr 1 list</code>は<code>(cdr list)</code>や<code>(rest list)</code>と等しい</li>
-</ul></li>
+</ul>
+</li>
 <li><code>(last list n)</code>は、後ろからn番目の要素を取得できる
-
 <ul>
 <li><strong><code>n</code>は1始まり</strong></li>
 <li><code>n</code>を省略すると末尾要素</li>
 <li><code>(last '(0 1 2 3 4 5) 4) ; (2 3 4 5)</code></li>
-</ul></li>
 </ul>
-
-<p><code>car</code>と<code>cdr</code>を合成した関数も存在する。例えば<code>cadr</code>は、<code>(car (cdr list))</code>と等しい。<br />
+</li>
+</ul>
+<p><code>car</code>と<code>cdr</code>を合成した関数も存在する。例えば<code>cadr</code>は、<code>(car (cdr list))</code>と等しい。<br>
 合成関数は合計28個存在する。</p>
-
 <h3 id="last-list-n"><code>(last list [n])</code></h3>
-
 <p>リストの末尾要素を返す。オプションの<code>n</code>指定で最後のn個のコンスセルを返す。</p>
-
 <h3 id="butlast-list-n"><code>(butlast list [n])</code></h3>
-
-<p>最後のコンスセルを除いたリストの<strong>コピー</strong>を返す。<br />
+<p>最後のコンスセルを除いたリストの<strong>コピー</strong>を返す。<br>
 オプションの<code>n</code>指定で最後のn個のコンスセルを含めない。</p>
-
 <h3 id="nbutlast-list-n"><code>(nbutlast list [n])</code></h3>
-
 <p><code>butlast</code>のリサイクルバージョン。</p>
-
 <h3 id="ldiff-list-object"><code>(ldiff list object)</code></h3>
-
 <p>指定された<code>object</code>までのリストのコピーを返す。
 <code>object</code>が<code>list</code>を構成するコンスセルそのものの場合に真となる。*1</p>
-
 <ul>
 <li>*1<a href="http://clhs.lisp.se/Body/f_ldiffc.htm">Common Lisp Hyper Spec - ldiff</a></li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">lists</span> <span class="o">&#39;#(</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="o">.</span> <span class="nv">d</span><span class="p">))))</span>
-  <span class="p">(</span><span class="nv">dotimes</span> <span class="p">(</span><span class="nv">i</span> <span class="p">(</span><span class="nv">length</span> <span class="nv">lists</span><span class="p">))</span> <span class="p">()</span>
-    <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">list</span> <span class="p">(</span><span class="nv">aref</span> <span class="nv">lists</span> <span class="nv">i</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~2&amp;list=~S ~21T(tailp object list)~
-</span><span class="s">                 ~44T(ldiff list object)~%&#34;</span> <span class="nv">list</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">objects</span> <span class="p">(</span><span class="nv">vector</span> <span class="nv">list</span> <span class="c1">; (a b c)</span>
-                             <span class="p">(</span><span class="nv">cddr</span> <span class="nv">list</span><span class="p">)</span> <span class="c1">; (c)</span>
-                             <span class="p">(</span><span class="nv">copy-list</span> <span class="p">(</span><span class="nv">cddr</span> <span class="nv">list</span><span class="p">))</span> <span class="c1">; (c) (a b c)と別のコンスセル</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">lists</span> <span class="o">&#39;#(</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span> <span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span> <span class="o">.</span> <span class="nv">d</span><span class="p">))))</span>
+  <span class="p">(</span><span class="nb">dotimes</span> <span class="p">(</span><span class="nv">i</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">lists</span><span class="p">))</span> <span class="p">()</span>
+    <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nc">list</span> <span class="p">(</span><span class="nf">aref</span> <span class="nv">lists</span> <span class="nv">i</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34;~2&amp;list=~S ~21T(tailp object list)~
+</span><span class="s">                 ~44T(ldiff list object)~%&#34;</span> <span class="nc">list</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">objects</span> <span class="p">(</span><span class="nc">vector</span> <span class="nc">list</span> <span class="c1">; (a b c)</span>
+                             <span class="p">(</span><span class="nf">cddr</span> <span class="nc">list</span><span class="p">)</span> <span class="c1">; (c)</span>
+                             <span class="p">(</span><span class="nf">copy-list</span> <span class="p">(</span><span class="nf">cddr</span> <span class="nc">list</span><span class="p">))</span> <span class="c1">; (c) (a b c)と別のコンスセル</span>
                              <span class="o">&#39;</span><span class="p">(</span><span class="nv">f</span> <span class="nv">g</span> <span class="nv">h</span><span class="p">)</span>
                              <span class="o">&#39;</span><span class="p">()</span>
                              <span class="ss">&#39;d</span>
                              <span class="ss">&#39;x</span><span class="p">)))</span>
-        <span class="p">(</span><span class="nv">dotimes</span> <span class="p">(</span><span class="nv">j</span> <span class="p">(</span><span class="nv">length</span> <span class="nv">objects</span><span class="p">))</span> <span class="p">()</span>
-          <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">object</span> <span class="p">(</span><span class="nv">aref</span> <span class="nv">objects</span> <span class="nv">j</span><span class="p">)))</span>
-            <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~&amp; object=~S ~21T~S ~44T~S&#34;</span>
-                    <span class="nv">object</span> <span class="p">(</span><span class="nv">tailp</span> <span class="nv">object</span> <span class="nv">list</span><span class="p">)</span> <span class="p">(</span><span class="nv">ldiff</span> <span class="nv">list</span> <span class="nv">object</span><span class="p">))))))))</span>
+        <span class="p">(</span><span class="nb">dotimes</span> <span class="p">(</span><span class="nv">j</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">objects</span><span class="p">))</span> <span class="p">()</span>
+          <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">object</span> <span class="p">(</span><span class="nf">aref</span> <span class="nv">objects</span> <span class="nv">j</span><span class="p">)))</span>
+            <span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34;~&amp; object=~S ~21T~S ~44T~S&#34;</span>
+                    <span class="nv">object</span> <span class="p">(</span><span class="nf">tailp</span> <span class="nv">object</span> <span class="nc">list</span><span class="p">)</span> <span class="p">(</span><span class="nf">ldiff</span> <span class="nc">list</span> <span class="nv">object</span><span class="p">))))))))</span>
 
-<span class="nv">&gt;&gt;</span>  <span class="nv">list=</span><span class="p">(</span><span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span><span class="p">)</span>         <span class="p">(</span><span class="nv">tailp</span> <span class="nv">object</span> <span class="nv">list</span><span class="p">)</span>    <span class="p">(</span><span class="nv">ldiff</span> <span class="nv">list</span> <span class="nv">object</span><span class="p">)</span>
+<span class="nv">&gt;&gt;</span>  <span class="nv">list=</span><span class="p">(</span><span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span><span class="p">)</span>         <span class="p">(</span><span class="nf">tailp</span> <span class="nv">object</span> <span class="nc">list</span><span class="p">)</span>    <span class="p">(</span><span class="nf">ldiff</span> <span class="nc">list</span> <span class="nv">object</span><span class="p">)</span>
 <span class="nv">&gt;&gt;</span>   <span class="nv">object=</span><span class="p">(</span><span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span><span class="p">)</span>      <span class="no">T</span>                      <span class="no">NIL</span>
 <span class="nv">&gt;&gt;</span>   <span class="nv">object=</span><span class="p">(</span><span class="nv">C</span><span class="p">)</span>          <span class="no">T</span>                      <span class="p">(</span><span class="nv">A</span> <span class="nv">B</span><span class="p">)</span>
 <span class="nv">&gt;&gt;</span>   <span class="nv">object=</span><span class="p">(</span><span class="nv">C</span><span class="p">)</span>          <span class="no">NIL</span>                    <span class="p">(</span><span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span><span class="p">)</span>
@@ -466,7 +416,7 @@
 <span class="nv">&gt;&gt;</span>   <span class="nv">object=D</span>            <span class="no">NIL</span>                    <span class="p">(</span><span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span><span class="p">)</span>
 <span class="nv">&gt;&gt;</span>   <span class="nv">object=X</span>            <span class="no">NIL</span>                    <span class="p">(</span><span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span><span class="p">)</span>
 <span class="nv">&gt;&gt;</span>  
-<span class="nv">&gt;&gt;</span>  <span class="nv">list=</span><span class="p">(</span><span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> <span class="o">.</span> <span class="nv">D</span><span class="p">)</span>     <span class="p">(</span><span class="nv">tailp</span> <span class="nv">object</span> <span class="nv">list</span><span class="p">)</span>    <span class="p">(</span><span class="nv">ldiff</span> <span class="nv">list</span> <span class="nv">object</span><span class="p">)</span>
+<span class="nv">&gt;&gt;</span>  <span class="nv">list=</span><span class="p">(</span><span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> <span class="o">.</span> <span class="nv">D</span><span class="p">)</span>     <span class="p">(</span><span class="nf">tailp</span> <span class="nv">object</span> <span class="nc">list</span><span class="p">)</span>    <span class="p">(</span><span class="nf">ldiff</span> <span class="nc">list</span> <span class="nv">object</span><span class="p">)</span>
 <span class="nv">&gt;&gt;</span>   <span class="nv">object=</span><span class="p">(</span><span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> <span class="o">.</span> <span class="nv">D</span><span class="p">)</span>  <span class="no">T</span>                      <span class="no">NIL</span>
 <span class="nv">&gt;&gt;</span>   <span class="nv">object=</span><span class="p">(</span><span class="nv">C</span> <span class="o">.</span> <span class="nv">D</span><span class="p">)</span>      <span class="no">T</span>                      <span class="p">(</span><span class="nv">A</span> <span class="nv">B</span><span class="p">)</span>
 <span class="nv">&gt;&gt;</span>   <span class="nv">object=</span><span class="p">(</span><span class="nv">C</span> <span class="o">.</span> <span class="nv">D</span><span class="p">)</span>      <span class="no">NIL</span>                    <span class="p">(</span><span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> <span class="o">.</span> <span class="nv">D</span><span class="p">)</span>
@@ -474,22 +424,17 @@
 <span class="nv">&gt;&gt;</span>   <span class="nv">object=NIL</span>          <span class="no">NIL</span>                    <span class="p">(</span><span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> <span class="o">.</span> <span class="nv">D</span><span class="p">)</span>
 <span class="nv">&gt;&gt;</span>   <span class="nv">object=D</span>            <span class="no">T</span>                      <span class="p">(</span><span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span><span class="p">)</span>
 <span class="nv">&gt;&gt;</span>   <span class="nv">object=X</span>            <span class="no">NIL</span>                    <span class="p">(</span><span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span> <span class="o">.</span> <span class="nv">D</span><span class="p">)</span>
-<span class="nv">=&gt;</span>  <span class="nv">NIL</span></code></pre></div>
-<h3 id="tailp-object-list"><code>(tailp object list)</code></h3>
-
+<span class="nv">=&gt;</span>  <span class="no">NIL</span>
+</code></pre></div><h3 id="tailp-object-list"><code>(tailp object list)</code></h3>
 <p>指定された<code>object</code>がリストを構成するコンスセルの一部である時真を返す。*1</p>
-
 <h3 id="list-list"><code>(list* list+)</code></h3>
-
 <ol>
 <li>指定された引数のうち最後のもの以外をすべて含むリストを生成する。</li>
 <li>最後の引数を、生成したリストの最後のセルの<code>cdr</code>にする。*2</li>
 </ol>
-
 <ul>
 <li>*2<a href="http://clhs.lisp.se/Body/f_list_.htm">Common Lisp Hyper Spec - list*</a></li>
 </ul>
-
 
 
 <div class="box aligncenter" style="max-width:400px;">
@@ -501,118 +446,87 @@
   </figure>
 </div>
 
-
 <h3 id="make-list-size-initial-element-elm"><code>(make-list size [:initial-element elm])</code></h3>
-
-<p>n個の要素から成るリストを生成する。<br />
+<p>n個の要素から成るリストを生成する。<br>
 <code>:initial-element</code>で初期値を指定(既定値は<code>nil</code>)</p>
-
 <h3 id="revappend-list-object"><code>(revappend list object)</code></h3>
-
-<p><code>reverse</code>と<code>append</code>の合成関数。<br />
+<p><code>reverse</code>と<code>append</code>の合成関数。<br>
 最初の引数を反転し、2つ目の引数を結合する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">revappend</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">))</span> <span class="nv">=&gt;</span>  <span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">revappend</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">())</span> <span class="nv">=&gt;</span>  <span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">)</span></code></pre></div>
-<h3 id="nreconc-list-object"><code>(nreconc list object)</code></h3>
-
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nf">revappend</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">))</span> <span class="nv">=&gt;</span>  <span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">revappend</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">())</span> <span class="nv">=&gt;</span>  <span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div><h3 id="nreconc-list-object"><code>(nreconc list object)</code></h3>
 <p><code>revappend</code>のリサイクルバージョン。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"> <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">list-1</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"> <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">list-1</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
        <span class="p">(</span><span class="nv">list-2</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">)))</span>
-   <span class="p">(</span><span class="nv">print</span> <span class="p">(</span><span class="nv">nreconc</span> <span class="nv">list-1</span> <span class="nv">list-2</span><span class="p">))</span>
-   <span class="p">(</span><span class="nv">print</span> <span class="p">(</span><span class="nv">equal</span> <span class="nv">list-1</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)))</span>
-   <span class="p">(</span><span class="nv">print</span> <span class="p">(</span><span class="nv">equal</span> <span class="nv">list-2</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">))))</span>
+   <span class="p">(</span><span class="nf">print</span> <span class="p">(</span><span class="nf">nreconc</span> <span class="nv">list-1</span> <span class="nv">list-2</span><span class="p">))</span>
+   <span class="p">(</span><span class="nf">print</span> <span class="p">(</span><span class="nf">equal</span> <span class="nv">list-1</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)))</span>
+   <span class="p">(</span><span class="nf">print</span> <span class="p">(</span><span class="nf">equal</span> <span class="nv">list-2</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span> <span class="nv">b</span> <span class="nv">c</span><span class="p">))))</span>
 <span class="nv">&gt;&gt;</span>  <span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="nv">A</span> <span class="nv">B</span> <span class="nv">C</span><span class="p">)</span>
 <span class="nv">&gt;&gt;</span>  <span class="no">NIL</span>
 <span class="nv">&gt;&gt;</span>  <span class="no">T</span>
-<span class="nv">=&gt;</span>  <span class="nv">T</span></code></pre></div>
-<h3 id="consp-object"><code>(consp object)</code></h3>
-
+<span class="nv">=&gt;</span>  <span class="no">T</span>
+</code></pre></div><h3 id="consp-object"><code>(consp object)</code></h3>
 <p>オブジェクトがコンスセルのときに真を返す述語。</p>
-
 <h3 id="atom-object"><code>(atom object)</code></h3>
-
 <p>オブジェクトがコンスセルでないときに真を返す述語。</p>
-
 <h3 id="listp-object"><code>(listp object)</code></h3>
-
 <p>オブジェクトがコンスセルか<code>nil</code>のときに真を返す述語。</p>
-
 <h3 id="null-object"><code>(null object)</code></h3>
-
-<p>オブジェクトが<code>nil</code>のときに真を返す述語。<br />
+<p>オブジェクトが<code>nil</code>のときに真を返す述語。<br>
 <code>not</code>と等価だが、空リストか否かのテストの際には、意図を表すためにこちらを使うべき。</p>
-
-<h2 id="12-6-マッピング">12.6 マッピング</h2>
-
-<p>高階関数とは、関数を引数にとったり、関数を戻り値として返すような関数のことをいう。<br />
+<h2 id="126-マッピング">12.6 マッピング</h2>
+<p>高階関数とは、関数を引数にとったり、関数を戻り値として返すような関数のことをいう。<br>
 前の章の<code>map</code>なども高階関数だ。</p>
-
-<p><code>map</code>は任意のシーケンス(=リストとベクタの両方)に対して適用できる。<br />
+<p><code>map</code>は任意のシーケンス(=リストとベクタの両方)に対して適用できる。<br>
 <code>map</code>の他にも、リスト専用の高階関数が6つ存在する。</p>
-
 <h3 id="mapcar"><code>mapcar</code></h3>
-
-<p><code>mapcar</code>は<code>map</code>と似ているが、必ずリストを返す仕様。<br />
+<p><code>mapcar</code>は<code>map</code>と似ているが、必ずリストを返す仕様。<br>
 すなわち、<code>map</code>では第1引数に戻り値の型を表すシンボルを指定していたが、それが不要になる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nv">*</span> <span class="mi">2</span> <span class="nv">x</span><span class="p">))</span> <span class="p">(</span><span class="nv">list</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span> <span class="c1">; (2 4 6)</span>
-<span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">+</span> <span class="p">(</span><span class="nv">list</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="nv">list</span> <span class="mi">10</span> <span class="mi">20</span> <span class="mi">30</span><span class="p">))</span> <span class="c1">; (11 22 33)</span></code></pre></div>
-<h3 id="maplist"><code>maplist</code></h3>
-
-<p><code>maplist</code>は<code>mapcar</code>に似ているが、関数の引数にするのが、リストの要素ではなくて、コンスセル。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">2</span> <span class="nv">x</span><span class="p">))</span> <span class="p">(</span><span class="nc">list</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span> <span class="c1">; (2 4 6)</span>
+<span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;+</span> <span class="p">(</span><span class="nc">list</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="nc">list</span> <span class="mi">10</span> <span class="mi">20</span> <span class="mi">30</span><span class="p">))</span> <span class="c1">; (11 22 33)</span>
+</code></pre></div><h3 id="maplist"><code>maplist</code></h3>
+<p><code>maplist</code>は<code>mapcar</code>に似ているが、関数の引数にするのが、リストの要素ではなくて、コンスセル。<br>
 すなわち、リスト中で現在フォーカスしている要素と、それ以降の要素にもアクセスできる。</p>
-
 <h3 id="mapcan"><code>mapcan</code></h3>
-
-<p><code>mapcan</code>は<code>mapcar</code>のリサイクル版。<br />
-リストの要素をマップされる関数の引数にする。<br />
+<p><code>mapcan</code>は<code>mapcar</code>のリサイクル版。<br>
+リストの要素をマップされる関数の引数にする。<br>
 そして、関数呼び出しの結果(リスト)を、<code>mapcan</code>の繰り返しごとに<code>nconc</code>のように繋ぎ合わせていく。</p>
-
 <p><code>remove</code>のようなフィルタリング操作用の関数がないLispの方言の場合、下記のように<code>mapcan</code>を使用することになる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">mapcan</span> <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">=</span> <span class="nv">x</span> <span class="mi">10</span><span class="p">)</span> <span class="no">nil</span> <span class="p">(</span><span class="nv">list</span> <span class="nv">x</span><span class="p">)))</span> <span class="nv">list</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nf">mapcan</span> <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">=</span> <span class="nv">x</span> <span class="mi">10</span><span class="p">)</span> <span class="no">nil</span> <span class="p">(</span><span class="nc">list</span> <span class="nv">x</span><span class="p">)))</span> <span class="nc">list</span><span class="p">)</span>
 <span class="c1">; 上と下は同様の操作</span>
-<span class="p">(</span><span class="nv">remove</span> <span class="mi">10</span> <span class="nv">list</span><span class="p">)</span></code></pre></div>
-<h3 id="mapcon"><code>mapcon</code></h3>
-
-<p><code>mapcan</code>は<code>maplist</code>のリサイクル版。<br />
-コンスセルをマップされる関数の引数にする。<br />
-すなわち、リスト中で現在フォーカスしている要素と、それ以降の要素にもアクセスできる。<br />
+<span class="p">(</span><span class="nf">remove</span> <span class="mi">10</span> <span class="nc">list</span><span class="p">)</span>
+</code></pre></div><h3 id="mapcon"><code>mapcon</code></h3>
+<p><code>mapcan</code>は<code>maplist</code>のリサイクル版。<br>
+コンスセルをマップされる関数の引数にする。<br>
+すなわち、リスト中で現在フォーカスしている要素と、それ以降の要素にもアクセスできる。<br>
 そして、関数呼び出しの結果(リスト)を、<code>mapcon</code>の繰り返しごとに<code>nconc</code>のように繋ぎ合わせていく。</p>
-
 <h3 id="maplist-mapcar-mapcon-mapcan-のまとめ"><code>maplist</code> <code>mapcar</code> <code>mapcon</code> <code>mapcan</code> のまとめ</h3>
-
 <p>それぞれの関数の関係性を表にすると下記のようになる。</p>
-
-<hr />
-
+<hr>
 <table>
 <thead>
 <tr>
 <th></th>
-<th>&nbsp;引数が要素</th>
-<th>&nbsp;引数がコンスセル</th>
+<th> 引数が要素</th>
+<th> 引数がコンスセル</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><strong>非破壊版</strong></td>
-<td>&nbsp;<code>mapcar</code></td>
-<td>&nbsp;<code>maplist</code></td>
+<td> <code>mapcar</code></td>
+<td> <code>maplist</code></td>
 </tr>
-
 <tr>
 <td><strong>リサイクル版</strong></td>
-<td>&nbsp;<code>mapcan</code></td>
-<td>&nbsp;<code>mapcon</code></td>
+<td> <code>mapcan</code></td>
+<td> <code>mapcon</code></td>
 </tr>
 </tbody>
 </table>
-
-<hr />
-
-<p>下図のリスト<code>(1 2 3 4)</code>に対して、それぞれの関数は、その関数の色と同じ色の要素について走査する。<br />
+<hr>
+<p>下図のリスト<code>(1 2 3 4)</code>に対して、それぞれの関数は、その関数の色と同じ色の要素について走査する。<br>
 リサイクル版の関数は、各関数呼び出しの結果を前回までの結果につなげていく。</p>
-
 
 
 <div class="box aligncenter" style="max-width:600px;">
@@ -624,16 +538,11 @@
   </figure>
 </div>
 
-
-<h3 id="mapc-と-mapl"><code>mapc</code>と<code>mapl</code></h3>
-
+<h3 id="mapcとmapl"><code>mapc</code>と<code>mapl</code></h3>
 <p>これらは、<code>mapc</code>と<code>mapl</code>の引数に渡したリストをそのまま返す。すなわち、これらは関数ではなく制御構文。</p>
-
-<p><code>mapc</code>は関数の引数に要素を渡す(<code>mapcar</code>や<code>mapcan</code>と同じ)。<br />
+<p><code>mapc</code>は関数の引数に要素を渡す(<code>mapcar</code>や<code>mapcan</code>と同じ)。<br>
 <code>mapl</code>は関数の引数にコンスセルを渡す(<code>maplist</code>や<code>mapcon</code>と同じ)。</p>
-
-<h2 id="12-7-その他のデータ構造">12.7 その他のデータ構造</h2>
-
+<h2 id="127-その他のデータ構造">12.7 その他のデータ構造</h2>
 <p>次の章では、コンスセルを、木、集合、連想リストとして使用するための関数について説明する。</p>
 
   </article>
@@ -708,7 +617,9 @@
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>toc on Lazy Lambda</title>
@@ -6,10 +6,24 @@
     <description>Recent content in toc on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Thu, 07 Mar 2019 00:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 01 May 2019 22:00:00 +0900</lastBuildDate><atom:link href="https://otaon.github.io/web/ja-jp/tag/toc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HugoにTOCを追加する</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/05/01/hugo%E3%81%ABtoc%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B/</link>
+      <pubDate>Wed, 01 May 2019 22:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/05/01/hugo%E3%81%ABtoc%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B/</guid>
+      <description>目的 HugoにTOC(目次)を追加する方法を残す。 参考文献 わからないから調べるブログ - Hugoに開閉式の目次を実装する方法 Qiita - HUGOで作れ</description>
+    </item>
     
-	<atom:link href="https://otaon.github.io/web/ja-jp/tag/toc/index.xml" rel="self" type="application/rss+xml" />
-    
+    <item>
+      <title>Go言語入門(目次)</title>
+      <link>https://otaon.github.io/web/ja-jp/2019/03/31/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E7%9B%AE%E6%AC%A1/</link>
+      <pubDate>Sun, 31 Mar 2019 14:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/2019/03/31/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E7%9B%AE%E6%AC%A1/</guid>
+      <description>目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 TOC</description>
+    </item>
     
     <item>
       <title>書籍 Land of Lisp の学習記録</title>

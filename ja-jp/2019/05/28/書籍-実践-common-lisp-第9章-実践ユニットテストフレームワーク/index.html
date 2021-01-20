@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>書籍 実践 Common Lisp 第9章 実践：ユニットテストフレームワーク · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="この章について この章では、マクロを使ってユニットテストフレームワークを作成する。 テストとは、結局のところ承認(accept)か拒否(reje" />
+  <meta name="description" content="この章について この章では、マクロを使ってユニットテストフレームワークを作成する。 テストとは、結局のところ**承認(accept)か拒否(re" />
 
   <meta name="keywords" content="programming, make" />
 
@@ -19,18 +19,15 @@
 
 
 <meta property="og:title" content="書籍 実践 Common Lisp 第9章 実践：ユニットテストフレームワーク" />
-<meta property="og:description" content="この章について この章では、マクロを使ってユニットテストフレームワークを作成する。 テストとは、結局のところ承認(accept)か拒否(reje" />
+<meta property="og:description" content="この章について この章では、マクロを使ってユニットテストフレームワークを作成する。 テストとは、結局のところ**承認(accept)か拒否(re" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/05/28/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC9%E7%AB%A0-%E5%AE%9F%E8%B7%B5%E3%83%A6%E3%83%8B%E3%83%83%E3%83%88%E3%83%86%E3%82%B9%E3%83%88%E3%83%95%E3%83%AC%E3%83%BC%E3%83%A0%E3%83%AF%E3%83%BC%E3%82%AF/" />
-<meta property="article:published_time" content="2019-05-28T00:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-05-28T00:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-05-28T00:00:00+09:00" />
+<meta property="article:modified_time" content="2019-05-28T00:00:00+09:00" />
 <meta itemprop="name" content="書籍 実践 Common Lisp 第9章 実践：ユニットテストフレームワーク">
-<meta itemprop="description" content="この章について この章では、マクロを使ってユニットテストフレームワークを作成する。 テストとは、結局のところ承認(accept)か拒否(reje">
-
-
-<meta itemprop="datePublished" content="2019-05-28T00:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-05-28T00:00:00&#43;09:00" />
+<meta itemprop="description" content="この章について この章では、マクロを使ってユニットテストフレームワークを作成する。 テストとは、結局のところ**承認(accept)か拒否(re">
+<meta itemprop="datePublished" content="2019-05-28T00:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-05-28T00:00:00+09:00" />
 <meta itemprop="wordCount" content="4575">
 
 
@@ -38,7 +35,7 @@
 <meta itemprop="keywords" content="lisp,実践-Common-Lisp," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="書籍 実践 Common Lisp 第9章 実践：ユニットテストフレームワーク"/>
-<meta name="twitter:description" content="この章について この章では、マクロを使ってユニットテストフレームワークを作成する。 テストとは、結局のところ承認(accept)か拒否(reje"/>
+<meta name="twitter:description" content="この章について この章では、マクロを使ってユニットテストフレームワークを作成する。 テストとは、結局のところ**承認(accept)か拒否(re"/>
 </head>
 <body>
   
@@ -145,336 +142,305 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#この章について">この章について</a></li>
-<li><a href="#9-1-最初の試みを2件">9.1 最初の試みを2件</a></li>
-<li><a href="#9-2-先述のコードをリファクタリングする">9.2 先述のコードをリファクタリングする</a></li>
-<li><a href="#9-3-戻り値を手直しする">9.3 戻り値を手直しする</a></li>
-<li><a href="#9-4-より良い結果レポートのために">9.4 より良い結果レポートのために</a></li>
-<li><a href="#9-5-抽象化の余地">9.5 抽象化の余地</a></li>
-<li><a href="#9-6-テストの階層">9.6 テストの階層</a></li>
-<li><a href="#9-7-まとめ">9.7 まとめ</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#この章について">この章について</a></li>
+    <li><a href="#91-最初の試みを2件">9.1 最初の試みを2件</a></li>
+    <li><a href="#92-先述のコードをリファクタリングする">9.2 先述のコードをリファクタリングする</a></li>
+    <li><a href="#93-戻り値を手直しする">9.3 戻り値を手直しする</a></li>
+    <li><a href="#94-より良い結果レポートのために">9.4 より良い結果レポートのために</a></li>
+    <li><a href="#95-抽象化の余地">9.5 抽象化の余地</a></li>
+    <li><a href="#96-テストの階層">9.6 テストの階層</a></li>
+    <li><a href="#97-まとめ">9.7 まとめ</a></li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h2 id="この章について">この章について</h2>
-
+  <h2 id="この章について">この章について</h2>
 <p>この章では、マクロを使ってユニットテストフレームワークを作成する。</p>
-
-<p>テストとは、結局のところ<strong>承認(accept)</strong>か<strong>拒否(reject)</strong>のどちらかに評価される。<br />
+<p>テストとは、結局のところ**承認(accept)<strong>か</strong>拒否(reject)**のどちらかに評価される。<br>
 しかし、使い勝手を考えていくと、下記のような機能が無いと困ることに気付く。</p>
-
 <ul>
 <li>どのサブテストが失敗したのかを表示する</li>
 <li>失敗したときの期待値と実行結果は何だったのかを表示する</li>
 </ul>
-
-<h2 id="9-1-最初の試みを2件">9.1 最初の試みを2件</h2>
-
-<p>副作用を持つ機能に対しては、機能を呼び出した後に、正しい副作用が起こったのかを確かめる必要がある。<br />
+<h2 id="91-最初の試みを2件">9.1 最初の試みを2件</h2>
+<p>副作用を持つ機能に対しては、機能を呼び出した後に、正しい副作用が起こったのかを確かめる必要がある。<br>
 反対に、副作用を持たない機能に対しては、機能の戻り値を受け取って、期待値と比較すれば良い。</p>
-
 <p>例えば、加算<code>+</code>が正しく実行されているか確認するための簡単なテストなら、下記のコードで十分だ。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">test-+</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nv">and</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
-       <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
-       <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">test-+</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nb">and</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
+       <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
+       <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)))</span>
 
 <span class="p">(</span><span class="nv">test-+</span><span class="p">)</span>
-<span class="c1">; =&gt; T</span></code></pre></div>
-<p>各テストケースで何が起こったのかを確認したいのであれば、下記のように愚直に各方法もある。<br />
-<code>~:[FAIL~;pass~]</code>、最初の引数が偽の場合は&rdquo;FAIL&rdquo;を、そうでなければ&rdquo;pass&rdquo;を表示する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">test-+</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~:[FAIL~;pass~] ... ~a~%&#34;</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>    <span class="o">&#39;</span><span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~:[FAIL~;pass~] ... ~a~%&#34;</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>  <span class="o">&#39;</span><span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~:[FAIL~;pass~] ... ~a~%&#34;</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)))</span></code></pre></div>
-<p>上記のコードでは、下記の点で使いにくい。</p>
-
+<span class="c1">; =&gt; T</span>
+</code></pre></div><p>各テストケースで何が起こったのかを確認したいのであれば、下記のように愚直に各方法もある。<br>
+<code>~:[FAIL~;pass~]</code>、最初の引数が偽の場合は&quot;FAIL&quot;を、そうでなければ&quot;pass&quot;を表示する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">test-+</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34;~:[FAIL~;pass~] ... ~a~%&#34;</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>    <span class="o">&#39;</span><span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34;~:[FAIL~;pass~] ... ~a~%&#34;</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>  <span class="o">&#39;</span><span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34;~:[FAIL~;pass~] ... ~a~%&#34;</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)))</span>
+</code></pre></div><p>上記のコードでは、下記の点で使いにくい。</p>
 <ul>
 <li>繰り返し<code>format</code>を呼び出している</li>
 <li>テストの式が表示用と評価用で2度記述されている</li>
 <li>全体として合格か不合格かが分かりにくい(全テストケースがpassであると確認する必要がある)</li>
 </ul>
-
-<h2 id="9-2-先述のコードをリファクタリングする">9.2 先述のコードをリファクタリングする</h2>
-
+<h2 id="92-先述のコードをリファクタリングする">9.2 先述のコードをリファクタリングする</h2>
 <p>ここで本当に実現したいのは、下記の両立だ。</p>
-
 <ul>
 <li>1つ目の例のように、<code>T</code>か<code>NIL</code>を返す1つ目のバージョンの<code>test-+</code>くらい直感的</li>
 <li>2つ目の例のように、個々のテストケースについての結果も報告される</li>
 </ul>
-
 <p>似たような<code>format</code>の呼び出しを繰り返さないようにするには、新しい関数を定義する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">report-result</span> <span class="p">(</span><span class="nv">result</span> <span class="nv">form</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~:[FAIL;pass~] ... ~a~%&#34;</span> <span class="nv">result</span> <span class="nv">form</span><span class="p">))</span></code></pre></div>
-<p><code>format</code>の代わりに上記の<code>report-result</code>を使うことで、結果のレポート方法の定義を一箇所にまとめられた。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">test-+</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nv">report-result</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>    <span class="o">&#39;</span><span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">report-result</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>  <span class="o">&#39;</span><span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">report-result</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)))</span></code></pre></div>
-<p>次に、テストケースの式が、表示用と評価用で繰り返されている部分をまとめる。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">report-result</span> <span class="p">(</span><span class="nv">result</span> <span class="nv">form</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34;~:[FAIL;pass~] ... ~a~%&#34;</span> <span class="nv">result</span> <span class="nv">form</span><span class="p">))</span>
+</code></pre></div><p><code>format</code>の代わりに上記の<code>report-result</code>を使うことで、結果のレポート方法の定義を一箇所にまとめられた。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">test-+</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nv">report-result</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>    <span class="o">&#39;</span><span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">report-result</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>  <span class="o">&#39;</span><span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">report-result</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)))</span>
+</code></pre></div><p>次に、テストケースの式が、表示用と評価用で繰り返されている部分をまとめる。<br>
 マクロを使えば簡単に定義できる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">check</span> <span class="p">(</span><span class="nv">form</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">check</span> <span class="p">(</span><span class="nv">form</span><span class="p">)</span>
   <span class="o">`</span><span class="p">(</span><span class="nv">report-result</span> <span class="o">,</span><span class="nv">form</span> <span class="ss">&#39;,form</span><span class="p">))</span>
 
-<span class="p">(</span><span class="nv">check</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">check</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">))</span>
 <span class="c1">; =&gt;</span>
-<span class="c1">; (report-result (= (+ 1 2) 3)    &#39;(= (+ 1 2) 3))</span></code></pre></div>
-<p><code>check</code>を使って<code>test-+</code>を書き換えると下記の通りになる。</p>
+<span class="c1">; (report-result (= (+ 1 2) 3)    &#39;(= (+ 1 2) 3))</span>
+</code></pre></div><p><code>check</code>を使って<code>test-+</code>を書き換えると下記の通りになる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">test-+</span>
-  <span class="p">(</span><span class="nv">check</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">check</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">check</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)))</span></code></pre></div>
-<p>上記を見ると、そもそも<code>check</code>を繰り返していることに気付く。これも邪魔なので記述しないように<code>check</code>を修正する。<br />
+  <span class="p">(</span><span class="nv">check</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">check</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">check</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)))</span>
+</code></pre></div><p>上記を見ると、そもそも<code>check</code>を繰り返していることに気付く。これも邪魔なので記述しないように<code>check</code>を修正する。<br>
 下記では、<strong>複数のフォームの並びを単一のフォームにするため<code>progn</code>で包み込む</strong>というイディオムを利用している。
 ここでは必須ではないが、紹介のために使用している。よく使うので覚えると良い。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">check</span> <span class="p">(</span><span class="nv">&amp;body</span> <span class="nv">forms</span><span class="p">)</span>
-  <span class="o">`</span><span class="p">(</span><span class="nv">progn</span>
-     <span class="o">,@</span><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">f</span> <span class="nv">in</span> <span class="nv">forms</span>
-             <span class="nv">collect</span> <span class="o">`</span><span class="p">(</span><span class="nv">report-result</span> <span class="o">,</span><span class="nv">f</span> <span class="ss">&#39;,f</span><span class="p">))))</span></code></pre></div>
-<p>こうすると、<code>test-+</code>は下記の通りになる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">check</span> <span class="p">(</span><span class="k">&amp;body</span> <span class="nv">forms</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="k">progn</span>
+     <span class="o">,@</span><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">f</span> <span class="nv">in</span> <span class="nv">forms</span>
+             <span class="nv">collect</span> <span class="o">`</span><span class="p">(</span><span class="nv">report-result</span> <span class="o">,</span><span class="nv">f</span> <span class="ss">&#39;,f</span><span class="p">))))</span>
+</code></pre></div><p>こうすると、<code>test-+</code>は下記の通りになる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">test-+</span>
   <span class="p">(</span><span class="nv">check</span>
-    <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)))</span></code></pre></div>
-<p>上記の<code>check</code>を展開すると下記の通りになる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">test-+</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nv">progn</span>
-    <span class="p">(</span><span class="nv">report-result</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>    <span class="o">&#39;</span><span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">))</span>
-    <span class="p">(</span><span class="nv">report-result</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>  <span class="o">&#39;</span><span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">))</span>
-    <span class="p">(</span><span class="nv">report-result</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">))))</span></code></pre></div>
-<h2 id="9-3-戻り値を手直しする">9.3 戻り値を手直しする</h2>
-
-<p><code>test-+</code>を手直しして、全テストケースにパスしたかどうかを戻り値によって示すようにする。<br />
+    <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)))</span>
+</code></pre></div><p>上記の<code>check</code>を展開すると下記の通りになる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">test-+</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">progn</span>
+    <span class="p">(</span><span class="nv">report-result</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>    <span class="o">&#39;</span><span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">report-result</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>  <span class="o">&#39;</span><span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="p">(</span><span class="nv">report-result</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">))))</span>
+</code></pre></div><h2 id="93-戻り値を手直しする">9.3 戻り値を手直しする</h2>
+<p><code>test-+</code>を手直しして、全テストケースにパスしたかどうかを戻り値によって示すようにする。<br>
 最終的にテストケースを実行するコードの生成は<code>check</code>が担っているため、これを変更すれば良い。</p>
-
 <p>最初に、<code>report-result</code>を変更して、レポート対象のテストケースの結果を返すようにする。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">report-result</span> <span class="p">(</span><span class="nv">result</span> <span class="nv">form</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~:[FAIL~;pass~] ... ~a~%&#34;</span> <span class="nv">result</span> <span class="nv">form</span><span class="p">)</span>
-  <span class="nv">result</span><span class="p">)</span></code></pre></div>
-<p>これで各テストケースの結果を<code>report-result</code>が返すようになった。<br />
-全てのテストケースを<code>and</code>で繋げれば良いと思うところだが、<code>and</code>は短絡評価であるため、NGが出た時点でテスト実施が止まってしまう。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">report-result</span> <span class="p">(</span><span class="nv">result</span> <span class="nv">form</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34;~:[FAIL~;pass~] ... ~a~%&#34;</span> <span class="nv">result</span> <span class="nv">form</span><span class="p">)</span>
+  <span class="nv">result</span><span class="p">)</span>
+</code></pre></div><p>これで各テストケースの結果を<code>report-result</code>が返すようになった。<br>
+全てのテストケースを<code>and</code>で繋げれば良いと思うところだが、<code>and</code>は短絡評価であるため、NGが出た時点でテスト実施が止まってしまう。<br>
 したがって、<code>and</code>の短絡評価ではないバージョンのようなものを作成すれば良い。</p>
-
-<p>ここで作るマクロを<code>combine-results</code>と命名する。<br />
+<p>ここで作るマクロを<code>combine-results</code>と命名する。<br>
 このマクロは下記のように記述する。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">combine-results</span>
   <span class="p">(</span><span class="nv">foo</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">bar</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">baz</span><span class="p">))</span></code></pre></div>
-<p>このマクロは下記のように展開されることとする。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">result</span> <span class="no">t</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">unless</span> <span class="p">(</span><span class="nv">foo</span><span class="p">)</span> <span class="p">(</span><span class="nv">setf</span> <span class="nv">result</span> <span class="no">nil</span><span class="p">))</span> <span class="c1">; fooが失格だった場合、resultにnilをセットする</span>
-  <span class="p">(</span><span class="nv">unless</span> <span class="p">(</span><span class="nv">bar</span><span class="p">)</span> <span class="p">(</span><span class="nv">setf</span> <span class="nv">result</span> <span class="no">nil</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">unless</span> <span class="p">(</span><span class="nv">baz</span><span class="p">)</span> <span class="p">(</span><span class="nv">setf</span> <span class="nv">result</span> <span class="no">nil</span><span class="p">))</span>
-  <span class="nv">result</span><span class="p">)</span></code></pre></div>
-<p>このマクロでは変数を使っている。すなわち、変数名が重複する可能性がある。<br />
+  <span class="p">(</span><span class="nv">baz</span><span class="p">))</span>
+</code></pre></div><p>このマクロは下記のように展開されることとする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">result</span> <span class="no">t</span><span class="p">))</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">foo</span><span class="p">)</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">result</span> <span class="no">nil</span><span class="p">))</span> <span class="c1">; fooが失格だった場合、resultにnilをセットする</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">bar</span><span class="p">)</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">result</span> <span class="no">nil</span><span class="p">))</span>
+  <span class="p">(</span><span class="nb">unless</span> <span class="p">(</span><span class="nv">baz</span><span class="p">)</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">result</span> <span class="no">nil</span><span class="p">))</span>
+  <span class="nv">result</span><span class="p">)</span>
+</code></pre></div><p>このマクロでは変数を使っている。すなわち、変数名が重複する可能性がある。<br>
 そこで、先述の通り<code>(gensym)</code>を使ってユニークな変数を定義する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">combine-results</span> <span class="p">(</span><span class="nv">&amp;body</span> <span class="nv">forms</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">result</span> <span class="p">(</span><span class="nv">gensym</span><span class="p">)))</span>
-    <span class="o">`</span><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="o">,</span><span class="nv">result</span> <span class="no">t</span><span class="p">))</span>
-       <span class="o">,@</span><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">f</span> <span class="nv">in</span> <span class="nv">forms</span>
-              <span class="nv">collect</span> <span class="o">`</span><span class="p">(</span><span class="nv">unless</span> <span class="o">,</span><span class="nv">f</span> <span class="p">(</span><span class="nv">setf</span> <span class="o">,</span><span class="nv">result</span> <span class="no">nil</span><span class="p">)))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">combine-results</span> <span class="p">(</span><span class="k">&amp;body</span> <span class="nv">forms</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">result</span> <span class="p">(</span><span class="nf">gensym</span><span class="p">)))</span>
+    <span class="o">`</span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="o">,</span><span class="nv">result</span> <span class="no">t</span><span class="p">))</span>
+       <span class="o">,@</span><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">f</span> <span class="nv">in</span> <span class="nv">forms</span>
+              <span class="nv">collect</span> <span class="o">`</span><span class="p">(</span><span class="nb">unless</span> <span class="o">,</span><span class="nv">f</span> <span class="p">(</span><span class="nb">setf</span> <span class="o">,</span><span class="nv">result</span> <span class="no">nil</span><span class="p">)))</span>
        <span class="o">,</span><span class="nv">result</span><span class="p">)))</span>
 
-<span class="p">(</span><span class="nv">macroexpand-1</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">combine-results</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)))</span>
+<span class="p">(</span><span class="nf">macroexpand-1</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">combine-results</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)))</span>
 <span class="c1">; =&gt;</span>
 <span class="p">(</span><span class="nv">LET</span> <span class="p">((</span><span class="ss">#:G563</span> <span class="no">T</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">UNLESS</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span> <span class="p">(</span><span class="nv">SETF</span> <span class="ss">#:G563</span> <span class="no">NIL</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">UNLESS</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="nv">SETF</span> <span class="ss">#:G563</span> <span class="no">NIL</span><span class="p">))</span>
-  <span class="ss">#:G563</span><span class="p">)</span></code></pre></div>
-<p>上記のように定義しても良いが、8章で作成した<code>with-gensyms</code>マクロを使えば、少し簡単に定義できる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">combine-results</span> <span class="p">(</span><span class="nv">&amp;body</span> <span class="nv">forms</span><span class="p">)</span>
+  <span class="p">(</span><span class="nv">UNLESS</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span> <span class="p">(</span><span class="nv">SETF</span> <span class="ss">#:G563</span> <span class="no">NIL</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">UNLESS</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="nv">SETF</span> <span class="ss">#:G563</span> <span class="no">NIL</span><span class="p">))</span>
+  <span class="ss">#:G563</span><span class="p">)</span>
+</code></pre></div><p>上記のように定義しても良いが、8章で作成した<code>with-gensyms</code>マクロを使えば、少し簡単に定義できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">combine-results</span> <span class="p">(</span><span class="k">&amp;body</span> <span class="nv">forms</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">with-gensyms</span> <span class="p">(</span><span class="nv">result</span><span class="p">)</span>
-    <span class="o">`</span><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="o">,</span><span class="nv">result</span> <span class="no">t</span><span class="p">))</span>
-       <span class="o">,@</span><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">f</span> <span class="nv">in</span> <span class="nv">forms</span>
-               <span class="nv">collect</span> <span class="o">`</span><span class="p">(</span><span class="nv">unless</span> <span class="o">,</span><span class="nv">f</span> <span class="p">(</span><span class="nv">setf</span> <span class="o">,</span><span class="nv">result</span> <span class="no">nil</span><span class="p">)))</span>
-       <span class="o">,</span><span class="nv">result</span><span class="p">)))</span></code></pre></div>
-<p>上記で定義できた<code>combine-results</code>マクロを使って、当初の目的通り<code>check</code>を修正する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">check</span> <span class="p">(</span><span class="nv">&amp;body</span> <span class="nv">forms</span><span class="p">)</span>
+    <span class="o">`</span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="o">,</span><span class="nv">result</span> <span class="no">t</span><span class="p">))</span>
+       <span class="o">,@</span><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">f</span> <span class="nv">in</span> <span class="nv">forms</span>
+               <span class="nv">collect</span> <span class="o">`</span><span class="p">(</span><span class="nb">unless</span> <span class="o">,</span><span class="nv">f</span> <span class="p">(</span><span class="nb">setf</span> <span class="o">,</span><span class="nv">result</span> <span class="no">nil</span><span class="p">)))</span>
+       <span class="o">,</span><span class="nv">result</span><span class="p">)))</span>
+</code></pre></div><p>上記で定義できた<code>combine-results</code>マクロを使って、当初の目的通り<code>check</code>を修正する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">check</span> <span class="p">(</span><span class="k">&amp;body</span> <span class="nv">forms</span><span class="p">)</span>
   <span class="o">`</span><span class="p">(</span><span class="nv">combine-results</span>
-     <span class="o">,@</span><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">f</span> <span class="nv">in</span> <span class="nv">forms</span>
-             <span class="nv">collect</span> <span class="o">`</span><span class="p">(</span><span class="nv">report-result</span> <span class="o">,</span><span class="nv">f</span> <span class="ss">&#39;,f</span><span class="p">))))</span></code></pre></div>
-<p>この<code>check</code>を使うと、<code>test-+</code>は3つのテスト式の結果を表示し、その後で<code>T</code>を返して全てのテストがパスしたことを示す。</p>
+     <span class="o">,@</span><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">f</span> <span class="nv">in</span> <span class="nv">forms</span>
+             <span class="nv">collect</span> <span class="o">`</span><span class="p">(</span><span class="nv">report-result</span> <span class="o">,</span><span class="nv">f</span> <span class="ss">&#39;,f</span><span class="p">))))</span>
+</code></pre></div><p>この<code>check</code>を使うと、<code>test-+</code>は3つのテスト式の結果を表示し、その後で<code>T</code>を返して全てのテストがパスしたことを示す。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">CL-USER&gt;</span> <span class="p">(</span><span class="nv">test-+</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)</span>
-<span class="nv">T</span></code></pre></div>
-<p>仮にテストで期待値と結果が異なっていれば、下記の通りどこが間違っているかすぐに分かるように表示される。</p>
+<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
+<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
+<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)</span>
+<span class="no">T</span>
+</code></pre></div><p>仮にテストで期待値と結果が異なっていれば、下記の通りどこが間違っているかすぐに分かるように表示される。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">CL-USER&gt;</span> <span class="p">(</span><span class="nv">test-+</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
-<span class="nv">FAIL</span> <span class="o">...</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-5</span><span class="p">)</span>
-<span class="nv">NIL</span></code></pre></div>
-<h2 id="9-4-より良い結果レポートのために">9.4 より良い結果レポートのために</h2>
-
-<p>テスト対象の関数が1つだけなら、先程のテスト方法で問題ない。<br />
+<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
+<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
+<span class="nv">FAIL</span> <span class="o">...</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-5</span><span class="p">)</span>
+<span class="no">NIL</span>
+</code></pre></div><h2 id="94-より良い結果レポートのために">9.4 より良い結果レポートのために</h2>
+<p>テスト対象の関数が1つだけなら、先程のテスト方法で問題ない。<br>
 しかし、複数の関数をテストするなら、もっと体系的なテストを実現したい。</p>
-
 <p>例えば、<code>*</code>関数のテストを追加しようと思ったら、下記のような関数で実現する事をすぐ思いつく。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">test-*</span> <span class="p">()</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">test-*</span> <span class="p">()</span>
   <span class="p">(</span><span class="nv">check</span>
-    <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">*</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">*</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span> <span class="mi">15</span><span class="p">)))</span></code></pre></div>
-<p>テスト関数が複数になったのだから、これらテスト関数をまとめる関数が欲しくなる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">test-arithmetic</span> <span class="p">()</span>
+    <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span> <span class="mi">15</span><span class="p">)))</span>
+</code></pre></div><p>テスト関数が複数になったのだから、これらテスト関数をまとめる関数が欲しくなる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">test-arithmetic</span> <span class="p">()</span>
   <span class="p">(</span><span class="nv">combine-results</span>
     <span class="p">(</span><span class="nv">test-+</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">test-*</span><span class="p">)))</span></code></pre></div>
-<p>ここまでで定義したテスト用関数、テスト用マクロをまとめて再掲する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">test-arithmetic</span> <span class="p">()</span>
+    <span class="p">(</span><span class="nv">test-*</span><span class="p">)))</span>
+</code></pre></div><p>ここまでで定義したテスト用関数、テスト用マクロをまとめて再掲する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">test-arithmetic</span> <span class="p">()</span>
   <span class="p">(</span><span class="nv">combine-results</span>
     <span class="p">(</span><span class="nv">test-+</span><span class="p">)</span>
     <span class="p">(</span><span class="nv">test-*</span><span class="p">)))</span>
 
 <span class="p">(</span><span class="nv">test-+</span>
   <span class="p">(</span><span class="nv">check</span>
-    <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)))</span>
 
-<span class="p">(</span><span class="nv">defun</span> <span class="nv">test-*</span> <span class="p">()</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">test-*</span> <span class="p">()</span>
   <span class="p">(</span><span class="nv">check</span>
-    <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">*</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">*</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span> <span class="mi">15</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span> <span class="mi">15</span><span class="p">)))</span>
 
-<span class="p">(</span><span class="nv">defmacro</span> <span class="nv">check</span> <span class="p">(</span><span class="nv">&amp;body</span> <span class="nv">forms</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defmacro</span> <span class="nv">check</span> <span class="p">(</span><span class="k">&amp;body</span> <span class="nv">forms</span><span class="p">)</span>
   <span class="o">`</span><span class="p">(</span><span class="nv">combine-results</span>
-     <span class="o">,@</span><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">f</span> <span class="nv">in</span> <span class="nv">forms</span>
+     <span class="o">,@</span><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">f</span> <span class="nv">in</span> <span class="nv">forms</span>
              <span class="nv">collect</span> <span class="o">`</span><span class="p">(</span><span class="nv">report-result</span> <span class="o">,</span><span class="nv">f</span> <span class="ss">&#39;,f</span><span class="p">))))</span>
 
-<span class="p">(</span><span class="nv">defmacro</span> <span class="nv">combine-results</span> <span class="p">(</span><span class="nv">&amp;body</span> <span class="nv">forms</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defmacro</span> <span class="nv">combine-results</span> <span class="p">(</span><span class="k">&amp;body</span> <span class="nv">forms</span><span class="p">)</span>
   <span class="p">(</span><span class="nv">with-gensyms</span> <span class="p">(</span><span class="nv">result</span><span class="p">)</span>
-    <span class="o">`</span><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="o">,</span><span class="nv">result</span> <span class="no">t</span><span class="p">))</span>
-       <span class="o">,@</span><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">f</span> <span class="nv">in</span> <span class="nv">forms</span>
-               <span class="nv">collect</span> <span class="o">`</span><span class="p">(</span><span class="nv">unless</span> <span class="o">,</span><span class="nv">f</span> <span class="p">(</span><span class="nv">setf</span> <span class="o">,</span><span class="nv">result</span> <span class="no">nil</span><span class="p">)))</span>
+    <span class="o">`</span><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="o">,</span><span class="nv">result</span> <span class="no">t</span><span class="p">))</span>
+       <span class="o">,@</span><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">f</span> <span class="nv">in</span> <span class="nv">forms</span>
+               <span class="nv">collect</span> <span class="o">`</span><span class="p">(</span><span class="nb">unless</span> <span class="o">,</span><span class="nv">f</span> <span class="p">(</span><span class="nb">setf</span> <span class="o">,</span><span class="nv">result</span> <span class="no">nil</span><span class="p">)))</span>
        <span class="o">,</span><span class="nv">result</span><span class="p">)))</span>
 
-<span class="p">(</span><span class="nv">defun</span> <span class="nv">report-result</span> <span class="p">(</span><span class="nv">result</span> <span class="nv">form</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~:[FAIL~;pass~] ... ~a~%&#34;</span> <span class="nv">result</span> <span class="nv">form</span><span class="p">)</span>
-  <span class="nv">result</span><span class="p">)</span></code></pre></div>
-<p>今、何らかのテストケースが失敗して問題を追跡する必要があるとする。<br />
-上記のテスト関数をまとめた場合、大量のテスト結果の表示から、<code>FAIL</code>の文字を探す必要がある。<br />
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">report-result</span> <span class="p">(</span><span class="nv">result</span> <span class="nv">form</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34;~:[FAIL~;pass~] ... ~a~%&#34;</span> <span class="nv">result</span> <span class="nv">form</span><span class="p">)</span>
+  <span class="nv">result</span><span class="p">)</span>
+</code></pre></div><p>今、何らかのテストケースが失敗して問題を追跡する必要があるとする。<br>
+上記のテスト関数をまとめた場合、大量のテスト結果の表示から、<code>FAIL</code>の文字を探す必要がある。<br>
 しかも、<code>FAIL</code>の文字を探し出せたとしても、そのテストがどの関数に対するテストだったのかは、実際のテスト対象の式を見て判断するしか無い。</p>
-
-<p>ここで、テスト対象の関数が何なのかが分かるように、一種の<strong>ラベル</strong>を表示する。<br />
+<p>ここで、テスト対象の関数が何なのかが分かるように、一種の<strong>ラベル</strong>を表示する。<br>
 ラベルを表示するためにすぐ思いつくのは、<code>test-+</code>や<code>test-*</code>の関数を修正して、それぞれの関数を表す文字列を定義する方法だ。
 この文字列を最終的に各テストケースに表示できれば、とりあえず各テストケースが何に対するテストなのか分かるようになる。</p>
-
-<p>しかし、<code>test-+</code>や<code>test-*</code>内でラベルを定義しようとした場合、他にも編集する必要がある。<br />
-例えば<code>check</code>マクロに対しては、引数に渡された関数名を考慮してマクロの仕組みを変える必要が出てきてしまう。<br />
+<p>しかし、<code>test-+</code>や<code>test-*</code>内でラベルを定義しようとした場合、他にも編集する必要がある。<br>
+例えば<code>check</code>マクロに対しては、引数に渡された関数名を考慮してマクロの仕組みを変える必要が出てきてしまう。<br>
 さらに、テスト種別ごとに<code>check</code>マクロを呼ぶのであれば、<code>check</code>マクロの修正までで良いが、使い勝手が低下する。</p>
-
 <p>そこで、ダイナミック変数を用いて対応することにする。下記の通り、トップレベルで使用できるダイナミック変数を定義しておく。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defvar</span> <span class="vg">*test-name*</span> <span class="no">nil</span><span class="p">)</span></code></pre></div>
-<p>次に、<code>format</code>の出力に<code>*test-name*</code>が含まれるように<code>report-result</code>を修正する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;~:[FAIL~;pass~] ... ~a: ~a~%&#34;</span> <span class="nv">result</span> <span class="vg">*test-name*</span> <span class="nv">form</span><span class="p">)</span></code></pre></div>
-<p>上記の修正によって、<code>*test-name*</code>にテスト名が定義されているときにテスト実施すると、そのテスト名が表示されるようになる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">test-+</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="vg">*test-name*</span> <span class="ss">&#39;test-+</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defvar</span> <span class="vg">*test-name*</span> <span class="no">nil</span><span class="p">)</span>
+</code></pre></div><p>次に、<code>format</code>の出力に<code>*test-name*</code>が含まれるように<code>report-result</code>を修正する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34;~:[FAIL~;pass~] ... ~a: ~a~%&#34;</span> <span class="nv">result</span> <span class="vg">*test-name*</span> <span class="nv">form</span><span class="p">)</span>
+</code></pre></div><p>上記の修正によって、<code>*test-name*</code>にテスト名が定義されているときにテスト実施すると、そのテスト名が表示されるようになる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">test-+</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="vg">*test-name*</span> <span class="ss">&#39;test-+</span><span class="p">))</span>
     <span class="p">(</span><span class="nv">check</span>
-      <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">))))</span>
+      <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">))))</span>
 
-<span class="p">(</span><span class="nv">defun</span> <span class="nv">test-*</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="vg">*test-name*</span> <span class="ss">&#39;test-*</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">test-*</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="vg">*test-name*</span> <span class="ss">&#39;test-*</span><span class="p">))</span>
     <span class="p">(</span><span class="nv">check</span>
-      <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">*</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">*</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span> <span class="mi">15</span><span class="p">))))</span>
+      <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span> <span class="mi">15</span><span class="p">))))</span>
 
 <span class="p">(</span><span class="nv">test-arithmetic</span><span class="p">)</span>
 <span class="c1">; =&gt;</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="nv">test-+:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="nv">test-+:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="nv">test-+:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="nv">test-*:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">*</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="nv">test-*:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">*</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span> <span class="mi">15</span><span class="p">)</span>
-<span class="nv">T</span></code></pre></div>
-<h2 id="9-5-抽象化の余地">9.5 抽象化の余地</h2>
-
+<span class="nv">pass</span> <span class="o">...</span> <span class="nv">test-+:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
+<span class="nv">pass</span> <span class="o">...</span> <span class="nv">test-+:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
+<span class="nv">pass</span> <span class="o">...</span> <span class="nv">test-+:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)</span>
+<span class="nv">pass</span> <span class="o">...</span> <span class="nv">test-*:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">)</span>
+<span class="nv">pass</span> <span class="o">...</span> <span class="nv">test-*:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span> <span class="mi">15</span><span class="p">)</span>
+<span class="no">T</span>
+</code></pre></div><h2 id="95-抽象化の余地">9.5 抽象化の余地</h2>
 <p>上記の対応によって、重複するコードが発生してしまった。具体的には下記の2点。</p>
-
 <ul>
 <li>各テスト関数において、関数名が2回出現する(<code>defun</code>で定義するときと、<code>*test-name*</code>で名前を束縛する時)</li>
 <li>各テスト関数において、<code>defun</code>の行と後続行の合計3行が共通して記述される</li>
 </ul>
-
-<p>これらの重複は、他人がテストフレームワークを正しく使用する際の妨げとなる。<br />
+<p>これらの重複は、他人がテストフレームワークを正しく使用する際の妨げとなる。<br>
 これを解決する効果的な方法としては、使い方を覚えさせるコストを生むのではなく、重複の原因となっているコードをマクロで生成してしまえば良い。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defmacro</span> <span class="nv">deftest</span> <span class="p">(</span><span class="nv">name</span> <span class="nv">parameters</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
-  <span class="o">`</span><span class="p">(</span><span class="nv">defun</span> <span class="o">,</span><span class="nv">name</span> <span class="o">,</span><span class="nv">parameters</span>
-     <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="vg">*test-name*</span> <span class="ss">&#39;,name</span><span class="p">))</span>
-       <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span></code></pre></div>
-<p>このマクロを使って<code>test-+</code>を書き直すと、下記の通りになる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defmacro</span> <span class="nv">deftest</span> <span class="p">(</span><span class="nv">name</span> <span class="nv">parameters</span> <span class="k">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nb">defun</span> <span class="o">,</span><span class="nv">name</span> <span class="o">,</span><span class="nv">parameters</span>
+     <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="vg">*test-name*</span> <span class="ss">&#39;,name</span><span class="p">))</span>
+       <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span>
+</code></pre></div><p>このマクロを使って<code>test-+</code>を書き直すと、下記の通りになる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">deftest</span> <span class="nv">test-+</span> <span class="p">()</span>
   <span class="p">(</span><span class="nv">check</span>
-    <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
-    <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)))</span>
+    <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)))</span>
 <span class="c1">; =&gt;</span>
-<span class="p">(</span><span class="nv">defun</span> <span class="nv">test-+</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="vg">*test-name*</span> <span class="ss">&#39;test-+</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">test-+</span> <span class="p">()</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="vg">*test-name*</span> <span class="ss">&#39;test-+</span><span class="p">))</span>
     <span class="p">(</span><span class="nv">check</span>
-      <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">))))</span></code></pre></div>
-<h2 id="9-6-テストの階層">9.6 テストの階層</h2>
-
+      <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">))))</span>
+</code></pre></div><h2 id="96-テストの階層">9.6 テストの階層</h2>
 <p>前章までで、テスト関数を定義できるようになった。</p>
-
-<p>さて、テストが大規模化・複雑化していくと、<code>test-+</code>や<code>test-*</code>に対する<code>test-arithmetic</code>のように、複数のテスト関数をグループ化して階層化していく必要が出てくる。<br />
-テストを階層すると、異なるテストグループから同一のテスト関数を呼び出す場合もあり得るし、さらに、あるテストグループでは成功するテスト関数が、他のテストグループでは失敗するという自体も考えられる。<br />
-こういった場合、テストグループのトップレベルから一番下層のテスト関数までの<strong>フルパス</strong>を表示すれば、各テスト結果がどういう状況で実行されたものなのかを識別できるようになる。<br />
+<p>さて、テストが大規模化・複雑化していくと、<code>test-+</code>や<code>test-*</code>に対する<code>test-arithmetic</code>のように、複数のテスト関数をグループ化して階層化していく必要が出てくる。<br>
+テストを階層すると、異なるテストグループから同一のテスト関数を呼び出す場合もあり得るし、さらに、あるテストグループでは成功するテスト関数が、他のテストグループでは失敗するという自体も考えられる。<br>
+こういった場合、テストグループのトップレベルから一番下層のテスト関数までの<strong>フルパス</strong>を表示すれば、各テスト結果がどういう状況で実行されたものなのかを識別できるようになる。<br>
 lispらしく、フルパスには<strong>トップレベルから最下層までの関数名をリスト化したもの</strong>を表示すれば良い。(下記参照)</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">TEST-ARITHMETRIC</span> <span class="nv">TEST-+</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span></code></pre></div>
-<p>テスト関数を定義するプロセスは既に抽象化したため、テスト関数のコードは変更不要であり、記録方式の詳細だけを変更すれば良い。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">TEST-ARITHMETRIC</span> <span class="nv">TEST-+</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
+</code></pre></div><p>テスト関数を定義するプロセスは既に抽象化したため、テスト関数のコードは変更不要であり、記録方式の詳細だけを変更すれば良い。<br>
 すなわち、<code>*test-name*</code>が最新のテスト関数の名前だけではなく、それまでに呼び出されたテスト関数の名前のリストを保持するようにするには、<code>let</code>の部分を下記の通りに変更する。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; before</span>
-<span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="vg">*test-name*</span> <span class="ss">&#39;,name</span><span class="p">))</span> <span class="o">...</span><span class="p">)</span>
+<span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="vg">*test-name*</span> <span class="ss">&#39;,name</span><span class="p">))</span> <span class="o">...</span><span class="p">)</span>
 
 <span class="c1">; after</span>
-<span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="vg">*test-name*</span> <span class="p">(</span><span class="nv">append</span> <span class="vg">*test-name*</span> <span class="p">(</span><span class="nv">list</span> <span class="ss">&#39;,name</span><span class="p">))))</span> <span class="o">...</span><span class="p">)</span>
+<span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="vg">*test-name*</span> <span class="p">(</span><span class="nf">append</span> <span class="vg">*test-name*</span> <span class="p">(</span><span class="nc">list</span> <span class="ss">&#39;,name</span><span class="p">))))</span> <span class="o">...</span><span class="p">)</span>
 
 <span class="c1">; 修正後のdeftest</span>
-<span class="p">(</span><span class="nv">defmacro</span> <span class="nv">deftest</span> <span class="p">(</span><span class="nv">name</span> <span class="nv">parameters</span> <span class="nv">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
-  <span class="o">`</span><span class="p">(</span><span class="nv">defun</span> <span class="o">,</span><span class="nv">name</span> <span class="o">,</span><span class="nv">parameters</span>
-     <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="vg">*test-name*</span> <span class="p">(</span><span class="nv">append</span> <span class="vg">*test-name*</span> <span class="p">(</span><span class="nv">list</span> <span class="ss">&#39;,name</span><span class="p">))))</span>
-       <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span></code></pre></div>
-<p><code>append</code>を使って、<code>*test-name*</code>の末尾にに<code>name</code>の評価結果をリスト化したものを結合する。<br />
+<span class="p">(</span><span class="nb">defmacro</span> <span class="nv">deftest</span> <span class="p">(</span><span class="nv">name</span> <span class="nv">parameters</span> <span class="k">&amp;body</span> <span class="nv">body</span><span class="p">)</span>
+  <span class="o">`</span><span class="p">(</span><span class="nb">defun</span> <span class="o">,</span><span class="nv">name</span> <span class="o">,</span><span class="nv">parameters</span>
+     <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="vg">*test-name*</span> <span class="p">(</span><span class="nf">append</span> <span class="vg">*test-name*</span> <span class="p">(</span><span class="nc">list</span> <span class="ss">&#39;,name</span><span class="p">))))</span>
+       <span class="o">,@</span><span class="nv">body</span><span class="p">)))</span>
+</code></pre></div><p><code>append</code>を使って、<code>*test-name*</code>の末尾にに<code>name</code>の評価結果をリスト化したものを結合する。<br>
 しかも、<code>*test-name*</code>は<code>let</code>を使ってシャドーイングしているだけなので、テスト関数の処理が終わって<code>let</code>から抜けていく度に、そのテスト関数名がパスのリストから取り除かれていくという処理になる。</p>
-
 <p>修正後の<code>deftest</code>を使って定義した<code>test-arithmetic</code>を実行すると、下記の通りに表示される。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-arithmetic</span> <span class="nv">test-+</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-arithmetic</span> <span class="nv">test-+</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-arithmetic</span> <span class="nv">test-+</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-arithmetic</span> <span class="nv">test-*</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">*</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-arithmetic</span> <span class="nv">test-*</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">*</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span> <span class="mi">15</span><span class="p">)</span>
-<span class="nv">T</span></code></pre></div>
-<p>更にテストが階層化された場合にも既に対応できている。例えば、<code>test-arithmetic</code>などをまとめ上げたテスト<code>test-math</code>を作成したとする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-arithmetic</span> <span class="nv">test-+</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
+<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-arithmetic</span> <span class="nv">test-+</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
+<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-arithmetic</span> <span class="nv">test-+</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)</span>
+<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-arithmetic</span> <span class="nv">test-*</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">)</span>
+<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-arithmetic</span> <span class="nv">test-*</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span> <span class="mi">15</span><span class="p">)</span>
+<span class="no">T</span>
+</code></pre></div><p>更にテストが階層化された場合にも既に対応できている。例えば、<code>test-arithmetic</code>などをまとめ上げたテスト<code>test-math</code>を作成したとする。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">deftest</span> <span class="nv">test-math</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nv">test-arithmetic</span><span class="p">))</span></code></pre></div>
-<p>これは、下記の通りに表示される。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-math</span> <span class="nv">test-arithmetic</span> <span class="nv">test-+</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-math</span> <span class="nv">test-arithmetic</span> <span class="nv">test-+</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-math</span> <span class="nv">test-arithmetic</span> <span class="nv">test-+</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-math</span> <span class="nv">test-arithmetic</span> <span class="nv">test-*</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">*</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">)</span>
-<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-math</span> <span class="nv">test-arithmetic</span> <span class="nv">test-*</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nv">=</span> <span class="p">(</span><span class="nv">*</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span> <span class="mi">15</span><span class="p">)</span>
-<span class="nv">T</span></code></pre></div>
-<h2 id="9-7-まとめ">9.7 まとめ</h2>
-
-<p>上記でユニットテストフレームワークを作成した各ステップについてと、全体としてどの様にリファクタリングを進めてきたかを確認すること。<br />
+  <span class="p">(</span><span class="nv">test-arithmetic</span><span class="p">))</span>
+</code></pre></div><p>これは、下記の通りに表示される。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-math</span> <span class="nv">test-arithmetic</span> <span class="nv">test-+</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">3</span><span class="p">)</span>
+<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-math</span> <span class="nv">test-arithmetic</span> <span class="nv">test-+</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">6</span><span class="p">)</span>
+<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-math</span> <span class="nv">test-arithmetic</span> <span class="nv">test-+</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">-1</span> <span class="mi">-3</span><span class="p">)</span> <span class="mi">-4</span><span class="p">)</span>
+<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-math</span> <span class="nv">test-arithmetic</span> <span class="nv">test-*</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">2</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">)</span>
+<span class="nv">pass</span> <span class="o">...</span> <span class="p">(</span><span class="nv">test-math</span> <span class="nv">test-arithmetic</span> <span class="nv">test-*</span><span class="p">)</span><span class="err">:</span> <span class="p">(</span><span class="nf">=</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span> <span class="mi">15</span><span class="p">)</span>
+<span class="no">T</span>
+</code></pre></div><h2 id="97-まとめ">9.7 まとめ</h2>
+<p>上記でユニットテストフレームワークを作成した各ステップについてと、全体としてどの様にリファクタリングを進めてきたかを確認すること。<br>
 ドラスティックな改善が手軽に行えているという、lispでのプログラミングに頻出する事実に気付くはず。</p>
 
   </article>
@@ -549,7 +515,9 @@ lispらしく、フルパスには<strong>トップレベルから最下層ま�
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

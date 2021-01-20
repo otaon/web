@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>ファイルシステムの概要 · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,15 +22,12 @@
 <meta property="og:description" content="目的 極単純なファイルシステムを自作できる程度の知識を、初歩的な事柄をまとめる。 参考文献 ファイルシステム ファイルシステムとは ファイルシステムは" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/24/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0%E3%81%AE%E6%A6%82%E8%A6%81/" />
-<meta property="article:published_time" content="2019-03-24T00:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-03-24T00:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-03-24T00:00:00+09:00" />
+<meta property="article:modified_time" content="2019-03-24T00:00:00+09:00" />
 <meta itemprop="name" content="ファイルシステムの概要">
 <meta itemprop="description" content="目的 極単純なファイルシステムを自作できる程度の知識を、初歩的な事柄をまとめる。 参考文献 ファイルシステム ファイルシステムとは ファイルシステムは">
-
-
-<meta itemprop="datePublished" content="2019-03-24T00:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-03-24T00:00:00&#43;09:00" />
+<meta itemprop="datePublished" content="2019-03-24T00:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-03-24T00:00:00+09:00" />
 <meta itemprop="wordCount" content="4640">
 
 
@@ -145,84 +142,58 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#目的">目的</a></li>
-<li><a href="#参考文献">参考文献</a></li>
-<li><a href="#ファイルシステムとは">ファイルシステムとは</a></li>
-<li><a href="#ディスクファイルシステムとは">ディスクファイルシステムとは</a></li>
-<li><a href="#ファイルシステムへの要求">ファイルシステムへの要求</a></li>
-<li><a href="#ファイルシステムの構成要素">ファイルシステムの構成要素</a>
-<ul>
-<li><a href="#ブロック">ブロック</a></li>
-<li><a href="#ボリューム">ボリューム</a></li>
-</ul></li>
-<li><a href="#ファイルへのアクセス方法">ファイルへのアクセス方法</a>
-<ul>
-<li><a href="#ファイルのアクセス-読み出し-書き込み-の方法">ファイルのアクセス（読み出し・書き込み）の方法</a></li>
-</ul></li>
-<li><a href="#ファイルの操作">ファイルの操作</a>
-<ul>
-<li><a href="#open-ファイルをオープンする"><code>open()</code> ファイルをオープンする</a></li>
-<li><a href="#write-ファイルデスクリプタへ書き込む"><code>write()</code> ファイルデスクリプタへ書き込む</a></li>
-<li><a href="#read-ファイルデスクリプタから読み込む"><code>read()</code> ファイルデスクリプタから読み込む</a></li>
-<li><a href="#close-ファイルをクローズする"><code>close()</code> ファイルをクローズする</a></li>
-<li><a href="#fseek-ファイルポインタの位置を設定する"><code>fseek()</code> ファイルポインタの位置を設定する</a></li>
-</ul></li>
-<li><a href="#ファイルの管理情報">ファイルの管理情報</a></li>
-<li><a href="#ディレクトリ構造">ディレクトリ構造</a></li>
-<li><a href="#ファイルの実装">ファイルの実装</a></li>
-<li><a href="#ファイルの割り当て方式">ファイルの割り当て方式</a>
-<ul>
-<li><a href="#連続割り当て方式-contiguous">連続割り当て方式(contiguous)</a></li>
-<li><a href="#連結リスト割り当て方式-linked-list">連結リスト割り当て方式(linked-list)</a></li>
-<li><a href="#リスト検索表割り当て方式-fat-file-allocation-table">リスト検索表割り当て方式(FAT:file-allocation-table)</a></li>
-<li><a href="#索引割り当て方式-index">索引割り当て方式(index)</a></li>
-<li><a href="#iノード方式-i-node">iノード方式(i-node)</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#ブロック">ブロック</a></li>
+    <li><a href="#ボリューム">ボリューム</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#ファイルのアクセス読み出し書き込みの方法">ファイルのアクセス（読み出し・書き込み）の方法</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#open-ファイルをオープンする"><code>open()</code> ファイルをオープンする</a></li>
+    <li><a href="#write-ファイルデスクリプタへ書き込む"><code>write()</code> ファイルデスクリプタへ書き込む</a></li>
+    <li><a href="#read-ファイルデスクリプタから読み込む"><code>read()</code> ファイルデスクリプタから読み込む</a></li>
+    <li><a href="#close-ファイルをクローズする"><code>close()</code> ファイルをクローズする</a></li>
+    <li><a href="#fseek-ファイルポインタの位置を設定する"><code>fseek()</code> ファイルポインタの位置を設定する</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#連続割り当て方式contiguous">連続割り当て方式(contiguous)</a></li>
+    <li><a href="#連結リスト割り当て方式linked-list">連結リスト割り当て方式(linked-list)</a></li>
+    <li><a href="#リスト検索表割り当て方式fatfile-allocation-table">リスト検索表割り当て方式(FAT:file-allocation-table)</a></li>
+    <li><a href="#索引割り当て方式index">索引割り当て方式(index)</a></li>
+    <li><a href="#iノード方式i-node">iノード方式(i-node)</a></li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h1 id="目的">目的</h1>
-
+  <h1 id="目的">目的</h1>
 <p>極単純なファイルシステムを自作できる程度の知識を、初歩的な事柄をまとめる。</p>
-
 <h1 id="参考文献">参考文献</h1>
-
 <ul>
 <li><a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=1&amp;cad=rja&amp;uact=8&amp;ved=2ahUKEwix1PLmnKDhAhUKO3AKHShZBOMQFjAAegQIBBAC&amp;url=http%3A%2F%2Fresearch.nii.ac.jp%2F~ichiro%2Flecture%2Fos2001%2Fnotes%2FOS2001-file.pdf&amp;usg=AOvVaw15ZC6zFCuZreyMzU2s0TAA">ファイルシステム</a></li>
 </ul>
-
 <h1 id="ファイルシステムとは">ファイルシステムとは</h1>
-
 <blockquote>
-<p>ファイルシステムは、コンピュータのリソースを操作するための、オペレーティングシステム (OS) が持つ機能の一つ。<br />
-ファイルとは、主に補助記憶装置に格納されたデータを指すが、デバイスやプロセス、カーネル内の情報といったものもファイルとして提供するファイルシステムもある。<br />
+<p>ファイルシステムは、コンピュータのリソースを操作するための、オペレーティングシステム (OS) が持つ機能の一つ。<br>
+ファイルとは、主に補助記憶装置に格納されたデータを指すが、デバイスやプロセス、カーネル内の情報といったものもファイルとして提供するファイルシステムもある。<br>
 より正確に定義すれば、ファイルシステムは抽象データ型の集まりであり、ストレージ、階層構造、データの操作/アクセス/検索のために実装されたものである。</p>
 </blockquote>
-
 <p><a href="https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0">Wikipedia - ファイルシステム</a></p>
-
 <p><strong>NOTE:</strong> ファイルシステムを操作するためには、OSが提供する機能を利用することになる。</p>
-
 <h1 id="ディスクファイルシステムとは">ディスクファイルシステムとは</h1>
-
 <blockquote>
 <p>「ディスクファイルシステム」は、直接的か間接的かに関わらずコンピュータシステムに接続された補助記憶装置、特にハードディスク上にファイルを格納するためのものである。
 ディスクファイルシステムとしては、FAT、NTFS、HFS、ext2、ext3、ext4、WAFL（英語版）、ISO 9660、ODS-5（英語版）、UDF、HPFS、JFS、UFS、VTOC、XFSなどがある。
 ディスクファイルシステムの一部はジャーナルファイルシステムまたはバージョニングファイルシステムでもある。</p>
 </blockquote>
-
 <p><a href="https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%B7%E3%82%B9%E3%83%86%E3%83%A0">Wikipedia - ファイルシステム</a></p>
-
 <h1 id="ファイルシステムへの要求">ファイルシステムへの要求</h1>
-
 <p>ファイルシステム、特にディスクファイルシステムへの要求</p>
-
 <ul>
 <li>メモリと比較して低速な読み書き速度に対応できる</li>
 <li>記憶装置の容量を無駄無く利用できる</li>
@@ -230,11 +201,8 @@
 <li>記憶装置の容量拡大に容易に対応できる</li>
 <li>記憶装置の物理的な差異を吸収する論理インターフェースを提供できる</li>
 </ul>
-
 <h1 id="ファイルシステムの構成要素">ファイルシステムの構成要素</h1>
-
-<p>ファイルシステムの典型例をクラス図風に示す。<sup class="footnote-ref" id="fnref:PlantUML-Previewer"><a href="#fn:PlantUML-Previewer">1</a></sup></p>
-
+<p>ファイルシステムの典型例をクラス図風に示す。<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup></p>
 
 <link rel="stylesheet" href="https://otaon.github.io/css/hugo-easy-gallery.css" />
 <div class="box aligncenter" style="max-width:700px;">
@@ -251,39 +219,34 @@
   </figure>
 </div>
 
-
 <h2 id="ブロック">ブロック</h2>
-
 <p>多くのOSにおいては、ディスクを、(トラック)セクタを要素とする1次元配列として管理する。</p>
-
 <p>多くのＯＳがディスクをセクタを要素とする１次元配列として管理</p>
-
 <ul>
 <li>セクタの指定方法</li>
 <li>シリンダ番号、ヘッド番号（ディスク番号）、セクタ番号の３項組</li>
 <li>セクタサイズ
-
 <ul>
 <li>システムに依存（代表的サイズ:512B）</li>
-</ul></li>
+</ul>
+</li>
 <li>ブロック
-
 <ul>
 <li>ＯＳがハードディスクを読み書きする際のデータ単位</li>
 <li>ブロックサイズ
-
 <ul>
 <li>ＯＳに依存。512B、1024B、2048B、4096B、8192Bなど</li>
-</ul></li>
-</ul></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><strong>注意</strong> ブロックサイズが大きいと
-
 <ul>
 <li>○ まとめて入出力処理が可能なため高速化</li>
 <li>× ファイルサイズがブロックサイズより小さいと無駄が多い</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 
 
 <div class="box aligncenter" style="max-width:200px;">
@@ -293,48 +256,47 @@
     </div>
     
       <figcaption>
-          <p>A トラック<br/>B 幾何学的セクタ<br/>C (トラック)セクタ<br/>D クラスタ
+          <p>A トラック<!-- raw HTML omitted -->B 幾何学的セクタ<!-- raw HTML omitted -->C (トラック)セクタ<!-- raw HTML omitted -->D クラスタ
               
           </p>
       </figcaption>
   </figure>
 </div>
 
-
 <h2 id="ボリューム">ボリューム</h2>
-
 <ul>
-<li><p>記憶媒体のことを、ＯＳではボリュームと呼ぶ</p>
-
+<li>
+<p>記憶媒体のことを、ＯＳではボリュームと呼ぶ</p>
 <ul>
 <li>磁気ディスクや光ディスク、磁気テープなどの記憶する媒体</li>
-</ul></li>
-
-<li><p>ボリュームの構成</p>
-
+</ul>
+</li>
+<li>
+<p>ボリュームの構成</p>
 <ul>
 <li>初期プログラムローダ(IPL)
-
 <ul>
 <li>システム起動時に自動的に読み込まれるプログラムのこと</li>
-</ul></li>
-</ul></li>
-
-<li><p>ボリュームの管理情報</p>
-
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>ボリュームの管理情報</p>
 <ul>
 <li>ボリュームの名前、領域割り当てサイズなどのボリューム管理に必要な情報のこと</li>
-</ul></li>
-
-<li><p>ファイル</p>
-
+</ul>
+</li>
+<li>
+<p>ファイル</p>
 <ul>
 <li>ファイル管理情報とファイル内容自体のこと</li>
-</ul></li>
-
-<li><p>UNIXのボリューム構成例</p></li>
 </ul>
-
+</li>
+<li>
+<p>UNIXのボリューム構成例</p>
+</li>
+</ul>
 
 
 <div class="box aligncenter" style="max-width:200px;">
@@ -353,7 +315,6 @@
 
 
 
-
 <div class="box aligncenter" style="max-width:300px;">
   <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
     <div class="img">
@@ -368,33 +329,27 @@
   </figure>
 </div>
 
-
 <h1 id="ファイルへのアクセス方法">ファイルへのアクセス方法</h1>
-
-<h2 id="ファイルのアクセス-読み出し-書き込み-の方法">ファイルのアクセス（読み出し・書き込み）の方法</h2>
-
+<h2 id="ファイルのアクセス読み出し書き込みの方法">ファイルのアクセス（読み出し・書き込み）の方法</h2>
 <ul>
 <li>順アクセス
-
 <ul>
 <li>ファイルの先頭から末尾に向かってアクセス（<code>read</code>、<code>write</code>を使用)</li>
-</ul></li>
+</ul>
+</li>
 <li>直接アクセス
-
 <ul>
 <li>ファイル上の任意の位置をアクセス（<code>seek</code>、<code>read</code>、<code>write</code>を使用)</li>
-</ul></li>
+</ul>
+</li>
 <li>検索付き直接アクセス
-
 <ul>
 <li>キー値からアクセス対象となるレコードを取得・アクセス</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <h1 id="ファイルの操作">ファイルの操作</h1>
-
 <p>OSが提供するシステムコール、または、APIによってファイルを操作する。</p>
-
 
 
 <div class="box aligncenter" style="max-width:500px;">
@@ -411,7 +366,6 @@
   </figure>
 </div>
 
-
 <dl>
 <dt><code>OPEN</code></dt>
 <dd>ファイルアクセスに先立ち、ディスク上のファイルの位置を調べる。また、バッファ領域を含むファイル入出力に必要な情報領域(テーブル)を作成する。</dd>
@@ -424,440 +378,353 @@
 <dt><code>SEEK</code></dt>
 <dd>ファイルのアクセス位置を変更する</dd>
 </dl>
-
 <h2 id="open-ファイルをオープンする"><code>open()</code> ファイルをオープンする</h2>
-
 <table>
 <thead>
 <tr>
-<th align="left"><code>open()</code>の情報</th>
+<th style="text-align:left"><code>open()</code>の情報</th>
 <th>ファイルをオープンする</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
-<td align="left"><strong>ヘッダ</strong></td>
+<td style="text-align:left"><strong>ヘッダ</strong></td>
 <td><code>fcntl.h</code>, <code>sys/types.h</code>, <code>sys/stat.h</code></td>
 </tr>
-
 <tr>
-<td align="left"><strong>書式</strong></td>
+<td style="text-align:left"><strong>書式</strong></td>
 <td><code>int open(const char *path, int mode, [mode_t creat_mode])</code></td>
 </tr>
-
 <tr>
-<td align="left"><strong>引数</strong></td>
+<td style="text-align:left"><strong>引数</strong></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left"><code>path</code></td>
+<td style="text-align:left"><code>path</code></td>
 <td>ファイル名</td>
 </tr>
-
 <tr>
-<td align="left"><code>mode</code></td>
+<td style="text-align:left"><code>mode</code></td>
 <td>オープンするファイルに許可を与えるモード</td>
 </tr>
-
 <tr>
-<td align="left"><code>creat_mode</code></td>
+<td style="text-align:left"><code>creat_mode</code></td>
 <td><code>mode</code>に<code>O_CREAT</code>指定時に設定できる、オープンするファイルのモード（省略可能）。</td>
 </tr>
-
 <tr>
-<td align="left"></td>
-<td><code>mode</code>で設定できる値は、下記※１の3つのいずれか1つと、<br/>※２の任意の値を「|(論理和)」で結んだものとなる。</td>
+<td style="text-align:left"></td>
+<td><code>mode</code>で設定できる値は、下記※１の3つのいずれか1つと、<!-- raw HTML omitted -->※２の任意の値を「|(論理和)」で結んだものとなる。</td>
 </tr>
-
 <tr>
-<td align="left"><strong>※1</strong></td>
+<td style="text-align:left"><strong>※1</strong></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left"><code>O_RDONLY</code></td>
+<td style="text-align:left"><code>O_RDONLY</code></td>
 <td>読み込み可</td>
 </tr>
-
 <tr>
-<td align="left"><code>O_WRONLY</code></td>
+<td style="text-align:left"><code>O_WRONLY</code></td>
 <td>書き込み可</td>
 </tr>
-
 <tr>
-<td align="left"><code>O_RDWR</code></td>
+<td style="text-align:left"><code>O_RDWR</code></td>
 <td>読み書き可</td>
 </tr>
-
 <tr>
-<td align="left"><strong>※2</strong></td>
+<td style="text-align:left"><strong>※2</strong></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left"><code>O_APPEND</code></td>
+<td style="text-align:left"><code>O_APPEND</code></td>
 <td>ファイルポインタをファイルの最後に移動する</td>
 </tr>
-
 <tr>
-<td align="left"><code>O_CREAT</code></td>
+<td style="text-align:left"><code>O_CREAT</code></td>
 <td>ファイルを生成する</td>
 </tr>
-
 <tr>
-<td align="left"><code>O_TRUNC</code></td>
+<td style="text-align:left"><code>O_TRUNC</code></td>
 <td>ファイルが存在する場合、サイズを0にする</td>
 </tr>
-
 <tr>
-<td align="left"><code>O_BINARY</code></td>
+<td style="text-align:left"><code>O_BINARY</code></td>
 <td>バイナリモード</td>
 </tr>
-
 <tr>
-<td align="left"><code>O_TEXT</code></td>
+<td style="text-align:left"><code>O_TEXT</code></td>
 <td>テキストモード</td>
 </tr>
-
 <tr>
-<td align="left"></td>
+<td style="text-align:left"></td>
 <td>modeにO_CREATを指定した場合、第3引数で※３の<code>creat_mode</code>を指定できる。</td>
 </tr>
-
 <tr>
-<td align="left"></td>
+<td style="text-align:left"></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left"><strong>※3</strong></td>
+<td style="text-align:left"><strong>※3</strong></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left"><code>S_IWRITE</code></td>
+<td style="text-align:left"><code>S_IWRITE</code></td>
 <td>読み書き可</td>
 </tr>
-
 <tr>
-<td align="left"><code>S_IREAD</code></td>
+<td style="text-align:left"><code>S_IREAD</code></td>
 <td>読み込み可</td>
 </tr>
-
 <tr>
-<td align="left"><code>S_IREAD \| S_IWRITE</code></td>
+<td style="text-align:left"><code>S_IREAD \| S_IWRITE</code></td>
 <td>読み書き可</td>
 </tr>
-
 <tr>
-<td align="left"></td>
+<td style="text-align:left"></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left"><strong>戻り値</strong></td>
+<td style="text-align:left"><strong>戻り値</strong></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left">成功</td>
+<td style="text-align:left">成功</td>
 <td>ファイルデスクリプタ（そのファイルを一意に識別できる数値）</td>
 </tr>
-
 <tr>
-<td align="left">失敗</td>
+<td style="text-align:left">失敗</td>
 <td><code>-1</code></td>
 </tr>
-
 <tr>
-<td align="left"></td>
+<td style="text-align:left"></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left"><strong>解説</strong></td>
+<td style="text-align:left"><strong>解説</strong></td>
 <td>ファイルをオープンし、ファイルデスクリプタを返却する低水準入出力関数。</td>
 </tr>
 </tbody>
 </table>
-
 <h2 id="write-ファイルデスクリプタへ書き込む"><code>write()</code> ファイルデスクリプタへ書き込む</h2>
-
 <table>
 <thead>
 <tr>
-<th align="left"><code>write()</code>の情報</th>
+<th style="text-align:left"><code>write()</code>の情報</th>
 <th>ファイルデスクリプタへ書き込む</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
-<td align="left"><strong>ヘッダ</strong></td>
+<td style="text-align:left"><strong>ヘッダ</strong></td>
 <td><code>unistd.h</code></td>
 </tr>
-
 <tr>
-<td align="left"><strong>書式</strong></td>
+<td style="text-align:left"><strong>書式</strong></td>
 <td><code>int write(int fd, void *buf, unsigned int byte)</code></td>
 </tr>
-
 <tr>
-<td align="left"><strong>引数</strong></td>
+<td style="text-align:left"><strong>引数</strong></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left"><code>fd</code></td>
+<td style="text-align:left"><code>fd</code></td>
 <td>ファイルデスクリプタ</td>
 </tr>
-
 <tr>
-<td align="left"><code>buf</code></td>
+<td style="text-align:left"><code>buf</code></td>
 <td>ファイルに書き込むデータが格納されている領域のポインタ</td>
 </tr>
-
 <tr>
-<td align="left"><code>byte</code></td>
+<td style="text-align:left"><code>byte</code></td>
 <td>ファイルへ書き込むバイト数</td>
 </tr>
-
 <tr>
-<td align="left"><strong>戻り値</strong></td>
+<td style="text-align:left"><strong>戻り値</strong></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left">成功</td>
+<td style="text-align:left">成功</td>
 <td>書き込んだバイト数</td>
 </tr>
-
 <tr>
-<td align="left">失敗</td>
+<td style="text-align:left">失敗</td>
 <td><code>-1</code></td>
 </tr>
-
 <tr>
-<td align="left"><strong>解説</strong></td>
+<td style="text-align:left"><strong>解説</strong></td>
 <td>ファイルデスクリプタ(<code>fd</code>)へ<code>buf</code>に格納されているbyteバイト分のデータを書き込む。</td>
 </tr>
 </tbody>
 </table>
-
 <h2 id="read-ファイルデスクリプタから読み込む"><code>read()</code> ファイルデスクリプタから読み込む</h2>
-
 <table>
 <thead>
 <tr>
-<th align="left"><code>read()</code>の情報</th>
+<th style="text-align:left"><code>read()</code>の情報</th>
 <th>ファイルデスクリプタから読み込む</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
-<td align="left"><strong>ヘッダ</strong></td>
+<td style="text-align:left"><strong>ヘッダ</strong></td>
 <td><code>unistd.h</code></td>
 </tr>
-
 <tr>
-<td align="left"><strong>書式</strong></td>
+<td style="text-align:left"><strong>書式</strong></td>
 <td><code>ssize_t read(int fd, void *buf, size_t byte)</code></td>
 </tr>
-
 <tr>
-<td align="left"><strong>引数</strong></td>
+<td style="text-align:left"><strong>引数</strong></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left"><code>fd</code></td>
+<td style="text-align:left"><code>fd</code></td>
 <td>ファイルデスクリプタ</td>
 </tr>
-
 <tr>
-<td align="left"><code>buf</code></td>
+<td style="text-align:left"><code>buf</code></td>
 <td>読み込んだデータを保存する領域のポインタ</td>
 </tr>
-
 <tr>
-<td align="left"><code>byte</code></td>
+<td style="text-align:left"><code>byte</code></td>
 <td>ファイルから読み込むバイト数</td>
 </tr>
-
 <tr>
-<td align="left"><strong>戻り値</strong></td>
+<td style="text-align:left"><strong>戻り値</strong></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left"><strong>成功</strong></td>
+<td style="text-align:left"><strong>成功</strong></td>
 <td>読み込んだバイト数（ファイルの終端に達した場合は0）。</td>
 </tr>
-
 <tr>
-<td align="left"><strong>失敗</strong></td>
+<td style="text-align:left"><strong>失敗</strong></td>
 <td><code>-1</code></td>
 </tr>
-
 <tr>
-<td align="left"><strong>解説</strong></td>
+<td style="text-align:left"><strong>解説</strong></td>
 <td>ファイルデスクリプタ(<code>fd</code>)から、<code>byte</code>分のデータを読み込み、bufへ格納する。</td>
 </tr>
 </tbody>
 </table>
-
 <h2 id="close-ファイルをクローズする"><code>close()</code> ファイルをクローズする</h2>
-
 <table>
 <thead>
 <tr>
-<th align="left"><code>close()</code>の情報</th>
+<th style="text-align:left"><code>close()</code>の情報</th>
 <th>ファイルをクローズする</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
-<td align="left"><strong>ヘッダ</strong></td>
+<td style="text-align:left"><strong>ヘッダ</strong></td>
 <td><code>unistd.h</code></td>
 </tr>
-
 <tr>
-<td align="left"><strong>書式</strong></td>
+<td style="text-align:left"><strong>書式</strong></td>
 <td><code>int close(int fd)</code></td>
 </tr>
-
 <tr>
-<td align="left"><strong>引数</strong></td>
+<td style="text-align:left"><strong>引数</strong></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left"><code>fd</code></td>
+<td style="text-align:left"><code>fd</code></td>
 <td>ファイルデスクリプタ</td>
 </tr>
-
 <tr>
-<td align="left"><strong>戻り値</strong></td>
+<td style="text-align:left"><strong>戻り値</strong></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left">成功</td>
+<td style="text-align:left">成功</td>
 <td><code>0</code></td>
 </tr>
-
 <tr>
-<td align="left">失敗</td>
+<td style="text-align:left">失敗</td>
 <td><code>-1</code></td>
 </tr>
-
 <tr>
-<td align="left"><strong>解説</strong></td>
+<td style="text-align:left"><strong>解説</strong></td>
 <td>ファイルをクローズする低水準入出力関数。</td>
 </tr>
 </tbody>
 </table>
-
 <h2 id="fseek-ファイルポインタの位置を設定する"><code>fseek()</code> ファイルポインタの位置を設定する</h2>
-
 <table>
 <thead>
 <tr>
-<th align="left"><code>fseek()</code>の情報</th>
+<th style="text-align:left"><code>fseek()</code>の情報</th>
 <th>ファイルポインタの位置を設定する</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
-<td align="left"><strong>ヘッダ</strong></td>
+<td style="text-align:left"><strong>ヘッダ</strong></td>
 <td><code>stdio.h</code></td>
 </tr>
-
 <tr>
-<td align="left"><strong>書式</strong></td>
+<td style="text-align:left"><strong>書式</strong></td>
 <td><code>int fseek(FILE *fp, long offset, int origin);</code></td>
 </tr>
-
 <tr>
-<td align="left"><strong>引数</strong></td>
+<td style="text-align:left"><strong>引数</strong></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left"><code>fp</code></td>
+<td style="text-align:left"><code>fp</code></td>
 <td>ファイルポインタ</td>
 </tr>
-
 <tr>
-<td align="left"><code>offset</code></td>
+<td style="text-align:left"><code>offset</code></td>
 <td><code>origin</code>で指定した位置からファイルポインタを移動するバイト数</td>
 </tr>
-
 <tr>
-<td align="left"><code>origin</code></td>
+<td style="text-align:left"><code>origin</code></td>
 <td>ファイルポインタの初期設定値</td>
 </tr>
-
 <tr>
-<td align="left"></td>
+<td style="text-align:left"></td>
 <td>origenで指定できる値は※1の通り。</td>
 </tr>
-
 <tr>
-<td align="left"><strong>※1</strong></td>
+<td style="text-align:left"><strong>※1</strong></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left"><code>SEEK_CUR</code></td>
+<td style="text-align:left"><code>SEEK_CUR</code></td>
 <td>現在のファイルポインタの位置</td>
 </tr>
-
 <tr>
-<td align="left"><code>SEEK_END</code></td>
+<td style="text-align:left"><code>SEEK_END</code></td>
 <td>ファイルの終端</td>
 </tr>
-
 <tr>
-<td align="left"><code>SEEK_SET</code></td>
+<td style="text-align:left"><code>SEEK_SET</code></td>
 <td>ファイルの先頭</td>
 </tr>
-
 <tr>
-<td align="left"><strong>戻り値</strong></td>
+<td style="text-align:left"><strong>戻り値</strong></td>
 <td></td>
 </tr>
-
 <tr>
-<td align="left">成功</td>
+<td style="text-align:left">成功</td>
 <td><code>0</code></td>
 </tr>
-
 <tr>
-<td align="left">失敗</td>
+<td style="text-align:left">失敗</td>
 <td><code>-1</code></td>
 </tr>
-
 <tr>
-<td align="left"><strong>解説</strong></td>
-<td>現在のファイルポインタを、<code>origin</code>で指定した位置から、<code>offset</code>バイト分移動した位置に設定する。<br/><code>offset</code>には負の値を設定することが可能で、負の値を入力するとファイルポインタは前に移動する。</td>
+<td style="text-align:left"><strong>解説</strong></td>
+<td>現在のファイルポインタを、<code>origin</code>で指定した位置から、<code>offset</code>バイト分移動した位置に設定する。<!-- raw HTML omitted --><code>offset</code>には負の値を設定することが可能で、負の値を入力するとファイルポインタは前に移動する。</td>
 </tr>
 </tbody>
 </table>
-
-<p><br/></p>
-
+<!-- raw HTML omitted -->
 <p>参考サイト: <a href="http://www.geocities.jp/p_lan_c/index.html">C言語例文集</a></p>
-
 <h1 id="ファイルの管理情報">ファイルの管理情報</h1>
-
 <p>ファイルを管理するための代表的な情報を下記に示す。</p>
-
 <ul>
 <li>名前</li>
 <li>属性</li>
@@ -866,20 +733,15 @@
 <li>保護情報（アクセス権）</li>
 <li>参照時間、生成時間</li>
 </ul>
-
-<p><strong>NOTE</strong><br />
-ファイルの管理情報とファイル本体を結ぶ部分をディレクトリと呼ぶ。<br />
+<p><strong>NOTE</strong><br>
+ファイルの管理情報とファイル本体を結ぶ部分をディレクトリと呼ぶ。<br>
 ディレクトリに管理情報そのものを保持、または、ディレクトリに管理情報のある領域（ブロック）のポインタを保持する。</p>
-
 <h1 id="ディレクトリ構造">ディレクトリ構造</h1>
-
-<p>1階層のみのファイルシステムだと同一ファイル名を扱えない。<br />
+<p>1階層のみのファイルシステムだと同一ファイル名を扱えない。<br>
 そこで、多階層のディレクトリ構造を導入する。</p>
-
 <ul>
 <li>1階層のみのファイルシステム・・・同一の名前空間となり、名前が衝突する。</li>
 </ul>
-
 <div class="mermaid" align="center">
     
 graph TD;
@@ -891,11 +753,9 @@ graph TD;
 
 </div>
 
-
 <ul>
 <li>多階層のファイルシステム・・・異なるディレクトリでは異なる名前空間となる。</li>
 </ul>
-
 <div class="mermaid" align="center">
     
 graph TD;
@@ -915,36 +775,28 @@ graph TD;
 
 </div>
 
-
 <h1 id="ファイルの実装">ファイルの実装</h1>
-
 <ul>
-<li>磁気テープの場合は、先頭から末尾まで、順番にヘッドを走査するしかない。<br /></li>
+<li>磁気テープの場合は、先頭から末尾まで、順番にヘッドを走査するしかない。</li>
 <li>磁気ディスクの場合は、ランダムアクセス可能。→記憶媒体へのファイル配置方法は多様。
-
 <ol>
 <li>連続方式</li>
 <li>連結リスト方式</li>
 <li>索引方式</li>
-</ol></li>
+</ol>
+</li>
 </ul>
-
-<p><strong>NOTE</strong><br />
+<p><strong>NOTE</strong><br>
 OSは、ブロック(セクタサイズの整数倍)単位で読み書きする。</p>
-
 <h1 id="ファイルの割り当て方式">ファイルの割り当て方式</h1>
-
-<h2 id="連続割り当て方式-contiguous">連続割り当て方式(contiguous)</h2>
-
+<h2 id="連続割り当て方式contiguous">連続割り当て方式(contiguous)</h2>
 <p>ファイルをディスク上に連続して格納する。</p>
-
 <ul>
 <li>✅ 必要ブロック数と開始ブロック番号だけでファイルの格納場所を特定できる。</li>
 <li>✅ 連続ブロックのため、シーケンシャルアクセス、ランダムアクセス共に高速。</li>
 <li>❌ ファイルサイズが固定になる。ファイルサイズ変更するには、保存し直す必要がある。</li>
 <li>❌ 断片化（フラグメンテーション）により無駄な領域が発生しやすい。</li>
 </ul>
-
 
 
 <div class="box aligncenter" style="max-width:300px;">
@@ -961,22 +813,18 @@ OSは、ブロック(セクタサイズの整数倍)単位で読み書きする�
   </figure>
 </div>
 
-
-<h2 id="連結リスト割り当て方式-linked-list">連結リスト割り当て方式(linked-list)</h2>
-
+<h2 id="連結リスト割り当て方式linked-list">連結リスト割り当て方式(linked-list)</h2>
 <p>ファイルを構成するブロックを先頭から順にリンクで連結する。</p>
-
 <ul>
 <li>✅ ファイルサイズ（必要ブロック数）を変更が容易</li>
 <li>✅ 断片化による無駄な領域が発生しない</li>
-<li>❌ リンク不良によりファイルアクセスが不可能になる<br />
-
+<li>❌ リンク不良によりファイルアクセスが不可能になる
 <ul>
 <li>一つでもブロックが壊れると、それ以降のブロックも読めなくなる</li>
-</ul></li>
+</ul>
+</li>
 <li>❌ ランダムアクセスの効率が悪い</li>
 </ul>
-
 
 
 <div class="box aligncenter" style="max-width:300px;">
@@ -993,17 +841,13 @@ OSは、ブロック(セクタサイズの整数倍)単位で読み書きする�
   </figure>
 </div>
 
-
-<h2 id="リスト検索表割り当て方式-fat-file-allocation-table">リスト検索表割り当て方式(FAT:file-allocation-table)</h2>
-
-<p>ファイルを構成するブロックを先頭から順にリンクで連結する。<br />
+<h2 id="リスト検索表割り当て方式fatfile-allocation-table">リスト検索表割り当て方式(FAT:file-allocation-table)</h2>
+<p>ファイルを構成するブロックを先頭から順にリンクで連結する。<br>
 リンク情報を取り出して、検索（FAT）として<strong>メモリ</strong>上に展開する。</p>
-
 <ul>
 <li>✅ シーケンシャルアクセスが高速</li>
 <li>❌ 検索情報（リンク表）が大量のメモリを消費する</li>
 </ul>
-
 
 
 <div class="box aligncenter" style="max-width:400px;">
@@ -1039,23 +883,19 @@ OSは、ブロック(セクタサイズの整数倍)単位で読み書きする�
     <span class="n">Byte</span>    <span class="n">updateDate</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
     <span class="n">Byte</span>    <span class="n">cluster</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>         <span class="cm">/* start cluster number(First cluster,LSB) */</span>
     <span class="n">Byte</span>    <span class="n">fileSize</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>        <span class="cm">/* file size in bytes (directory is always zero) */</span>
-<span class="p">}</span>   <span class="n">DirEntry</span><span class="p">;</span></code></pre></div>
-<p><a href="http://www.geocities.co.jp/SiliconValley-PaloAlto/2038/fat.html">FAT FS フォーマットの実装についての覚え書き</a></p>
-
-<h2 id="索引割り当て方式-index">索引割り当て方式(index)</h2>
-
+<span class="p">}</span>   <span class="n">DirEntry</span><span class="p">;</span>
+</code></pre></div><p><a href="http://www.geocities.co.jp/SiliconValley-PaloAlto/2038/fat.html">FAT FS フォーマットの実装についての覚え書き</a></p>
+<h2 id="索引割り当て方式index">索引割り当て方式(index)</h2>
 <p>ファイル構成するブロック番号を表形式で索引ブロック(index block)内に格納する。</p>
-
 <ul>
 <li>✅ 断片化による無駄な領域が発生しない</li>
 <li>🔺 ファイルサイズ（必要ブロック数）の変更が比較的容易
-
 <ul>
 <li>ただし、ファイルサイズが増加して索引ブロックに収まらないときは索引ブロックの追加が必要</li>
-</ul></li>
+</ul>
+</li>
 <li>🔻 最少２回のディスクアクセスが必要</li>
 </ul>
-
 
 
 <div class="box aligncenter" style="max-width:400px;">
@@ -1072,26 +912,22 @@ OSは、ブロック(セクタサイズの整数倍)単位で読み書きする�
   </figure>
 </div>
 
-
-<h2 id="iノード方式-i-node">iノード方式(i-node)</h2>
-
-<p>索引割り当て方式では大容量用ファイルは一つの索引ブロックでは収まらない。<br />
+<h2 id="iノード方式i-node">iノード方式(i-node)</h2>
+<p>索引割り当て方式では大容量用ファイルは一つの索引ブロックでは収まらない。<br>
 →「索引ブロックの索引ブロック」（間接ブロック）を導入する。</p>
-
 <ul>
 <li>索引ブロック(i-node block)・・・間接ブロック、または、データブロックへの参照を持つ</li>
 <li>間接ブロック・・・1段、2段、3段の間接ブロックが存在する(下図は1段と2段)
-
 <ul>
 <li><strong>ext2</strong>では、iノード構造体が持つデータブロック参照用の配列は15個。
-
 <ul>
 <li>そのうち12個を「直接参照」、残りの3つをそれぞれ「一段間接参照」「二段間接参照」「三段間接参照」用に使用することで、複数のデータブロックを必要とする大きめのファイルを効率的に扱うようにしている。</li>
-</ul></li>
-<li><strong>ext4</strong>では、extent機能というものを使用できる。この場合、ここで述べたような間接ブロックは使用しない。(下記slideshareの37ページあたり参照)</li>
-</ul></li>
 </ul>
-
+</li>
+<li><strong>ext4</strong>では、extent機能というものを使用できる。この場合、ここで述べたような間接ブロックは使用しない。(下記slideshareの37ページあたり参照)</li>
+</ul>
+</li>
+</ul>
 
 
 <div class="box aligncenter" style="max-width:400px;">
@@ -1108,20 +944,18 @@ OSは、ブロック(セクタサイズの整数倍)単位で読み書きする�
   </figure>
 </div>
 
-
 <ul>
-<li><a href="https://www.atmarkit.co.jp/ait/articles/0306/24/news002_2.html">ブロックアルゴリズムとB-Treeアルゴリズム (<sup>2</sup>&frasl;<sub>3</sub>)</a></li>
+<li><a href="https://www.atmarkit.co.jp/ait/articles/0306/24/news002_2.html">ブロックアルゴリズムとB-Treeアルゴリズム (2/3)</a></li>
 <li><a href="https://www.slideshare.net/YoshihiroYunomae/f-36905134">slideshare - ファイルシステム</a></li>
 </ul>
-<div class="footnotes">
-
-<hr />
-
+<section class="footnotes" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn:PlantUML-Previewer">右記サイトでPlantUMLを使って作成した。(<a href="http://sujoyu.github.io/plantuml-previewer/">http://sujoyu.github.io/plantuml-previewer/</a>)
- <a class="footnote-return" href="#fnref:PlantUML-Previewer"><sup>[return]</sup></a></li>
+<li id="fn:1" role="doc-endnote">
+<p>右記サイトでPlantUMLを使って作成した。(<a href="http://sujoyu.github.io/plantuml-previewer/">http://sujoyu.github.io/plantuml-previewer/</a>) <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
-</div>
+</section>
 
   </article>
 
@@ -1195,7 +1029,9 @@ OSは、ブロック(セクタサイズの整数倍)単位で読み書きする�
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

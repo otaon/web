@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Lazy Lambda</title>
@@ -6,11 +6,7 @@
     <description>Recent content in Posts on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sun, 28 Jul 2019 21:00:00 +0900</lastBuildDate>
-    
-	<atom:link href="https://otaon.github.io/web/ja-jp/posts/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 28 Jul 2019 21:00:00 +0900</lastBuildDate><atom:link href="https://otaon.github.io/web/ja-jp/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>roswellとvimとslimvでlisp環境を作る</title>
       <link>https://otaon.github.io/web/ja-jp/2019/07/28/roswell%E3%81%A8vim%E3%81%A8slimv%E3%81%A7lisp%E7%92%B0%E5%A2%83%E3%82%92%E4%BD%9C%E3%82%8B/</link>
@@ -35,7 +31,7 @@
       <pubDate>Sat, 20 Jul 2019 16:16:45 +0900</pubDate>
       
       <guid>https://otaon.github.io/web/ja-jp/2019/07/20/p5.js%E3%82%92hugo%E3%81%AE%E8%A8%98%E4%BA%8B%E3%81%AB%E5%9F%8B%E3%82%81%E8%BE%BC%E3%82%80%E6%96%B9%E6%B3%95/</guid>
-      <description>実例 div id=canvas↓↓ /div id=canvas↑↑ 方法 1. p5.jsのライブラリをstatic/ディレクトリに配置する static/に配置し</description>
+      <description>実例 div id=canvas↓↓ 方法 1. p5.jsのライブラリをstatic/ディレクトリに配置する static/に配置したものは、ビルド時にその</description>
     </item>
     
     <item>
@@ -71,7 +67,7 @@
       <pubDate>Tue, 28 May 2019 00:00:00 +0900</pubDate>
       
       <guid>https://otaon.github.io/web/ja-jp/2019/05/28/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC9%E7%AB%A0-%E5%AE%9F%E8%B7%B5%E3%83%A6%E3%83%8B%E3%83%83%E3%83%88%E3%83%86%E3%82%B9%E3%83%88%E3%83%95%E3%83%AC%E3%83%BC%E3%83%A0%E3%83%AF%E3%83%BC%E3%82%AF/</guid>
-      <description>この章について この章では、マクロを使ってユニットテストフレームワークを作成する。 テストとは、結局のところ承認(accept)か拒否(reje</description>
+      <description>この章について この章では、マクロを使ってユニットテストフレームワークを作成する。 テストとは、結局のところ**承認(accept)か拒否(re</description>
     </item>
     
     <item>
@@ -98,7 +94,7 @@
       <pubDate>Sat, 25 May 2019 00:00:00 +0900</pubDate>
       
       <guid>https://otaon.github.io/web/ja-jp/2019/05/25/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC6%E7%AB%A0-%E5%A4%89%E6%95%B0/</guid>
-      <description>6.1 変数の基礎 Common Lispは、動的型付け(dynamically typed)であり、型エラーは動的に検出される。 また、強い型付け(strongl</description>
+      <description>6.1 変数の基礎 Common Lispは、**動的型付け(dynamically typed)**であり、型エラーは動的に検出される。 また、**強い型付け(s</description>
     </item>
     
     <item>

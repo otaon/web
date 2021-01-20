@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>オブジェクト指向原則集(SOLID、他):リスコフの置換原則について · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,16 +22,13 @@
 <meta property="og:description" content="目的 プログラミングや設計において守るべき「SOLID原則」のうち、「リスコフの置換原則」についての学習記録を残す。 参考文献 「オブジェクト指向" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E3%83%AA%E3%82%B9%E3%82%B3%E3%83%95%E3%81%AE%E7%BD%AE%E6%8F%9B%E5%8E%9F%E5%89%87%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/" />
-<meta property="article:published_time" content="2019-05-05T03:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-05-05T03:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-05-05T03:00:00+09:00" />
+<meta property="article:modified_time" content="2019-05-05T03:00:00+09:00" />
 <meta itemprop="name" content="オブジェクト指向原則集(SOLID、他):リスコフの置換原則について">
 <meta itemprop="description" content="目的 プログラミングや設計において守るべき「SOLID原則」のうち、「リスコフの置換原則」についての学習記録を残す。 参考文献 「オブジェクト指向">
-
-
-<meta itemprop="datePublished" content="2019-05-05T03:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-05-05T03:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="1429">
+<meta itemprop="datePublished" content="2019-05-05T03:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-05-05T03:00:00+09:00" />
+<meta itemprop="wordCount" content="1375">
 
 
 
@@ -128,8 +125,8 @@
               <i class="fas fa-tags" aria-hidden="true"></i>
               <a href="https://otaon.github.io/web/ja-jp/tag/lsp/">LSP</a>, 
                 <a href="https://otaon.github.io/web/ja-jp/tag/oop/">OOP</a>, 
-                <a href="https://otaon.github.io/web/ja-jp/tag/solid/">SOLID</a>, 
                 <a href="https://otaon.github.io/web/ja-jp/tag/programming/">programming</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/solid/">SOLID</a>, 
                 <a href="https://otaon.github.io/web/ja-jp/tag/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91/">オブジェクト指向</a>
           </p>
         
@@ -148,229 +145,202 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#目的">目的</a></li>
-<li><a href="#参考文献">参考文献</a></li>
-<li><a href="#solid原則について">SOLID原則について</a>
-<ul>
-<li><a href="#l-the-liskov-substitution-principle-lsp-リスコフの置換原則"><strong>L</strong> : The Liskov Substitution Principle (LSP) : リスコフの置換原則</a>
-<ul>
-<li><a href="#実装例">実装例</a></li>
-<li><a href="#programming-by-contract-契約プログラミング">Programming By Contract 契約プログラミング</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#l--the-liskov-substitution-principle-lsp--リスコフの置換原則"><strong>L</strong> : The Liskov Substitution Principle (LSP) : リスコフの置換原則</a>
+      <ul>
+        <li><a href="#実装例">実装例</a></li>
+        <li><a href="#programming-by-contract-契約プログラミング">Programming By Contract 契約プログラミング</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h1 id="目的">目的</h1>
-
+  <h1 id="目的">目的</h1>
 <p>プログラミングや設計において守るべき「SOLID原則」のうち、「リスコフの置換原則」についての学習記録を残す。</p>
-
 <h1 id="参考文献">参考文献</h1>
-
 <p>「<a href="/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96/">オブジェクト指向原則集(SOLID、他)</a>」を参照。</p>
-
 <h1 id="solid原則について">SOLID原則について</h1>
-
 <p>SOLID原則とは、プログラミングや設計において守るべき主要な原則5つをまとめたもの。</p>
-
 <table>
 <thead>
 <tr>
-<th>&nbsp;頭文字</th>
-<th>&nbsp;略称</th>
-<th>&nbsp;英名</th>
-<th>&nbsp;和名</th>
+<th> 頭文字</th>
+<th> 略称</th>
+<th> 英名</th>
+<th> 和名</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
-<td>&nbsp;<strong>S</strong></td>
-<td>&nbsp;SRP</td>
-<td>&nbsp;Single Responsibility Principle</td>
-<td>&nbsp;単一責任の原則</td>
+<td> <strong>S</strong></td>
+<td> SRP</td>
+<td> Single Responsibility Principle</td>
+<td> 単一責任の原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;<strong>O</strong></td>
-<td>&nbsp;OCP</td>
-<td>&nbsp;The Open-Closed Principle</td>
-<td>&nbsp;開放／閉鎖原則</td>
+<td> <strong>O</strong></td>
+<td> OCP</td>
+<td> The Open-Closed Principle</td>
+<td> 開放／閉鎖原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;<strong>L</strong></td>
-<td>&nbsp;LSP</td>
-<td>&nbsp;The Liskov Substitution Principle</td>
-<td>&nbsp;リスコフの置換原則</td>
+<td> <strong>L</strong></td>
+<td> LSP</td>
+<td> The Liskov Substitution Principle</td>
+<td> リスコフの置換原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;<strong>I</strong></td>
-<td>&nbsp;ISP</td>
-<td>&nbsp;The Interface Segregation Principle</td>
-<td>&nbsp;インターフェース分離原則</td>
+<td> <strong>I</strong></td>
+<td> ISP</td>
+<td> The Interface Segregation Principle</td>
+<td> インターフェース分離原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;<strong>D</strong></td>
-<td>&nbsp;DIP</td>
-<td>&nbsp;The Dependency Inversion Principle</td>
-<td>&nbsp;依存性逆転の原理</td>
+<td> <strong>D</strong></td>
+<td> DIP</td>
+<td> The Dependency Inversion Principle</td>
+<td> 依存性逆転の原理</td>
 </tr>
 </tbody>
 </table>
-
 <p>SOLID全体の説明については「<a href="/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96/">オブジェクト指向原則集(SOLID、他)</a>」を参照。</p>
-
-<h2 id="l-the-liskov-substitution-principle-lsp-リスコフの置換原則"><strong>L</strong> : The Liskov Substitution Principle (LSP) : リスコフの置換原則</h2>
-
+<h2 id="l--the-liskov-substitution-principle-lsp--リスコフの置換原則"><strong>L</strong> : The Liskov Substitution Principle (LSP) : リスコフの置換原則</h2>
 <blockquote>
-<p><code>T</code> 型のオブジェクト<code>x</code>に関して真となる属性を<code>q(x)</code>とする。<br />
+<p><code>T</code> 型のオブジェクト<code>x</code>に関して真となる属性を<code>q(x)</code>とする。<br>
 このとき<code>S</code>が<code>T</code> の派生型であれば、<code>S</code>型のオブジェクト<code>y</code> について<code>q(y)</code>が真となる。</p>
 </blockquote>
-
 <p><code>S</code>が<code>T</code>の派生型であれば、プログラム内で<code>T</code>型のオブジェクトが使われている箇所は全て<code>S</code>型のオブジェクトで置換可能であるべき。</p>
-
 <p>リスコフの置換原則を契約プログラミングに適用すると、契約と継承の相互作用に次のような制約をもたらす</p>
-
 <ul>
 <li>派生型は、事前条件を強めることはできない。つまり、上位の型よりも強い事前条件を持つ派生型を作ることはできない。
-
 <ul>
 <li>サブクラスは、スーパークラスが呼び出せる状況なら必ず呼び出せること。</li>
-</ul></li>
+</ul>
+</li>
 <li>派生型は、事後条件を弱めることはできない。つまり、上位の型よりも弱い事後条件を持つ派生型を作ることはできない。
-
 <ul>
 <li>サブクラスは、スーパークラスが達成することは必ず達成すること。</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <h3 id="実装例">実装例</h3>
-
-<p>車クラス と F1クラス を用意する。<br />
+<p>車クラス と F1クラス を用意する。<br>
 これらのクラスを利用するドライバクラスを用意する。</p>
 <div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">class</span> <span class="nc">Driver</span>
 <span class="p">{</span>
-    <span class="kt">var</span> <span class="n">car</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Car</span><span class="p">();</span>
-    <span class="kt">var</span> <span class="n">f1</span> <span class="p">=</span> <span class="k">new</span> <span class="n">F1</span><span class="p">();</span>
+	<span class="kt">var</span> <span class="n">car</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Car</span><span class="p">();</span>
+	<span class="kt">var</span> <span class="n">f1</span> <span class="p">=</span> <span class="k">new</span> <span class="n">F1</span><span class="p">();</span>
 
-    <span class="kt">var</span> <span class="n">crt</span> <span class="p">=</span> <span class="n">CreateCurrentLocation</span><span class="p">();</span>
-    <span class="kt">var</span> <span class="n">dst</span> <span class="p">=</span> <span class="n">CreateRandomDestination</span><span class="p">();</span>
+	<span class="kt">var</span> <span class="n">crt</span> <span class="p">=</span> <span class="n">CreateCurrentLocation</span><span class="p">();</span>
+	<span class="kt">var</span> <span class="n">dst</span> <span class="p">=</span> <span class="n">CreateRandomDestination</span><span class="p">();</span>
 
-    <span class="c1">// 事前条件チェック
-</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="n">dst</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="n">dst</span> <span class="p">=</span> <span class="n">DefaultDestination</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">crt</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="n">crt</span> <span class="p">=</span> <span class="n">Home</span><span class="p">;</span>
+	<span class="c1">// 事前条件チェック
+</span><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="n">dst</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="n">dst</span> <span class="p">=</span> <span class="n">DefaultDestination</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">crt</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="n">crt</span> <span class="p">=</span> <span class="n">Home</span><span class="p">;</span>
 
-    <span class="c1">// サブルーチン呼び出し
-</span><span class="c1"></span>    <span class="kt">var</span> <span class="n">message</span> <span class="p">=</span> <span class="n">car</span><span class="p">.</span><span class="n">SetDestination</span><span class="p">(</span><span class="n">crt</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>
+	<span class="c1">// サブルーチン呼び出し
+</span><span class="c1"></span>	<span class="kt">var</span> <span class="n">message</span> <span class="p">=</span> <span class="n">car</span><span class="p">.</span><span class="n">SetDestination</span><span class="p">(</span><span class="n">crt</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>
 
-    <span class="c1">// 事前条件を満たしているのでメッセージの妥当性が保証されている
-</span><span class="c1"></span>    <span class="n">car</span><span class="p">.</span><span class="n">Read</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+	<span class="c1">// 事前条件を満たしているのでメッセージの妥当性が保証されている
+</span><span class="c1"></span>	<span class="n">car</span><span class="p">.</span><span class="n">Read</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
 
 
-    <span class="kt">var</span> <span class="n">dst</span> <span class="p">=</span> <span class="n">CreateRandomDestination</span><span class="p">();</span>
+	<span class="kt">var</span> <span class="n">dst</span> <span class="p">=</span> <span class="n">CreateRandomDestination</span><span class="p">();</span>
 
-    <span class="c1">// 事前条件チェック
-</span><span class="c1"></span>    <span class="k">if</span> <span class="p">(</span><span class="n">dst</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="n">dst</span> <span class="p">=</span> <span class="n">DefaultDestination</span><span class="p">;</span>
+	<span class="c1">// 事前条件チェック
+</span><span class="c1"></span>	<span class="k">if</span> <span class="p">(</span><span class="n">dst</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="n">dst</span> <span class="p">=</span> <span class="n">DefaultDestination</span><span class="p">;</span>
 
-    <span class="c1">// サブルーチン呼び出し
-</span><span class="c1"></span>    <span class="kt">var</span> <span class="n">message</span> <span class="p">=</span> <span class="n">f1</span><span class="p">.</span><span class="n">SetDestination</span><span class="p">(</span><span class="n">crt</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>
+	<span class="c1">// サブルーチン呼び出し
+</span><span class="c1"></span>	<span class="kt">var</span> <span class="n">message</span> <span class="p">=</span> <span class="n">f1</span><span class="p">.</span><span class="n">SetDestination</span><span class="p">(</span><span class="n">crt</span><span class="p">,</span> <span class="n">dst</span><span class="p">);</span>
 
-    <span class="c1">// 事前条件を満たしているのでメッセージの妥当性が保証されている
-</span><span class="c1"></span>    <span class="n">f1</span><span class="p">.</span><span class="n">Read</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+	<span class="c1">// 事前条件を満たしているのでメッセージの妥当性が保証されている
+</span><span class="c1"></span>	<span class="n">f1</span><span class="p">.</span><span class="n">Read</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
 <span class="p">}</span>
 
 <span class="k">class</span> <span class="nc">Car</span>
 <span class="p">{</span>
-    <span class="k">public</span> <span class="n">Message</span> <span class="n">SetDestination</span><span class="p">(</span><span class="kt">string</span> <span class="n">currentPlace</span><span class="p">,</span> <span class="kt">string</span> <span class="n">destination</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="c1">// 事前条件
-</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="n">currentPlace</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NullCurrentPlaceException</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">destination</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NullDestinationException</span><span class="p">();</span>
+	<span class="k">public</span> <span class="n">Message</span> <span class="n">SetDestination</span><span class="p">(</span><span class="kt">string</span> <span class="n">currentPlace</span><span class="p">,</span> <span class="kt">string</span> <span class="n">destination</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">// 事前条件
+</span><span class="c1"></span>		<span class="k">if</span> <span class="p">(</span><span class="n">currentPlace</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NullCurrentPlaceException</span><span class="p">();</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">destination</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NullDestinationException</span><span class="p">();</span>
 
-        <span class="c1">// 不変条件
-</span><span class="c1"></span>        <span class="n">InvariantTest</span><span class="p">();</span>
+		<span class="c1">// 不変条件
+</span><span class="c1"></span>		<span class="n">InvariantTest</span><span class="p">();</span>
 
-        <span class="k">this</span><span class="p">.</span><span class="n">Destination</span> <span class="p">=</span> <span class="n">destination</span><span class="p">;</span>
-        <span class="n">ChangeDriveMode</span><span class="p">(</span><span class="n">Mode</span><span class="p">.</span><span class="n">Ready</span><span class="p">);</span>
-        <span class="kt">var</span> <span class="n">message</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Message</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">Mode</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span>
+		<span class="k">this</span><span class="p">.</span><span class="n">Destination</span> <span class="p">=</span> <span class="n">destination</span><span class="p">;</span>
+		<span class="n">ChangeDriveMode</span><span class="p">(</span><span class="n">Mode</span><span class="p">.</span><span class="n">Ready</span><span class="p">);</span>
+		<span class="kt">var</span> <span class="n">message</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Message</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">Mode</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span>
 
-        <span class="c1">// 事後条件
-</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(!</span><span class="k">this</span><span class="p">.</span><span class="n">Destination</span><span class="p">.</span><span class="n">IsValid</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">InvalidDestinationException</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(!</span><span class="k">this</span><span class="p">.</span><span class="n">Mode</span><span class="p">.</span><span class="n">IsReady</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NotPreparedException</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">message</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NullMessageException</span><span class="p">();</span>
+		<span class="c1">// 事後条件
+</span><span class="c1"></span>		<span class="k">if</span> <span class="p">(!</span><span class="k">this</span><span class="p">.</span><span class="n">Destination</span><span class="p">.</span><span class="n">IsValid</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">InvalidDestinationException</span><span class="p">();</span>
+		<span class="k">if</span> <span class="p">(!</span><span class="k">this</span><span class="p">.</span><span class="n">Mode</span><span class="p">.</span><span class="n">IsReady</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NotPreparedException</span><span class="p">();</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">message</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NullMessageException</span><span class="p">();</span>
 
-        <span class="c1">// 不変条件
-</span><span class="c1"></span>        <span class="n">InvariantTest</span><span class="p">();</span>
+		<span class="c1">// 不変条件
+</span><span class="c1"></span>		<span class="n">InvariantTest</span><span class="p">();</span>
 
-        <span class="k">return</span> <span class="n">message</span><span class="p">;</span>
-    <span class="p">}</span>
+		<span class="k">return</span> <span class="n">message</span><span class="p">;</span>
+	<span class="p">}</span>
 
-    <span class="c1">// クラス不変条件の判定
-</span><span class="c1"></span>    <span class="k">private</span> <span class="k">void</span> <span class="n">InvariantTest</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(!</span><span class="k">this</span><span class="p">.</span><span class="n">CurrentPlace</span><span class="p">.</span><span class="n">IsValidLocation</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">InvalidLocationException</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(!</span><span class="k">this</span><span class="p">.</span><span class="n">Destination</span><span class="p">.</span><span class="n">IsValidLocation</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">InvalidLocationException</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">CurrentPlace</span> <span class="p">==</span> <span class="k">this</span><span class="p">.</span><span class="n">Destination</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">InvalidLocationException</span><span class="p">();</span>
-    <span class="p">}</span>
+	<span class="c1">// クラス不変条件の判定
+</span><span class="c1"></span>	<span class="k">private</span> <span class="k">void</span> <span class="n">InvariantTest</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(!</span><span class="k">this</span><span class="p">.</span><span class="n">CurrentPlace</span><span class="p">.</span><span class="n">IsValidLocation</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">InvalidLocationException</span><span class="p">();</span>
+		<span class="k">if</span> <span class="p">(!</span><span class="k">this</span><span class="p">.</span><span class="n">Destination</span><span class="p">.</span><span class="n">IsValidLocation</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">InvalidLocationException</span><span class="p">();</span>
+		<span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">CurrentPlace</span> <span class="p">==</span> <span class="k">this</span><span class="p">.</span><span class="n">Destination</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">InvalidLocationException</span><span class="p">();</span>
+	<span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">class</span> <span class="nc">F1</span> <span class="p">:</span> <span class="n">Car</span>
 <span class="p">{</span>
-    <span class="k">public</span> <span class="n">Message</span> <span class="n">SetDestination</span><span class="p">(</span><span class="kt">string</span> <span class="n">currentPlace</span><span class="p">,</span> <span class="kt">string</span> <span class="n">destination</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="c1">// 事前条件 派生型では事前条件を弱めることのみできる
-</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(</span><span class="n">destination</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NullDestinationException</span><span class="p">();</span>
+	<span class="k">public</span> <span class="n">Message</span> <span class="n">SetDestination</span><span class="p">(</span><span class="kt">string</span> <span class="n">currentPlace</span><span class="p">,</span> <span class="kt">string</span> <span class="n">destination</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">// 事前条件 派生型では事前条件を弱めることのみできる
+</span><span class="c1"></span>		<span class="k">if</span> <span class="p">(</span><span class="n">destination</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NullDestinationException</span><span class="p">();</span>
 
-        <span class="c1">// 不変条件
-</span><span class="c1"></span>        <span class="n">InvariantTest</span><span class="p">();</span>
+		<span class="c1">// 不変条件
+</span><span class="c1"></span>		<span class="n">InvariantTest</span><span class="p">();</span>
 
-        <span class="k">this</span><span class="p">.</span><span class="n">Destination</span> <span class="p">=</span> <span class="n">destination</span><span class="p">;</span>
-        <span class="n">ChangeDriveMode</span><span class="p">(</span><span class="n">Mode</span><span class="p">.</span><span class="n">Ready</span><span class="p">);</span>
-        <span class="kt">var</span> <span class="n">message</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Message</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">Mode</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span>
+		<span class="k">this</span><span class="p">.</span><span class="n">Destination</span> <span class="p">=</span> <span class="n">destination</span><span class="p">;</span>
+		<span class="n">ChangeDriveMode</span><span class="p">(</span><span class="n">Mode</span><span class="p">.</span><span class="n">Ready</span><span class="p">);</span>
+		<span class="kt">var</span> <span class="n">message</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Message</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">Mode</span><span class="p">.</span><span class="n">Message</span><span class="p">);</span>
 
-        <span class="c1">// 事後条件 派生型では事後条件を強化のみできる
-</span><span class="c1"></span>        <span class="k">if</span> <span class="p">(!</span><span class="k">this</span><span class="p">.</span><span class="n">Destination</span><span class="p">.</span><span class="n">IsValid</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">InvalidDestinationException</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(!</span><span class="k">this</span><span class="p">.</span><span class="n">Mode</span><span class="p">.</span><span class="n">IsReady</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NotPreparedException</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">message</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NullMessageException</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(!</span><span class="k">this</span><span class="p">.</span><span class="n">IsIgnited</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NotIgnitedException</span><span class="p">();</span>
+		<span class="c1">// 事後条件 派生型では事後条件を強化のみできる
+</span><span class="c1"></span>		<span class="k">if</span> <span class="p">(!</span><span class="k">this</span><span class="p">.</span><span class="n">Destination</span><span class="p">.</span><span class="n">IsValid</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">InvalidDestinationException</span><span class="p">();</span>
+		<span class="k">if</span> <span class="p">(!</span><span class="k">this</span><span class="p">.</span><span class="n">Mode</span><span class="p">.</span><span class="n">IsReady</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NotPreparedException</span><span class="p">();</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">message</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NullMessageException</span><span class="p">();</span>
+		<span class="k">if</span> <span class="p">(!</span><span class="k">this</span><span class="p">.</span><span class="n">IsIgnited</span><span class="p">)</span> <span class="k">throw</span> <span class="k">new</span> <span class="n">NotIgnitedException</span><span class="p">();</span>
 
-        <span class="c1">// 不変条件
-</span><span class="c1"></span>        <span class="n">InvariantTest</span><span class="p">();</span>
+		<span class="c1">// 不変条件
+</span><span class="c1"></span>		<span class="n">InvariantTest</span><span class="p">();</span>
 
-        <span class="k">return</span> <span class="n">message</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<h3 id="programming-by-contract-契約プログラミング">Programming By Contract 契約プログラミング</h3>
-
-<p>プログラムコードの中にプログラムが満たすべき仕様についての記述を盛り込む事で設計の安全性を高める技法。<br />
-コードを呼ぶ側が事前条件と不変条件を満たす義務を負うことで、呼ばれたコードはその条件が恒真であるとの前提を利益として得る。<br />
+		<span class="k">return</span> <span class="n">message</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="programming-by-contract-契約プログラミング">Programming By Contract 契約プログラミング</h3>
+<p>プログラムコードの中にプログラムが満たすべき仕様についての記述を盛り込む事で設計の安全性を高める技法。<br>
+コードを呼ぶ側が事前条件と不変条件を満たす義務を負うことで、呼ばれたコードはその条件が恒真であるとの前提を利益として得る。<br>
 引き換えに、呼ばれたコードは事後条件と不変条件を義務として負い、呼ぶ側の利益としてこれを保証する。</p>
-
 <ul>
 <li>事前条件 (precondition)
-
 <ul>
 <li>サブルーチンの開始時に、これを呼ぶ側で保証すべき性質。例：引数チェック。</li>
-</ul></li>
+</ul>
+</li>
 <li>事後条件 (postcondition)
-
 <ul>
 <li>サブルーチンが、終了時に保証すべき性質。例：戻り値チェック。</li>
-</ul></li>
+</ul>
+</li>
 <li>不変条件 (invariant)
-
 <ul>
 <li>クラスなどのオブジェクトがその外部に公開しているすべての操作の開始時と終了時に保証されるべき、オブジェクト毎に共通した性質。</li>
-</ul></li>
+</ul>
+</li>
 </ul>
 
   </article>
@@ -445,7 +415,9 @@
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

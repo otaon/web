@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>継続 on Lazy Lambda</title>
@@ -6,11 +6,7 @@
     <description>Recent content in 継続 on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Thu, 07 Mar 2019 02:00:00 +0900</lastBuildDate>
-    
-	<atom:link href="https://otaon.github.io/web/ja-jp/tag/%E7%B6%99%E7%B6%9A/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Thu, 07 Mar 2019 02:00:00 +0900</lastBuildDate><atom:link href="https://otaon.github.io/web/ja-jp/tag/%E7%B6%99%E7%B6%9A/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Common Lispで継続・継続渡し方式(cps)を学ぶ</title>
       <link>https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp%E3%81%A7%E7%B6%99%E7%B6%9A%E7%B6%99%E7%B6%9A%E6%B8%A1%E3%81%97%E6%96%B9%E5%BC%8Fcps%E3%82%92%E5%AD%A6%E3%81%B6/</link>

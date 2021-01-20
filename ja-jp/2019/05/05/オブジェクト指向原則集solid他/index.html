@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>オブジェクト指向原則集(SOLID、他) · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,16 +22,13 @@
 <meta property="og:description" content="目的 プログラミングや設計において守るべき、クラスに関する原則である「SOLID原則」についての学習記録を残す。 参考文献 SOLIDについて POSTD -" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96/" />
-<meta property="article:published_time" content="2019-05-05T00:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-05-05T00:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-05-05T00:00:00+09:00" />
+<meta property="article:modified_time" content="2019-05-05T00:00:00+09:00" />
 <meta itemprop="name" content="オブジェクト指向原則集(SOLID、他)">
 <meta itemprop="description" content="目的 プログラミングや設計において守るべき、クラスに関する原則である「SOLID原則」についての学習記録を残す。 参考文献 SOLIDについて POSTD -">
-
-
-<meta itemprop="datePublished" content="2019-05-05T00:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-05-05T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="9115">
+<meta itemprop="datePublished" content="2019-05-05T00:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-05-05T00:00:00+09:00" />
+<meta itemprop="wordCount" content="8962">
 
 
 
@@ -131,9 +128,9 @@
                 <a href="https://otaon.github.io/web/ja-jp/tag/lsp/">LSP</a>, 
                 <a href="https://otaon.github.io/web/ja-jp/tag/ocp/">OCP</a>, 
                 <a href="https://otaon.github.io/web/ja-jp/tag/oop/">OOP</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/programming/">programming</a>, 
                 <a href="https://otaon.github.io/web/ja-jp/tag/solid/">SOLID</a>, 
                 <a href="https://otaon.github.io/web/ja-jp/tag/srp/">SRP</a>, 
-                <a href="https://otaon.github.io/web/ja-jp/tag/programming/">programming</a>, 
                 <a href="https://otaon.github.io/web/ja-jp/tag/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91/">オブジェクト指向</a>
           </p>
         
@@ -152,215 +149,180 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#目的">目的</a></li>
-<li><a href="#参考文献">参考文献</a></li>
-<li><a href="#クラスに関する原則-solid原則-について">クラスに関する原則「SOLID原則」について</a>
-<ul>
-<li><a href="#s-single-responsibility-principle-srp-単一責任の原則"><strong>S</strong> : Single Responsibility Principle (SRP) : 単一責任の原則</a></li>
-<li><a href="#o-the-open-closed-principle-ocp-開放-閉鎖原則"><strong>O</strong> : The Open-Closed Principle (OCP) : 開放／閉鎖原則</a></li>
-<li><a href="#l-the-liskov-substitution-principle-lsp-リスコフの置換原則"><strong>L</strong> : The Liskov Substitution Principle (LSP) : リスコフの置換原則</a></li>
-<li><a href="#i-the-interface-segregation-principle-isp-インターフェース分離の原則"><strong>I</strong> : The Interface Segregation Principle (ISP) : インターフェース分離の原則</a>
-<ul>
-<li><a href="#インターフェース分離の原則に違反したコード">インターフェース分離の原則に違反したコード</a></li>
-<li><a href="#インターフェース分離の原則に適合したコード">インターフェース分離の原則に適合したコード</a></li>
-</ul></li>
-<li><a href="#d-the-dependency-inversion-principle-dip-依存性逆転の原理"><strong>D</strong> : The Dependency Inversion Principle (DIP) : 依存性逆転の原理</a></li>
-</ul></li>
-<li><a href="#パッケージに関する原則">パッケージに関する原則</a>
-<ul>
-<li><a href="#パッケージ凝集に関する原則">パッケージ凝集に関する原則</a>
-<ul>
-<li><a href="#the-reuse-release-equivalence-principle-rep-再利用開放等価原則">The Reuse/Release Equivalence Principle (REP) : 再利用開放等価原則</a></li>
-<li><a href="#the-common-reuse-principle-crp-共通再利用原則">The Common Reuse Principle (CRP) : 共通再利用原則</a></li>
-<li><a href="#the-common-closure-principle-ccp-共通閉鎖原則">The Common Closure Principle (CCP) : 共通閉鎖原則</a></li>
-</ul></li>
-<li><a href="#パッケージ結合に関する原則">パッケージ結合に関する原則</a>
-<ul>
-<li><a href="#the-acyclic-dependencies-principle-adp-非環式依存原則">The Acyclic Dependencies Principle (ADP) : 非環式依存原則</a></li>
-<li><a href="#the-stable-dependencies-principle-sdp-安定依存原則">The Stable Dependencies Principle (SDP) : 安定依存原則</a></li>
-<li><a href="#the-stable-abstractions-principle-sap-安定抽象概念原則">The Stable Abstractions Principle (SAP) : 安定抽象概念原則</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#その他の原則">その他の原則</a>
-<ul>
-<li><a href="#the-law-of-demeter-デメテルの法則">The Law of Demeter（デメテルの法則）</a>
-<ul>
-<li><a href="#オブジェクト指向におけるデメテルの法則の適用">オブジェクト指向におけるデメテルの法則の適用</a></li>
-<li><a href="#デメテルの法則の利点と欠点">デメテルの法則の利点と欠点</a>
-<ul>
-<li><a href="#利点">利点</a></li>
-<li><a href="#欠点">欠点</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#s--single-responsibility-principle-srp--単一責任の原則"><strong>S</strong> : Single Responsibility Principle (SRP) : 単一責任の原則</a></li>
+    <li><a href="#o--the-open-closed-principle-ocp--開放閉鎖原則"><strong>O</strong> : The Open-Closed Principle (OCP) : 開放／閉鎖原則</a></li>
+    <li><a href="#l--the-liskov-substitution-principle-lsp--リスコフの置換原則"><strong>L</strong> : The Liskov Substitution Principle (LSP) : リスコフの置換原則</a></li>
+    <li><a href="#i--the-interface-segregation-principle-isp--インターフェース分離の原則"><strong>I</strong> : The Interface Segregation Principle (ISP) : インターフェース分離の原則</a>
+      <ul>
+        <li><a href="#インターフェース分離の原則に違反したコード">インターフェース分離の原則に違反したコード</a></li>
+        <li><a href="#インターフェース分離の原則に適合したコード">インターフェース分離の原則に適合したコード</a></li>
+      </ul>
+    </li>
+    <li><a href="#d--the-dependency-inversion-principle-dip--依存性逆転の原理"><strong>D</strong> : The Dependency Inversion Principle (DIP) : 依存性逆転の原理</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#パッケージ凝集に関する原則">パッケージ凝集に関する原則</a>
+      <ul>
+        <li><a href="#the-reuserelease-equivalence-principle-rep--再利用開放等価原則">The Reuse/Release Equivalence Principle (REP) : 再利用開放等価原則</a></li>
+        <li><a href="#the-common-reuse-principle-crp--共通再利用原則">The Common Reuse Principle (CRP) : 共通再利用原則</a></li>
+        <li><a href="#the-common-closure-principle-ccp--共通閉鎖原則">The Common Closure Principle (CCP) : 共通閉鎖原則</a></li>
+      </ul>
+    </li>
+    <li><a href="#パッケージ結合に関する原則">パッケージ結合に関する原則</a>
+      <ul>
+        <li><a href="#the-acyclic-dependencies-principle-adp--非環式依存原則">The Acyclic Dependencies Principle (ADP) : 非環式依存原則</a></li>
+        <li><a href="#the-stable-dependencies-principle-sdp--安定依存原則">The Stable Dependencies Principle (SDP) : 安定依存原則</a></li>
+        <li><a href="#the-stable-abstractions-principle-sap--安定抽象概念原則">The Stable Abstractions Principle (SAP) : 安定抽象概念原則</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#the-law-of-demeterデメテルの法則">The Law of Demeter（デメテルの法則）</a>
+      <ul>
+        <li><a href="#オブジェクト指向におけるデメテルの法則の適用">オブジェクト指向におけるデメテルの法則の適用</a></li>
+        <li><a href="#デメテルの法則の利点と欠点">デメテルの法則の利点と欠点</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h1 id="目的">目的</h1>
-
+  <h1 id="目的">目的</h1>
 <p>プログラミングや設計において守るべき、クラスに関する原則である「SOLID原則」についての学習記録を残す。</p>
-
 <h1 id="参考文献">参考文献</h1>
-
 <ul>
 <li>SOLIDについて
-
 <ul>
-<li><a href="https://postd.cc/solid-principles-every-developer-should-know/">POSTD - 開発者が知っておくべきSOLIDの原則</a></li>
+<li><a href="https://postd.cc/solid-principles-every-developer-should-know/">POSTD - 開発者が知っておくべきSOLIDの原則</a>
+<ul>
 <li>原文 <a href="https://blog.bitsrc.io/solid-principles-every-developer-should-know-b3bfa96bb688">Bits and Pieces - SOLID Principles every Developer Should Know</a></li>
+</ul>
+</li>
 <li><a href="https://qiita.com/kenjihiranabe/items/9eddc70e279861992274">Qiita - オブジェクト指向の法則集</a></li>
 <li><a href="https://ja.wikipedia.org/wiki/%E9%96%8B%E6%94%BE/%E9%96%89%E9%8E%96%E5%8E%9F%E5%89%87">Wikipedia - 開放/閉鎖原則</a></li>
 <li><a href="https://ja.wikipedia.org/wiki/%E3%83%AA%E3%82%B9%E3%82%B3%E3%83%95%E3%81%AE%E7%BD%AE%E6%8F%9B%E5%8E%9F%E5%89%87">Wikipedia - リスコフの置換原則</a></li>
 <li><a href="https://ja.wikipedia.org/wiki/%E4%BE%9D%E5%AD%98%E6%80%A7%E9%80%86%E8%BB%A2%E3%81%AE%E5%8E%9F%E5%89%87">Wikipedia - 依存性逆転の原則</a></li>
 <li><a href="https://www.slideshare.net/ShintaroKurosawa/20160526-62511723">SlideShare - 20160526 依存関係逆転の原則</a></li>
 <li><a href="http://etc9.hatenablog.com/entry/20090925/1253883259">The Interface Segregation Principle (ISP)　インターフェース分離原則</a></li>
-</ul></li>
+</ul>
+</li>
 <li>Graphvizについて(本稿の図作成に使用)
-
 <ul>
 <li><a href="https://iroha208.com/categories/graphviz/02/">いろは二〇八 - Graphvizの基本 - 02</a></li>
 <li><a href="https://qiita.com/rubytomato@github/items/51779135bc4b77c8c20d">Qiita - Graphvizとdot言語でグラフを描く方法のまとめ</a></li>
 <li><a href="https://www.graphviz.org/doc/info/attrs.html">Graphviz - Node, Edge and Graph Attributes</a></li>
-</ul></li>
+</ul>
+</li>
 <li>その他
-
 <ul>
 <li>本稿の各引用箇所に記載</li>
-</ul></li>
 </ul>
-
-<h1 id="クラスに関する原則-solid原則-について">クラスに関する原則「SOLID原則」について</h1>
-
+</li>
+</ul>
+<h1 id="クラスに関する原則solid原則について">クラスに関する原則「SOLID原則」について</h1>
 <p>SOLID原則とは、プログラミングや設計において守るべき主要な原則5つをまとめたもの。</p>
-
 <table>
 <thead>
 <tr>
-<th>&nbsp;頭文字</th>
-<th>&nbsp;略称</th>
-<th>&nbsp;英名</th>
-<th>&nbsp;和名</th>
+<th> 頭文字</th>
+<th> 略称</th>
+<th> 英名</th>
+<th> 和名</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
-<td>&nbsp;<strong>S</strong></td>
-<td>&nbsp;SRP</td>
-<td>&nbsp;Single Responsibility Principle</td>
-<td>&nbsp;単一責任の原則</td>
+<td> <strong>S</strong></td>
+<td> SRP</td>
+<td> Single Responsibility Principle</td>
+<td> 単一責任の原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;<strong>O</strong></td>
-<td>&nbsp;OCP</td>
-<td>&nbsp;The Open-Closed Principle</td>
-<td>&nbsp;開放／閉鎖原則</td>
+<td> <strong>O</strong></td>
+<td> OCP</td>
+<td> The Open-Closed Principle</td>
+<td> 開放／閉鎖原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;<strong>L</strong></td>
-<td>&nbsp;LSP</td>
-<td>&nbsp;The Liskov Substitution Principle</td>
-<td>&nbsp;リスコフの置換原則</td>
+<td> <strong>L</strong></td>
+<td> LSP</td>
+<td> The Liskov Substitution Principle</td>
+<td> リスコフの置換原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;<strong>I</strong></td>
-<td>&nbsp;ISP</td>
-<td>&nbsp;The Interface Segregation Principle</td>
-<td>&nbsp;インターフェース分離原則</td>
+<td> <strong>I</strong></td>
+<td> ISP</td>
+<td> The Interface Segregation Principle</td>
+<td> インターフェース分離原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;<strong>D</strong></td>
-<td>&nbsp;DIP</td>
-<td>&nbsp;The Dependency Inversion Principle</td>
-<td>&nbsp;依存性逆転の原理</td>
+<td> <strong>D</strong></td>
+<td> DIP</td>
+<td> The Dependency Inversion Principle</td>
+<td> 依存性逆転の原理</td>
 </tr>
 </tbody>
 </table>
-
-<h2 id="s-single-responsibility-principle-srp-単一責任の原則"><strong>S</strong> : Single Responsibility Principle (SRP) : 単一責任の原則</h2>
-
-<h2 id="o-the-open-closed-principle-ocp-開放-閉鎖原則"><strong>O</strong> : The Open-Closed Principle (OCP) : 開放／閉鎖原則</h2>
-
+<h2 id="s--single-responsibility-principle-srp--単一責任の原則"><strong>S</strong> : Single Responsibility Principle (SRP) : 単一責任の原則</h2>
+<h2 id="o--the-open-closed-principle-ocp--開放閉鎖原則"><strong>O</strong> : The Open-Closed Principle (OCP) : 開放／閉鎖原則</h2>
 <p>OCPは、プログラムや設計の拡張・修正に対する下記の原則のこと。</p>
-
 <ul>
 <li>拡張に対して開いているべき (開放原則(open))
-
 <ul>
 <li>機能拡張はコード修正によってではなく、コードの追加によって実現せよ</li>
 <li>これが守られている⇒既存コード(共通ライブラリ等)を変更せずに機能拡張できる</li>
 <li>これが守られていない⇒既存コード(共通ライブラリ等)を変更する必要がある</li>
-</ul></li>
+</ul>
+</li>
 <li>修正に対して閉じているべき (閉鎖原則(closed))
-
 <ul>
 <li>コードに修正が必要になった時、不要に影響範囲が漏れ出ることを避けよ</li>
 <li>これが守られている⇒修正コードのみテストすれば良い(共通ライブラリ等はテストせずに済む)</li>
 <li>これが守られていない⇒修正コード(修正の入った共通ライブラリ等もテストする必要がある)</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <p>上記の原則を満たすコードは、機能拡張の際に既存のコードに影響しないと考えて良い。(トートロジーじみているが。)</p>
-
 <p>開放/閉鎖原則の詳細については「<a href="/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E9%96%8B%E6%94%BE%E9%96%89%E9%8E%96%E5%8E%9F%E5%89%87%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/">オブジェクト指向原則集(SOLID、他):開放／閉鎖原則について</a>」を参照。</p>
-
-<h2 id="l-the-liskov-substitution-principle-lsp-リスコフの置換原則"><strong>L</strong> : The Liskov Substitution Principle (LSP) : リスコフの置換原則</h2>
-
+<h2 id="l--the-liskov-substitution-principle-lsp--リスコフの置換原則"><strong>L</strong> : The Liskov Substitution Principle (LSP) : リスコフの置換原則</h2>
 <blockquote>
-<p><code>T</code> 型のオブジェクト<code>x</code>に関して真となる属性を<code>q(x)</code>とする。<br />
+<p><code>T</code> 型のオブジェクト<code>x</code>に関して真となる属性を<code>q(x)</code>とする。<br>
 このとき<code>S</code>が<code>T</code> の派生型であれば、<code>S</code>型のオブジェクト<code>y</code> について<code>q(y)</code>が真となる。</p>
 </blockquote>
-
 <p><code>S</code>が<code>T</code>の派生型であれば、プログラム内で<code>T</code>型のオブジェクトが使われている箇所は全て<code>S</code>型のオブジェクトで置換可能であるべき。</p>
-
 <p>リスコフの置換原則を契約プログラミングに適用すると、契約と継承の相互作用に次のような制約をもたらす</p>
-
 <ul>
 <li>派生型は、事前条件を強めることはできない。つまり、上位の型よりも強い事前条件を持つ派生型を作ることはできない。
-
 <ul>
 <li>サブクラスは、スーパークラスが呼び出せる状況なら必ず呼び出せること。</li>
-</ul></li>
+</ul>
+</li>
 <li>派生型は、事後条件を弱めることはできない。つまり、上位の型よりも弱い事後条件を持つ派生型を作ることはできない。
-
 <ul>
 <li>サブクラスは、スーパークラスが達成することは必ず達成すること。</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <p>リスコフの置換原則の詳細については「<a href="/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E3%83%AA%E3%82%B9%E3%82%B3%E3%83%95%E3%81%AE%E7%BD%AE%E6%8F%9B%E5%8E%9F%E5%89%87%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/">オブジェクト指向原則集(SOLID、他):リスコフの置換原則について</a>」を参照。</p>
-
-<h2 id="i-the-interface-segregation-principle-isp-インターフェース分離の原則"><strong>I</strong> : The Interface Segregation Principle (ISP) : インターフェース分離の原則</h2>
-
+<h2 id="i--the-interface-segregation-principle-isp--インターフェース分離の原則"><strong>I</strong> : The Interface Segregation Principle (ISP) : インターフェース分離の原則</h2>
 <p>インターフェース分離の原則は、下記の通り。</p>
-
 <ul>
 <li>クライアントは自分が使うインタフェースだけを依存すべきである</li>
 <li>単一のインタフェースより複数のインタフェースを使うべきである</li>
 <li>インタフェースをクライアントごとに分離すべきである</li>
 </ul>
-
 <p>あるいは、下記のように言い表せる。</p>
-
 <blockquote>
-<p>顧客に特化した細粒度のインタフェースを作れ。<br />
+<p>顧客に特化した細粒度のインタフェースを作れ。<br>
 顧客は自分たちが使わないインターフェースに依存することを強いられるべきではない。</p>
 </blockquote>
-
 <p>つまり、一つのインターフェースに、不必要に多くのメソッドを定義するのは得策ではない。</p>
-
 <h3 id="インターフェース分離の原則に違反したコード">インターフェース分離の原則に違反したコード</h3>
-
 <p>下記のようにインターフェースを定義してしまうと、ユーザーが<code>Circle</code>クラスのみを欲していたとしても、下記のように、<code>DrawSquare()</code>、<code>DrawRectangle()</code>を定義しなければならない。</p>
 <div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">interface</span> <span class="n">IShape</span>
 <span class="p">{</span>
@@ -370,342 +332,269 @@
 <span class="p">}</span>
 
 <span class="k">class</span> <span class="nc">Circle</span> <span class="p">:</span> <span class="n">IShape</span> <span class="p">{</span>
-    <span class="k">public</span> <span class="k">void</span> <span class="n">DrawCircle</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="c1">// ...
-</span><span class="c1"></span>    <span class="p">}</span>
-    <span class="k">public</span> <span class="k">void</span> <span class="n">DrawSquare</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="c1">// ...
-</span><span class="c1"></span>    <span class="p">}</span>
-    <span class="k">public</span> <span class="k">void</span> <span class="n">DrawRectangle</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="c1">// ...
-</span><span class="c1"></span>    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<h3 id="インターフェース分離の原則に適合したコード">インターフェース分離の原則に適合したコード</h3>
-
+	<span class="k">public</span> <span class="k">void</span> <span class="n">DrawCircle</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="c1">// ...
+</span><span class="c1"></span>	<span class="p">}</span>
+	<span class="k">public</span> <span class="k">void</span> <span class="n">DrawSquare</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="c1">// ...
+</span><span class="c1"></span>	<span class="p">}</span>
+	<span class="k">public</span> <span class="k">void</span> <span class="n">DrawRectangle</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="c1">// ...
+</span><span class="c1"></span>	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="インターフェース分離の原則に適合したコード">インターフェース分離の原則に適合したコード</h3>
 <p>下記のように、インターフェースをユーザの用途に合わせて適切に分離して定義していれば、ユーザのクラスに余計なメソッドを定義せずに済む。</p>
 <div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">interface</span> <span class="n">ICircle</span>
 <span class="p">{</span>
-    <span class="k">void</span> <span class="n">DrawCircle</span><span class="p">();</span>
+	<span class="k">void</span> <span class="n">DrawCircle</span><span class="p">();</span>
 <span class="p">}</span>
 
 <span class="k">interface</span> <span class="n">ISquare</span>
 <span class="p">{</span>
-    <span class="k">void</span> <span class="n">DrawSquare</span><span class="p">();</span>
+	<span class="k">void</span> <span class="n">DrawSquare</span><span class="p">();</span>
 <span class="p">}</span>
 
 <span class="k">interface</span> <span class="n">IRectangle</span>
 <span class="p">{</span>
-    <span class="k">void</span> <span class="n">DrawRectangle</span><span class="p">();</span>
+	<span class="k">void</span> <span class="n">DrawRectangle</span><span class="p">();</span>
 <span class="p">}</span>
 
 <span class="k">class</span> <span class="nc">Circle</span> <span class="p">:</span> <span class="n">ICircle</span>
 <span class="p">{</span>
-    <span class="k">public</span> <span class="k">void</span> <span class="n">DrawCircle</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="c1">// ...
-</span><span class="c1"></span>    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<h2 id="d-the-dependency-inversion-principle-dip-依存性逆転の原理"><strong>D</strong> : The Dependency Inversion Principle (DIP) : 依存性逆転の原理</h2>
-
+	<span class="k">public</span> <span class="k">void</span> <span class="n">DrawCircle</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="c1">// ...
+</span><span class="c1"></span>	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h2 id="d--the-dependency-inversion-principle-dip--依存性逆転の原理"><strong>D</strong> : The Dependency Inversion Principle (DIP) : 依存性逆転の原理</h2>
 <p>この原則は、下記のことを表す。</p>
-
 <ul>
 <li>上位レベルのモジュールは、下位レベルのモジュールに依存すべきではない</li>
 <li>上位レベルのモジュール、下位レベルのモジュール、ともに抽象（abstractions)に依存すべき</li>
 <li>抽象は、詳細に依存してはならない</li>
 <li>詳細は、抽象に依存すべき</li>
 </ul>
-
 <p>依存性逆転の原理の詳細については「<a href="/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E4%BE%9D%E5%AD%98%E6%80%A7%E9%80%86%E8%BB%A2%E3%81%AE%E5%8E%9F%E7%90%86%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/">オブジェクト指向原則集(SOLID、他):依存性逆転の原理について</a>」を参照。</p>
-
-<hr />
-
+<hr>
 <h1 id="パッケージに関する原則">パッケージに関する原則</h1>
-
-<p>パッケージとは、複数のクラスをひとまとめにした単位。<br />
+<p>パッケージとは、複数のクラスをひとまとめにした単位。<br>
 このパッケージの構成に関しても、原則が存在する。</p>
-
 <p>最近では、2018年にO&rsquo;REILLYから、<a href="https://www.oreilly.com/library/view/principles-of-package/9781484241196/">Principles of Package Design: Creating Reusable Software Components</a>という電子書籍が出ており、これにも掲載されているらしい(未確認だが)。</p>
-
 <table>
 <thead>
 <tr>
-<th>&nbsp;種別</th>
-<th>&nbsp;略称</th>
-<th>&nbsp;英名</th>
-<th>&nbsp;和名</th>
+<th> 種別</th>
+<th> 略称</th>
+<th> 英名</th>
+<th> 和名</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
-<td>&nbsp;パッケージ凝集</td>
-<td>&nbsp;REP</td>
-<td>&nbsp;The Reuse/Release Equivalence Principle</td>
-<td>&nbsp;再利用開放等価原則</td>
+<td> パッケージ凝集</td>
+<td> REP</td>
+<td> The Reuse/Release Equivalence Principle</td>
+<td> 再利用開放等価原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;〃</td>
-<td>&nbsp;CRP</td>
-<td>&nbsp;The Common Reuse Principle</td>
-<td>&nbsp;共通再利用原則</td>
+<td> 〃</td>
+<td> CRP</td>
+<td> The Common Reuse Principle</td>
+<td> 共通再利用原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;〃</td>
-<td>&nbsp;CCP</td>
-<td>&nbsp;The Common Closure Principle</td>
-<td>&nbsp;共通閉鎖原則</td>
+<td> 〃</td>
+<td> CCP</td>
+<td> The Common Closure Principle</td>
+<td> 共通閉鎖原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;パッケージ結合</td>
-<td>&nbsp;ADP</td>
-<td>&nbsp;The Acyclic Dependencies Principle</td>
-<td>&nbsp;非環式依存原則</td>
+<td> パッケージ結合</td>
+<td> ADP</td>
+<td> The Acyclic Dependencies Principle</td>
+<td> 非環式依存原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;〃</td>
-<td>&nbsp;SDP</td>
-<td>&nbsp;The Stable Dependencies Principle</td>
-<td>&nbsp;安定依存原則</td>
+<td> 〃</td>
+<td> SDP</td>
+<td> The Stable Dependencies Principle</td>
+<td> 安定依存原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;〃</td>
-<td>&nbsp;SAP</td>
-<td>&nbsp;The Stable Abstractions Principle</td>
-<td>&nbsp;安定抽象概念原則</td>
+<td> 〃</td>
+<td> SAP</td>
+<td> The Stable Abstractions Principle</td>
+<td> 安定抽象概念原則</td>
 </tr>
 </tbody>
 </table>
-
 <h2 id="パッケージ凝集に関する原則">パッケージ凝集に関する原則</h2>
-
-<p>あるパッケージの責務分割に関する原則。<br />
+<p>あるパッケージの責務分割に関する原則。<br>
 この原則に則ると、パッケージを高凝集にできる。</p>
-
 <ul>
 <li><a href="https://ja.wikipedia.org/wiki/%E5%87%9D%E9%9B%86%E5%BA%A6">Wikipedia - 凝集度</a></li>
 </ul>
-
-<h3 id="the-reuse-release-equivalence-principle-rep-再利用開放等価原則">The Reuse/Release Equivalence Principle (REP) : 再利用開放等価原則</h3>
-
+<h3 id="the-reuserelease-equivalence-principle-rep--再利用開放等価原則">The Reuse/Release Equivalence Principle (REP) : 再利用開放等価原則</h3>
 <p>パッケージのリリースと再利用の関係に関する原則。</p>
-
 <p><a href="http://etc9.hatenablog.com/entry/20090926/1253974827">A Memorandum - The Reuse/Release Equivalence Principle (REP)　再利用開放等価原則</a></p>
-
 <blockquote>
 <p>個々のクラスを集めたパッケージに関する原則です。この REP は、パッケージを再利用可能にするためのシステムについて述べたものです。一般に、クラス単体は再利用可能ではありません。あるクラスは他のクラスに依存している場合がほとんどです。再利用可能にするには、クラス群をリリースする単位としてパッケージ化し、バージョン管理を行うようにすべきだ、ということです。そういうシステムがない限り再利用はうまくいかないということでしょう。</p>
-
 <p>再利用の単位（パッケージ）がリリースの単位より小さくなってはいけない。パッケージに含まれる個々のクラス単位で再利用するのではなく、パッケージごと再利用できるようにすべきである。つまり、リリースはパッケージの単位で行う必要がある。また、パッケージを分割する際には、それを再利用する側の視点に立って個々のパッケージを構築すべきである。</p>
 </blockquote>
-
 <p>リリースは、最小でもパッケージ単位で行うべきということ。
 パッケージ単位でリリースすれば、リリース毎のバージョン整合が取れている限りはシステムが整合する。
-反対に、例えばクラス毎でリリースしてしまうと、各クラスのバージョン違いが発生してシステムが破綻する恐れがある。<br />
+反対に、例えばクラス毎でリリースしてしまうと、各クラスのバージョン違いが発生してシステムが破綻する恐れがある。<br>
 ただし、バージョン設計が正しくなされていることが前提。</p>
-
-<h3 id="the-common-reuse-principle-crp-共通再利用原則">The Common Reuse Principle (CRP) : 共通再利用原則</h3>
-
-<p>パッケージが再利用できるように、パッケージを切る単位(=パッケージにどのクラスを入れるか)を考える際に則るべき原則。<br />
+<h3 id="the-common-reuse-principle-crp--共通再利用原則">The Common Reuse Principle (CRP) : 共通再利用原則</h3>
+<p>パッケージが再利用できるように、パッケージを切る単位(=パッケージにどのクラスを入れるか)を考える際に則るべき原則。<br>
 ユーザが使用するクラス/使用しないクラスという観点で述べられている。</p>
-
 <p><a href="http://etc9.hatenablog.com/entry/20091017/1255749130">A Memorandum - The Common Reuse Principle (CRP)　共通再利用原則</a></p>
-
 <blockquote>
 <p>パッケージに入れるクラスは何にするかという判定基準を再利用の観点から表したものです。あるパッケージをバージョンアップする場合、利用している側のソフトウェアにとって関係のないクラスが修正されたにも関わらず更新しなければならない、というのはおかしな話です。パッケージをリリースしたあとの配布の問題を考えてもこうなっていることが理想です。Interface Segregation Principle のパッケージ版といえます。</p>
-
 <p>パッケージを利用する側の視点に立ってパッケージを構築すること。クライアントから利用されないクラスは、同一パッケージに含めてはならない。パッケージにクライアントが利用しないクラスが含まれていれば、クライアントには本来関係のないそれらのクラスの修正に伴ってパッケージが再リリースされることになる。これは先の「再利用・リリース等値の原則」に違反することにもなる。</p>
 </blockquote>
-
 <p>パッケージは、ユーザが使用するクラスと使用しないクラスが混在しないようにすべきということ。
 さもなくば、ユーザが使用しないクラスのバージョンアップがあった場合にもパッケージが更新され、ユーザにバージョンアップを強いることになる。</p>
-
-<h3 id="the-common-closure-principle-ccp-共通閉鎖原則">The Common Closure Principle (CCP) : 共通閉鎖原則</h3>
-
+<h3 id="the-common-closure-principle-ccp--共通閉鎖原則">The Common Closure Principle (CCP) : 共通閉鎖原則</h3>
 <p>パッケージが再利用できるように、パッケージを切る単位(=パッケージにどのクラスを入れるか)を考える際に則るべき原則。</p>
-
 <p><a href="http://etc9.hatenablog.com/entry/20090927/1254035143">A Memorandum - The Common Closure Principle (CCP)　共通閉鎖原則</a></p>
-
 <blockquote>
 <p>クラスをどのようなパッケージとしてまとめるか？ という判定基準をメンテナンス性の観点から表したものです。ソフトウェアを修正しなければならない場合、その修正があるパッケージの中で閉じているにこしたことはありません。そのため将来起こるであろう変更を想定した場合、同時に修正することになるクラスは同じパッケージとして管理するべきです。</p>
-
 <p>この原則は、クラスに関する設計原則である「単一責任の原則」をパッケージに当てはめたものになります。クラスの変更理由が1つでなければいけないように、パッケージの変更理由も複数存在してはならないということになります。変更理由が複数のパッケージにまたがってしまえば保守性が低下します。つまり、パッケージは変更理由が同じクラス群で構成されるべきということです。こうすることでリリースの単位とパッケージの単位を同じにすることができるようになります。</p>
 </blockquote>
-
-<p>あるパッケージ内のクラスは、同種の変更理由に対して共に閉じている必要がある。<br />
-つまり、とある1つの理由で変更されるパッケージは、ただ1であるべき。<br />
+<p>あるパッケージ内のクラスは、同種の変更理由に対して共に閉じている必要がある。<br>
+つまり、とある1つの理由で変更されるパッケージは、ただ1であるべき。<br>
 さもなくば、何かの理由でソフトウェアの変更が発生した際、変更箇所が複数のパッケージにまたがってしまい保守性が低下する。</p>
-
 <h2 id="パッケージ結合に関する原則">パッケージ結合に関する原則</h2>
-
-<p>あるパッケージの結合度に関する原則。<br />
+<p>あるパッケージの結合度に関する原則。<br>
 この原則に則ると、パッケージ同士を疎結合にできる。</p>
-
 <ul>
 <li><a href="https://ja.wikipedia.org/wiki/%E7%B5%90%E5%90%88%E5%BA%A6">Wikipedia - 結合度</a></li>
 </ul>
-
-<h3 id="the-acyclic-dependencies-principle-adp-非環式依存原則">The Acyclic Dependencies Principle (ADP) : 非環式依存原則</h3>
-
+<h3 id="the-acyclic-dependencies-principle-adp--非環式依存原則">The Acyclic Dependencies Principle (ADP) : 非環式依存原則</h3>
 <p>パッケージの依存関係に関する原則。</p>
-
 <p><a href="http://etc9.hatenablog.com/entry/20091018/1255926653">A Memorandum - The Common Closure Principle (CCP)　非環式依存原則</a></p>
-
 <blockquote>
 <p>パッケージ間に依存の循環があれば、1つのパッケージ内のクラスに対する修正の影響が、関連するすべてのパッケージに及ぶ。パッケージをビルドする順番に制約があるような場合がよい例である。これではせっかくパッケージとして分割されていても、実際は分割されていないのと同じである。</p>
-
 <p>パッケージ間の循環を断つ手段として次の2つの方法が存在する。</p>
-
 <p>　1つ目の方法は、クラスに関する設計原則である「依存関係逆転の原則」を適用する方法。例えばパッケージMyGuiPartsのクラスXがパッケージMyApplicationのクラスYに依存しているような場合には、パッケージMyGuiParts内にクラスXが利用する抽象インターフェイスを配置し、その派生クラスとしてYクラスをパッケージMyApplication内に配置する。こうすることでパッケージMyGuiPartsとパッケージMyApplicationの依存関係が逆転して循環が断たれる。</p>
-
 <p>もう1つの方法は新たなパッケージを追加する方法である。新たに追加したパッケージに依存元が参照しているクラスを移動させることで循環が断たれる。</p>
 </blockquote>
-
-<p>パッケージの依存関係は、有向非巡回グラフとなっている必要がある。<br />
-つまり、依存関係が循環してはいけない。<br />
+<p>パッケージの依存関係は、有向非巡回グラフとなっている必要がある。<br>
+つまり、依存関係が循環してはいけない。<br>
 さもなくば、循環関係にあるパッケージ1つをバージョンアップしたい場合、そのパッケージと循環関係ある全パッケージを同時にバージョンアップする必要がある。</p>
-
-<h3 id="the-stable-dependencies-principle-sdp-安定依存原則">The Stable Dependencies Principle (SDP) : 安定依存原則</h3>
-
-<p>パッケージの依存関係に関する原則。<br />
+<h3 id="the-stable-dependencies-principle-sdp--安定依存原則">The Stable Dependencies Principle (SDP) : 安定依存原則</h3>
+<p>パッケージの依存関係に関する原則。<br>
 依存関係にあるパッケージ同士の安定性という観点で述べられている。</p>
-
 <p><a href="http://etc9.hatenablog.com/entry/20091019/1255961020">A Memorandum - The Common Closure Principle (CCP)　安定依存原則</a></p>
-
 <blockquote>
 <p>安定しているパッケージは修正が難しく、不安定なパッケージは修正が容易です。SDP では、パッケージの依存関係はより安定しているパッケージへと向かうべきだ、と言っています。言い変えると、パッケージは、自分よりも不安定なパッケージに依存してはならないとなります。変更が少ない安定したパッケージでも、依存先のパッケージが不安定であればその影響が及んで結局は不安定になってしまう。つまり、末端（依存されるクラスのない）のパッケージから依存関係を上にたどっていくに従って、パッケージの安定度が増すようにすべきである、ということになります。</p>
-
 <p>さらに突き詰めていくと、システム中のパッケージすべてが安定している必要はないということが言えます。先の「閉鎖性共通の原則」に従って構成されたパッケージは、変更理由が同じクラス群がまとめられており、いい換えると、変更することを意識して作られた不安定なパッケージということになります。システムに柔軟性を持たせようとすれば、このような不安定なパッケージと安定したパッケージを混在させる必要が出てきます。ただし、安定依存の原則に従うためには「依存関係逆転の原則」を使用してパッケージ間の依存関係を調整する必要があります。</p>
 </blockquote>
-
 <p>パッケージは、変更する可能性が高いパッケージに依存すべきではない。
-そして、変更する可能性が高いパッケージは、不安定なパッケージになっている。<br />
-したがって、パッケージの依存関係は、<strong>不安定なパッケージ &ndash;依存-&gt; 安定なパッケージ</strong>となっている必要がある。<br />
-ここで、安定なパッケージとは、下記の「安定している」に当たるパッケージのこと。<br />
+そして、変更する可能性が高いパッケージは、不安定なパッケージになっている。<br>
+したがって、パッケージの依存関係は、<strong>不安定なパッケージ &ndash;依存-&gt; 安定なパッケージ</strong>となっている必要がある。<br>
+ここで、安定なパッケージとは、下記の「安定している」に当たるパッケージのこと。<br>
 安定なパッケージは<strong>変更が難しい</strong>。反対に、不安定なパッケージは<strong>変更が容易</strong>。</p>
-
 <ul>
 <li>内側結合度 <code>Ca = このパッケージ内のクラスに依存するクラス数</code></li>
 <li>外側結合度 <code>Ce = パッケージ外のクラスに依存するパッケージ内のクラス数</code></li>
 <li>不安定度 <code>I = Ce / (Ca + Ce)</code></li>
 <li>安定している：<code>Iが小さい</code></li>
 </ul>
-
-<h3 id="the-stable-abstractions-principle-sap-安定抽象概念原則">The Stable Abstractions Principle (SAP) : 安定抽象概念原則</h3>
-
+<h3 id="the-stable-abstractions-principle-sap--安定抽象概念原則">The Stable Abstractions Principle (SAP) : 安定抽象概念原則</h3>
 <p>パッケージの依存関係と抽象度に関する原則。</p>
-
 <p><a href="http://etc9.hatenablog.com/entry/20091020/1256051472">A Memorandum - The Common Closure Principle (CCP)　安定抽象概念原則</a></p>
-
 <blockquote>
 <p>パッケージの依存関係は、抽象度が高いパッケージへと向かうべき、ということで SAP と SDP は Dependency Inversion Principleのパッケージ版となります。
 パッケージの安定度を高めるには、抽象的でなくてはならず、一方、不安定なパッケージは具体的でなくてはならない。パッケージの抽象度を高めれば その安定度も高くなる。その逆もまたしかりと。</p>
-
 <p>抽象クラスやインターフェイスは、その派生クラスによって振る舞いが拡張されます。これは抽象クラスやインターフェイスがその派生クラスより安定していることを示しています。つまり、安定したパッケージを構成するためは、パッケージ内での抽象クラスやインターフェイスの割合を高めればよいことになります。さらに、これらの抽象クラスやインターフェイスに依存する派生クラスをまとめて別のパッケージに配置すれば、そのパッケージは不安定なパッケージとなり、安定したパッケージに依存することになります。結果として自然に先の「安定依存の原則」に従うことになります。</p>
 </blockquote>
-
-<p>パッケージの安定度を最大にするためには、抽象度を最大化する必要がある。<br />
-また反対に、不安定なパッケージは、具象である必要がある。<br />
+<p>パッケージの安定度を最大にするためには、抽象度を最大化する必要がある。<br>
+また反対に、不安定なパッケージは、具象である必要がある。<br>
 したがって、パッケージの依存関係は、具象的なパッケージから抽象的なパッケージに向かうべき。</p>
-
-<hr />
-
+<hr>
 <h1 id="その他の原則">その他の原則</h1>
-
-<h2 id="the-law-of-demeter-デメテルの法則">The Law of Demeter（デメテルの法則）</h2>
-
+<h2 id="the-law-of-demeterデメテルの法則">The Law of Demeter（デメテルの法則）</h2>
 <p>デメテルの法則とは、1987年の末にかけてノースイースタン大学で作成された、オブジェクト指向プログラミングにおけるガイドライン。</p>
-
 <p><a href="https://ja.wikipedia.org/wiki/%E3%83%87%E3%83%A1%E3%83%86%E3%83%AB%E3%81%AE%E6%B3%95%E5%89%87">Wikipedia - デメテルの法則</a></p>
-
 <h3 id="オブジェクト指向におけるデメテルの法則の適用">オブジェクト指向におけるデメテルの法則の適用</h3>
-
 <p>Wikipediaの文章を少し変更しつつ引用する。</p>
-
 <blockquote>
-<p>オブジェクト指向プログラムにデメテルの法則を適用する場合には、この法則はより厳密に「関数/メソッドに関するデメテルの法則」(<em>Law of Demeter for Functions/Methods, LoD-F</em>) と言い表すことができる。<br />
+<p>オブジェクト指向プログラムにデメテルの法則を適用する場合には、この法則はより厳密に「関数/メソッドに関するデメテルの法則」(<em>Law of Demeter for Functions/Methods, LoD-F</em>) と言い表すことができる。<br>
 この場合、下記が成り立つ。</p>
-
 <ul>
 <li>あるオブジェクトAは別のオブジェクトBのサービスを要求してもよい
-
 <ul>
 <li>クラスA内でメソッド呼び出し<code>B.Method()</code>しても良い</li>
-</ul></li>
+</ul>
+</li>
 <li>オブジェクトAがオブジェクトBを<strong>経由して</strong>更にに別のオブジェクトCのサービスを要求してはならない。
-
 <ul>
 <li>クラスA内で<code>var c := B.GetC()</code>して得た<code>c</code>に対してメソッド呼び出し<code>c.Method()</code>してはならない。</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <p>これが望ましくないのは、オブジェクトAがオブジェクトBに対して、オブジェクトB自身の内部構造以上の知識を要求してしまうためである。 このような場合には、クラスBを変更し、クラスAがクラスBに対して行った要求を適切なBのサブコンポーネントに伝播させるようにすればよい。または、AがCへのリファレンスを持つようにして、AがCを直接呼ぶようにしてもよい。この法則に従えば、オブジェクトBが知っているのは自分自身の内部構造だけになる。</p>
 </blockquote>
-
 <p>つまり、下記コードは違反となる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">class</span> <span class="nc">A</span>
 <span class="p">{</span>
-    <span class="k">private</span> <span class="n">B</span> <span class="n">b</span> <span class="p">=</span> <span class="k">new</span> <span class="n">B</span><span class="p">();</span>
+	<span class="k">private</span> <span class="n">B</span> <span class="n">b</span> <span class="p">=</span> <span class="k">new</span> <span class="n">B</span><span class="p">();</span>
 
-    <span class="k">private</span> <span class="k">void</span> <span class="n">Method</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="n">b</span><span class="p">.</span><span class="n">GetC</span><span class="p">().</span><span class="n">Method</span><span class="p">();</span>  <span class="c1">// クラスAが直接参照していないクラスCに対してメソッド呼び出し(=違反)
-</span><span class="c1"></span>    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<p>上記を適合コードに修正する方法には、主に2通りある。</p>
-
+	<span class="k">private</span> <span class="k">void</span> <span class="n">Method</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="n">b</span><span class="p">.</span><span class="n">GetC</span><span class="p">().</span><span class="n">Method</span><span class="p">();</span>	<span class="c1">// クラスAが直接参照していないクラスCに対してメソッド呼び出し(=違反)
+</span><span class="c1"></span>	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><p>上記を適合コードに修正する方法には、主に2通りある。</p>
 <ul>
 <li>下記のように、クラスAがクラスCに対して行った要求を、クラスBが伝播するようにクラスBを修正する。</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">class</span> <span class="nc">A</span>
 <span class="p">{</span>
-    <span class="k">private</span> <span class="n">B</span> <span class="n">b</span> <span class="p">=</span> <span class="k">new</span> <span class="n">B</span><span class="p">();</span>
+	<span class="k">private</span> <span class="n">B</span> <span class="n">b</span> <span class="p">=</span> <span class="k">new</span> <span class="n">B</span><span class="p">();</span>
 
-    <span class="k">private</span> <span class="k">void</span> <span class="n">Method</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="n">b</span><span class="p">.</span><span class="n">GetCAndMethod</span><span class="p">();</span>
-    <span class="p">}</span>
+	<span class="k">private</span> <span class="k">void</span> <span class="n">Method</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="n">b</span><span class="p">.</span><span class="n">GetCAndMethod</span><span class="p">();</span>
+	<span class="p">}</span>
 <span class="p">}</span>
 
 <span class="k">class</span> <span class="nc">B</span>
 <span class="p">{</span>
-    <span class="k">private</span> <span class="n">C</span> <span class="n">c</span><span class="p">=</span> <span class="k">new</span> <span class="n">C</span><span class="p">();</span>
+	<span class="k">private</span> <span class="n">C</span> <span class="n">c</span><span class="p">=</span> <span class="k">new</span> <span class="n">C</span><span class="p">();</span>
 
-    <span class="k">public</span> <span class="n">C</span> <span class="n">GetC</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="k">return</span> <span class="n">c</span><span class="p">;</span>
-    <span class="p">}</span>
+	<span class="k">public</span> <span class="n">C</span> <span class="n">GetC</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">c</span><span class="p">;</span>
+	<span class="p">}</span>
 
-    <span class="c1">// このメソッドを新設
-</span><span class="c1"></span>    <span class="k">public</span> <span class="k">void</span> <span class="n">GetCAndMethod</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="n">GetC</span><span class="p">().</span><span class="n">Method</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<ul>
+	<span class="c1">// このメソッドを新設
+</span><span class="c1"></span>	<span class="k">public</span> <span class="k">void</span> <span class="n">GetCAndMethod</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="n">GetC</span><span class="p">().</span><span class="n">Method</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><ul>
 <li>下記のようにクラスA内にクラスCへの参照を持たせ、クラスAからクラスCへ直接要求するように修正する。</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">class</span> <span class="nc">A</span>
 <span class="p">{</span>
-    <span class="k">private</span> <span class="n">B</span> <span class="n">b</span> <span class="p">=</span> <span class="k">new</span> <span class="n">B</span><span class="p">();</span>
-    <span class="k">private</span> <span class="n">C</span> <span class="n">c</span><span class="p">;</span>    <span class="c1">// Cへの参照を直接持つ
+	<span class="k">private</span> <span class="n">B</span> <span class="n">b</span> <span class="p">=</span> <span class="k">new</span> <span class="n">B</span><span class="p">();</span>
+	<span class="k">private</span> <span class="n">C</span> <span class="n">c</span><span class="p">;</span>	<span class="c1">// Cへの参照を直接持つ
 </span><span class="c1"></span>
-    <span class="k">private</span> <span class="k">void</span> <span class="n">Method</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="n">c</span> <span class="p">=</span> <span class="n">b</span><span class="p">.</span><span class="n">GetC</span><span class="p">();</span>   <span class="c1">// Aが持つCへの参照をセットするだけなので問題ない
-</span><span class="c1"></span>        <span class="n">c</span><span class="p">.</span><span class="n">Method</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<blockquote>
+	<span class="k">private</span> <span class="k">void</span> <span class="n">Method</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="n">c</span> <span class="p">=</span> <span class="n">b</span><span class="p">.</span><span class="n">GetC</span><span class="p">();</span>	<span class="c1">// Aが持つCへの参照をセットするだけなので問題ない
+</span><span class="c1"></span>		<span class="n">c</span><span class="p">.</span><span class="n">Method</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><blockquote>
 <p>より形式的に言えば、関数に対するデメテルの法則に従った場合、オブジェクトO上のメソッドMが呼び出してもよいメソッドは以下のオブジェクトに属するメソッドのみに限定される。</p>
-
 <ol>
 <li>Oそれ自身(<code>this</code>)</li>
 <li>Mの引数に渡されたオブジェクト</li>
@@ -713,61 +602,49 @@
 <li>Oを直接的に構成するオブジェクト（Oのインスタンス変数）</li>
 </ol>
 </blockquote>
-
 <p>つまり、呼び出して良いメソッドは下記のパターンに限られる。(番号は上記と対応する)</p>
 <div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">class</span> <span class="nc">O</span>
 <span class="p">{</span>
-    <span class="k">private</span> <span class="n">OtherO3</span> <span class="n">otherO3</span><span class="p">;</span>
+	<span class="k">private</span> <span class="n">OtherO3</span> <span class="n">otherO3</span><span class="p">;</span>
 
-    <span class="k">public</span> <span class="k">void</span> <span class="n">M</span><span class="p">(</span><span class="n">OtherO</span> <span class="n">input</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="n">M2</span><span class="p">();</span>  <span class="c1">// OK (1.)
-</span><span class="c1"></span>        <span class="n">input</span><span class="p">.</span><span class="n">OtherOM</span><span class="p">();</span>    <span class="c1">// OK (2.)
-</span><span class="c1"></span>        <span class="p">(</span><span class="k">new</span> <span class="n">OtherO2</span><span class="p">).</span><span class="n">OtherO2M</span><span class="p">();</span>   <span class="c1">// OK (3.)
-</span><span class="c1"></span>        <span class="n">otherO3</span><span class="p">.</span><span class="n">OtherO3M</span><span class="p">();</span> <span class="c1">// OK (4.)
-</span><span class="c1"></span>    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<blockquote>
-<p>具体的には、他のメソッドの戻り値として返されたオブジェクトのメソッドの呼び出しを避けるということになる。最近のオブジェクト指向言語の多くではフィールド識別子としてドット(.)が採用されているが、そのような言語においてはこの法則は単純に「使えるドットは一つだけ」と言い表すこともできる。つまり、&rdquo;a.b.Method()&ldquo;という呼び出しは法則に違反しているが&rdquo;a.Method()&ldquo;という呼び出しは問題ない。なお、<strong>このアプローチの充足性については反論がある。</strong></p>
+	<span class="k">public</span> <span class="k">void</span> <span class="n">M</span><span class="p">(</span><span class="n">OtherO</span> <span class="n">input</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">this</span><span class="p">.</span><span class="n">M2</span><span class="p">();</span>	<span class="c1">// OK (1.)
+</span><span class="c1"></span>		<span class="n">input</span><span class="p">.</span><span class="n">OtherOM</span><span class="p">();</span>	<span class="c1">// OK (2.)
+</span><span class="c1"></span>		<span class="p">(</span><span class="k">new</span> <span class="n">OtherO2</span><span class="p">).</span><span class="n">OtherO2M</span><span class="p">();</span>	<span class="c1">// OK (3.)
+</span><span class="c1"></span>		<span class="n">otherO3</span><span class="p">.</span><span class="n">OtherO3M</span><span class="p">();</span>	<span class="c1">// OK (4.)
+</span><span class="c1"></span>	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><blockquote>
+<p>具体的には、他のメソッドの戻り値として返されたオブジェクトのメソッドの呼び出しを避けるということになる。最近のオブジェクト指向言語の多くではフィールド識別子としてドット(.)が採用されているが、そのような言語においてはこの法則は単純に「使えるドットは一つだけ」と言い表すこともできる。つまり、&ldquo;a.b.Method()&ldquo;という呼び出しは法則に違反しているが&quot;a.Method()&ldquo;という呼び出しは問題ない。なお、<strong>このアプローチの充足性については反論がある。</strong></p>
 </blockquote>
-
 <p>「使えるドットは一つだけ」がデメテルの法則を充足しないのは、例えば下記コードも許してしまうため。</p>
 <div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">public</span> <span class="k">void</span> <span class="n">Method</span><span class="p">(</span><span class="n">B</span> <span class="n">b</span><span class="p">)</span>
 <span class="p">{</span>
-    <span class="kt">var</span> <span class="n">c</span> <span class="p">=</span> <span class="n">b</span><span class="p">.</span><span class="n">GetC</span><span class="p">();</span>   <span class="c1">// 一時変数を挟むだけでOKとみなされてしまう
-</span><span class="c1"></span>    <span class="n">c</span><span class="p">.</span><span class="n">Method</span><span class="p">();</span>
-<span class="p">}</span></code></pre></div>
-<blockquote>
+	<span class="kt">var</span> <span class="n">c</span> <span class="p">=</span> <span class="n">b</span><span class="p">.</span><span class="n">GetC</span><span class="p">();</span>	<span class="c1">// 一時変数を挟むだけでOKとみなされてしまう
+</span><span class="c1"></span>	<span class="n">c</span><span class="p">.</span><span class="n">Method</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div><blockquote>
 <p>簡単な例として、犬を散歩に連れ出すことを考える。この際、犬の足に直接「歩け」と命じるのはおかしいだろう。この場合は、犬に対して命令し、自分の足の面倒は自分で見させるのが正しい方法だといえる。</p>
 </blockquote>
-
 <h3 id="デメテルの法則の利点と欠点">デメテルの法則の利点と欠点</h3>
-
 <h4 id="利点">利点</h4>
-
 <blockquote>
 <p>デメテルの法則の利点としては、結果的にソフトウェアがよりメンテナンスしやすく、柔軟なものになりやすいという点が挙げられる。オブジェクトが他のオブジェクトの内部構造に依存することが少なくなるため、オブジェクトのコンテナを呼び出し側の変更なしに修正することができる。</p>
-
 <p>Basiliらによる1996年の実験では、デメテルの法則がソフトウェアの欠陥の発生確率を低下させるのに有効であることが示唆されている。</p>
-
 <p>マルチレイヤアーキテクチャは、ソフトウェアシステムにおいてデメテルの法則を系統的に実装するためのメカニズムとして捉えることができる。 レイヤ化されたアーキテクチャにおいて、各レイヤ中のコードは自分の属するレイヤと直下のレイヤのコードのみを呼び出すことができる。直下のレイヤをスキップして他のレイヤにアクセスした場合には、アーキテクチャに違反していることになる。</p>
 </blockquote>
-
 <h4 id="欠点">欠点</h4>
-
 <blockquote>
-<p>デメテルの法則の欠点としては、時として数多くの&rdquo;ラッパー&rdquo;メソッド（デメテルのTransmogrifierと呼ばれる）を作成する必要があるという点が挙げられる。このメソッドは自分自身の呼び出しを別のコンポーネントに委譲するためのものである。さらに、自分自身が含んでいるクラスのメソッドを呼び出せるようにするためにインタフェースが巨大になり、結果としてクラスの凝集度が低下するという欠点もある。</p>
+<p>デメテルの法則の欠点としては、時として数多くの&quot;ラッパー&quot;メソッド（デメテルのTransmogrifierと呼ばれる）を作成する必要があるという点が挙げられる。このメソッドは自分自身の呼び出しを別のコンポーネントに委譲するためのものである。さらに、自分自身が含んでいるクラスのメソッドを呼び出せるようにするためにインタフェースが巨大になり、結果としてクラスの凝集度が低下するという欠点もある。</p>
 </blockquote>
-
-<p>利点と欠点を読んで思ったが、結局は、デメテルの法則は厳格すぎて実用性を削いでいると思う。<br />
-厳格に守るべきは、メソッド(例:<code>C c = b.GetC()</code>)呼び出しで得られた他オブジェクト(例:<code>c</code>)の<strong>内部構造</strong>に依存しないという点ではないか?<br />
+<p>利点と欠点を読んで思ったが、結局は、デメテルの法則は厳格すぎて実用性を削いでいると思う。<br>
+厳格に守るべきは、メソッド(例:<code>C c = b.GetC()</code>)呼び出しで得られた他オブジェクト(例:<code>c</code>)の<strong>内部構造</strong>に依存しないという点ではないか?<br>
 メソッドがインターフェースを返すようにし(例:<code>IC ic = b.GetIC()</code>)、そのインターフェースが提供するメソッド(例:<code>Method()</code>)は呼び出せるようにすれば良いと思う(例:<code>ic.Method()</code>)。こうすれば下記が実現できる。</p>
-
 <ul>
 <li>呼び出し元クラス(例:<code>A</code>)からは、メソッド呼び出しで得られた他オブジェクト(例:<code>ic</code>)を直接使用できる。</li>
 <li>メソッドが呼び出された側(例:<code>B</code>)では、返り値のオブジェクト自体(例:クラス<code>C</code>)ではなく、インターフェース(例:インターフェース<code>IC</code>)を保証するだけで済む(返り値のオブジェクトの内部構造に依存しなくなる)。</li>
 </ul>
-
 <p>…と、ここまで書いているととても当たり前のことしか言っていないように思う。実際、「メソッド利用者側にオブジェクトを返す際には、実体ではなくインターフェースを返す」というのは、よく見かける。上記のような流れで、インターフェースが活躍するようになったのかもしれない。</p>
 
   </article>
@@ -842,7 +719,9 @@
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

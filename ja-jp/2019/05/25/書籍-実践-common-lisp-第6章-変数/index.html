@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>書籍 実践 Common Lisp 第6章 変数 · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="6.1 変数の基礎 Common Lispは、動的型付け(dynamically typed)であり、型エラーは動的に検出される。 また、強い型付け(strongl" />
+  <meta name="description" content="6.1 変数の基礎 Common Lispは、**動的型付け(dynamically typed)**であり、型エラーは動的に検出される。 また、**強い型付け(s" />
 
   <meta name="keywords" content="programming, make" />
 
@@ -19,26 +19,23 @@
 
 
 <meta property="og:title" content="書籍 実践 Common Lisp 第6章 変数" />
-<meta property="og:description" content="6.1 変数の基礎 Common Lispは、動的型付け(dynamically typed)であり、型エラーは動的に検出される。 また、強い型付け(strongl" />
+<meta property="og:description" content="6.1 変数の基礎 Common Lispは、**動的型付け(dynamically typed)**であり、型エラーは動的に検出される。 また、**強い型付け(s" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/05/25/%E6%9B%B8%E7%B1%8D-%E5%AE%9F%E8%B7%B5-common-lisp-%E7%AC%AC6%E7%AB%A0-%E5%A4%89%E6%95%B0/" />
-<meta property="article:published_time" content="2019-05-25T00:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-05-25T00:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-05-25T00:00:00+09:00" />
+<meta property="article:modified_time" content="2019-05-25T00:00:00+09:00" />
 <meta itemprop="name" content="書籍 実践 Common Lisp 第6章 変数">
-<meta itemprop="description" content="6.1 変数の基礎 Common Lispは、動的型付け(dynamically typed)であり、型エラーは動的に検出される。 また、強い型付け(strongl">
-
-
-<meta itemprop="datePublished" content="2019-05-25T00:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-05-25T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="3053">
+<meta itemprop="description" content="6.1 変数の基礎 Common Lispは、**動的型付け(dynamically typed)**であり、型エラーは動的に検出される。 また、**強い型付け(s">
+<meta itemprop="datePublished" content="2019-05-25T00:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-05-25T00:00:00+09:00" />
+<meta itemprop="wordCount" content="3065">
 
 
 
 <meta itemprop="keywords" content="lisp,実践-Common-Lisp," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="書籍 実践 Common Lisp 第6章 変数"/>
-<meta name="twitter:description" content="6.1 変数の基礎 Common Lispは、動的型付け(dynamically typed)であり、型エラーは動的に検出される。 また、強い型付け(strongl"/>
+<meta name="twitter:description" content="6.1 変数の基礎 Common Lispは、**動的型付け(dynamically typed)**であり、型エラーは動的に検出される。 また、**強い型付け(s"/>
 </head>
 <body>
   
@@ -145,143 +142,126 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#6-1-変数の基礎">6.1 変数の基礎</a></li>
-<li><a href="#6-2-レキシカル変数とクロージャ">6.2 レキシカル変数とクロージャ</a></li>
-<li><a href="#6-3-ダイナミック変数-スペシャル変数">6.3 ダイナミック変数(=スペシャル変数)</a></li>
-<li><a href="#6-4-定数">6.4 定数</a></li>
-<li><a href="#6-5-代入">6.5 代入</a></li>
-<li><a href="#6-6-ジェネリックな代入">6.6 ジェネリックな代入</a></li>
-<li><a href="#6-7-場所の値を変更する別の方法">6.7 場所の値を変更する別の方法</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#61-変数の基礎">6.1 変数の基礎</a></li>
+    <li><a href="#62-レキシカル変数とクロージャ">6.2 レキシカル変数とクロージャ</a></li>
+    <li><a href="#63-ダイナミック変数スペシャル変数">6.3 ダイナミック変数(=スペシャル変数)</a></li>
+    <li><a href="#64-定数">6.4 定数</a></li>
+    <li><a href="#65-代入">6.5 代入</a></li>
+    <li><a href="#66-ジェネリックな代入">6.6 ジェネリックな代入</a></li>
+    <li><a href="#67-場所の値を変更する別の方法">6.7 場所の値を変更する別の方法</a></li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h2 id="6-1-変数の基礎">6.1 変数の基礎</h2>
-
+  <h2 id="61-変数の基礎">6.1 変数の基礎</h2>
 <ul>
-<li>Common Lispは、<strong>動的型付け(dynamically typed)</strong>であり、型エラーは動的に検出される。<br /></li>
-<li>また、<strong>強い型付け(strongly typed)</strong>であり、全ての型エラーを検出できる。<br />
-言い換えると、あるオブジェクトを別のクラスのインスタンスとして扱う方法は存在しない。<br />
+<li>Common Lispは、**動的型付け(dynamically typed)**であり、型エラーは動的に検出される。</li>
+<li>また、**強い型付け(strongly typed)**であり、全ての型エラーを検出できる。<br>
+言い換えると、あるオブジェクトを別のクラスのインスタンスとして扱う方法は存在しない。<br>
 ただし、コンパイラのオプションによって、ある変数が特定の型であると宣言しておいて実行時のチェックをオフにできる。</li>
 <li>Common Lispにおける全ての値は、少なくとも概念上は<strong>オブジェクトへの参照</strong>。
-
 <ul>
 <li>プリミティブなオブジェクト(巨大ではない数値や文字列)はイミュータブルのため、メモリ上に直接展開される。</li>
-</ul></li>
 </ul>
-
-<p>特殊オペレータ<code>let</code>を使うことで、何らかの値を変数に束縛できる。<br />
+</li>
+</ul>
+<p>特殊オペレータ<code>let</code>を使うことで、何らかの値を変数に束縛できる。<br>
 下記コードのとおり、<code>let</code>では、より内部の束縛が優先される。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">x</span> <span class="s">&#34;outer&#34;</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">princ</span> <span class="nv">x</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">x</span> <span class="s">&#34;inner&#34;</span><span class="p">))</span>
-    <span class="p">(</span><span class="nv">princ</span> <span class="nv">x</span><span class="p">)))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">x</span> <span class="s">&#34;outer&#34;</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">princ</span> <span class="nv">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">x</span> <span class="s">&#34;inner&#34;</span><span class="p">))</span>
+    <span class="p">(</span><span class="nf">princ</span> <span class="nv">x</span><span class="p">)))</span>
 <span class="c1">; =&gt;</span>
 <span class="c1">; outer</span>
-<span class="c1">; inner</span></code></pre></div>
-<p>特殊オペレータ<code>let*</code>では、初期化フォームでの各変数が参照する初期値のフォームで、変数リストの中で前に出てきたものを使うことができる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">let*</span> <span class="p">((</span><span class="nv">x</span> <span class="mi">10</span><span class="p">)</span> <span class="p">(</span><span class="nv">y</span> <span class="p">(</span><span class="nv">*</span> <span class="nv">x</span> <span class="mi">2</span><span class="p">)))</span>
-  <span class="p">(</span><span class="nv">princ</span> <span class="nv">y</span><span class="p">))</span>
-<span class="c1">; =&gt; 20</span></code></pre></div>
-<h2 id="6-2-レキシカル変数とクロージャ">6.2 レキシカル変数とクロージャ</h2>
-
-<p>Common Lispにおける束縛フォームが導入する変数は、すべてデフォルトでは<strong>レキシカルなスコープ</strong>を持つ。<br />
+<span class="c1">; inner</span>
+</code></pre></div><p>特殊オペレータ<code>let*</code>では、初期化フォームでの各変数が参照する初期値のフォームで、変数リストの中で前に出てきたものを使うことができる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="k">let*</span> <span class="p">((</span><span class="nv">x</span> <span class="mi">10</span><span class="p">)</span> <span class="p">(</span><span class="nv">y</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">x</span> <span class="mi">2</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nf">princ</span> <span class="nv">y</span><span class="p">))</span>
+<span class="c1">; =&gt; 20</span>
+</code></pre></div><h2 id="62-レキシカル変数とクロージャ">6.2 レキシカル変数とクロージャ</h2>
+<p>Common Lispにおける束縛フォームが導入する変数は、すべてデフォルトでは<strong>レキシカルなスコープ</strong>を持つ。<br>
 レキシカルなスコープを持つ変数は、束縛フォームの内部にあるコードだけが参照できる。</p>
-
 <p>ただし、Common Lispはクロージャをサポートしているため、予め束縛した値は、関数オブジェクトを持ち運んだ後も生き残っている。
 したがって、下記コードが実現できる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">count</span> <span class="mi">0</span><span class="p">))</span>
-  <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">()</span>
-      <span class="p">(</span><span class="nv">setf</span> <span class="nv">count</span> <span class="p">(</span><span class="nv">1+</span> <span class="nv">count</span><span class="p">))))</span></code></pre></div>
-<p>上記のように、関数定義の外側にある変数を内部に束縛した関数を<strong>クロージャ</strong>という。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nf">count</span> <span class="mi">0</span><span class="p">))</span>
+  <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+      <span class="p">(</span><span class="nb">setf</span> <span class="nf">count</span> <span class="p">(</span><span class="nf">1+</span> <span class="nf">count</span><span class="p">))))</span>
+</code></pre></div><p>上記のように、関数定義の外側にある変数を内部に束縛した関数を<strong>クロージャ</strong>という。<br>
 クロージャを生成したときに束縛した変数は、そのクロージャ自体が存在して変数を参照し続ける限り、存在し続ける。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*fn*</span>
-  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">count</span> <span class="mi">0</span><span class="p">))</span>
-    <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">()</span>
-        <span class="p">(</span><span class="nv">incf</span> <span class="nv">count</span><span class="p">))))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*fn*</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nf">count</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">()</span>
+        <span class="p">(</span><span class="nb">incf</span> <span class="nf">count</span><span class="p">))))</span>
 
-<span class="p">(</span><span class="nv">funcall</span> <span class="vg">*fn*</span><span class="p">)</span> <span class="c1">; =&gt; 1</span>
-<span class="p">(</span><span class="nv">funcall</span> <span class="vg">*fn*</span><span class="p">)</span> <span class="c1">; =&gt; 2</span>
-<span class="p">(</span><span class="nv">funcall</span> <span class="vg">*fn*</span><span class="p">)</span> <span class="c1">; =&gt; 3</span></code></pre></div>
-<h2 id="6-3-ダイナミック変数-スペシャル変数">6.3 ダイナミック変数(=スペシャル変数)</h2>
-
-<p>レキシカルなスコープを持つ束縛は、その名前が意味を持つ範囲が字句によって決まる。<br />
+<span class="p">(</span><span class="nf">funcall</span> <span class="vg">*fn*</span><span class="p">)</span> <span class="c1">; =&gt; 1</span>
+<span class="p">(</span><span class="nf">funcall</span> <span class="vg">*fn*</span><span class="p">)</span> <span class="c1">; =&gt; 2</span>
+<span class="p">(</span><span class="nf">funcall</span> <span class="vg">*fn*</span><span class="p">)</span> <span class="c1">; =&gt; 3</span>
+</code></pre></div><h2 id="63-ダイナミック変数スペシャル変数">6.3 ダイナミック変数(=スペシャル変数)</h2>
+<p>レキシカルなスコープを持つ束縛は、その名前が意味を持つ範囲が字句によって決まる。<br>
 これに対して、ダイナミック変数は、実際に束縛が評価されたらそれをずっと保持し続ける。いわゆるグローバル変数として使われる。</p>
-
 <p><strong>書式</strong></p>
-
 <dl>
 <dt><code>defvar</code></dt>
-<dd>変数が未定義だった場合のみ初期値を代入する。<br />
+<dd>変数が未定義だった場合のみ初期値を代入する。<br>
 値を指定しなければ、初期値のない<strong>未束縛な</strong>グローバル変数定義となる。</dd>
 <dt><code>defparameter</code></dt>
 <dd>評価されるたびに常に初期値を代入する。</dd>
 </dl>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defvar</span> <span class="vg">*変数*</span> <span class="s">&#34;変数の説明&#34;</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*変数*</span> <span class="s">&#34;変数の説明&#34;</span><span class="p">)</span></code></pre></div>
-<p><strong>使用例</strong></p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defvar</span> <span class="vg">*count*</span> <span class="mi">0</span> <span class="s">&#34;製造済みの部品数&#34;</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*gap-tolerance*</span> <span class="mf">0.001</span> <span class="s">&#34;部品間の隙間の許容幅&#34;</span><span class="p">)</span></code></pre></div>
-<p><code>defvar</code>と<code>defparameter</code>の使い分けについては下記の通りにすべき。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defvar</span> <span class="vg">*変数*</span> <span class="s">&#34;変数の説明&#34;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*変数*</span> <span class="s">&#34;変数の説明&#34;</span><span class="p">)</span>
+</code></pre></div><p><strong>使用例</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defvar</span> <span class="vg">*count*</span> <span class="mi">0</span> <span class="s">&#34;製造済みの部品数&#34;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*gap-tolerance*</span> <span class="mf">0.001</span> <span class="s">&#34;部品間の隙間の許容幅&#34;</span><span class="p">)</span>
+</code></pre></div><p><code>defvar</code>と<code>defparameter</code>の使い分けについては下記の通りにすべき。</p>
 <ul>
-<li>変数定義する時、その変数を使うソースコードを変更したとしても維持しておきたいデータを含むものには<code>defvar</code>を使うべき。<br />
+<li>変数定義する時、その変数を使うソースコードを変更したとしても維持しておきたいデータを含むものには<code>defvar</code>を使うべき。<br>
 例: プログラム全体で共有したい、何らかの個数など。</li>
-<li>コード全体に影響する値を定義したい場合は<code>defparameter</code>を使うべき。<br />
+<li>コード全体に影響する値を定義したい場合は<code>defparameter</code>を使うべき。<br>
 例: プログラム全体の挙動を制御するためのフラグなど。</li>
 </ul>
-
 <p><code>defvar</code>で定義した<code>*count*</code>を使って、下記のように個数をカウントするクロージャを容易に定義できる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*count*</span> <span class="mi">0</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">defun</span> <span class="nv">increment-count</span> <span class="p">()</span> <span class="p">(</span><span class="nv">incf</span> <span class="vg">*count*</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*count*</span> <span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">increment-count</span> <span class="p">()</span> <span class="p">(</span><span class="nb">incf</span> <span class="vg">*count*</span><span class="p">))</span>
 
 <span class="p">(</span><span class="nv">increment-count</span><span class="p">)</span> <span class="c1">; =&gt; 1</span>
 <span class="p">(</span><span class="nv">increment-count</span><span class="p">)</span> <span class="c1">; =&gt; 2</span>
-<span class="p">(</span><span class="nv">increment-count</span><span class="p">)</span> <span class="c1">; =&gt; 3</span></code></pre></div>
-<p>ダイナミック変数を<code>let</code>で束縛すると、<code>let</code>の外側では束縛前の値を参照し、<code>let</code>の内側では束縛中の値を参照する。<br />
+<span class="p">(</span><span class="nv">increment-count</span><span class="p">)</span> <span class="c1">; =&gt; 3</span>
+</code></pre></div><p>ダイナミック変数を<code>let</code>で束縛すると、<code>let</code>の外側では束縛前の値を参照し、<code>let</code>の内側では束縛中の値を参照する。<br>
 これを利用すると、標準出力ストリームを一時的に別のものに束縛し、何らかの処理が完了したら元のストリームに自動的に戻すことができる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; *standard-output* = 自動的に定義されている</span>
-<span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="vg">*standard-output*</span> <span class="vg">*別のストリーム*</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">処理</span><span class="p">))</span></code></pre></div>
-<p>束縛を参照できる期間を<strong>エクステント(extent)</strong>と呼ぶ。<br />
-束縛を参照できる字句的な範囲を<strong>スコープ(scope)</strong>と呼ぶ。<br />
+<span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="vg">*standard-output*</span> <span class="vg">*別のストリーム*</span><span class="p">))</span>
+  <span class="p">(</span><span class="nv">処理</span><span class="p">))</span>
+</code></pre></div><p>束縛を参照できる期間を**エクステント(extent)<strong>と呼ぶ。<br>
+束縛を参照できる字句的な範囲を</strong>スコープ(scope)**と呼ぶ。<br>
 したがって、エクステントは時間を、スコープは場所を指す。</p>
-
 <p>レキシカル変数はのスコープはレキシカルに決まり、エクステントは<strong>無限(indefinite)</strong>、つまり期限はなく、必要とされている期間だけ参照できる。
-これと対照的に、ダイナミック変数はスコープは無限、つまりどこからでも参照でき、エクステントは<strong>ダイナミック</strong><sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>。</p>
-
+これと対照的に、ダイナミック変数はスコープは無限、つまりどこからでも参照でき、エクステントは<strong>ダイナミック</strong><sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>。</p>
 <p>下記コードは、下記項目の注意点を示唆している。</p>
-
 <ul>
 <li><strong>呼び出したコードによって、自分の知らないうちにダイナミック変数の束縛の値を変更してしまうかもしれない(予期せぬ副作用)</strong>
-
 <ul>
 <li><strong>ダーティな</strong>関数を呼び出すとき、その副作用に注意する。</li>
-</ul></li>
+</ul>
+</li>
 <li><strong>コードが確立したスタック上の束縛を自分で隠してしまうかもしれない(予期せぬシャドーイング)</strong>
-
 <ul>
 <li>束縛する変数が既に束縛の外でダイナミックに定義されており、かつ、関数内で使用している、ということが無いことを注意する。</li>
-</ul></li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*x*</span> <span class="mi">10</span><span class="p">)</span>
+</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*x*</span> <span class="mi">10</span><span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">()</span>
-  <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;Before assignment X: ~d~%&#34;</span> <span class="vg">*x*</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">incf</span> <span class="vg">*x*</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;After assignment  X: ~d~%&#34;</span> <span class="vg">*x*</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">foo</span> <span class="p">()</span>
+  <span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34;Before assignment X: ~d~%&#34;</span> <span class="vg">*x*</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">incf</span> <span class="vg">*x*</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34;After assignment  X: ~d~%&#34;</span> <span class="vg">*x*</span><span class="p">))</span>
 
-<span class="p">(</span><span class="nv">defun</span> <span class="nv">bar</span> <span class="p">()</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">bar</span> <span class="p">()</span>
   <span class="p">(</span><span class="nv">foo</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="vg">*x*</span> <span class="mi">20</span><span class="p">))</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="vg">*x*</span> <span class="mi">20</span><span class="p">))</span>
     <span class="p">(</span><span class="nv">foo</span><span class="p">))</span>
   <span class="p">(</span><span class="nv">foo</span><span class="p">))</span>
 
@@ -297,88 +277,77 @@
 
 <span class="c1">;; (foo)の内部でダイナミック変数を使用していることを知っている必要がある</span>
 <span class="c1">; Before assignment X: 12</span>
-<span class="c1">; After assignment  X: 13  </span></code></pre></div>
-<h2 id="6-4-定数">6.4 定数</h2>
-
+<span class="c1">; After assignment  X: 13  </span>
+</code></pre></div><h2 id="64-定数">6.4 定数</h2>
 <p>定数は下記の通り定義する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defconstant</span> <span class="nv">+名前+</span> <span class="nv">初期値</span> <span class="s">&#34;説明&#34;</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defconstant</span> <span class="nv">+名前+</span> <span class="nv">初期値</span> <span class="s">&#34;説明&#34;</span><span class="p">)</span>
 
-<span class="p">(</span><span class="nv">defconstant</span> <span class="nv">+pi+</span> <span class="mf">3.14</span> <span class="s">&#34;円周率&#34;</span><span class="p">)</span></code></pre></div>
-<p><strong>注意</strong><br />
-<code>defconstant</code>で定義された定数をさらに再定義したとき、言語仕様では許可しているものの、どんなことが起こるのかは定義されていない。<br />
+<span class="p">(</span><span class="nb">defconstant</span> <span class="nv">+pi+</span> <span class="mf">3.14</span> <span class="s">&#34;円周率&#34;</span><span class="p">)</span>
+</code></pre></div><p><strong>注意</strong><br>
+<code>defconstant</code>で定義された定数をさらに再定義したとき、言語仕様では許可しているものの、どんなことが起こるのかは定義されていない。<br>
 変更する可能性が少しでもある場合は<code>defparameter</code>を使用すべき。</p>
-
-<h2 id="6-5-代入">6.5 代入</h2>
-
+<h2 id="65-代入">6.5 代入</h2>
 <p>代入には<code>setf</code>を用いる。<code>setq</code>もあるが、最近では全ての代入に<code>setf</code>を用いる事が多い。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">setf</span> <span class="nv">代入対象</span> <span class="nv">値</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">setf</span> <span class="nv">代入対象</span> <span class="nv">値</span><span class="p">)</span>
 
-<span class="p">(</span><span class="nv">setf</span> <span class="nv">x</span> <span class="mi">100</span><span class="p">)</span></code></pre></div>
-<p>束縛に新しい値を代入しても、他の束縛には影響しないことに注意。すなわち、代入前に束縛に保存されていた値にも影響しない。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">setf</span> <span class="mi">10</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">setf</span> <span class="nv">x</span> <span class="mi">100</span><span class="p">)</span>
+</code></pre></div><p>束縛に新しい値を代入しても、他の束縛には影響しないことに注意。すなわち、代入前に束縛に保存されていた値にも影響しない。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">setf</span> <span class="mi">10</span><span class="p">))</span>
 
-<span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">y</span> <span class="mi">20</span><span class="p">))</span>
+<span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">y</span> <span class="mi">20</span><span class="p">))</span>
   <span class="p">(</span><span class="nv">foo</span> <span class="nv">y</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">print</span> <span class="nv">y</span><span class="p">))</span>
-<span class="c1">; =&gt; 20</span></code></pre></div>
-<p><code>setf</code>は複数の代入を連続して実行できる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">setf</span> <span class="nv">x</span> <span class="mi">1</span> <span class="nv">y</span> <span class="mi">2</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">print</span> <span class="nv">y</span><span class="p">))</span>
+<span class="c1">; =&gt; 20</span>
+</code></pre></div><p><code>setf</code>は複数の代入を連続して実行できる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">setf</span> <span class="nv">x</span> <span class="mi">1</span> <span class="nv">y</span> <span class="mi">2</span><span class="p">)</span>
 
 <span class="c1">; 上記と下記は同じ</span>
-<span class="p">(</span><span class="nv">setf</span> <span class="nv">x</span> <span class="mi">1</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">setf</span> <span class="nv">y</span> <span class="mi">2</span><span class="p">)</span></code></pre></div>
-<p><code>setf</code>は新しく代入した値を返す。<br />
-したがって、<code>setf</code>を入れ子にすれば、複数の変数に同一の値を代入することも簡単にできる。<br />
+<span class="p">(</span><span class="nb">setf</span> <span class="nv">x</span> <span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">setf</span> <span class="nv">y</span> <span class="mi">2</span><span class="p">)</span>
+</code></pre></div><p><code>setf</code>は新しく代入した値を返す。<br>
+したがって、<code>setf</code>を入れ子にすれば、複数の変数に同一の値を代入することも簡単にできる。<br>
 cf. C言語における<code>a = b = rand();</code></p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">setf</span> <span class="nv">x</span> <span class="p">(</span><span class="nv">setf</span> <span class="nv">y</span> <span class="p">(</span><span class="nv">random</span> <span class="mi">10</span><span class="p">)))</span></code></pre></div>
-<h2 id="6-6-ジェネリックな代入">6.6 ジェネリックな代入</h2>
-
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">setf</span> <span class="nv">x</span> <span class="p">(</span><span class="nb">setf</span> <span class="nv">y</span> <span class="p">(</span><span class="nf">random</span> <span class="mi">10</span><span class="p">)))</span>
+</code></pre></div><h2 id="66-ジェネリックな代入">6.6 ジェネリックな代入</h2>
 <p>どんなデータ構造への代入にも<code>setf</code>が使える。</p>
-
 <table>
 <thead>
 <tr>
 <th>代入対象</th>
-<th>&nbsp;<code>Java</code>, <code>C</code>, <code>C++</code></th>
-<th>&nbsp;<code>Perl</code></th>
-<th>&nbsp;<code>Python</code></th>
+<th> <code>Java</code>, <code>C</code>, <code>C++</code></th>
+<th> <code>Perl</code></th>
+<th> <code>Python</code></th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>変数</td>
-<td>&nbsp;<code>x = 10;</code></td>
-<td>&nbsp;<code>$x = 10;</code></td>
-<td>&nbsp;<code>x = 10</code></td>
+<td> <code>x = 10;</code></td>
+<td> <code>$x = 10;</code></td>
+<td> <code>x = 10</code></td>
 </tr>
-
 <tr>
 <td>配列要素</td>
-<td>&nbsp;<code>a[0] = 10;</code></td>
-<td>&nbsp;<code>$a[0] = 10;</code></td>
-<td>&nbsp;<code>a[0] = 10</code></td>
+<td> <code>a[0] = 10;</code></td>
+<td> <code>$a[0] = 10;</code></td>
+<td> <code>a[0] = 10</code></td>
 </tr>
-
 <tr>
 <td>ハッシュテーブルのエントリ</td>
-<td>&nbsp;<code>x = 10;</code></td>
-<td>&nbsp;<code>$hash{'key'} = 10;</code></td>
-<td>&nbsp;<code>hash['key'] = 10</code></td>
+<td> <code>x = 10;</code></td>
+<td> <code>$hash{'key'} = 10;</code></td>
+<td> <code>hash['key'] = 10</code></td>
 </tr>
-
 <tr>
 <td>オブジェクトのフィールド</td>
-<td>&nbsp;<code>o.field = 10;</code></td>
-<td>&nbsp;<code>$o-&gt;{'field'} = 10;</code></td>
-<td>&nbsp;<code>o.field = 10</code></td>
+<td> <code>o.field = 10;</code></td>
+<td> <code>$o-&gt;{'field'} = 10;</code></td>
+<td> <code>o.field = 10</code></td>
 </tr>
 </tbody>
 </table>
-
 <p>Common Lispの場合は、下記の通り<code>setf</code>によって代入できる。</p>
-
 <table>
 <thead>
 <tr>
@@ -386,62 +355,57 @@ cf. C言語における<code>a = b = rand();</code></p>
 <th>代入方法</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td>単純な値</td>
-<td>&nbsp;<code>(setf x 10)</code></td>
+<td> <code>(setf x 10)</code></td>
 </tr>
-
 <tr>
 <td>配列</td>
-<td>&nbsp;<code>(setf (aref a 0) 10)</code></td>
+<td> <code>(setf (aref a 0) 10)</code></td>
 </tr>
-
 <tr>
 <td>ハッシュテーブル</td>
-<td>&nbsp;<code>(setf (gethash 'key hash) 10)</code></td>
+<td> <code>(setf (gethash 'key hash) 10)</code></td>
 </tr>
-
 <tr>
 <td><code>field</code>という名前のスロット</td>
-<td>&nbsp;<code>(setf (field o) 10)</code></td>
+<td> <code>(setf (field o) 10)</code></td>
 </tr>
 </tbody>
 </table>
-
-<h2 id="6-7-場所の値を変更する別の方法">6.7 場所の値を変更する別の方法</h2>
-
-<p><strong>モディファイマクロ</strong>によっても、値を変更できる。<br />
-モディファイマクロとは、<code>setf</code>上に定義されたマクロで、ある場所の現在の値に基づいた新しい値を代入するもの。<br />
+<h2 id="67-場所の値を変更する別の方法">6.7 場所の値を変更する別の方法</h2>
+<p><strong>モディファイマクロ</strong>によっても、値を変更できる。<br>
+モディファイマクロとは、<code>setf</code>上に定義されたマクロで、ある場所の現在の値に基づいた新しい値を代入するもの。<br>
 <strong>一般的に</strong>、モディファイマクロでは、引数および場所を表すフォームの一部分が、正確に一度だけ左から右に評価されることが保証されている。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*x*</span> <span class="mi">100</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">incf</span> <span class="vg">*x*</span><span class="p">)</span> <span class="c1">; =&gt; 101</span>
-<span class="p">(</span><span class="nv">decf</span> <span class="vg">*x*</span><span class="p">)</span> <span class="c1">; =&gt; 100</span>
-<span class="p">(</span><span class="nv">incf</span> <span class="vg">*x*</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">; =&gt; 110</span></code></pre></div>
-<p>他にも、<code>push</code>、<code>pop</code>、<code>pushnew</code>、<code>rotatef</code>などのモディファイマクロがある。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*x*</span> <span class="mi">100</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">incf</span> <span class="vg">*x*</span><span class="p">)</span> <span class="c1">; =&gt; 101</span>
+<span class="p">(</span><span class="nb">decf</span> <span class="vg">*x*</span><span class="p">)</span> <span class="c1">; =&gt; 100</span>
+<span class="p">(</span><span class="nb">incf</span> <span class="vg">*x*</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">; =&gt; 110</span>
+</code></pre></div><p>他にも、<code>push</code>、<code>pop</code>、<code>pushnew</code>、<code>rotatef</code>などのモディファイマクロがある。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; aとbをswapする</span>
 <span class="p">(</span><span class="nv">ratatef</span> <span class="nv">a</span> <span class="nv">b</span><span class="p">)</span>
 
 <span class="c1">; 上記と等価</span>
-<span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">tmp</span> <span class="nv">a</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">setf</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">b</span> <span class="nv">tmp</span><span class="p">)</span>
-  <span class="no">nil</span><span class="p">)</span> <span class="c1">; setfによって戻り値がaであるのを回避するため</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 残りの引数の値を一つずつ左にずらす</span>
+<span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">tmp</span> <span class="nv">a</span><span class="p">))</span>
+  <span class="p">(</span><span class="nb">setf</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">b</span> <span class="nv">tmp</span><span class="p">)</span>
+  <span class="no">nil</span><span class="p">)</span> <span class="c1">; setfによって戻り値がaであるのを回避するため</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 残りの引数の値を一つずつ左にずらす</span>
 <span class="c1">; 最初の引数の値だったものを戻り値とする</span>
-<span class="p">(</span><span class="nv">shiftf</span> <span class="nv">a</span> <span class="nv">b</span> <span class="mi">10</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">shiftf</span> <span class="nv">a</span> <span class="nv">b</span> <span class="mi">10</span><span class="p">)</span>
 
 <span class="c1">; 上記と等価</span>
-<span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">tmp</span> <span class="nv">a</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">setf</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">b</span> <span class="mi">10</span><span class="p">)</span>
-  <span class="nv">tmp</span><span class="p">)</span></code></pre></div><div class="footnotes">
-
-<hr />
-
+<span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">tmp</span> <span class="nv">a</span><span class="p">))</span>
+  <span class="p">(</span><span class="nb">setf</span> <span class="nv">a</span> <span class="nv">b</span> <span class="nv">b</span> <span class="mi">10</span><span class="p">)</span>
+  <span class="nv">tmp</span><span class="p">)</span>
+</code></pre></div><section class="footnotes" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn:1">ダイナミック変数のエクステントは束縛フォーム(例:<code>defvar</code>)を実行している間のみであり、束縛フォームの実行が終了すると値は消える、という意味。
- <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+<li id="fn:1" role="doc-endnote">
+<p>ダイナミック変数のエクステントは束縛フォーム(例:<code>defvar</code>)を実行している間のみであり、束縛フォームの実行が終了すると値は消える、という意味。 <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
 </ol>
-</div>
+</section>
 
   </article>
 
@@ -515,7 +479,9 @@ cf. C言語における<code>a = b = rand();</code></p>
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>SOLID on Lazy Lambda</title>
@@ -6,11 +6,7 @@
     <description>Recent content in SOLID on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sun, 05 May 2019 05:00:00 +0900</lastBuildDate>
-    
-	<atom:link href="https://otaon.github.io/web/ja-jp/tag/solid/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 05 May 2019 05:00:00 +0900</lastBuildDate><atom:link href="https://otaon.github.io/web/ja-jp/tag/solid/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>オブジェクト指向原則集(SOLID、他):依存性逆転の原理について</title>
       <link>https://otaon.github.io/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E4%BE%9D%E5%AD%98%E6%80%A7%E9%80%86%E8%BB%A2%E3%81%AE%E5%8E%9F%E7%90%86%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/</link>

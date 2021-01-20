@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>オブジェクト指向原則集(SOLID、他):依存性逆転の原理について · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,16 +22,13 @@
 <meta property="og:description" content="目的 プログラミングや設計において守るべき「SOLID原則」についての学習記録を残す。 参考文献 SOLID全体の説明については「オブジェクト指向" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96%E4%BE%9D%E5%AD%98%E6%80%A7%E9%80%86%E8%BB%A2%E3%81%AE%E5%8E%9F%E7%90%86%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6/" />
-<meta property="article:published_time" content="2019-05-05T05:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-05-05T05:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-05-05T05:00:00+09:00" />
+<meta property="article:modified_time" content="2019-05-05T05:00:00+09:00" />
 <meta itemprop="name" content="オブジェクト指向原則集(SOLID、他):依存性逆転の原理について">
 <meta itemprop="description" content="目的 プログラミングや設計において守るべき「SOLID原則」についての学習記録を残す。 参考文献 SOLID全体の説明については「オブジェクト指向">
-
-
-<meta itemprop="datePublished" content="2019-05-05T05:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-05-05T05:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="1464">
+<meta itemprop="datePublished" content="2019-05-05T05:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-05-05T05:00:00+09:00" />
+<meta itemprop="wordCount" content="1413">
 
 
 
@@ -128,8 +125,8 @@
               <i class="fas fa-tags" aria-hidden="true"></i>
               <a href="https://otaon.github.io/web/ja-jp/tag/dip/">DIP</a>, 
                 <a href="https://otaon.github.io/web/ja-jp/tag/oop/">OOP</a>, 
-                <a href="https://otaon.github.io/web/ja-jp/tag/solid/">SOLID</a>, 
                 <a href="https://otaon.github.io/web/ja-jp/tag/programming/">programming</a>, 
+                <a href="https://otaon.github.io/web/ja-jp/tag/solid/">SOLID</a>, 
                 <a href="https://otaon.github.io/web/ja-jp/tag/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91/">オブジェクト指向</a>
           </p>
         
@@ -148,103 +145,80 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#目的">目的</a></li>
-<li><a href="#参考文献">参考文献</a></li>
-<li><a href="#solid原則について">SOLID原則について</a>
-<ul>
-<li><a href="#d-the-dependency-inversion-principle-dip-依存性逆転の原理"><strong>D</strong> : The Dependency Inversion Principle (DIP) : 依存性逆転の原理</a>
-<ul>
-<li><a href="#0-サンプルプログラム">0. サンプルプログラム</a></li>
-<li><a href="#1-上位モジュールと下位モジュールを抽象に依存させる">1. 上位モジュールと下位モジュールを抽象に依存させる</a></li>
-<li><a href="#2-依存性の注入">2. 依存性の注入</a></li>
-<li><a href="#3-下位モジュールから上位モジュールに依存する">3. 下位モジュールから上位モジュールに依存する</a></li>
-<li><a href="#4-メインルーチンから依存性を注入する">4. メインルーチンから依存性を注入する</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#d--the-dependency-inversion-principle-dip--依存性逆転の原理"><strong>D</strong> : The Dependency Inversion Principle (DIP) : 依存性逆転の原理</a>
+      <ul>
+        <li><a href="#0-サンプルプログラム">0. サンプルプログラム</a></li>
+        <li><a href="#1-上位モジュールと下位モジュールを抽象に依存させる">1. 上位モジュールと下位モジュールを抽象に依存させる</a></li>
+        <li><a href="#2-依存性の注入">2. 依存性の注入</a></li>
+        <li><a href="#3-下位モジュールから上位モジュールに依存する">3. 下位モジュールから上位モジュールに依存する</a></li>
+        <li><a href="#4-メインルーチンから依存性を注入する">4. メインルーチンから依存性を注入する</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h1 id="目的">目的</h1>
-
+  <h1 id="目的">目的</h1>
 <p>プログラミングや設計において守るべき「SOLID原則」についての学習記録を残す。</p>
-
 <h1 id="参考文献">参考文献</h1>
-
 <p>SOLID全体の説明については「<a href="/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96/">オブジェクト指向原則集(SOLID、他)</a>」を参照。</p>
-
 <h1 id="solid原則について">SOLID原則について</h1>
-
 <p>SOLID原則とは、プログラミングや設計において守るべき主要な原則5つをまとめたもの。</p>
-
 <table>
 <thead>
 <tr>
-<th>&nbsp;頭文字</th>
-<th>&nbsp;略称</th>
-<th>&nbsp;英名</th>
-<th>&nbsp;和名</th>
+<th> 頭文字</th>
+<th> 略称</th>
+<th> 英名</th>
+<th> 和名</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
-<td>&nbsp;<strong>S</strong></td>
-<td>&nbsp;SRP</td>
-<td>&nbsp;Single Responsibility Principle</td>
-<td>&nbsp;単一責任の原則</td>
+<td> <strong>S</strong></td>
+<td> SRP</td>
+<td> Single Responsibility Principle</td>
+<td> 単一責任の原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;<strong>O</strong></td>
-<td>&nbsp;OCP</td>
-<td>&nbsp;The Open-Closed Principle</td>
-<td>&nbsp;開放／閉鎖原則</td>
+<td> <strong>O</strong></td>
+<td> OCP</td>
+<td> The Open-Closed Principle</td>
+<td> 開放／閉鎖原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;<strong>L</strong></td>
-<td>&nbsp;LSP</td>
-<td>&nbsp;The Liskov Substitution Principle</td>
-<td>&nbsp;リスコフの置換原則</td>
+<td> <strong>L</strong></td>
+<td> LSP</td>
+<td> The Liskov Substitution Principle</td>
+<td> リスコフの置換原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;<strong>I</strong></td>
-<td>&nbsp;ISP</td>
-<td>&nbsp;The Interface Segregation Principle</td>
-<td>&nbsp;インターフェース分離原則</td>
+<td> <strong>I</strong></td>
+<td> ISP</td>
+<td> The Interface Segregation Principle</td>
+<td> インターフェース分離原則</td>
 </tr>
-
 <tr>
-<td>&nbsp;<strong>D</strong></td>
-<td>&nbsp;DIP</td>
-<td>&nbsp;The Dependency Inversion Principle</td>
-<td>&nbsp;依存性逆転の原理</td>
+<td> <strong>D</strong></td>
+<td> DIP</td>
+<td> The Dependency Inversion Principle</td>
+<td> 依存性逆転の原理</td>
 </tr>
 </tbody>
 </table>
-
 <p>SOLID全体の説明については「<a href="/web/ja-jp/2019/05/05/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91%E5%8E%9F%E5%89%87%E9%9B%86solid%E4%BB%96/">オブジェクト指向原則集(SOLID、他)</a>」を参照。</p>
-
-<h2 id="d-the-dependency-inversion-principle-dip-依存性逆転の原理"><strong>D</strong> : The Dependency Inversion Principle (DIP) : 依存性逆転の原理</h2>
-
+<h2 id="d--the-dependency-inversion-principle-dip--依存性逆転の原理"><strong>D</strong> : The Dependency Inversion Principle (DIP) : 依存性逆転の原理</h2>
 <p>この原則は、下記のことを表す。</p>
-
 <ul>
 <li>上位レベルのモジュールは、下位レベルのモジュールに依存すべきではない</li>
 <li>上位レベルのモジュール、下位レベルのモジュール、ともに抽象（abstractions)に依存すべき</li>
 <li>抽象は、詳細に依存してはならない</li>
 <li>詳細は、抽象に依存すべき</li>
 </ul>
-
 <p>例えば、下記のような依存関係があるとする。</p>
-
 
 <link rel="stylesheet" href="https://otaon.github.io/css/hugo-easy-gallery.css" />
 <div class="box aligncenter" style="max-width:150px;">
@@ -256,10 +230,8 @@
   </figure>
 </div>
 
-
 <p>下位レベルのモジュールの再利用性を高めるためには、上記を、下記のような依存関係に逆転させたい。
 ロジック層とデータアクセス層との間だけにこの原則を適用したコード例を下記に示す。</p>
-
 
 
 <div class="box aligncenter" style="max-width:150px;">
@@ -271,74 +243,74 @@
   </figure>
 </div>
 
-
 <h3 id="0-サンプルプログラム">0. サンプルプログラム</h3>
-
 <ul>
 <li>ユーザの誕生日から現在の年齢を計算する</li>
 <li>ユーザの情報は永続化して保存可能</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">public</span> <span class="k">void</span> <span class="n">Main</span><span class="p">()</span>
 <span class="p">{</span>
-    <span class="kt">var</span> <span class="n">user</span> <span class="p">=</span> <span class="k">new</span> <span class="n">User</span> <span class="p">(</span><span class="n">Date</span> <span class="n">Time</span><span class="p">.</span><span class="n">Now</span><span class="p">);</span>
-    <span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;You are &#34;</span> <span class="p">+</span> <span class="n">user</span><span class="p">.</span><span class="n">Age</span><span class="p">.</span><span class="n">ToString</span><span class="p">()</span> <span class="p">+</span> <span class="s">&#34;years old.&#34;</span><span class="p">);</span>
-    <span class="n">user</span><span class="p">.</span><span class="n">Save</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
-<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">public</span> <span class="k">class</span> <span class="nc">User</span>
+	<span class="kt">var</span> <span class="n">user</span> <span class="p">=</span> <span class="k">new</span> <span class="n">User</span> <span class="p">(</span><span class="n">Date</span> <span class="n">Time</span><span class="p">.</span><span class="n">Now</span><span class="p">);</span>
+	<span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="s">&#34;You are &#34;</span> <span class="p">+</span> <span class="n">user</span><span class="p">.</span><span class="n">Age</span><span class="p">.</span><span class="n">ToString</span><span class="p">()</span> <span class="p">+</span> <span class="s">&#34;years old.&#34;</span><span class="p">);</span>
+	<span class="n">user</span><span class="p">.</span><span class="n">Save</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">public</span> <span class="k">class</span> <span class="nc">User</span>
 <span class="p">{</span>
-    <span class="k">public</span> <span class="n">DateTime</span> <span class="n">Birthday</span> <span class="p">{</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+	<span class="k">public</span> <span class="n">DateTime</span> <span class="n">Birthday</span> <span class="p">{</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
 
-    <span class="k">public</span> <span class="kt">int</span> <span class="n">Age</span> <span class="p">{</span> <span class="k">get</span> <span class="p">=&gt;</span> <span class="n">GetAge</span><span class="p">();</span> <span class="p">}</span>
+	<span class="k">public</span> <span class="kt">int</span> <span class="n">Age</span> <span class="p">{</span> <span class="k">get</span> <span class="p">=&gt;</span> <span class="n">GetAge</span><span class="p">();</span> <span class="p">}</span>
 
-    <span class="k">private</span> <span class="kt">int</span> <span class="n">GetAge</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="k">return</span> <span class="m">17</span><span class="p">;</span>
-    <span class="p">}</span>
+	<span class="k">private</span> <span class="kt">int</span> <span class="n">GetAge</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="m">17</span><span class="p">;</span>
+	<span class="p">}</span>
 
-    <span class="k">public</span> <span class="k">void</span> <span class="n">Save</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">UserRepository</span><span class="p">();</span>
-        <span class="n">repository</span><span class="p">.</span><span class="n">Save</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">public</span> <span class="k">class</span> <span class="nc">UserRepository</span>
+	<span class="k">public</span> <span class="k">void</span> <span class="n">Save</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="kt">var</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">UserRepository</span><span class="p">();</span>
+		<span class="n">repository</span><span class="p">.</span><span class="n">Save</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">public</span> <span class="k">class</span> <span class="nc">UserRepository</span>
 <span class="p">{</span>
-    <span class="k">public</span> <span class="k">void</span> <span class="n">Save</span><span class="p">(</span><span class="n">User</span> <span class="n">user</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="c1">// Insert Database
-</span><span class="c1"></span>    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-<h3 id="1-上位モジュールと下位モジュールを抽象に依存させる">1. 上位モジュールと下位モジュールを抽象に依存させる</h3>
-
-<p>上位モジュール(Logic DLL)と下位モジュール(Data Access DLL)を抽象に依存させる。<br />
+	<span class="k">public</span> <span class="k">void</span> <span class="n">Save</span><span class="p">(</span><span class="n">User</span> <span class="n">user</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">// Insert Database
+</span><span class="c1"></span>	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="1-上位モジュールと下位モジュールを抽象に依存させる">1. 上位モジュールと下位モジュールを抽象に依存させる</h3>
+<p>上位モジュール(Logic DLL)と下位モジュール(Data Access DLL)を抽象に依存させる。<br>
 しかし、単純に抽象に依存させると、<code>User</code>クラスが<code>UserRepository</code>インターフェースに依存してしまっている。</p>
 <div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">public</span> <span class="k">interface</span> <span class="n">IUserRepository</span>
 <span class="p">{</span>
-    <span class="k">void</span> <span class="n">Save</span><span class="p">(</span><span class="n">User</span> <span class="n">user</span><span class="p">);</span>
-<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">public</span> <span class="k">class</span> <span class="nc">User</span>
+	<span class="k">void</span> <span class="n">Save</span><span class="p">(</span><span class="n">User</span> <span class="n">user</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">public</span> <span class="k">class</span> <span class="nc">User</span>
 <span class="p">{</span>
-    <span class="k">private</span> <span class="n">DateTime</span> <span class="n">_birthday</span><span class="p">;</span>
+	<span class="k">private</span> <span class="n">DateTime</span> <span class="n">_birthday</span><span class="p">;</span>
 
-    <span class="c1">// コンストラクタ
-</span><span class="c1"></span>    <span class="k">public</span> <span class="n">User</span><span class="p">(</span><span class="n">DateTime</span> <span class="n">birthday</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">_birthday</span> <span class="p">=</span> <span class="n">birthday</span><span class="p">;</span>
-    <span class="p">}</span>
+	<span class="c1">// コンストラクタ
+</span><span class="c1"></span>	<span class="k">public</span> <span class="n">User</span><span class="p">(</span><span class="n">DateTime</span> <span class="n">birthday</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">_birthday</span> <span class="p">=</span> <span class="n">birthday</span><span class="p">;</span>
+	<span class="p">}</span>
 
-    <span class="k">public</span> <span class="kt">int</span> <span class="n">Age</span> <span class="p">=&gt;</span> <span class="n">GetAge</span><span class="p">();</span>
+	<span class="k">public</span> <span class="kt">int</span> <span class="n">Age</span> <span class="p">=&gt;</span> <span class="n">GetAge</span><span class="p">();</span>
 
-    <span class="k">private</span> <span class="kt">int</span> <span class="n">GetAge</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="k">return</span> <span class="m">17</span><span class="p">;</span>
-    <span class="p">}</span>
+	<span class="k">private</span> <span class="kt">int</span> <span class="n">GetAge</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="m">17</span><span class="p">;</span>
+	<span class="p">}</span>
 
-    <span class="k">public</span> <span class="n">Save</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="c1">// まだ、UserRepositoryの実体に依存してしまっている
-</span><span class="c1"></span>        <span class="n">IUserRepository</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">UserRepository</span><span class="p">();</span>
+	<span class="k">public</span> <span class="n">Save</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="c1">// まだ、UserRepositoryの実体に依存してしまっている
+</span><span class="c1"></span>		<span class="n">IUserRepository</span> <span class="n">repository</span> <span class="p">=</span> <span class="k">new</span> <span class="n">UserRepository</span><span class="p">();</span>
 
-        <span class="n">repository</span><span class="p">.</span><span class="n">Save</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-
+		<span class="n">repository</span><span class="p">.</span><span class="n">Save</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <div class="box aligncenter" style="max-width:200px;">
   <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
@@ -349,39 +321,37 @@
   </figure>
 </div>
 
-
 <h3 id="2-依存性の注入">2. 依存性の注入</h3>
-
 <p>依存関係を、クラスやソースコードの外側から注入することで、<code>User</code>クラスを<code>UserRepository</code>インターフェースに依存させなくできる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-cs" data-lang="cs"><span class="k">public</span> <span class="k">class</span> <span class="nc">User</span>
 <span class="p">{</span>
-    <span class="c1">// フィールドで依存先のインターフェースを持つ
-</span><span class="c1"></span>    <span class="k">private</span> <span class="n">IUserRepository</span> <span class="n">_repository</span><span class="p">;</span>
-    <span class="k">private</span> <span class="n">DateTime</span> <span class="n">_birthday</span><span class="p">;</span>
+	<span class="c1">// フィールドで依存先のインターフェースを持つ
+</span><span class="c1"></span>	<span class="k">private</span> <span class="n">IUserRepository</span> <span class="n">_repository</span><span class="p">;</span>
+	<span class="k">private</span> <span class="n">DateTime</span> <span class="n">_birthday</span><span class="p">;</span>
 
-    <span class="c1">// コンストラクタ
-</span><span class="c1"></span>    <span class="c1">// コンストラクタでIUserRepositoryの実装を受け取る
-</span><span class="c1"></span>    <span class="k">public</span> <span class="n">User</span><span class="p">(</span><span class="n">DateTime</span> <span class="n">birthday</span><span class="p">,</span> <span class="n">IUserRepository</span> <span class="n">repository</span><span class="p">)</span>
-    <span class="p">{</span>
-        <span class="n">_birthday</span> <span class="p">=</span> <span class="n">birthday</span><span class="p">;</span>
-        <span class="n">_repository</span> <span class="p">=</span> <span class="n">repository</span><span class="p">;</span>
-    <span class="p">}</span>
+	<span class="c1">// コンストラクタ
+</span><span class="c1"></span>	<span class="c1">// コンストラクタでIUserRepositoryの実装を受け取る
+</span><span class="c1"></span>	<span class="k">public</span> <span class="n">User</span><span class="p">(</span><span class="n">DateTime</span> <span class="n">birthday</span><span class="p">,</span> <span class="n">IUserRepository</span> <span class="n">repository</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">_birthday</span> <span class="p">=</span> <span class="n">birthday</span><span class="p">;</span>
+		<span class="n">_repository</span> <span class="p">=</span> <span class="n">repository</span><span class="p">;</span>
+	<span class="p">}</span>
 
-    <span class="k">public</span> <span class="kt">int</span> <span class="n">Age</span> <span class="p">=&gt;</span> <span class="n">GetAge</span><span class="p">();</span>
+	<span class="k">public</span> <span class="kt">int</span> <span class="n">Age</span> <span class="p">=&gt;</span> <span class="n">GetAge</span><span class="p">();</span>
 
-    <span class="k">private</span> <span class="kt">int</span> <span class="n">GetAge</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="k">return</span> <span class="m">17</span><span class="p">;</span>
-    <span class="p">}</span>
+	<span class="k">private</span> <span class="kt">int</span> <span class="n">GetAge</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="m">17</span><span class="p">;</span>
+	<span class="p">}</span>
 
-    <span class="k">public</span> <span class="n">Save</span><span class="p">()</span>
-    <span class="p">{</span>
-        <span class="c1">// コンストラクタで受け取ったインスタンスを使う
-</span><span class="c1"></span>        <span class="c1">// IUserRepository型である限り、実体が何なのかは無視できる
-</span><span class="c1"></span>        <span class="n">_repository</span><span class="p">.</span><span class="n">Save</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></div>
-
+	<span class="k">public</span> <span class="n">Save</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="c1">// コンストラクタで受け取ったインスタンスを使う
+</span><span class="c1"></span>		<span class="c1">// IUserRepository型である限り、実体が何なのかは無視できる
+</span><span class="c1"></span>		<span class="n">_repository</span><span class="p">.</span><span class="n">Save</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
 
 <div class="box aligncenter" style="max-width:200px;">
   <figure  itemprop="associatedMedia" itemscope itemtype="http://schema.org/ImageObject">
@@ -392,11 +362,8 @@
   </figure>
 </div>
 
-
 <h3 id="3-下位モジュールから上位モジュールに依存する">3. 下位モジュールから上位モジュールに依存する</h3>
-
 <p>パッケージの持ち方を変える事により、「下位モジュールから上位モジュールに依存する」が実現できる。</p>
-
 
 
 <div class="box aligncenter" style="max-width:200px;">
@@ -408,13 +375,10 @@
   </figure>
 </div>
 
-
 <h3 id="4-メインルーチンから依存性を注入する">4. メインルーチンから依存性を注入する</h3>
-
-<p><code>User</code>クラスから実際に<code>User Repository</code>クラスを使うにはどうしたら良いか。<br />
-最も簡単な方法は、これらのクラスの更に外側にある<code>Main</code>クラスから<strong>オブジェクト</strong>を注入すること。<br />
+<p><code>User</code>クラスから実際に<code>User Repository</code>クラスを使うにはどうしたら良いか。<br>
+最も簡単な方法は、これらのクラスの更に外側にある<code>Main</code>クラスから<strong>オブジェクト</strong>を注入すること。<br>
 <code>Main</code>クラスがアプリケーション全体を統括する責務を持つならば、<code>LogicDLL</code>パッケージおよび<code>DataAccessDLL</code>パッケージに依存していても問題ない。</p>
-
 
 
 <div class="box aligncenter" style="max-width:300px;">
@@ -425,7 +389,6 @@
     
   </figure>
 </div>
-
 
 <p>依存性の注入と言われているが、実際の処理を見て分かる通り、大抵のオブジェクト指向の文脈においては<strong>オブジェクトの注入</strong>と呼んだ方が分かりやすいと思う。</p>
 
@@ -501,7 +464,9 @@
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

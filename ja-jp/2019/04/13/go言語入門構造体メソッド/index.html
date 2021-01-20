@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>Go言語入門(構造体・メソッド) · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,16 +22,13 @@
 <meta property="og:description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 ポインタ・構造体・インターフェース 構造体 Goにおける構造体は、C言語と同様に、デ" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E6%A7%8B%E9%80%A0%E4%BD%93%E3%83%A1%E3%82%BD%E3%83%83%E3%83%89/" />
-<meta property="article:published_time" content="2019-04-13T18:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-04-13T18:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-04-13T18:00:00+09:00" />
+<meta property="article:modified_time" content="2019-04-13T18:00:00+09:00" />
 <meta itemprop="name" content="Go言語入門(構造体・メソッド)">
 <meta itemprop="description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 ポインタ・構造体・インターフェース 構造体 Goにおける構造体は、C言語と同様に、デ">
-
-
-<meta itemprop="datePublished" content="2019-04-13T18:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-04-13T18:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="7391">
+<meta itemprop="datePublished" content="2019-04-13T18:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-04-13T18:00:00+09:00" />
+<meta itemprop="wordCount" content="7392">
 
 
 
@@ -145,81 +142,42 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#目的">目的</a></li>
-<li><a href="#参考文献">参考文献</a></li>
-<li><a href="#ポインタ-構造体-インターフェース">ポインタ・構造体・インターフェース</a>
-<ul>
-<li><a href="#構造体">構造体</a>
-<ul>
-<li><a href="#type-で型定義する"><code>type</code>で型定義する</a>
-<ul>
-<li><a href="#エイリアス型の互換性">エイリアス型の互換性</a></li>
-</ul></li>
-<li><a href="#構造体の定義">構造体の定義</a></li>
-<li><a href="#複合リテラル">複合リテラル</a></li>
-<li><a href="#フィールド定義の詳細な仕様について">フィールド定義の詳細な仕様について</a></li>
-<li><a href="#構造体を含む構造体-構造体を入れ子にする">構造体を含む構造体(構造体を入れ子にする)</a>
-<ul>
-<li><a href="#フィールド名をつけて構造体を埋め込む">フィールド名をつけて構造体を埋め込む</a></li>
-<li><a href="#フィールド名を省略して構造体を埋め込む">フィールド名を省略して構造体を埋め込む</a>
-<ul>
-<li><a href="#暗黙的なフィールド定義の注意点">暗黙的なフィールド定義の注意点</a>
-<ul>
-<li><a href="#定義されるフィールド名の決まり">定義されるフィールド名の決まり</a></li>
-</ul></li>
-<li><a href="#再帰的な定義は禁止">再帰的な定義は禁止</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#無名の構造体型">無名の構造体型</a></li>
-<li><a href="#ポインタの参照先の構造体が持つフィールド-メソッドに参照する方法">ポインタの参照先の構造体が持つフィールド・メソッドに参照する方法</a></li>
-<li><a href="#new-関数で指定した型のポインタ型を生成する"><code>new()</code>関数で指定した型のポインタ型を生成する</a></li>
-<li><a href="#メソッド">メソッド</a>
-<ul>
-<li><a href="#メソッドの定義">メソッドの定義</a></li>
-<li><a href="#エイリアスへのメソッド定義">エイリアスへのメソッド定義</a></li>
-<li><a href="#型のコンストラクタパターン">型のコンストラクタパターン</a></li>
-<li><a href="#メソッドを関数型として参照する">メソッドを関数型として参照する</a>
-<ul>
-<li><a href="#レシーバーの型-メソッド名-の形で参照"><code>レシーバーの型.メソッド名</code>の形で参照</a></li>
-</ul></li>
-<li><a href="#レシーバー名-メソッド名-の形で参照"><code>レシーバー名.メソッド名</code>の形で参照</a></li>
-<li><a href="#メソッドのレシーバーは原則-ポインタ型-にすべき">メソッドのレシーバーは原則<strong>ポインタ型</strong>にすべき</a></li>
-</ul></li>
-<li><a href="#フィールドとメソッドのアクセシビリティ">フィールドとメソッドのアクセシビリティ</a></li>
-<li><a href="#スライスと構造体を組み合わせる">スライスと構造体を組み合わせる</a></li>
-<li><a href="#マップと構造体">マップと構造体</a></li>
-<li><a href="#タグ">タグ</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#構造体">構造体</a>
+      <ul>
+        <li><a href="#typeで型定義する"><code>type</code>で型定義する</a></li>
+        <li><a href="#構造体の定義">構造体の定義</a></li>
+        <li><a href="#複合リテラル">複合リテラル</a></li>
+        <li><a href="#フィールド定義の詳細な仕様について">フィールド定義の詳細な仕様について</a></li>
+        <li><a href="#構造体を含む構造体構造体を入れ子にする">構造体を含む構造体(構造体を入れ子にする)</a></li>
+        <li><a href="#無名の構造体型">無名の構造体型</a></li>
+        <li><a href="#ポインタの参照先の構造体が持つフィールドメソッドに参照する方法">ポインタの参照先の構造体が持つフィールド・メソッドに参照する方法</a></li>
+        <li><a href="#new関数で指定した型のポインタ型を生成する"><code>new()</code>関数で指定した型のポインタ型を生成する</a></li>
+        <li><a href="#メソッド">メソッド</a></li>
+        <li><a href="#フィールドとメソッドのアクセシビリティ">フィールドとメソッドのアクセシビリティ</a></li>
+        <li><a href="#スライスと構造体を組み合わせる">スライスと構造体を組み合わせる</a></li>
+        <li><a href="#マップと構造体">マップと構造体</a></li>
+        <li><a href="#タグ">タグ</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h1 id="目的">目的</h1>
-
+  <h1 id="目的">目的</h1>
 <p>Go言語の基本構文を残す。</p>
-
 <h1 id="参考文献">参考文献</h1>
-
 <ul>
 <li><a href="https://www.shoeisha.co.jp/book/detail/9784798142418">スターティング Go言語</a></li>
 </ul>
-
-<h1 id="ポインタ-構造体-インターフェース">ポインタ・構造体・インターフェース</h1>
-
+<h1 id="ポインタ構造体インターフェース">ポインタ・構造体・インターフェース</h1>
 <h2 id="構造体">構造体</h2>
-
-<p>Goにおける構造体は、C言語と同様に、データと手続きを一体化するためのデータ構造のこと。<br />
-Goでは、構造体を、Javaなどにおけるクラスやオブジェクトのような目的で使用することになる。<br />
+<p>Goにおける構造体は、C言語と同様に、データと手続きを一体化するためのデータ構造のこと。<br>
+Goでは、構造体を、Javaなどにおけるクラスやオブジェクトのような目的で使用することになる。<br>
 ちなみに、後述する「インターフェース」もGoの構造体に柔軟性を与えるために使用される。</p>
-
-<h3 id="type-で型定義する"><code>type</code>で型定義する</h3>
-
+<h3 id="typeで型定義する"><code>type</code>で型定義する</h3>
 <p>構造体では、予約語<code>type</code>を使用して、任意の既存の型に対してエイリアス(別名)を定義する。そこで、まずは<code>type</code>による型定義の使用方法について説明する。
 書式は「<code>type 定義する型 既存の型</code>」となる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">MyInt</span> <span class="kt">int</span>
@@ -230,251 +188,237 @@ Goでは、構造体を、Javaなどにおけるクラスやオブジェクト�
 <span class="c1">// 変数n2に、int型のリテラル7をMyInt型に型変換して代入
 </span><span class="c1"></span><span class="nx">n2</span> <span class="o">:=</span> <span class="nf">MyInt</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
 
-<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">n1</span><span class="p">)</span> <span class="c1">// =&gt; 5
-</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">n2</span><span class="p">)</span> <span class="c1">// =&gt; 7
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">n1</span><span class="p">)</span>	<span class="c1">// =&gt; 5
+</span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">n2</span><span class="p">)</span>	<span class="c1">// =&gt; 7
 </span><span class="c1"></span>
 <span class="c1">// typeによる様々なエイリアスの例
 </span><span class="c1">// type(...)の形で、まとめて型名を定義できる
 </span><span class="c1"></span><span class="kd">type</span> <span class="p">(</span>
-    <span class="nx">IntPair</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="kt">int</span>
-    <span class="nx">Strings</span> <span class="p">[]</span><span class="kt">string</span>
-    <span class="nx">AreaMap</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="kt">float64</span>
-    <span class="nx">IntsChannel</span> <span class="kd">chan</span> <span class="p">[]</span><span class="kt">int</span>
+	<span class="nx">IntPair</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="kt">int</span>
+	<span class="nx">Strings</span> <span class="p">[]</span><span class="kt">string</span>
+	<span class="nx">AreaMap</span> <span class="kd">map</span><span class="p">[</span><span class="kt">string</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="kt">float64</span>
+	<span class="nx">IntsChannel</span> <span class="kd">chan</span> <span class="p">[]</span><span class="kt">int</span>
 <span class="p">)</span>
 
-<span class="nx">pair</span> <span class="o">:=</span> <span class="nx">IntPair</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">}</span>   <span class="c1">// [2]int{1, 2}
-</span><span class="c1"></span><span class="nx">strs</span> <span class="o">:=</span> <span class="nx">Strings</span><span class="p">{</span><span class="s">&#34;Apple&#34;</span><span class="p">,</span> <span class="s">&#34;Banana&#34;</span><span class="p">,</span> <span class="s">&#34;Cherry&#34;</span><span class="p">}</span>    <span class="c1">// []string
-</span><span class="c1"></span><span class="nx">amap</span> <span class="o">:=</span> <span class="nx">AreaMap</span><span class="p">{</span><span class="s">&#34;Tokyo&#34;</span><span class="p">,</span> <span class="p">{</span><span class="mf">35.6789</span><span class="p">,</span> <span class="mf">123.456</span><span class="p">}}</span>    <span class="c1">// map[string][2]float64
-</span><span class="c1"></span><span class="nx">ich</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">(</span><span class="nx">IntsChannel</span><span class="p">)</span> <span class="c1">// chan []int
+<span class="nx">pair</span> <span class="o">:=</span> <span class="nx">IntPair</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">}</span>	<span class="c1">// [2]int{1, 2}
+</span><span class="c1"></span><span class="nx">strs</span> <span class="o">:=</span> <span class="nx">Strings</span><span class="p">{</span><span class="s">&#34;Apple&#34;</span><span class="p">,</span> <span class="s">&#34;Banana&#34;</span><span class="p">,</span> <span class="s">&#34;Cherry&#34;</span><span class="p">}</span>	<span class="c1">// []string
+</span><span class="c1"></span><span class="nx">amap</span> <span class="o">:=</span> <span class="nx">AreaMap</span><span class="p">{</span><span class="s">&#34;Tokyo&#34;</span><span class="p">,</span> <span class="p">{</span><span class="mf">35.6789</span><span class="p">,</span> <span class="mf">123.456</span><span class="p">}}</span>	<span class="c1">// map[string][2]float64
+</span><span class="c1"></span><span class="nx">ich</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">(</span><span class="nx">IntsChannel</span><span class="p">)</span>	<span class="c1">// chan []int
 </span><span class="c1"></span>
 <span class="c1">// 関数型にエイリアスを定義する事もできる
 </span><span class="c1">// 型名で明確な意味付けをする
 </span><span class="c1"></span><span class="kd">type</span> <span class="nx">Callback</span> <span class="kd">func</span><span class="p">(</span><span class="nx">i</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span>
 
 <span class="kd">func</span> <span class="nf">Sum</span><span class="p">(</span><span class="nx">ints</span> <span class="p">[]</span><span class="kt">int</span><span class="p">,</span> <span class="nx">callback</span> <span class="nx">Callback</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">sum</span> <span class="kt">int</span>
-    <span class="c1">// 引数intsの各要素を足す =&gt; 15
-</span><span class="c1"></span>    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ints</span> <span class="p">{</span>
-        <span class="nx">sum</span> <span class="o">+=</span> <span class="nx">i</span>
-    <span class="p">}</span>
-    <span class="c1">// int型の引数を取ってint型の戻り値返すコールバック関数をコール
-</span><span class="c1"></span>    <span class="c1">// callback(15) =&gt; 15 * 2 =&gt; 30
-</span><span class="c1"></span>    <span class="k">return</span> <span class="nf">callback</span><span class="p">(</span><span class="nx">sum</span><span class="p">)</span>
+	<span class="kd">var</span> <span class="nx">sum</span> <span class="kt">int</span>
+	<span class="c1">// 引数intsの各要素を足す =&gt; 15
+</span><span class="c1"></span>	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ints</span> <span class="p">{</span>
+		<span class="nx">sum</span> <span class="o">+=</span> <span class="nx">i</span>
+	<span class="p">}</span>
+	<span class="c1">// int型の引数を取ってint型の戻り値返すコールバック関数をコール
+</span><span class="c1"></span>	<span class="c1">// callback(15) =&gt; 15 * 2 =&gt; 30
+</span><span class="c1"></span>	<span class="k">return</span> <span class="nf">callback</span><span class="p">(</span><span class="nx">sum</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">n</span> <span class="o">:=</span> <span class="nf">Sum</span><span class="p">(</span>
-        <span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span>
-        <span class="kd">func</span><span class="p">(</span><span class="nx">i</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="nx">i</span> <span class="o">*</span> <span class="mi">2</span>
-        <span class="p">},</span>
-    <span class="p">)</span>
-    <span class="c1">// n == 30
-</span><span class="c1"></span><span class="p">}</span></code></pre></div>
-<h4 id="エイリアス型の互換性">エイリアス型の互換性</h4>
-
-<p>型の互換性については注意が必要。<br />
-例えば、下記の通りに定義した型<code>T0</code>と型<code>T1</code>はいずれも<code>int</code>型へのエイリアス。<br />
+	<span class="nx">n</span> <span class="o">:=</span> <span class="nf">Sum</span><span class="p">(</span>
+		<span class="p">[]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span>
+		<span class="kd">func</span><span class="p">(</span><span class="nx">i</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">i</span> <span class="o">*</span> <span class="mi">2</span>
+		<span class="p">},</span>
+	<span class="p">)</span>
+	<span class="c1">// n == 30
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><h4 id="エイリアス型の互換性">エイリアス型の互換性</h4>
+<p>型の互換性については注意が必要。<br>
+例えば、下記の通りに定義した型<code>T0</code>と型<code>T1</code>はいずれも<code>int</code>型へのエイリアス。<br>
 このとき、型<code>T0</code>と型<code>T1</code>には互換性がない。つまり、同じ<code>int</code>型のエイリアスだが、全く別の型として認識される。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">T0</span> <span class="kt">int</span>
 <span class="kd">type</span> <span class="nx">T1</span> <span class="kt">int</span>
 
-<span class="nx">t0</span> <span class="o">:=</span> <span class="nf">T0</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>     <span class="c1">// t0 == 5
-</span><span class="c1"></span><span class="nx">i0</span> <span class="o">:=</span> <span class="nf">T1</span><span class="p">(</span><span class="nx">t0</span><span class="p">)</span>    <span class="c1">// i0 == 5
+<span class="nx">t0</span> <span class="o">:=</span> <span class="nf">T0</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>		<span class="c1">// t0 == 5
+</span><span class="c1"></span><span class="nx">i0</span> <span class="o">:=</span> <span class="nf">T1</span><span class="p">(</span><span class="nx">t0</span><span class="p">)</span>	<span class="c1">// i0 == 5
 </span><span class="c1"></span>
-<span class="nx">t1</span> <span class="o">:=</span> <span class="nf">T1</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>     <span class="c1">// t1 == 8
-</span><span class="c1"></span><span class="nx">i2</span> <span class="o">:=</span> <span class="nb">int</span><span class="p">(</span><span class="nx">t1</span><span class="p">)</span>   <span class="c1">// i1 == 8
+<span class="nx">t1</span> <span class="o">:=</span> <span class="nf">T1</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>		<span class="c1">// t1 == 8
+</span><span class="c1"></span><span class="nx">i2</span> <span class="o">:=</span> <span class="nb">int</span><span class="p">(</span><span class="nx">t1</span><span class="p">)</span>	<span class="c1">// i1 == 8
 </span><span class="c1"></span>
-<span class="nx">t0</span> <span class="p">=</span> <span class="nx">t1</span> <span class="o">//</span> <span class="nx">コンパイルエラー</span></code></pre></div>
-<h3 id="構造体の定義">構造体の定義</h3>
-
-<p>構造体を使用する前には、前述の通り<code>type</code>と組み合わせて新しい型を定義することになる。<br />
-構造体は「<code>struct { フィールドの定義 }</code>」によって囲われた範囲で定義する。<br />
+<span class="nx">t0</span> <span class="p">=</span> <span class="nx">t1</span>	<span class="c1">// コンパイルエラー
+</span></code></pre></div><h3 id="構造体の定義">構造体の定義</h3>
+<p>構造体を使用する前には、前述の通り<code>type</code>と組み合わせて新しい型を定義することになる。<br>
+構造体は「<code>struct { フィールドの定義 }</code>」によって囲われた範囲で定義する。<br>
 構造体定義と型定義の順番は、必ず「<code>struct</code>で定義された構造体に対して、<code>type</code>を使って新しい型名を与える」である必要がある。</p>
-
-<p><code>struct</code>の中には、任意の型を持つ「フィールド(field)」を任意の数だけ並べることができる。<br />
+<p><code>struct</code>の中には、任意の型を持つ「フィールド(field)」を任意の数だけ並べることができる。<br>
 次の例に示す<code>Point</code>型では、<code>int</code>型の変数<code>X</code>と変数<code>Y</code>をフィールドに持つ。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Point</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">X</span> <span class="kt">int</span>
-    <span class="nx">Y</span> <span class="kt">int</span>
+	<span class="nx">X</span> <span class="kt">int</span>
+	<span class="nx">Y</span> <span class="kt">int</span>
 <span class="p">}</span>
 
 <span class="c1">// 異なる定義方法
 </span><span class="c1"></span><span class="kd">type</span> <span class="nx">Point</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">X</span><span class="p">,</span> <span class="nx">Y</span> <span class="kt">int</span>
-<span class="p">}</span></code></pre></div>
-<p>構造体のフィールドにアクセスするには、C言語と同様に<code>.</code>を用いる。</p>
+	<span class="nx">X</span><span class="p">,</span> <span class="nx">Y</span> <span class="kt">int</span>
+<span class="p">}</span>
+</code></pre></div><p>構造体のフィールドにアクセスするには、C言語と同様に<code>.</code>を用いる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">var</span> <span class="nx">pt</span> <span class="nx">Point</span>
-<span class="nx">pt</span><span class="p">.</span><span class="nx">X</span>    <span class="c1">// 0
-</span><span class="c1"></span><span class="nx">pt</span><span class="p">.</span><span class="nx">Y</span>    <span class="c1">// 0
+<span class="nx">pt</span><span class="p">.</span><span class="nx">X</span>	<span class="c1">// 0
+</span><span class="c1"></span><span class="nx">pt</span><span class="p">.</span><span class="nx">Y</span>	<span class="c1">// 0
 </span><span class="c1"></span>
 <span class="c1">// 構造体のフィールドへ値を代入する
 </span><span class="c1"></span><span class="nx">pt</span><span class="p">.</span><span class="nx">X</span> <span class="p">=</span> <span class="mi">10</span>
 <span class="nx">pt</span><span class="p">.</span><span class="nx">Y</span> <span class="p">=</span> <span class="mi">8</span>
 
 <span class="c1">// 構造体のフィールドを参照する
-</span><span class="c1"></span><span class="nx">pt</span><span class="p">.</span><span class="nx">X</span>    <span class="c1">// 10
-</span><span class="c1"></span><span class="nx">pt</span><span class="p">.</span><span class="nx">Y</span>    <span class="o">//</span> <span class="mi">8</span></code></pre></div>
-<h3 id="複合リテラル">複合リテラル</h3>
-
+</span><span class="c1"></span><span class="nx">pt</span><span class="p">.</span><span class="nx">X</span>	<span class="c1">// 10
+</span><span class="c1"></span><span class="nx">pt</span><span class="p">.</span><span class="nx">Y</span>	<span class="c1">// 8
+</span></code></pre></div><h3 id="複合リテラル">複合リテラル</h3>
 <p>構造体型に書くフィールドの初期値を指定子つつ構造体を生成するための方法として「複合リテラル」が用意されている。
 <code>{}</code>で囲んだ中に各フィールドの初期値を列挙して、それを構造体の変数に代入できる。初期値を並べる順番は、フィールドが定義された順序と同じ。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">pt</span> <span class="o">:=</span> <span class="nx">Point</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">}</span>
-<span class="nx">pt</span><span class="p">.</span><span class="nx">X</span>    <span class="c1">// 1
-</span><span class="c1"></span><span class="nx">pt</span><span class="p">.</span><span class="nx">Y</span>    <span class="o">//</span> <span class="mi">2</span></code></pre></div>
-<p>構造体を各フィールドの初期値を上記のように指定して生成する書き方は、フィールドの定義順序を意識せざるを得ないため、使い勝手が悪い。<br />
-そこで、他言語のラベル付き引数のように「<code>フィールド: 値</code>」と記述することで、順序を気にせず初期値を与えることができる。<br />
+<span class="nx">pt</span><span class="p">.</span><span class="nx">X</span>	<span class="c1">// 1
+</span><span class="c1"></span><span class="nx">pt</span><span class="p">.</span><span class="nx">Y</span>	<span class="c1">// 2
+</span></code></pre></div><p>構造体を各フィールドの初期値を上記のように指定して生成する書き方は、フィールドの定義順序を意識せざるを得ないため、使い勝手が悪い。<br>
+そこで、他言語のラベル付き引数のように「<code>フィールド: 値</code>」と記述することで、順序を気にせず初期値を与えることができる。<br>
 また、任意の一部のフィールドのみ初期化することも可能となる。この場合、未初期化状態のフィールドは、その型の初期値が入る。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">pt</span> <span class="o">:=</span> <span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
-<span class="nx">pt</span><span class="p">.</span><span class="nx">X</span>    <span class="c1">// 1
-</span><span class="c1"></span><span class="nx">pt</span><span class="p">.</span><span class="nx">Y</span>    <span class="c1">// 2
+<span class="nx">pt</span><span class="p">.</span><span class="nx">X</span>	<span class="c1">// 1
+</span><span class="c1"></span><span class="nx">pt</span><span class="p">.</span><span class="nx">Y</span>	<span class="c1">// 2
 </span><span class="c1"></span>
 <span class="nx">pt</span> <span class="p">=</span> <span class="nx">Point</span><span class="p">{</span><span class="nx">Y</span><span class="p">:</span> <span class="mi">28</span><span class="p">}</span>
-<span class="nx">pt</span><span class="p">.</span><span class="nx">X</span>    <span class="c1">// 0
-</span><span class="c1"></span><span class="nx">pt</span><span class="p">.</span><span class="nx">Y</span>    <span class="o">//</span> <span class="mi">28</span></code></pre></div>
-<h3 id="フィールド定義の詳細な仕様について">フィールド定義の詳細な仕様について</h3>
-
-<p>構造体のフィールド名のルールは、変数や関数など他のGoの識別子と同様。<br />
-つまり、UTF-8エンコーディングであれば、日本語フィールド名も使用できる。<br />
+<span class="nx">pt</span><span class="p">.</span><span class="nx">X</span>	<span class="c1">// 0
+</span><span class="c1"></span><span class="nx">pt</span><span class="p">.</span><span class="nx">Y</span>	<span class="c1">// 28
+</span></code></pre></div><h3 id="フィールド定義の詳細な仕様について">フィールド定義の詳細な仕様について</h3>
+<p>構造体のフィールド名のルールは、変数や関数など他のGoの識別子と同様。<br>
+つまり、UTF-8エンコーディングであれば、日本語フィールド名も使用できる。<br>
 しかし、Goの慣例としては、<strong>フィールド名は英大文字で始まりの英数字を用いるべき</strong>。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Person</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">ID</span> <span class="kt">uint</span>
-    <span class="nx">name</span> <span class="kt">string</span>
-    <span class="nx">部署</span> <span class="kt">string</span>
+	<span class="nx">ID</span> <span class="kt">uint</span>
+	<span class="nx">name</span> <span class="kt">string</span>
+	<span class="nx">部署</span> <span class="kt">string</span>
 <span class="p">}</span>
 
-<span class="nx">p</span> <span class="o">:=</span> <span class="nx">Person</span><span class="p">{</span><span class="nx">ID</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span> <span class="nx">name</span><span class="p">:</span> <span class="s">&#34;ヤマメくん&#34;</span><span class="p">,</span> <span class="nx">部署</span><span class="p">:</span> <span class="s">&#34;四万十川&#34;</span><span class="p">}</span></code></pre></div>
-<p>Goにおいては、フィールド名の省略ができる。<br />
-フィールド名を省略した場合は「<code>フィールド名=型名</code>」という定義であるとみなされる。<br />
+<span class="nx">p</span> <span class="o">:=</span> <span class="nx">Person</span><span class="p">{</span><span class="nx">ID</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span> <span class="nx">name</span><span class="p">:</span> <span class="s">&#34;ヤマメくん&#34;</span><span class="p">,</span> <span class="nx">部署</span><span class="p">:</span> <span class="s">&#34;四万十川&#34;</span><span class="p">}</span>
+</code></pre></div><p>Goにおいては、フィールド名の省略ができる。<br>
+フィールド名を省略した場合は「<code>フィールド名=型名</code>」という定義であるとみなされる。<br>
 基本型に対しては、このような仕様は大して利点は無いが、構造体に別の構造体を埋め込む場合(後述)には有効な機能となる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">T</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="kt">int</span>
-    <span class="kt">float64</span>
-    <span class="kt">string</span>
+	<span class="kt">int</span>
+	<span class="kt">float64</span>
+	<span class="kt">string</span>
 <span class="p">}</span>
 
 <span class="nx">t</span> <span class="o">:=</span> <span class="nx">T</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.14</span><span class="p">,</span> <span class="s">&#34;文字列&#34;</span><span class="p">}</span>
-<span class="nx">t</span><span class="p">.</span><span class="kt">int</span>       <span class="c1">// 1
-</span><span class="c1"></span><span class="nx">t</span><span class="p">.</span><span class="kt">float64</span>   <span class="c1">// 3.14
-</span><span class="c1"></span><span class="nx">t</span><span class="p">.</span><span class="kt">string</span>    <span class="o">//</span> <span class="s">&#34;文字列&#34;</span></code></pre></div>
-<p>Goの構造体には、「無名フィールド(blank field)」を定義できる。フィールド名「<code>_</code>」を与えると、そのフィールドは無名フィールドになる。<br />
-無名フィールドには名前のとおりフィールド名が存在しないため、参照や代入はできない。また、複合リテラルを使ったフィールド値の初期化もできない。<br />
+<span class="nx">t</span><span class="p">.</span><span class="kt">int</span>		<span class="c1">// 1
+</span><span class="c1"></span><span class="nx">t</span><span class="p">.</span><span class="kt">float64</span>	<span class="c1">// 3.14
+</span><span class="c1"></span><span class="nx">t</span><span class="p">.</span><span class="kt">string</span>	<span class="c1">// &#34;文字列&#34;
+</span></code></pre></div><p>Goの構造体には、「無名フィールド(blank field)」を定義できる。フィールド名「<code>_</code>」を与えると、そのフィールドは無名フィールドになる。<br>
+無名フィールドには名前のとおりフィールド名が存在しないため、参照や代入はできない。また、複合リテラルを使ったフィールド値の初期化もできない。<br>
 無名フィールドは、構造体のメモリ領域のアライメント調整に使用できるらしい。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">T</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">N</span> <span class="kt">uint</span>  <span class="c1">// 32bit確保
-</span><span class="c1"></span>    <span class="nx">_</span> <span class="kt">int16</span> <span class="c1">// 16bit確保
-</span><span class="c1"></span>    <span class="nx">S</span> <span class="p">[]</span><span class="kt">string</span>  <span class="c1">// []string型の分のメモリ領域確保
+	<span class="nx">N</span> <span class="kt">uint</span>	<span class="c1">// 32bit確保
+</span><span class="c1"></span>	<span class="nx">_</span> <span class="kt">int16</span>	<span class="c1">// 16bit確保
+</span><span class="c1"></span>	<span class="nx">S</span> <span class="p">[]</span><span class="kt">string</span>	<span class="c1">// []string型の分のメモリ領域確保
 </span><span class="c1"></span><span class="p">}</span>
 
 <span class="nx">t</span> <span class="o">:=</span> <span class="nx">T</span> <span class="p">{</span>
-    <span class="nx">N</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
-    <span class="nx">S</span><span class="p">:</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;A&#34;</span><span class="p">,</span> <span class="s">&#34;B&#34;</span><span class="p">,</span> <span class="s">&#34;C&#34;</span><span class="p">},</span>
+	<span class="nx">N</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span>
+	<span class="nx">S</span><span class="p">:</span> <span class="p">[]</span><span class="kt">string</span><span class="p">{</span><span class="s">&#34;A&#34;</span><span class="p">,</span> <span class="s">&#34;B&#34;</span><span class="p">,</span> <span class="s">&#34;C&#34;</span><span class="p">},</span>
 <span class="p">}</span>
-<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>  <span class="o">//</span> <span class="s">&#34;{12 0 [A B C]}&#34;</span></code></pre></div>
-<h3 id="構造体を含む構造体-構造体を入れ子にする">構造体を含む構造体(構造体を入れ子にする)</h3>
-
-<p>構造体のフィールドに構造体を持たせるには、2種類の方法がある。<br />
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>	<span class="c1">// &#34;{12 0 [A B C]}&#34;
+</span></code></pre></div><h3 id="構造体を含む構造体構造体を入れ子にする">構造体を含む構造体(構造体を入れ子にする)</h3>
+<p>構造体のフィールドに構造体を持たせるには、2種類の方法がある。<br>
 それぞれの方法は使用目的が異なるため、仕組みを正しく理解するべき。</p>
-
 <ul>
 <li>フィールド名をつけて構造体を埋め込む</li>
 <li>フィールド名を省略して構造体を持たせる</li>
 </ul>
-
 <h4 id="フィールド名をつけて構造体を埋め込む">フィールド名をつけて構造体を埋め込む</h4>
-
-<p>次の例では、<code>Feed</code>型の構造体を定義して、<code>Animal</code>型の構造体のフィールドに埋め込む定義を行っている。<br />
-<code>Animal</code>型に埋め込む<code>Feed</code>型のフィールド名を、型と同じ<code>Feed</code>にしているが、これは問題無い。むしろ、実際のGoの構造体の定義ではよく見られる。<br />
+<p>次の例では、<code>Feed</code>型の構造体を定義して、<code>Animal</code>型の構造体のフィールドに埋め込む定義を行っている。<br>
+<code>Animal</code>型に埋め込む<code>Feed</code>型のフィールド名を、型と同じ<code>Feed</code>にしているが、これは問題無い。むしろ、実際のGoの構造体の定義ではよく見られる。<br>
 このように、フィールド名を構造体名と同じにしておけば、複合リテラルによる初期化の際などに混乱せずに済む。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Feed</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Name</span> <span class="kt">string</span>
-    <span class="nx">Amount</span> <span class="kt">uint</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">Amount</span> <span class="kt">uint</span>
 <span class="p">}</span>
 
 <span class="kd">type</span> <span class="nx">Animal</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Name</span> <span class="kt">string</span>
-    <span class="nx">Feed</span> <span class="nx">Feed</span>   <span class="c1">// Feed型の埋め込み
+	<span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">Feed</span> <span class="nx">Feed</span>	<span class="c1">// Feed型の埋め込み
 </span><span class="c1"></span><span class="p">}</span>
 
 <span class="nx">a</span> <span class="o">:=</span> <span class="nx">Animal</span> <span class="p">{</span>
-    <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Monkey&#34;</span><span class="p">,</span>
-    <span class="nx">Feed</span><span class="p">:</span> <span class="nx">Feed</span> <span class="p">{</span>
-        <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Banana&#34;</span><span class="p">,</span>
-        <span class="nx">Amount</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-    <span class="p">},</span>
+	<span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Monkey&#34;</span><span class="p">,</span>
+	<span class="nx">Feed</span><span class="p">:</span> <span class="nx">Feed</span> <span class="p">{</span>
+		<span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Banana&#34;</span><span class="p">,</span>
+		<span class="nx">Amount</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+	<span class="p">},</span>
 <span class="p">}</span>
 
-<span class="nx">a</span><span class="p">.</span><span class="nx">Name</span>          <span class="c1">// &#34;Monkey&#34;
-</span><span class="c1"></span><span class="nx">a</span><span class="p">.</span><span class="nx">Feed</span><span class="p">.</span><span class="nx">Name</span>     <span class="c1">// &#34;Banana&#34;
-</span><span class="c1"></span><span class="nx">a</span><span class="p">.</span><span class="nx">Feed</span><span class="p">.</span><span class="nx">Amount</span>   <span class="c1">// 10
+<span class="nx">a</span><span class="p">.</span><span class="nx">Name</span>			<span class="c1">// &#34;Monkey&#34;
+</span><span class="c1"></span><span class="nx">a</span><span class="p">.</span><span class="nx">Feed</span><span class="p">.</span><span class="nx">Name</span>		<span class="c1">// &#34;Banana&#34;
+</span><span class="c1"></span><span class="nx">a</span><span class="p">.</span><span class="nx">Feed</span><span class="p">.</span><span class="nx">Amount</span>	<span class="c1">// 10
 </span><span class="c1"></span>
 <span class="nx">a</span><span class="p">.</span><span class="nx">Feed</span><span class="p">.</span><span class="nx">Amount</span> <span class="p">=</span> <span class="mi">15</span>
-<span class="nx">a</span><span class="p">.</span><span class="nx">Feef</span><span class="p">.</span><span class="nx">Amount</span>   <span class="o">//</span> <span class="mi">15</span></code></pre></div>
-<h4 id="フィールド名を省略して構造体を埋め込む">フィールド名を省略して構造体を埋め込む</h4>
-
-<p>次の例では前述とは違い、<code>Animal</code>型に埋め込む<code>Feed</code>型のフィールド名を省略して定義している。<br />
+<span class="nx">a</span><span class="p">.</span><span class="nx">Feef</span><span class="p">.</span><span class="nx">Amount</span>	<span class="c1">// 15
+</span></code></pre></div><h4 id="フィールド名を省略して構造体を埋め込む">フィールド名を省略して構造体を埋め込む</h4>
+<p>次の例では前述とは違い、<code>Animal</code>型に埋め込む<code>Feed</code>型のフィールド名を省略して定義している。<br>
 このとき、<code>Feed</code>が持つ各フィールドにアクセスする方法が前述と異なり、あたかも<code>Animal</code>が持つフィールドのようにアクセスできる。</p>
-
 <p>構造体内の構造体にも同名のフィールドが定義されている場合(この場合<code>Name</code>が同名)、そのフィールドは外側の構造体の側のものを指す。
 したがって、構造体内の構造体のフィールドにアクセスするには、前述のように<code>Animal.Feed.Name</code>として、構造体名を明示して指定する必要がある。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Feed</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Name</span> <span class="kt">string</span>
-    <span class="nx">Amount</span> <span class="kt">uint</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">Amount</span> <span class="kt">uint</span>
 <span class="p">}</span>
 
 <span class="kd">type</span> <span class="nx">Animal</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Name</span> <span class="kt">string</span>
-    <span class="nx">Feed</span>    <span class="c1">// フィールド名を省略
+	<span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">Feed</span>	<span class="c1">// フィールド名を省略
 </span><span class="c1"></span><span class="p">}</span>
 
 <span class="nx">a</span> <span class="o">:=</span> <span class="nx">Animal</span> <span class="p">{</span>
-    <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Monkey&#34;</span><span class="p">,</span>
-    <span class="nx">Feed</span><span class="p">:</span> <span class="nx">Feed</span> <span class="p">{</span>
-        <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Banana&#34;</span><span class="p">,</span>
-        <span class="nx">Amount</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
-    <span class="p">},</span>
+	<span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Monkey&#34;</span><span class="p">,</span>
+	<span class="nx">Feed</span><span class="p">:</span> <span class="nx">Feed</span> <span class="p">{</span>
+		<span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Banana&#34;</span><span class="p">,</span>
+		<span class="nx">Amount</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+	<span class="p">},</span>
 <span class="p">}</span>
-<span class="nx">a</span><span class="p">.</span><span class="nx">Amount</span>    <span class="c1">// 10
+<span class="nx">a</span><span class="p">.</span><span class="nx">Amount</span>	<span class="c1">// 10
 </span><span class="c1"></span><span class="nx">a</span><span class="p">.</span><span class="nx">Amount</span> <span class="p">=</span> <span class="mi">15</span>
-<span class="nx">a</span><span class="p">.</span><span class="nx">Amount</span>    <span class="c1">// 15
-</span><span class="c1"></span><span class="nx">a</span><span class="p">.</span><span class="nx">Feed</span><span class="p">.</span><span class="nx">Amount</span>   <span class="o">//</span> <span class="mi">15</span> <span class="p">(</span><span class="o">==</span> <span class="nx">a</span><span class="p">.</span><span class="nx">Amount</span><span class="p">)</span></code></pre></div>
-<p><strong>Note</strong><br />
-この、構造体を入れ子にする方法を単純に使用しても、部分型が表現できないため、オブジェクト指向における<strong>継承</strong>は表現できない。<br />
-これは、例えば、下記の場合を考えることによって分かる。<br />
-派生クラスの構造体<code>SubClass</code>の中に、基本クラスの構造体<code>BaseClass</code>をフィールド名を省略して定義したとする。このとき、確かに<code>SubClass.FieldName</code>とすることで、<code>BaseClass.FieldName</code>にアクセスできる。<br />
+<span class="nx">a</span><span class="p">.</span><span class="nx">Amount</span>	<span class="c1">// 15
+</span><span class="c1"></span><span class="nx">a</span><span class="p">.</span><span class="nx">Feed</span><span class="p">.</span><span class="nx">Amount</span>	<span class="c1">// 15 (== a.Amount)
+</span></code></pre></div><p><strong>Note</strong><br>
+この、構造体を入れ子にする方法を単純に使用しても、部分型が表現できないため、オブジェクト指向における<strong>継承</strong>は表現できない。<br>
+これは、例えば、下記の場合を考えることによって分かる。<br>
+派生クラスの構造体<code>SubClass</code>の中に、基本クラスの構造体<code>BaseClass</code>をフィールド名を省略して定義したとする。このとき、確かに<code>SubClass.FieldName</code>とすることで、<code>BaseClass.FieldName</code>にアクセスできる。<br>
 しかし、この例において構造体<code>SubClass</code>は<code>BaseClass</code>の部分型ではないため、<code>BassClass</code>の<code>SubClass</code>への代入はコンパイルエラーとなってしまう。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">BassClass</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Name</span> <span class="kt">string</span>
-    <span class="nx">Kind</span> <span class="kt">string</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">Kind</span> <span class="kt">string</span>
 <span class="p">}</span>
 
 <span class="kd">type</span> <span class="nx">SubClass</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
 <span class="p">}</span>
 
 <span class="nx">sub</span> <span class="o">:=</span> <span class="nx">BassClass</span> <span class="p">{</span>
-    <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;John&#34;</span><span class="p">,</span>
-    <span class="nx">BassClass</span><span class="p">:</span> <span class="nx">BassClass</span> <span class="p">{</span>
-        <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Ape&#34;</span><span class="p">,</span>
-        <span class="nx">Kind</span><span class="p">:</span> <span class="s">&#34;Mammals&#34;</span><span class="p">,</span>
-    <span class="p">},</span>
+	<span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;John&#34;</span><span class="p">,</span>
+	<span class="nx">BassClass</span><span class="p">:</span> <span class="nx">BassClass</span> <span class="p">{</span>
+		<span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Ape&#34;</span><span class="p">,</span>
+		<span class="nx">Kind</span><span class="p">:</span> <span class="s">&#34;Mammals&#34;</span><span class="p">,</span>
+	<span class="p">},</span>
 <span class="p">}</span>
 
-<span class="nx">sub</span><span class="p">.</span><span class="nx">Name</span>            <span class="c1">// &#34;John&#34;
-</span><span class="c1"></span><span class="nx">sub</span><span class="p">.</span><span class="nx">BassClass</span><span class="p">.</span><span class="nx">Name</span>  <span class="c1">// &#34;Ape&#34;
-</span><span class="c1"></span><span class="nx">sub</span><span class="p">.</span><span class="nx">Kind</span>            <span class="c1">// &#34;Mammals&#34;
+<span class="nx">sub</span><span class="p">.</span><span class="nx">Name</span>			<span class="c1">// &#34;John&#34;
+</span><span class="c1"></span><span class="nx">sub</span><span class="p">.</span><span class="nx">BassClass</span><span class="p">.</span><span class="nx">Name</span>	<span class="c1">// &#34;Ape&#34;
+</span><span class="c1"></span><span class="nx">sub</span><span class="p">.</span><span class="nx">Kind</span>			<span class="c1">// &#34;Mammals&#34;
 </span><span class="c1"></span>
 
 <span class="kd">var</span> <span class="nx">sub1</span> <span class="nx">SubClass</span>
 <span class="kd">var</span> <span class="nx">bass1</span> <span class="nx">BaseClass</span>
-<span class="nx">sub1</span> <span class="p">=</span> <span class="nx">bass1</span>    <span class="o">//</span> <span class="nx">コンパイルエラー</span></code></pre></div>
-<h5 id="暗黙的なフィールド定義の注意点">暗黙的なフィールド定義の注意点</h5>
-
+<span class="nx">sub1</span> <span class="p">=</span> <span class="nx">bass1</span>	<span class="c1">// コンパイルエラー
+</span></code></pre></div><h5 id="暗黙的なフィールド定義の注意点">暗黙的なフィールド定義の注意点</h5>
 <h6 id="定義されるフィールド名の決まり">定義されるフィールド名の決まり</h6>
-
-<p>暗黙的にフィールド定義する際は、ポインタ型を埋め込む場合に注意する必要がある。<br />
+<p>暗黙的にフィールド定義する際は、ポインタ型を埋め込む場合に注意する必要がある。<br>
 ポインタ型の修飾子やパッケージのプリフィックス部分を埋め込む場合の暗黙的なフィールド名は、それらの修飾を取り除いたものになる。</p>
-
 <ul>
 <li><code>T1</code>&hellip;T1型。</li>
 <li><code>*T2</code>&hellip;T2型。フィールド名から<code>*</code>が取り除かれる。</li>
@@ -482,119 +426,112 @@ Goでは、構造体を、Javaなどにおけるクラスやオブジェクト�
 <li><code>*packageFoo.T4</code>&hellip;別パッケージのT4型のポインタ型。フィールド名から<code>*packageFoo</code>が取り除かれる。</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">T1</span>              <span class="c1">// フィールド名は「T1」
-</span><span class="c1"></span>    <span class="o">*</span><span class="nx">T2</span>             <span class="c1">// フィールド名は「T2」  // ポインタのデリファレンスは無視
-</span><span class="c1"></span>    <span class="nx">packageFoo</span><span class="p">.</span><span class="nx">T3</span>   <span class="c1">// フィールド名は「T3」  // パッケージのプリフィックスは無視
-</span><span class="c1"></span>    <span class="o">*</span><span class="nx">packageFoo</span><span class="p">.</span><span class="nx">T4</span>  <span class="c1">// フィールド名は「T4」  //  T2とT3の複合パターン
-</span><span class="c1"></span><span class="p">}</span></code></pre></div>
-<h5 id="再帰的な定義は禁止">再帰的な定義は禁止</h5>
-
+	<span class="nx">T1</span>				<span class="c1">// フィールド名は「T1」
+</span><span class="c1"></span>	<span class="o">*</span><span class="nx">T2</span>				<span class="c1">// フィールド名は「T2」	// ポインタのデリファレンスは無視
+</span><span class="c1"></span>	<span class="nx">packageFoo</span><span class="p">.</span><span class="nx">T3</span>	<span class="c1">// フィールド名は「T3」	// パッケージのプリフィックスは無視
+</span><span class="c1"></span>	<span class="o">*</span><span class="nx">packageFoo</span><span class="p">.</span><span class="nx">T4</span>	<span class="c1">// フィールド名は「T4」	//  T2とT3の複合パターン
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><h5 id="再帰的な定義は禁止">再帰的な定義は禁止</h5>
 <p>構造体のフィールドに、自身の方を含むような再帰的な定義、または、相互再帰(循環する定義)は、コンパイルエラーとなる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">T</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">T</span>   <span class="c1">// コンパイルエラー
+	<span class="nx">T</span>	<span class="c1">// コンパイルエラー
 </span><span class="c1"></span><span class="p">}</span>
 
 <span class="kd">type</span> <span class="nx">T0</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">T1</span>
+	<span class="nx">T1</span>
 <span class="p">}</span>
 
 <span class="kd">type</span> <span class="nx">T1</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">T0</span>  <span class="c1">// T0はこの構造体T1を持つためコンパイルエラー
-</span><span class="c1"></span><span class="p">}</span></code></pre></div>
-<h3 id="無名の構造体型">無名の構造体型</h3>
-
-<p><code>struct { フィールド定義 }</code>という、構造体型そのものを型として利用できる。<br />
+	<span class="nx">T0</span>	<span class="c1">// T0はこの構造体T1を持つためコンパイルエラー
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><h3 id="無名の構造体型">無名の構造体型</h3>
+<p><code>struct { フィールド定義 }</code>という、構造体型そのものを型として利用できる。<br>
 このように定義した構造体と、<code>type</code>によって定義された構造体とには互換性がある。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="nf">showStruct</span><span class="p">(</span><span class="nx">s</span> <span class="kd">struct</span><span class="p">{</span><span class="nx">X</span><span class="p">,</span> <span class="nx">Y</span> <span class="kt">int</span><span class="p">})</span> <span class="p">{</span>
-    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="c1">// 無名の構造体型
 </span><span class="c1"></span><span class="nx">s</span><span class="o">:=</span> <span class="kd">struct</span><span class="p">{</span><span class="nx">X</span><span class="p">,</span> <span class="nx">Y</span> <span class="kt">int</span><span class="p">}{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
-<span class="nf">showStruct</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>   <span class="c1">// =&gt; &#34;{1 2}&#34;
+<span class="nf">showStruct</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span>	<span class="c1">// =&gt; &#34;{1 2}&#34;
 </span><span class="c1"></span>
 <span class="kd">type</span> <span class="nx">Point</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">X</span><span class="p">,</span> <span class="nx">Y</span> <span class="kt">int</span>
+	<span class="nx">X</span><span class="p">,</span> <span class="nx">Y</span> <span class="kt">int</span>
 <span class="p">}</span>
 
 <span class="nx">p</span> <span class="o">:=</span> <span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">8</span><span class="p">}</span>
-<span class="nf">showStruct</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>   <span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;{3 8}&#34;</span></code></pre></div>
-<h3 id="ポインタの参照先の構造体が持つフィールド-メソッドに参照する方法">ポインタの参照先の構造体が持つフィールド・メソッドに参照する方法</h3>
-
-<p>構造体のポインタ型を定義したら、通常は<code>*p.FieldName</code>として参照できる。<br />
-また、アスタリスクを省略して<code>p.FieldName</code>としても参照できる。<br />
+<span class="nf">showStruct</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>	<span class="c1">// =&gt; &#34;{3 8}&#34;
+</span></code></pre></div><h3 id="ポインタの参照先の構造体が持つフィールドメソッドに参照する方法">ポインタの参照先の構造体が持つフィールド・メソッドに参照する方法</h3>
+<p>構造体のポインタ型を定義したら、通常は<code>*p.FieldName</code>として参照できる。<br>
+また、アスタリスクを省略して<code>p.FieldName</code>としても参照できる。<br>
 さらに、後述するメソッドに対しても、<code>*p.MethodName</code>は<code>p.MethodName</code>としても参照できる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span> <span class="c1">// Pointのポインタ型を定義
-</span><span class="c1"></span><span class="o">*</span><span class="nx">p</span><span class="p">.</span><span class="nx">X</span>    <span class="c1">// 1
-</span><span class="c1"></span><span class="o">*</span><span class="nx">p</span><span class="p">.</span><span class="nx">Y</span>    <span class="c1">// 2
-</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">X</span>     <span class="c1">// 1
-</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">Y</span>     <span class="o">//</span> <span class="mi">2</span></code></pre></div>
-<p>構造体を関数へ参照渡しするためには、構造体型へのポインタを使用する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>	<span class="c1">// Pointのポインタ型を定義
+</span><span class="c1"></span><span class="o">*</span><span class="nx">p</span><span class="p">.</span><span class="nx">X</span>	<span class="c1">// 1
+</span><span class="c1"></span><span class="o">*</span><span class="nx">p</span><span class="p">.</span><span class="nx">Y</span>	<span class="c1">// 2
+</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">X</span>		<span class="c1">// 1
+</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">Y</span>		<span class="c1">// 2
+</span></code></pre></div><p>構造体を関数へ参照渡しするためには、構造体型へのポインタを使用する。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Point</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">X</span><span class="p">,</span> <span class="nx">Y</span> <span class="kt">int</span>
+	<span class="nx">X</span><span class="p">,</span> <span class="nx">Y</span> <span class="kt">int</span>
 <span class="p">}</span>
 
 <span class="c1">// 値渡しなのでswapできない
 </span><span class="c1"></span><span class="kd">func</span> <span class="nf">swap</span><span class="p">(</span><span class="nx">p</span> <span class="nx">Point</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// フィールドX, Yの値を入れ替える
-</span><span class="c1"></span>    <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">X</span>
-    <span class="nx">p</span><span class="p">.</span><span class="nx">X</span> <span class="p">=</span> <span class="nx">x</span>
-    <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span> <span class="p">=</span> <span class="nx">y</span>
+	<span class="c1">// フィールドX, Yの値を入れ替える
+</span><span class="c1"></span>	<span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">X</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">X</span> <span class="p">=</span> <span class="nx">x</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">Y</span> <span class="p">=</span> <span class="nx">y</span>
 <span class="p">}</span>
 
 <span class="nx">p</span> <span class="o">:=</span> <span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
-<span class="nf">swap</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span> <span class="c1">// 値渡し
-</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">X</span> <span class="c1">// 1
-</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">Y</span> <span class="c1">// 2
+<span class="nf">swap</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>	<span class="c1">// 値渡し
+</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">X</span>	<span class="c1">// 1
+</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">Y</span>	<span class="c1">// 2
 </span><span class="c1"></span>
 <span class="c1">// 参照渡し
 </span><span class="c1"></span><span class="kd">func</span> <span class="nf">swap</span><span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Point</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">X</span>
-    <span class="nx">p</span><span class="p">.</span><span class="nx">X</span> <span class="p">=</span> <span class="nx">x</span>
-    <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span> <span class="p">=</span> <span class="nx">y</span>
+	<span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">X</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">X</span> <span class="p">=</span> <span class="nx">x</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">Y</span> <span class="p">=</span> <span class="nx">y</span>
 <span class="p">}</span>
 
-<span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span> <span class="c1">// Pointのポインタ型を定義
-</span><span class="c1"></span><span class="nf">swap</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span> <span class="c1">// 参照渡し
-</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">X</span> <span class="c1">// 2
-</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">Y</span> <span class="o">//</span> <span class="mi">1</span></code></pre></div>
-<h3 id="new-関数で指定した型のポインタ型を生成する"><code>new()</code>関数で指定した型のポインタ型を生成する</h3>
-
+<span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>	<span class="c1">// Pointのポインタ型を定義
+</span><span class="c1"></span><span class="nf">swap</span><span class="p">(</span><span class="nx">p</span><span class="p">)</span>	<span class="c1">// 参照渡し
+</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">X</span>	<span class="c1">// 2
+</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">Y</span>	<span class="c1">// 1
+</span></code></pre></div><h3 id="new関数で指定した型のポインタ型を生成する"><code>new()</code>関数で指定した型のポインタ型を生成する</h3>
 <p>指定した型のポインタ型を生成するために、組み込み関数<code>new()</code>が使用できる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Person</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Id</span> <span class="kt">int</span>
-    <span class="nx">Name</span> <span class="kt">string</span>
-    <span class="nx">Area</span> <span class="kt">string</span>
+	<span class="nx">Id</span> <span class="kt">int</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">Area</span> <span class="kt">string</span>
 <span class="p">}</span>
 
 <span class="c1">// 変数pは*Person型
 </span><span class="c1"></span><span class="nx">p</span> <span class="o">:=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">Person</span><span class="p">)</span>
 
 <span class="c1">// *p.FieldName は p.FieldNameとも記述できる
-</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">Id</span>    <span class="c1">// 0
-</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">Name</span>  <span class="c1">// &#34;&#34;
-</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">Area</span>  <span class="o">//</span> <span class="s">&#34;&#34;</span></code></pre></div>
-<p><code>new()</code>は、構造体以外にも基本型や参照型にも使用できる。ただし、使用用途としては専ら構造体用とされている。</p>
+</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">Id</span>	<span class="c1">// 0
+</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">Name</span>	<span class="c1">// &#34;&#34;
+</span><span class="c1"></span><span class="nx">p</span><span class="p">.</span><span class="nx">Area</span>	<span class="c1">// &#34;&#34;
+</span></code></pre></div><p><code>new()</code>は、構造体以外にも基本型や参照型にも使用できる。ただし、使用用途としては専ら構造体用とされている。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">i</span> <span class="o">:=</span> <span class="nb">new</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span>
-<span class="o">*</span><span class="nx">i</span>  <span class="c1">// 0
+<span class="o">*</span><span class="nx">i</span>	<span class="c1">// 0
 </span><span class="c1">// sは[]string型のポインタ
 </span><span class="c1"></span><span class="nx">s</span> <span class="o">:=</span> <span class="nb">new</span><span class="p">([]</span><span class="kt">string</span><span class="p">)</span>
-<span class="o">*</span><span class="nx">s</span>  <span class="o">//</span> <span class="kc">nil</span></code></pre></div>
-<p><code>new()</code>を使用した構造体型のポインタ生成と、アドレス演算子<code>&amp;</code>を使用した構造体型のポインタ生成には、ほとんど違いがない。</p>
+<span class="o">*</span><span class="nx">s</span>	<span class="c1">// nil
+</span></code></pre></div><p><code>new()</code>を使用した構造体型のポインタ生成と、アドレス演算子<code>&amp;</code>を使用した構造体型のポインタ生成には、ほとんど違いがない。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">p</span> <span class="o">:=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">Point</span><span class="p">)</span>
 <span class="nx">p</span><span class="p">.</span><span class="nx">X</span> <span class="p">=</span> <span class="mi">1</span>
 <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span> <span class="p">=</span> <span class="mi">2</span>
 
 <span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">2</span><span class="p">}</span>
 <span class="nx">p</span><span class="p">.</span><span class="nx">X</span> <span class="p">=</span> <span class="mi">1</span>
-<span class="nx">p</span><span class="p">.</span><span class="nx">Y</span> <span class="p">=</span> <span class="mi">2</span></code></pre></div>
-<h3 id="メソッド">メソッド</h3>
-
+<span class="nx">p</span><span class="p">.</span><span class="nx">Y</span> <span class="p">=</span> <span class="mi">2</span>
+</code></pre></div><h3 id="メソッド">メソッド</h3>
 <p>Goにおけるメソッドとは、任意の方に特化した関数を定義するための仕組み。</p>
-
 <h4 id="メソッドの定義">メソッドの定義</h4>
-
-<p>メソッド定義は、関数定義とは異なり、<code>func</code>とメソッド名の間に<strong>レシーバー</strong>の型とその変数名が必要になる。<br />
+<p>メソッド定義は、関数定義とは異なり、<code>func</code>とメソッド名の間に<strong>レシーバー</strong>の型とその変数名が必要になる。<br>
 型に定義されたメソッドは、<code>レシーバー.メソッド</code>という形式で呼び出せる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// メソッドの定義例
 </span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Point</span><span class="p">)</span> <span class="nf">Render</span><span class="p">()</span>
@@ -602,151 +539,140 @@ Goでは、構造体を、Javaなどにおけるクラスやオブジェクト�
 <span class="c1">// メソッドの呼び出し例
 </span><span class="c1"></span><span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">12</span><span class="p">}</span>
 <span class="o">*</span><span class="nx">p</span><span class="p">.</span><span class="nf">Render</span><span class="p">()</span>
-<span class="nx">p</span><span class="p">.</span><span class="nf">Render</span><span class="p">()</span></code></pre></div>
-<p>構造体型と、その構造体型に定義したメソッドの例を下記に示す。</p>
+<span class="nx">p</span><span class="p">.</span><span class="nf">Render</span><span class="p">()</span>
+</code></pre></div><p>構造体型と、その構造体型に定義したメソッドの例を下記に示す。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Point</span> <span class="kd">struct</span><span class="p">{</span><span class="nx">X</span><span class="p">,</span> <span class="nx">Y</span> <span class="kt">int</span><span class="p">}</span>
 
 <span class="c1">// Point型のメソッド
 </span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Point</span><span class="p">)</span> <span class="nf">Render</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;&lt;%d, %d&gt;\n&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">X</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;&lt;%d, %d&gt;\n&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">X</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">12</span><span class="p">}</span>
-<span class="nx">p</span><span class="p">.</span><span class="nf">Render</span><span class="p">()</span>  <span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;&lt;5, 12&gt;&#34;</span></code></pre></div>
-<p>レシーバーの場合は、レシーバーの方さえ異なっていれば、同名のメソッドを定義できる。</p>
+<span class="nx">p</span><span class="p">.</span><span class="nf">Render</span><span class="p">()</span>	<span class="c1">// =&gt; &#34;&lt;5, 12&gt;&#34;
+</span></code></pre></div><p>レシーバーの場合は、レシーバーの方さえ異なっていれば、同名のメソッドを定義できる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">IntPoint</span> <span class="kd">struct</span><span class="p">{</span><span class="nx">X</span><span class="p">,</span> <span class="nx">Y</span> <span class="kt">int</span><span class="p">}</span>
 <span class="kd">type</span> <span class="nx">FloatPoint</span> <span class="kd">struct</span><span class="p">{</span><span class="nx">X</span><span class="p">,</span> <span class="nx">Y</span> <span class="kt">float64</span><span class="p">}</span>
 
 <span class="c1">// *IntPoint型のメソッドDistance
 </span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">IntPoint</span><span class="p">)</span> <span class="nf">Distance</span><span class="p">(</span><span class="nx">dp</span> <span class="o">*</span><span class="nx">IntPoint</span><span class="p">)</span> <span class="kt">float64</span> <span class="p">{</span>
-    <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">X</span> <span class="o">-</span> <span class="nx">dp</span><span class="p">.</span><span class="nx">X</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span> <span class="o">-</span> <span class="nx">dp</span><span class="p">.</span><span class="nx">Y</span>
-    <span class="k">return</span> <span class="nx">math</span><span class="p">.</span><span class="nf">Sqrt</span><span class="p">(</span><span class="nb">float64</span><span class="p">(</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span> <span class="o">*</span> <span class="nx">y</span><span class="p">))</span>
+	<span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">X</span> <span class="o">-</span> <span class="nx">dp</span><span class="p">.</span><span class="nx">X</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span> <span class="o">-</span> <span class="nx">dp</span><span class="p">.</span><span class="nx">Y</span>
+	<span class="k">return</span> <span class="nx">math</span><span class="p">.</span><span class="nf">Sqrt</span><span class="p">(</span><span class="nb">float64</span><span class="p">(</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span> <span class="o">*</span> <span class="nx">y</span><span class="p">))</span>
 <span class="p">}</span>
 
 <span class="c1">// *FloatPoint型のメソッドDistance
 </span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">FloatPoint</span><span class="p">)</span> <span class="nf">Distance</span><span class="p">(</span><span class="nx">dp</span> <span class="o">*</span><span class="nx">FloatPoint</span><span class="p">)</span> <span class="kt">float64</span> <span class="p">{</span>
-    <span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">X</span> <span class="o">-</span> <span class="nx">dp</span><span class="p">.</span><span class="nx">X</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span> <span class="o">-</span> <span class="nx">dp</span><span class="p">.</span><span class="nx">Y</span>
-    <span class="k">return</span> <span class="nx">math</span><span class="p">.</span><span class="nf">Sqrt</span><span class="p">(</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span> <span class="o">*</span> <span class="nx">y</span><span class="p">)</span>
-<span class="p">}</span></code></pre></div>
-<h4 id="エイリアスへのメソッド定義">エイリアスへのメソッド定義</h4>
-
+	<span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">X</span> <span class="o">-</span> <span class="nx">dp</span><span class="p">.</span><span class="nx">X</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span> <span class="o">-</span> <span class="nx">dp</span><span class="p">.</span><span class="nx">Y</span>
+	<span class="k">return</span> <span class="nx">math</span><span class="p">.</span><span class="nf">Sqrt</span><span class="p">(</span><span class="nx">x</span> <span class="o">*</span> <span class="nx">x</span> <span class="o">+</span> <span class="nx">y</span> <span class="o">*</span> <span class="nx">y</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div><h4 id="エイリアスへのメソッド定義">エイリアスへのメソッド定義</h4>
 <p>メソッドは、エイリアスを定義することで、基本型に対しても定義できる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">MyInt</span> <span class="kt">int</span>
 
 <span class="kd">func</span> <span class="p">(</span><span class="nx">m</span> <span class="nx">MyInt</span><span class="p">)</span> <span class="nf">Plus</span><span class="p">(</span><span class="nx">i</span> <span class="kt">int</span><span class="p">)</span> <span class="kt">int</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span> <span class="o">+</span> <span class="nx">i</span>
+	<span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nx">m</span><span class="p">)</span> <span class="o">+</span> <span class="nx">i</span>
 <span class="p">}</span>
 
-<span class="nf">MyInt</span><span class="p">(</span><span class="mi">4</span><span class="p">).</span><span class="nf">Plus</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>    <span class="o">//</span> <span class="mi">6</span></code></pre></div>
-<h4 id="型のコンストラクタパターン">型のコンストラクタパターン</h4>
-
-<p>Goではコンストラクタとしての機能は存在しない。<br />
+<span class="nf">MyInt</span><span class="p">(</span><span class="mi">4</span><span class="p">).</span><span class="nf">Plus</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>	<span class="c1">// 6
+</span></code></pre></div><h4 id="型のコンストラクタパターン">型のコンストラクタパターン</h4>
+<p>Goではコンストラクタとしての機能は存在しない。<br>
 しかし、慣例的に<strong>型のコンストラクタ</strong>というパターンを利用する。</p>
-
-<p>型のコンストラクタを表す関数は、一般的に<code>New型名</code>のように命名する。<br />
+<p>型のコンストラクタを表す関数は、一般的に<code>New型名</code>のように命名する。<br>
 また、型のコンストラクタでは、対象の型のポインタ型を返すように定義するのが望ましい。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">user</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Id</span> <span class="kt">int</span>
-    <span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">Id</span> <span class="kt">int</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
 <span class="p">}</span>
 
 <span class="kd">func</span> <span class="nf">NewUser</span><span class="p">(</span><span class="nx">id</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="o">*</span><span class="nx">User</span> <span class="p">{</span>
-    <span class="nx">u</span> <span class="o">:=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">User</span><span class="p">)</span>  <span class="c1">// 構造体を生成して、そのポインタ型を返す
-</span><span class="c1"></span>    <span class="nx">u</span><span class="p">.</span><span class="nx">Id</span> <span class="p">=</span> <span class="nx">id</span>       <span class="c1">// 引数の値を構造体に代入
-</span><span class="c1"></span>    <span class="nx">u</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="nx">name</span>   <span class="c1">// 引数の値を構造体に代入
-</span><span class="c1"></span>    <span class="k">return</span> <span class="nx">u</span>        <span class="c1">// 対象の型のポインタ型を返す
+	<span class="nx">u</span> <span class="o">:=</span> <span class="nb">new</span><span class="p">(</span><span class="nx">User</span><span class="p">)</span>	<span class="c1">// 構造体を生成して、そのポインタ型を返す
+</span><span class="c1"></span>	<span class="nx">u</span><span class="p">.</span><span class="nx">Id</span> <span class="p">=</span> <span class="nx">id</span>		<span class="c1">// 引数の値を構造体に代入
+</span><span class="c1"></span>	<span class="nx">u</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="nx">name</span>	<span class="c1">// 引数の値を構造体に代入
+</span><span class="c1"></span>	<span class="k">return</span> <span class="nx">u</span>		<span class="c1">// 対象の型のポインタ型を返す
 </span><span class="c1"></span><span class="p">}</span>
 
 <span class="nx">user</span> <span class="o">:=</span> <span class="nf">NewUser</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#34;Taro&#34;</span><span class="p">)</span>
-<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span>    <span class="o">//</span> <span class="s">&#34;&amp;{1 Taro}&#34;</span></code></pre></div>
-<h4 id="メソッドを関数型として参照する">メソッドを関数型として参照する</h4>
-
-<h5 id="レシーバーの型-メソッド名-の形で参照"><code>レシーバーの型.メソッド名</code>の形で参照</h5>
-
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="nx">user</span><span class="p">)</span>	<span class="c1">// &#34;&amp;{1 Taro}&#34;
+</span><span class="c1"></span>
+</code></pre></div><h4 id="メソッドを関数型として参照する">メソッドを関数型として参照する</h4>
+<h5 id="レシーバーの型メソッド名の形で参照"><code>レシーバーの型.メソッド名</code>の形で参照</h5>
 <p>メソッドを関数型として参照するときは、<code>レシーバーの型.メソッド名</code>のように記述できる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Point</span> <span class="kd">struct</span><span class="p">{</span><span class="nx">X</span><span class="p">,</span> <span class="nx">Y</span> <span class="kt">int</span><span class="p">}</span>
 
 <span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Point</span><span class="p">)</span> <span class="nf">ToString</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;[%d, %d]&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">X</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;[%d, %d]&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">X</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="c1">// 変数fは func(*Point) string 型
 </span><span class="c1"></span><span class="nx">f</span> <span class="o">:=</span> <span class="p">(</span><span class="o">*</span><span class="nx">Point</span><span class="p">).</span><span class="nx">ToString</span>
 
 <span class="c1">// レシーバをただの関数として呼び出すこともできる
-</span><span class="c1"></span><span class="nf">f</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">11</span><span class="p">})</span>  <span class="o">//</span> <span class="s">&#34;[7, 11]&#34;</span></code></pre></div>
-<p><code>(*Point).ToString</code>の部分が、メソッドを関数型として参照している部分。<br />
-<code>f</code>に入るのは<code>func(*Point) string</code>という型。これは、第１引数が<code>*Point</code>型で戻り値型が<code>string</code>の関数の型と等しい。<br />
-つまり、<strong>メソッドは第１引数としてとる単なる関数に過ぎない</strong>。<br />
+</span><span class="c1"></span><span class="nf">f</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">11</span><span class="p">})</span>	<span class="c1">// &#34;[7, 11]&#34;
+</span></code></pre></div><p><code>(*Point).ToString</code>の部分が、メソッドを関数型として参照している部分。<br>
+<code>f</code>に入るのは<code>func(*Point) string</code>という型。これは、第１引数が<code>*Point</code>型で戻り値型が<code>string</code>の関数の型と等しい。<br>
+つまり、<strong>メソッドは第１引数としてとる単なる関数に過ぎない</strong>。<br>
 実際に、レシーバをただの関数として呼び出すこともできる。</p>
-
 <p>上記の事実を利用すると、トリッキーだが、下記のように記述できる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="p">((</span><span class="o">*</span><span class="nx">Point</span><span class="p">).</span><span class="nx">ToString</span><span class="p">)(</span><span class="o">&amp;</span><span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">33</span><span class="p">})</span></code></pre></div>
-<h4 id="レシーバー名-メソッド名-の形で参照"><code>レシーバー名.メソッド名</code>の形で参照</h4>
-
-<p>メソッドを関数型として参照するとき、<code>レシーバー名.メソッド名</code>のようにも記述できる。<br />
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="p">((</span><span class="o">*</span><span class="nx">Point</span><span class="p">).</span><span class="nx">ToString</span><span class="p">)(</span><span class="o">&amp;</span><span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">33</span><span class="p">})</span>
+</code></pre></div><h4 id="レシーバー名メソッド名の形で参照"><code>レシーバー名.メソッド名</code>の形で参照</h4>
+<p>メソッドを関数型として参照するとき、<code>レシーバー名.メソッド名</code>のようにも記述できる。<br>
 この形で記述すると、レシーバーの内容が具体的に決定しているため、第1引数にレシーバーを必要としない関数が得られる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">p</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">3</span><span class="p">}</span>
 <span class="c1">// 変数fは func() string 型
 </span><span class="c1"></span><span class="nx">f</span> <span class="o">:=</span> <span class="nx">p</span><span class="p">.</span><span class="nx">ToString</span>
-<span class="nf">f</span><span class="p">()</span> <span class="o">//</span> <span class="s">&#34;[2, 3]&#34;</span></code></pre></div>
-<h4 id="メソッドのレシーバーは原則-ポインタ型-にすべき">メソッドのレシーバーは原則<strong>ポインタ型</strong>にすべき</h4>
-
+<span class="nf">f</span><span class="p">()</span>	<span class="c1">// &#34;[2, 3]&#34;
+</span></code></pre></div><h4 id="メソッドのレシーバーは原則ポインタ型にすべき">メソッドのレシーバーは原則<strong>ポインタ型</strong>にすべき</h4>
 <p>メソッドに対していレシーバーが値渡しされるか参照渡しされるかは、レシーバーの型が値型かポインタ型かで決まる。</p>
-
 <p>|ポインタ型||</p>
-
-<p>構造体に定義するメソッドのレシーバーはポインタ型にすべき。<br />
+<p>構造体に定義するメソッドのレシーバーはポインタ型にすべき。<br>
 下記のように、値型でメソッド定義すると、メソッドにはレシーバーのコピーが渡されることになる。(値渡し)</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Point</span> <span class="kd">struct</span><span class="p">{</span><span class="nx">X</span><span class="p">,</span> <span class="nx">Y</span> <span class="kt">int</span><span class="p">}</span>
 
 <span class="c1">// Point型のレシーバー
 </span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="nx">Point</span><span class="p">)</span> <span class="nf">Set</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span> <span class="kt">int</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">p</span><span class="p">.</span><span class="nx">X</span> <span class="p">=</span> <span class="nx">x</span>
-    <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span> <span class="p">=</span> <span class="nx">Y</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">X</span> <span class="p">=</span> <span class="nx">x</span>
+	<span class="nx">p</span><span class="p">.</span><span class="nx">Y</span> <span class="p">=</span> <span class="nx">Y</span>
 <span class="p">}</span>
 
 <span class="c1">// 変数p1はPoint型
 </span><span class="c1"></span><span class="nx">p1</span> <span class="o">:=</span> <span class="nx">Point</span><span class="p">{}</span>
-<span class="nx">p1</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>    <span class="c1">// Setにはp1のコピーが渡される(値渡し)
-</span><span class="c1"></span><span class="nx">p1</span><span class="p">.</span><span class="nx">X</span>    <span class="c1">// 0    レシーバーの値が変化しない
-</span><span class="c1"></span><span class="nx">p1</span><span class="p">.</span><span class="nx">Y</span>    <span class="c1">// 0    レシーバーの値が変化しない
+<span class="nx">p1</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>	<span class="c1">// Setにはp1のコピーが渡される(値渡し)
+</span><span class="c1"></span><span class="nx">p1</span><span class="p">.</span><span class="nx">X</span>	<span class="c1">// 0	レシーバーの値が変化しない
+</span><span class="c1"></span><span class="nx">p1</span><span class="p">.</span><span class="nx">Y</span>	<span class="c1">// 0	レシーバーの値が変化しない
 </span><span class="c1"></span>
 <span class="c1">// 変数p2は*Point型
 </span><span class="c1"></span><span class="nx">p2</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">Point</span><span class="p">{}</span>
-<span class="nx">p2</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>    <span class="c1">// *p2.Set(1, 2)となり、Setには*p2のコピーが渡される(値渡し)
-</span><span class="c1"></span><span class="nx">p2</span><span class="p">.</span><span class="nx">X</span>    <span class="c1">// 0    レシーバーの値が変化しない
-</span><span class="c1"></span><span class="nx">p2</span><span class="p">.</span><span class="nx">Y</span>    <span class="o">//</span> <span class="mi">0</span>    <span class="nx">レシーバーの値が変化しない</span></code></pre></div>
-<h3 id="フィールドとメソッドのアクセシビリティ">フィールドとメソッドのアクセシビリティ</h3>
-
-<p>パッケージに定義された関数・定数・パッケージ変数・型など、全ての識別子において、<strong>大文字ならパッケージ外から参照可能</strong>で、<strong>小文字ならパッケージ外から参照不可</strong>。このルールは、構造体のフィールドやメソッドでも同様。<br />
+<span class="nx">p2</span><span class="p">.</span><span class="nf">Set</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>	<span class="c1">// *p2.Set(1, 2)となり、Setには*p2のコピーが渡される(値渡し)
+</span><span class="c1"></span><span class="nx">p2</span><span class="p">.</span><span class="nx">X</span>	<span class="c1">// 0	レシーバーの値が変化しない
+</span><span class="c1"></span><span class="nx">p2</span><span class="p">.</span><span class="nx">Y</span>	<span class="c1">// 0	レシーバーの値が変化しない
+</span></code></pre></div><h3 id="フィールドとメソッドのアクセシビリティ">フィールドとメソッドのアクセシビリティ</h3>
+<p>パッケージに定義された関数・定数・パッケージ変数・型など、全ての識別子において、<strong>大文字ならパッケージ外から参照可能</strong>で、<strong>小文字ならパッケージ外から参照不可</strong>。このルールは、構造体のフィールドやメソッドでも同様。<br>
 この仕組を利用し、構造体のフィールドは全て非公開として、公開メソッドとしてaccessorを作成すれば、メンテナンス性の高いパッケージが作成可能となる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">foo</span>
 
 <span class="kd">type</span> <span class="nx">T</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Field1</span> <span class="kt">int</span>  <span class="c1">// 公開フィールド
-</span><span class="c1"></span>    <span class="nx">field2</span> <span class="kt">int</span>  <span class="c1">// 非公開フィールド
+	<span class="nx">Field1</span> <span class="kt">int</span>	<span class="c1">// 公開フィールド
+</span><span class="c1"></span>	<span class="nx">field2</span> <span class="kt">int</span>	<span class="c1">// 非公開フィールド
 </span><span class="c1"></span><span class="p">}</span>
 
 <span class="c1">// 公開メソッド
 </span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nf">Method1</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">t</span><span class="p">.</span><span class="nx">Field1</span>
+	<span class="k">return</span> <span class="nx">t</span><span class="p">.</span><span class="nx">Field1</span>
 <span class="p">}</span>
 
 <span class="c1">// 非公開メソッド
 </span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nf">method2</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">t</span><span class="p">.</span><span class="nx">field2</span>
-<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+	<span class="k">return</span> <span class="nx">t</span><span class="p">.</span><span class="nx">field2</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
 
 <span class="nx">t</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">foo</span><span class="p">.</span><span class="nx">T</span><span class="p">{}</span>
-<span class="nx">t</span><span class="p">.</span><span class="nf">Method1</span><span class="p">()</span> <span class="c1">// OK
-</span><span class="c1"></span><span class="nx">t</span><span class="p">.</span><span class="nx">Field1</span>    <span class="c1">// OK
-</span><span class="c1"></span><span class="nx">t</span><span class="p">.</span><span class="nx">method2</span>   <span class="c1">// コンパイルエラー
-</span><span class="c1"></span><span class="nx">t</span><span class="p">.</span> <span class="nx">field</span>    <span class="o">//</span> <span class="nx">コンパイルエラー</span></code></pre></div>
-<h3 id="スライスと構造体を組み合わせる">スライスと構造体を組み合わせる</h3>
-
+<span class="nx">t</span><span class="p">.</span><span class="nf">Method1</span><span class="p">()</span>	<span class="c1">// OK
+</span><span class="c1"></span><span class="nx">t</span><span class="p">.</span><span class="nx">Field1</span>	<span class="c1">// OK
+</span><span class="c1"></span><span class="nx">t</span><span class="p">.</span><span class="nx">method2</span>	<span class="c1">// コンパイルエラー
+</span><span class="c1"></span><span class="nx">t</span><span class="p">.</span> <span class="nx">field</span>	<span class="c1">// コンパイルエラー
+</span></code></pre></div><h3 id="スライスと構造体を組み合わせる">スライスと構造体を組み合わせる</h3>
 <p>C言語で構造体の配列を扱うように、Goではスライスと構造体を組み合わせる処理が頻発する。</p>
-
 <p>組み込み関数<code>new()</code>などで別々に構造体を生成するよりも、<code>make([]構造体の型, 要素数)</code>としてまとめてメモリ領域を確保したほうが効率が良い。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Point</span> <span class="kd">struct</span><span class="p">{</span><span class="nx">X</span><span class="p">,</span> <span class="nx">Y</span> <span class="kt">int</span><span class="p">}</span>
 
@@ -754,124 +680,122 @@ Goでは、構造体を、Javaなどにおけるクラスやオブジェクト�
 </span><span class="c1"></span><span class="nx">ps</span> <span class="o">:=</span> <span class="nb">make</span><span class="p">([]</span><span class="nx">Point</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">p</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ps</span> <span class="p">{</span>
-    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">X</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">p</span><span class="p">.</span><span class="nx">X</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span><span class="p">)</span>
 <span class="p">}</span>
 <span class="c1">// =&gt;
 </span><span class="c1">// 0 0
 </span><span class="c1">// 0 0
 </span><span class="c1">// 0 0
 </span><span class="c1">// 0 0
-</span><span class="c1"></span><span class="o">//</span> <span class="mi">0</span> <span class="mi">0</span></code></pre></div>
-<p>また、<code>*[]Point</code>のように、複雑な型に対してtypeによるエイリアスを定義し、そのエイリアスに対してメソッドを定義することで型を扱いやすくする方法も頻発する。</p>
+</span><span class="c1">// 0 0
+</span></code></pre></div><p>また、<code>*[]Point</code>のように、複雑な型に対してtypeによるエイリアスを定義し、そのエイリアスに対してメソッドを定義することで型を扱いやすくする方法も頻発する。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nf">Points</span> <span class="p">()</span><span class="o">*</span><span class="nx">Point</span>
 
 <span class="kd">func</span> <span class="p">(</span><span class="nx">ps</span> <span class="nx">Points</span><span class="p">)</span> <span class="nf">ToString</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
-    <span class="nx">str</span> <span class="o">:=</span> <span class="s">&#34;&#34;</span>
-    <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">p</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ps</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="nx">str</span> <span class="o">!=</span> <span class="s">&#34;&#34;</span> <span class="p">{</span>
-            <span class="nx">str</span> <span class="o">+=</span> <span class="s">&#34;,&#34;</span>
-        <span class="p">}</span>
-        <span class="k">if</span> <span class="nx">p</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
-            <span class="nx">str</span> <span class="o">+=</span> <span class="s">&#34;&lt;nil&gt;&#34;</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="nx">str</span> <span class="o">+=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;[%d, %d]&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">X</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span><span class="p">)</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="nx">str</span>
+	<span class="nx">str</span> <span class="o">:=</span> <span class="s">&#34;&#34;</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">p</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">ps</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">str</span> <span class="o">!=</span> <span class="s">&#34;&#34;</span> <span class="p">{</span>
+			<span class="nx">str</span> <span class="o">+=</span> <span class="s">&#34;,&#34;</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="nx">p</span> <span class="o">==</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="nx">str</span> <span class="o">+=</span> <span class="s">&#34;&lt;nil&gt;&#34;</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+			<span class="nx">str</span> <span class="o">+=</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;[%d, %d]&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">X</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Y</span><span class="p">)</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">str</span>
 <span class="p">}</span>
 
 <span class="nx">ps</span> <span class="o">:=</span> <span class="nx">Points</span><span class="p">{}</span>
 <span class="nx">ps</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">ps</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">2</span><span class="p">})</span>
 <span class="nx">ps</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">ps</span><span class="p">,</span> <span class="kc">nil</span><span class="p">)</span>
 <span class="nx">ps</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">ps</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">Point</span><span class="p">{</span><span class="nx">X</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="nx">Y</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span>
-<span class="nx">ps</span><span class="p">.</span><span class="nf">ToString</span><span class="p">()</span>   <span class="o">//</span> <span class="s">&#34;[1, 2], &lt;nil&gt;, [3, 4]&#34;</span></code></pre></div>
-<h3 id="マップと構造体">マップと構造体</h3>
-
+<span class="nx">ps</span><span class="p">.</span><span class="nf">ToString</span><span class="p">()</span>	<span class="c1">// &#34;[1, 2], &lt;nil&gt;, [3, 4]&#34;
+</span></code></pre></div><h3 id="マップと構造体">マップと構造体</h3>
 <p>Goでは、マップのキーや値に構造体型を使用できる。こういうときに使用する、マップのリテラル表現がある。
 構造体型をマップのキー、または、値にする場合、リテラル内で構造体型の型名を省略できる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Id</span> <span class="kt">int</span>
-    <span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">Id</span> <span class="kt">int</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
 <span class="p">}</span>
 
 <span class="c1">// キーが構造体型のマップ
 </span><span class="c1"></span><span class="nx">m1</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="nx">User</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
-    <span class="c1">// キーの構造体型の型名を省略できる
-</span><span class="c1"></span>    <span class="p">{</span><span class="nx">Id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">}:</span> <span class="s">&#34;Tokyo&#34;</span><span class="p">,</span>
-    <span class="p">{</span><span class="nx">Id</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Jiro&#34;</span><span class="p">}:</span> <span class="s">&#34;Osaka&#34;</span><span class="p">,</span>
+	<span class="c1">// キーの構造体型の型名を省略できる
+</span><span class="c1"></span>	<span class="p">{</span><span class="nx">Id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">}:</span> <span class="s">&#34;Tokyo&#34;</span><span class="p">,</span>
+	<span class="p">{</span><span class="nx">Id</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Jiro&#34;</span><span class="p">}:</span> <span class="s">&#34;Osaka&#34;</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="c1">// 値が構造体型のマップ
 </span><span class="c1"></span><span class="nx">m2</span> <span class="o">:=</span> <span class="kd">map</span><span class="p">[</span><span class="kt">int</span><span class="p">]</span><span class="kt">string</span><span class="p">{</span>
-    <span class="c1">// 値の構造体型の型名を省略できる
-</span><span class="c1"></span>    <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="nx">Id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">},</span>
-    <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="nx">Id</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Jiro&#34;</span><span class="p">},</span>
-<span class="p">}</span></code></pre></div>
-<h3 id="タグ">タグ</h3>
-
-<p>Goの構造体には、<strong>タグ</strong>という、フィールドにメタ情報を付与する機能がある。<br />
+	<span class="c1">// 値の構造体型の型名を省略できる
+</span><span class="c1"></span>	<span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="nx">Id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">},</span>
+	<span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="nx">Id</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Jiro&#34;</span><span class="p">},</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="タグ">タグ</h3>
+<p>Goの構造体には、<strong>タグ</strong>という、フィールドにメタ情報を付与する機能がある。<br>
 タグは、文字列リテラル(&ldquo;文字列&rdquo;)かRAW文字列リテラル(`RAW文字列`)が使用できる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Id</span> <span class="kt">int</span> <span class="s">&#34;ID&#34;</span>         <span class="c1">// タグ &#34;ID&#34;
-</span><span class="c1"></span>    <span class="nx">Name</span> <span class="kt">string</span> <span class="s">&#34;名前&#34;</span>    <span class="c1">// タグ &#34;名前&#34;
-</span><span class="c1"></span><span class="p">}</span></code></pre></div>
-<p>タグはあくまでも構造体のフィールドに付与するメタ情報。つまり、文字列リテラルに問題が無い限り、プログラムの実行には影響しない。<br />
+	<span class="nx">Id</span> <span class="kt">int</span> <span class="s">&#34;ID&#34;</span>			<span class="c1">// タグ &#34;ID&#34;
+</span><span class="c1"></span>	<span class="nx">Name</span> <span class="kt">string</span> <span class="s">&#34;名前&#34;</span>	<span class="c1">// タグ &#34;名前&#34;
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><p>タグはあくまでも構造体のフィールドに付与するメタ情報。つまり、文字列リテラルに問題が無い限り、プログラムの実行には影響しない。<br>
 タグとは、プログラム内で定義された構造体のフィールドに、文字列を使って柔軟性の高いメタ情報を追加する仕組み。
 タグの内容がどのように使用されるのかは、ライブラリやプログラムの実装による。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
 
 <span class="kn">import</span> <span class="p">(</span>
-    <span class="s">&#34;fmt&#34;</span>
-    <span class="s">&#34;reflect&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+	<span class="s">&#34;reflect&#34;</span>
 <span class="p">)</span>
 
 <span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Id</span> <span class="kt">int</span> <span class="s">&#34;ユーザID&#34;</span>
-    <span class="nx">Name</span> <span class="kt">string</span> <span class="s">&#34;名前&#34;</span>
-    <span class="nx">Age</span> <span class="kt">uint</span> <span class="s">&#34;年齢&#34;</span>
+	<span class="nx">Id</span> <span class="kt">int</span> <span class="s">&#34;ユーザID&#34;</span>
+	<span class="nx">Name</span> <span class="kt">string</span> <span class="s">&#34;名前&#34;</span>
+	<span class="nx">Age</span> <span class="kt">uint</span> <span class="s">&#34;年齢&#34;</span>
 <span class="p">}</span>
 
 <span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">u</span> <span class="o">:=</span> <span class="nx">User</span><span class="p">{</span><span class="nx">Id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span> <span class="mi">32</span><span class="p">}</span>
+	<span class="nx">u</span> <span class="o">:=</span> <span class="nx">User</span><span class="p">{</span><span class="nx">Id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span> <span class="mi">32</span><span class="p">}</span>
 
-    <span class="c1">// 変数tは reflect.Type型
-</span><span class="c1"></span>    <span class="nx">t</span> <span class="o">:=</span> <span class="nx">reflect</span><span class="p">.</span><span class="nf">TypeOf</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span>
+	<span class="c1">// 変数tは reflect.Type型
+</span><span class="c1"></span>	<span class="nx">t</span> <span class="o">:=</span> <span class="nx">reflect</span><span class="p">.</span><span class="nf">TypeOf</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span>
 
-    <span class="c1">// 構造体の全フィールドを処理する
-</span><span class="c1"></span>    <span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">t</span><span class="p">.</span><span class="nf">NumField</span><span class="p">();</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
-        <span class="c1">// i番目のフィールドを取得
-</span><span class="c1"></span>        <span class="nx">f</span> <span class="o">:=</span> <span class="nx">t</span><span class="p">.</span><span class="nf">Field</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
-        <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">f</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">f</span><span class="p">.</span><span class="nx">Tag</span><span class="p">)</span>
-    <span class="p">}</span>
+	<span class="c1">// 構造体の全フィールドを処理する
+</span><span class="c1"></span>	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="p">&lt;</span> <span class="nx">t</span><span class="p">.</span><span class="nf">NumField</span><span class="p">();</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="c1">// i番目のフィールドを取得
+</span><span class="c1"></span>		<span class="nx">f</span> <span class="o">:=</span> <span class="nx">t</span><span class="p">.</span><span class="nf">Field</span><span class="p">(</span><span class="nx">i</span><span class="p">)</span>
+		<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">f</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">f</span><span class="p">.</span><span class="nx">Tag</span><span class="p">)</span>
+	<span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">// =&gt;
 </span><span class="c1">// Id ユーザID
 </span><span class="c1">// Name 名前
-</span><span class="c1"></span><span class="o">//</span> <span class="nx">Age</span> <span class="nx">年齢</span></code></pre></div>
-<p>構造体のタグが有効利用される場面としては、<code>json</code>パッケージをつかったプログラムが例にある。<br />
+</span><span class="c1">// Age 年齢
+</span></code></pre></div><p>構造体のタグが有効利用される場面としては、<code>json</code>パッケージをつかったプログラムが例にある。<br>
 <code>json</code>パッケージは、与えられた構造体のフィールドのタグ内に<code>json: &quot;キー名&quot;</code>という形式の文字列を見つけると、自動的にその情報を出力するJSONテキストのキー名として利用する。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
 
 <span class="kn">import</span> <span class="p">(</span>
-    <span class="s">&#34;fmt&#34;</span>
-    <span class="s">&#34;encoding/json&#34;</span>
+	<span class="s">&#34;fmt&#34;</span>
+	<span class="s">&#34;encoding/json&#34;</span>
 <span class="p">)</span>
 
 <span class="kd">type</span> <span class="nx">User</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Id</span> <span class="kt">int</span> <span class="s">`json:&#34;user_id&#34;`</span>
-    <span class="nx">Name</span> <span class="kt">string</span> <span class="s">`json:&#34;user_name&#34;`</span>
-    <span class="nx">Age</span> <span class="kt">uint</span> <span class="s">`json:&#34;user_age&#34;`</span>
+	<span class="nx">Id</span> <span class="kt">int</span> <span class="s">`json:&#34;user_id&#34;`</span>
+	<span class="nx">Name</span> <span class="kt">string</span> <span class="s">`json:&#34;user_name&#34;`</span>
+	<span class="nx">Age</span> <span class="kt">uint</span> <span class="s">`json:&#34;user_age&#34;`</span>
 <span class="p">}</span>
 
 <span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">u</span> <span class="o">:=</span> <span class="nx">User</span><span class="p">{</span><span class="nx">Id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span> <span class="mi">32</span><span class="p">}</span>
-    <span class="nx">bs</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span>
-    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">bs</span><span class="p">))</span>
+	<span class="nx">u</span> <span class="o">:=</span> <span class="nx">User</span><span class="p">{</span><span class="nx">Id</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span> <span class="mi">32</span><span class="p">}</span>
+	<span class="nx">bs</span><span class="p">,</span> <span class="nx">_</span> <span class="o">:=</span> <span class="nx">json</span><span class="p">.</span><span class="nf">Marshal</span><span class="p">(</span><span class="nx">u</span><span class="p">)</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nb">string</span><span class="p">(</span><span class="nx">bs</span><span class="p">))</span>
 <span class="p">}</span>
 <span class="c1">// =&gt;
-</span><span class="c1"></span><span class="o">//</span> <span class="p">{</span><span class="s">&#34;user_id&#34;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s">&#34;user_name&#34;</span><span class="p">:</span><span class="s">&#34;Taro&#34;</span><span class="p">,</span> <span class="s">&#34;user_age&#34;</span><span class="p">:</span><span class="mi">32</span><span class="p">}</span></code></pre></div>
-<p>タグを利用する際は、コンパイルによってエラーを検出できないことに注意すること。</p>
+</span><span class="c1">// {&#34;user_id&#34;:1, &#34;user_name&#34;:&#34;Taro&#34;, &#34;user_age&#34;:32}
+</span></code></pre></div><p>タグを利用する際は、コンパイルによってエラーを検出できないことに注意すること。</p>
 
   </article>
 
@@ -945,7 +869,9 @@ Goでは、構造体を、Javaなどにおけるクラスやオブジェクト�
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

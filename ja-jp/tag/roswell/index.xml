@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>roswell on Lazy Lambda</title>
@@ -6,11 +6,7 @@
     <description>Recent content in roswell on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sun, 28 Jul 2019 21:00:00 +0900</lastBuildDate>
-    
-	<atom:link href="https://otaon.github.io/web/ja-jp/tag/roswell/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 28 Jul 2019 21:00:00 +0900</lastBuildDate><atom:link href="https://otaon.github.io/web/ja-jp/tag/roswell/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>roswellとvimとslimvでlisp環境を作る</title>
       <link>https://otaon.github.io/web/ja-jp/2019/07/28/roswell%E3%81%A8vim%E3%81%A8slimv%E3%81%A7lisp%E7%92%B0%E5%A2%83%E3%82%92%E4%BD%9C%E3%82%8B/</link>

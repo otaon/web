@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>Common Lisp リスト操作方法を学ぶ · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,15 +22,12 @@
 <meta property="og:description" content="目的 この記事では、リスト操作において基本的な関数の使い方について説明する。 関数の説明 member関数 リスト中に、或る要素が含まれているか否か" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp-%E3%83%AA%E3%82%B9%E3%83%88%E6%93%8D%E4%BD%9C%E6%96%B9%E6%B3%95%E3%82%92%E5%AD%A6%E3%81%B6/" />
-<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-03-07T00:00:00+09:00" />
+<meta property="article:modified_time" content="2019-03-07T00:00:00+09:00" />
 <meta itemprop="name" content="Common Lisp リスト操作方法を学ぶ">
 <meta itemprop="description" content="目的 この記事では、リスト操作において基本的な関数の使い方について説明する。 関数の説明 member関数 リスト中に、或る要素が含まれているか否か">
-
-
-<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="datePublished" content="2019-03-07T00:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00+09:00" />
 <meta itemprop="wordCount" content="2127">
 
 
@@ -145,52 +142,42 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#目的">目的</a></li>
-<li><a href="#関数の説明">関数の説明</a>
-<ul>
-<li><a href="#member-関数"><code>member</code>関数</a></li>
-<li><a href="#find-if-関数"><code>find-if</code>関数</a></li>
-<li><a href="#assoc-関数"><code>assoc</code>関数</a></li>
-<li><a href="#mapcar-関数"><code>mapcar</code>関数</a></li>
-<li><a href="#append-関数"><code>append</code>関数</a></li>
-<li><a href="#apply-関数"><code>apply</code>関数</a></li>
-<li><a href="#append-関数と-apply-関数の使用例"><code>append</code>関数と<code>apply</code>関数の使用例</a>
-<ul>
-<li><a href="#ゲームの変数を定義する">ゲームの変数を定義する。</a></li>
-<li><a href="#関数を定義する">関数を定義する。</a></li>
-</ul></li>
-<li><a href="#find-関数"><code>find</code>関数</a></li>
-<li><a href="#push-関数"><code>push</code>関数</a></li>
-<li><a href="#assoc-関数と-push-関数を使った-alist-association-list-の値変更"><code>assoc</code>関数と<code>push</code>関数を使った、alist(association list)の値変更</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#member関数"><code>member</code>関数</a></li>
+    <li><a href="#find-if関数"><code>find-if</code>関数</a></li>
+    <li><a href="#assoc関数"><code>assoc</code>関数</a></li>
+    <li><a href="#mapcar関数"><code>mapcar</code>関数</a></li>
+    <li><a href="#append関数"><code>append</code>関数</a></li>
+    <li><a href="#apply関数"><code>apply</code>関数</a></li>
+    <li><a href="#append関数とapply関数の使用例"><code>append</code>関数と<code>apply</code>関数の使用例</a>
+      <ul>
+        <li><a href="#ゲームの変数を定義する">ゲームの変数を定義する。</a></li>
+        <li><a href="#関数を定義する">関数を定義する。</a></li>
+      </ul>
+    </li>
+    <li><a href="#find関数"><code>find</code>関数</a></li>
+    <li><a href="#push関数"><code>push</code>関数</a></li>
+    <li><a href="#assoc関数とpush関数を使ったalistassociation-listの値変更"><code>assoc</code>関数と<code>push</code>関数を使った、alist(association list)の値変更</a></li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h1 id="目的">目的</h1>
-
+  <h1 id="目的">目的</h1>
 <p>この記事では、リスト操作において基本的な関数の使い方について説明する。</p>
-
 <h1 id="関数の説明">関数の説明</h1>
-
-<h2 id="member-関数"><code>member</code>関数</h2>
-
+<h2 id="member関数"><code>member</code>関数</h2>
 <p>リスト中に、或る要素が含まれているか否かを調べる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">member</span> <span class="mi">1</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">5</span><span class="p">))</span>
-    <span class="ss">&#39;one-is-in-the-list</span>
-    <span class="ss">&#39;one-is-not-in-the-list</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">member</span> <span class="mi">1</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">5</span><span class="p">))</span>
+	<span class="ss">&#39;one-is-in-the-list</span>
+	<span class="ss">&#39;one-is-not-in-the-list</span><span class="p">)</span>
 <span class="nv">=&gt;</span> <span class="nv">ONE-IS-IN-THE-LIST</span>
 
 <span class="c1">; memberの実際の返り値</span>
-<span class="p">(</span><span class="nv">member</span> <span class="mi">1</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">5</span><span class="p">))</span>
-<span class="nv">=&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="mi">5</span><span class="p">)</span></code></pre></div>
-<p>上記に示したように、memberの挙動は下記のとおりである。</p>
-
+<span class="p">(</span><span class="nf">member</span> <span class="mi">1</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span> <span class="mi">4</span> <span class="mi">1</span> <span class="mi">5</span><span class="p">))</span>
+<span class="nv">=&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="mi">5</span><span class="p">)</span>
+</code></pre></div><p>上記に示したように、memberの挙動は下記のとおりである。</p>
 <ol>
 <li>リストをcarして、</li>
 <li>その要素が目的oの値だったら、</li>
@@ -199,154 +186,143 @@
 <li>上記1-4を繰り返す。</li>
 <li>最後までみつからなかったらNILを返す。</li>
 </ol>
-
 <p>例:</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">member</span> <span class="mi">3</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">5</span> <span class="mi">3</span> <span class="mi">4</span> <span class="p">(</span><span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nf">member</span> <span class="mi">3</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">5</span> <span class="mi">3</span> <span class="mi">4</span> <span class="p">(</span><span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">))</span>
 <span class="c1">; =&gt; (3 4 (1 2) 4)</span>
-<span class="p">(</span><span class="nv">member</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span> <span class="p">(</span><span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">))</span>
-<span class="c1">; =&gt; NIL  ; シンボルでないと駄目らしい</span></code></pre></div>
-<h2 id="find-if-関数"><code>find-if</code>関数</h2>
-
+<span class="p">(</span><span class="nf">member</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span> <span class="p">(</span><span class="mi">1</span> <span class="mi">2</span><span class="p">)</span> <span class="mi">4</span><span class="p">))</span>
+<span class="c1">; =&gt; NIL  ; シンボルでないと駄目らしい</span>
+</code></pre></div><h2 id="find-if関数"><code>find-if</code>関数</h2>
 <p>第2引数を<code>car</code>した値を対象に、第1引数に指定した関数を使って評価し、
 真を返した値を返す。
 もしも全ての値が偽だった場合は<code>nil</code>を返す。</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">find-if</span> <span class="nf">#&#39;</span><span class="nv">func</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">hoge</span> <span class="nv">foo</span> <span class="nv">bar</span><span class="p">))</span>
-<span class="c1">; =&gt; (foo bar)</span></code></pre></div>
-<p><code>#'oddp</code>により、リストから奇数が見つかるまで順に操作して、
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nf">find-if</span> <span class="nf">#&#39;</span><span class="nv">func</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">hoge</span> <span class="nv">foo</span> <span class="nv">bar</span><span class="p">))</span>
+<span class="c1">; =&gt; (foo bar)</span>
+</code></pre></div><p><code>#'oddp</code>により、リストから奇数が見つかるまで順に操作して、
 真を返す値を見つけたら、その値を返す。
 さもなければ、空リストを返す。</p>
-
 <p>例:</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">find-if</span> <span class="nf">#&#39;</span><span class="nv">null</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span><span class="p">))</span>
-    <span class="ss">&#39;there-is-an-odd-number</span>
-    <span class="ss">&#39;there-is-no-odd-number</span><span class="p">)</span>
-<span class="c1">; =&gt; &#39;THERE-IS-AN-ODD-NUMBER</span></code></pre></div>
-<p><strong>注意:nilを探す場合には使えない。</strong></p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">find-if</span> <span class="nf">#&#39;</span><span class="nv">null</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">4</span> <span class="no">nil</span> <span class="mi">6</span><span class="p">))</span>
-<span class="c1">; =&gt; NIL</span></code></pre></div>
-<h2 id="assoc-関数"><code>assoc</code>関数</h2>
-
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">find-if</span> <span class="nf">#&#39;</span><span class="nc">null</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">4</span> <span class="mi">5</span> <span class="mi">6</span><span class="p">))</span>
+	<span class="ss">&#39;there-is-an-odd-number</span>
+	<span class="ss">&#39;there-is-no-odd-number</span><span class="p">)</span>
+<span class="c1">; =&gt; &#39;THERE-IS-AN-ODD-NUMBER</span>
+</code></pre></div><p><strong>注意:nilを探す場合には使えない。</strong></p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nf">find-if</span> <span class="nf">#&#39;</span><span class="nc">null</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">4</span> <span class="no">nil</span> <span class="mi">6</span><span class="p">))</span>
+<span class="c1">; =&gt; NIL</span>
+</code></pre></div><h2 id="assoc関数"><code>assoc</code>関数</h2>
 <p>連想リスト(association list)から、指定したキーのリストを返す。</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">assoc</span> <span class="ss">&#39;key2</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">key1</span> <span class="p">(</span><span class="nv">list1</span><span class="p">))</span> <span class="p">(</span><span class="nv">key2</span> <span class="p">(</span><span class="nv">list2</span><span class="p">))</span> <span class="p">(</span><span class="nv">key3</span> <span class="p">(</span><span class="nv">list3</span><span class="p">)))</span> <span class="p">)</span>
-<span class="c1">; =&gt; (KEY2 (LIST2))</span></code></pre></div>
-<p>例:</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">assoc</span> <span class="ss">&#39;a</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">a</span> <span class="p">(</span><span class="mi">1</span> <span class="mi">2</span><span class="p">))</span> <span class="p">(</span><span class="nv">b</span> <span class="p">(</span><span class="mi">3</span> <span class="mi">4</span><span class="p">))</span> <span class="p">(</span><span class="nv">c</span> <span class="p">(</span><span class="mi">5</span> <span class="mi">6</span><span class="p">))</span> <span class="p">(</span><span class="nv">d</span> <span class="p">(</span><span class="mi">7</span> <span class="mi">8</span><span class="p">)))</span> <span class="p">)</span>
-<span class="c1">; =&gt; (A (1 2))</span></code></pre></div>
-<h2 id="mapcar-関数"><code>mapcar</code>関数</h2>
-
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nf">assoc</span> <span class="ss">&#39;key2</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">key1</span> <span class="p">(</span><span class="nv">list1</span><span class="p">))</span> <span class="p">(</span><span class="nv">key2</span> <span class="p">(</span><span class="nv">list2</span><span class="p">))</span> <span class="p">(</span><span class="nv">key3</span> <span class="p">(</span><span class="nv">list3</span><span class="p">)))</span> <span class="p">)</span>
+<span class="c1">; =&gt; (KEY2 (LIST2))</span>
+</code></pre></div><p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nf">assoc</span> <span class="ss">&#39;a</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">a</span> <span class="p">(</span><span class="mi">1</span> <span class="mi">2</span><span class="p">))</span> <span class="p">(</span><span class="nv">b</span> <span class="p">(</span><span class="mi">3</span> <span class="mi">4</span><span class="p">))</span> <span class="p">(</span><span class="nv">c</span> <span class="p">(</span><span class="mi">5</span> <span class="mi">6</span><span class="p">))</span> <span class="p">(</span><span class="nv">d</span> <span class="p">(</span><span class="mi">7</span> <span class="mi">8</span><span class="p">)))</span> <span class="p">)</span>
+<span class="c1">; =&gt; (A (1 2))</span>
+</code></pre></div><h2 id="mapcar関数"><code>mapcar</code>関数</h2>
 <p>リストを第n引数(2 &lt;= n &lt;= N)に持ち、これの要素を1つずつ取り出して、第1引数の関数に対して適用する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">func</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">list-for-arg-1</span><span class="p">)</span> <span class="o">...</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">list-for-arg-n</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">func</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">list-for-arg-1</span><span class="p">)</span> <span class="o">...</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">list-for-arg-n</span><span class="p">))</span>
 <span class="c1">; =&gt; `((func &#39;(list-for-arg-1の第1要素) ... &#39;(list-for-arg-nの第1要素))</span>
 <span class="c1">;      (func &#39;(list-for-arg-1の第2要素) ... &#39;(list-for-arg-nの第2要素))</span>
 <span class="c1">;      ...</span>
-<span class="c1">;      (func &#39;(list-for-arg-1の第m要素) ...&#39;(list-for-arg-nの第m要素)))</span></code></pre></div>
-<p>定義:</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defuc</span> <span class="nv">mapcar</span> <span class="p">(</span><span class="nv">func</span> <span class="nv">mlist</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">cond</span> <span class="p">((</span><span class="nv">null</span> <span class="nv">mlist</span><span class="p">)</span>
+<span class="c1">;      (func &#39;(list-for-arg-1の第m要素) ...&#39;(list-for-arg-nの第m要素)))</span>
+</code></pre></div><p>定義:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defuc</span> <span class="nf">mapcar</span> <span class="p">(</span><span class="nv">func</span> <span class="nv">mlist</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">cond</span> <span class="p">((</span><span class="nc">null</span> <span class="nv">mlist</span><span class="p">)</span>
           <span class="no">nil</span><span class="p">)</span>
         <span class="p">(</span><span class="no">t</span>
-          <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">funcall</span> <span class="nv">func</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">mlist</span><span class="p">))</span> <span class="p">(</span><span class="nv">mapcar</span> <span class="nv">func</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">mlist</span><span class="p">)))</span> <span class="p">))</span>
+          <span class="p">(</span><span class="nc">cons</span> <span class="p">(</span><span class="nf">funcall</span> <span class="nv">func</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">mlist</span><span class="p">))</span> <span class="p">(</span><span class="nf">mapcar</span> <span class="nv">func</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">mlist</span><span class="p">)))</span> <span class="p">))</span>
 
 <span class="c1">; 上記のmapcarを実行した結果</span>
-<span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">+</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
+<span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;+</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
 <span class="c1">; =&gt;</span>
 <span class="c1">; mapcarを定義にしたがって展開する</span>
-<span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">funcall</span> <span class="nf">#&#39;</span><span class="nv">-</span> <span class="p">(</span><span class="nv">car</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)))</span> <span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">-</span> <span class="p">(</span><span class="nv">cdr</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))))</span>
+<span class="p">(</span><span class="nc">cons</span> <span class="p">(</span><span class="nf">funcall</span> <span class="nf">#&#39;-</span> <span class="p">(</span><span class="nf">car</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)))</span> <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;-</span> <span class="p">(</span><span class="nf">cdr</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))))</span>
 <span class="c1">; =&gt;</span>
-<span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">funcall</span> <span class="nf">#&#39;</span><span class="nv">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">-</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">)))</span>
+<span class="p">(</span><span class="nc">cons</span> <span class="p">(</span><span class="nf">funcall</span> <span class="nf">#&#39;-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;-</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">)))</span>
 <span class="c1">; =&gt;</span>
-<span class="p">(</span><span class="nv">cons</span> <span class="mi">-1</span> <span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">-</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">))</span> <span class="p">)</span>
+<span class="p">(</span><span class="nc">cons</span> <span class="mi">-1</span> <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;-</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">))</span> <span class="p">)</span>
 <span class="c1">; =&gt;</span>
-<span class="p">(</span><span class="nv">cons</span> <span class="mi">-1</span> <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">funcall</span> <span class="nf">#&#39;</span><span class="nv">-</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">-</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span> <span class="p">)</span>
+<span class="p">(</span><span class="nc">cons</span> <span class="mi">-1</span> <span class="p">(</span><span class="nc">cons</span> <span class="p">(</span><span class="nf">funcall</span> <span class="nf">#&#39;-</span> <span class="mi">2</span><span class="p">)</span> <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;-</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span> <span class="p">)</span>
 <span class="c1">; =&gt;</span>
-<span class="p">(</span><span class="nv">cons</span> <span class="mi">-1</span> <span class="p">(</span><span class="nv">cons</span> <span class="mi">-2</span> <span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">-</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="p">)</span> <span class="p">)</span>
+<span class="p">(</span><span class="nc">cons</span> <span class="mi">-1</span> <span class="p">(</span><span class="nc">cons</span> <span class="mi">-2</span> <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;-</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span> <span class="p">)</span> <span class="p">)</span>
 <span class="c1">; =&gt;</span>
-<span class="p">(</span><span class="nv">cons</span> <span class="mi">-1</span> <span class="p">(</span><span class="nv">cons</span> <span class="mi">-2</span> <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">funcall</span> <span class="nf">#&#39;</span><span class="nv">-</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">-</span> <span class="no">nil</span><span class="p">))</span> <span class="p">)</span> <span class="p">)</span>
+<span class="p">(</span><span class="nc">cons</span> <span class="mi">-1</span> <span class="p">(</span><span class="nc">cons</span> <span class="mi">-2</span> <span class="p">(</span><span class="nc">cons</span> <span class="p">(</span><span class="nf">funcall</span> <span class="nf">#&#39;-</span> <span class="mi">3</span><span class="p">)</span> <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;-</span> <span class="no">nil</span><span class="p">))</span> <span class="p">)</span> <span class="p">)</span>
 <span class="c1">; =&gt;</span>
-<span class="p">(</span><span class="nv">cons</span> <span class="mi">-1</span> <span class="p">(</span><span class="nv">cons</span> <span class="mi">-2</span> <span class="p">(</span><span class="nv">cons</span> <span class="mi">-3</span> <span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">-</span> <span class="no">nil</span><span class="p">))</span> <span class="p">)</span> <span class="p">)</span>
+<span class="p">(</span><span class="nc">cons</span> <span class="mi">-1</span> <span class="p">(</span><span class="nc">cons</span> <span class="mi">-2</span> <span class="p">(</span><span class="nc">cons</span> <span class="mi">-3</span> <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;-</span> <span class="no">nil</span><span class="p">))</span> <span class="p">)</span> <span class="p">)</span>
 <span class="c1">; =&gt;</span>
-<span class="p">(</span><span class="nv">cons</span> <span class="mi">-1</span> <span class="p">(</span><span class="nv">cons</span> <span class="mi">-2</span> <span class="p">(</span><span class="nv">cons</span> <span class="mi">-3</span> <span class="no">nil</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
+<span class="p">(</span><span class="nc">cons</span> <span class="mi">-1</span> <span class="p">(</span><span class="nc">cons</span> <span class="mi">-2</span> <span class="p">(</span><span class="nc">cons</span> <span class="mi">-3</span> <span class="no">nil</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
 <span class="c1">; =&gt;</span>
 <span class="p">(</span><span class="mi">-1</span> <span class="o">.</span> <span class="p">(</span><span class="mi">-2</span> <span class="o">.</span> <span class="p">(</span><span class="mi">-3</span> <span class="o">.</span> <span class="p">()</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
 <span class="c1">; =&gt;</span>
-<span class="p">(</span><span class="mi">-1</span> <span class="mi">-2</span> <span class="mi">-3</span><span class="p">)</span></code></pre></div>
-<h2 id="append-関数"><code>append</code>関数</h2>
-
+<span class="p">(</span><span class="mi">-1</span> <span class="mi">-2</span> <span class="mi">-3</span><span class="p">)</span>
+</code></pre></div><h2 id="append関数"><code>append</code>関数</h2>
 <p>引数に会う複数のリストを、1つのリストに統合する。
 (append = 〜を付け加える。)</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">append</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">list1</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">list2</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">list3</span><span class="p">))</span>
-<span class="c1">; =&gt; (LIST1 LIST2 LIST3) </span></code></pre></div>
-<p>例:</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">append</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">many</span> <span class="nv">had</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">little</span> <span class="nv">lamb</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nf">append</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">list1</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">list2</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">list3</span><span class="p">))</span>
+<span class="c1">; =&gt; (LIST1 LIST2 LIST3) </span>
+</code></pre></div><p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nf">append</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">many</span> <span class="nv">had</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">a</span><span class="p">)</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">little</span> <span class="nv">lamb</span><span class="p">))</span>
 <span class="c1">; =&gt;</span>
-<span class="p">(</span><span class="nv">MARY</span> <span class="nv">HAD</span> <span class="nv">A</span> <span class="nv">LITTLE</span> <span class="nv">LAMB</span><span class="p">)</span></code></pre></div>
-<h2 id="apply-関数"><code>apply</code>関数</h2>
-
+<span class="p">(</span><span class="nv">MARY</span> <span class="nv">HAD</span> <span class="nv">A</span> <span class="nv">LITTLE</span> <span class="nv">LAMB</span><span class="p">)</span>
+</code></pre></div><h2 id="apply関数"><code>apply</code>関数</h2>
 <p>引数にある、複数の要素を持つリスト（要素1つのリストでも良い）の各要素を、
 引数にある関数の引数として渡す。</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">apply</span> <span class="nf">#&#39;</span><span class="nv">func</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">list</span><span class="p">))</span></code></pre></div>
-<p>例1:</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">apply</span> <span class="nf">#&#39;</span><span class="nv">1+</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;</span><span class="nv">func</span> <span class="o">&#39;</span><span class="p">(</span><span class="nc">list</span><span class="p">))</span>
+</code></pre></div><p>例1:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;1+</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 <span class="c1">; =&gt; 3</span>
 
-<span class="p">(</span><span class="nv">apply</span> <span class="nf">#&#39;</span><span class="nv">+</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
+<span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;+</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
 <span class="c1">; =&gt; 5</span>
 
-<span class="p">(</span><span class="nv">apply</span> <span class="nf">#&#39;</span><span class="nv">append</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">mary</span> <span class="nv">had</span><span class="p">)</span> <span class="p">(</span><span class="nv">a</span><span class="p">)</span> <span class="p">(</span><span class="nv">little</span> <span class="nv">lamb</span><span class="p">))</span> <span class="p">)</span>
-<span class="c1">; =&gt; (MARY HAD A LITTLE LAMB)</span></code></pre></div>
-<h2 id="append-関数と-apply-関数の使用例"><code>append</code>関数と<code>apply</code>関数の使用例</h2>
-
+<span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;append</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">mary</span> <span class="nv">had</span><span class="p">)</span> <span class="p">(</span><span class="nv">a</span><span class="p">)</span> <span class="p">(</span><span class="nv">little</span> <span class="nv">lamb</span><span class="p">))</span> <span class="p">)</span>
+<span class="c1">; =&gt; (MARY HAD A LITTLE LAMB)</span>
+</code></pre></div><h2 id="append関数とapply関数の使用例"><code>append</code>関数と<code>apply</code>関数の使用例</h2>
 <p>とあるゲーム(Land of Lispのアレ)を例に示す。</p>
-
 <h3 id="ゲームの変数を定義する">ゲームの変数を定義する。</h3>
-
 <ul>
 <li>とあるゲームにおいて、各々の場所について(つながっている他の場所 移動方向 移動方法)を定義</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*edges*</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">living-room</span> <span class="p">(</span><span class="nv">garden</span> <span class="nv">west</span> <span class="nv">door</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*edges*</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">living-room</span> <span class="p">(</span><span class="nv">garden</span> <span class="nv">west</span> <span class="nv">door</span><span class="p">)</span>
                                     <span class="p">(</span><span class="nv">attic</span> <span class="nv">upstairs</span> <span class="nv">ladder</span><span class="p">)</span>
                        <span class="p">(</span><span class="nv">garden</span>      <span class="p">(</span><span class="nv">living-room</span> <span class="nv">east</span> <span class="nv">door</span><span class="p">)</span>
-                       <span class="p">(</span><span class="nv">attic</span>       <span class="p">(</span><span class="nv">living-room</span> <span class="nv">downstairs</span> <span class="nv">ladders</span><span class="p">))))</span></code></pre></div>
-<ul>
+                       <span class="p">(</span><span class="nv">attic</span>       <span class="p">(</span><span class="nv">living-room</span> <span class="nv">downstairs</span> <span class="nv">ladders</span><span class="p">))))</span>
+</code></pre></div><ul>
 <li>とあるゲームにおいて、登場するオブジェクトを定義</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*objects*</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">whiskey</span> <span class="nv">bucket</span> <span class="nv">frog</span> <span class="nv">chain</span><span class="p">))</span></code></pre></div>
-<ul>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*objects*</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">whiskey</span> <span class="nv">bucket</span> <span class="nv">frog</span> <span class="nv">chain</span><span class="p">))</span>
+</code></pre></div><ul>
 <li>とあるゲームにおいて、登場するオブジェクトが置いてある場所を定義</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*objects-locations*</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">whiskey</span> <span class="nv">living-room</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*objects-locations*</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">whiskey</span> <span class="nv">living-room</span><span class="p">)</span>
                                     <span class="p">(</span><span class="nv">bucket</span> <span class="nv">living-room</span><span class="p">)</span>
                                     <span class="p">(</span><span class="nv">chain</span> <span class="nv">garden</span><span class="p">)</span>
-                                    <span class="p">(</span><span class="nv">frog</span> <span class="nv">garden</span><span class="p">))</span> <span class="p">)</span></code></pre></div>
-<h3 id="関数を定義する">関数を定義する。</h3>
-
+                                    <span class="p">(</span><span class="nv">frog</span> <span class="nv">garden</span><span class="p">))</span> <span class="p">)</span>
+</code></pre></div><h3 id="関数を定義する">関数を定義する。</h3>
 <ul>
 <li>与えられたパスを表示する</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defun</span> <span class="nv">describe-path</span> <span class="p">(</span><span class="nv">edge</span><span class="p">)</span>
-  <span class="o">&#39;</span><span class="p">(</span><span class="nv">there</span> <span class="nv">is</span> <span class="nv">a</span> <span class="o">,</span><span class="p">(</span><span class="nv">caddr</span> <span class="nv">edge</span><span class="p">)</span> <span class="nv">going</span> <span class="o">,</span><span class="p">(</span><span class="nv">cadr</span> <span class="nv">edge</span><span class="p">)</span> <span class="nv">from</span> <span class="nv">here.</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defun</span> <span class="nv">describe-path</span> <span class="p">(</span><span class="nv">edge</span><span class="p">)</span>
+  <span class="o">&#39;</span><span class="p">(</span><span class="nv">there</span> <span class="nv">is</span> <span class="nv">a</span> <span class="o">,</span><span class="p">(</span><span class="nf">caddr</span> <span class="nv">edge</span><span class="p">)</span> <span class="nv">going</span> <span class="o">,</span><span class="p">(</span><span class="nf">cadr</span> <span class="nv">edge</span><span class="p">)</span> <span class="nv">from</span> <span class="nv">here.</span><span class="p">))</span>
 
 <span class="c1">; 使用例:</span>
 <span class="p">(</span><span class="nv">describe-path</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">garden</span> <span class="nv">west</span> <span class="nv">door</span><span class="p">))</span>
-<span class="c1">; =&gt; (THERE IS A DOOR GOING WEST FROM HERE.)</span></code></pre></div>
-<ul>
+<span class="c1">; =&gt; (THERE IS A DOOR GOING WEST FROM HERE.)</span>
+</code></pre></div><ul>
 <li>指定した場所のパスを一覧表示する</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defun</span> <span class="nv">describe-paths</span> <span class="p">(</span><span class="nv">location</span> <span class="nv">edges</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">apply</span> <span class="nf">#&#39;</span> <span class="nv">append</span> <span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">describe-path</span> <span class="p">(</span><span class="nv">cdr</span> <span class="p">(</span><span class="nv">assoc</span> <span class="nv">location</span> <span class="nv">edges</span><span class="p">))</span> <span class="p">))</span> <span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defun</span> <span class="nv">describe-paths</span> <span class="p">(</span><span class="nv">location</span> <span class="nv">edges</span><span class="p">)</span>
+  <span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;</span> <span class="nf">append</span> <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">describe-path</span> <span class="p">(</span><span class="nf">cdr</span> <span class="p">(</span><span class="nf">assoc</span> <span class="nv">location</span> <span class="nv">edges</span><span class="p">))</span> <span class="p">))</span> <span class="p">)</span>
 
 <span class="c1">; 使用例:</span>
 <span class="p">(</span><span class="nv">describe-paths</span> <span class="ss">&#39;living-room</span> <span class="vg">*edges*</span><span class="p">)</span>
 <span class="c1">; =&gt; (THERE IS A DOOR GOING WEST FROM HERE. \</span>
-<span class="c1">;     THERE IS A LADDER GOING UPSTAIRS FROM HERE.)</span></code></pre></div>
-<ul>
+<span class="c1">;     THERE IS A LADDER GOING UPSTAIRS FROM HERE.)</span>
+</code></pre></div><ul>
 <li>指定した場所にあるオブジェクトを一覧表示する</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defun</span> <span class="nv">objects-at</span> <span class="p">(</span><span class="nv">loc</span> <span class="nv">objs</span> <span class="nv">obj-locs</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">at-loc-p</span> <span class="p">(</span><span class="nv">obj</span><span class="p">)</span>
-             <span class="p">(</span><span class="nv">eq</span> <span class="p">(</span><span class="nv">cadr</span> <span class="p">(</span><span class="nv">assoc</span> <span class="nv">obj</span> <span class="nv">obj-locs</span><span class="p">))</span> <span class="nv">loc</span><span class="p">)))</span>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defun</span> <span class="nv">objects-at</span> <span class="p">(</span><span class="nv">loc</span> <span class="nv">objs</span> <span class="nv">obj-locs</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">labels</span> <span class="p">((</span><span class="nv">at-loc-p</span> <span class="p">(</span><span class="nv">obj</span><span class="p">)</span>
+             <span class="p">(</span><span class="nf">eq</span> <span class="p">(</span><span class="nf">cadr</span> <span class="p">(</span><span class="nf">assoc</span> <span class="nv">obj</span> <span class="nv">obj-locs</span><span class="p">))</span> <span class="nv">loc</span><span class="p">)))</span>
              <span class="c1">; remove-if-not : predicate が偽となる要素を取り除く</span>
-             <span class="p">(</span><span class="nv">remove-if-not</span> <span class="nf">#&#39;</span><span class="nv">at-loc-p</span> <span class="nv">objs</span><span class="p">)))</span>
+             <span class="p">(</span><span class="nf">remove-if-not</span> <span class="nf">#&#39;</span><span class="nv">at-loc-p</span> <span class="nv">objs</span><span class="p">)))</span>
 
 <span class="c1">; 使用例:</span>
 <span class="p">(</span><span class="nv">objects-at</span> <span class="ss">&#39;living-room</span> <span class="vg">*objects*</span> <span class="vg">*objects-locations*</span><span class="p">)</span>
@@ -385,14 +361,14 @@
 <span class="c1">;                     └ &#39;chain</span>
 <span class="c1">;    =&gt; F</span>
  
-<span class="c1">; =&gt; (WHISKEY BUCKET)</span></code></pre></div>
-<ul>
+<span class="c1">; =&gt; (WHISKEY BUCKET)</span>
+</code></pre></div><ul>
 <li>全てのオブジェクトを一覧表示する</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defun</span> <span class="nv">describe-objects</span> <span class="p">(</span><span class="nv">loc</span> <span class="nv">objs</span> <span class="nv">obj-loc</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">describe-obj</span> <span class="p">(</span><span class="nv">obj</span><span class="p">)</span>
-              <span class="o">`</span><span class="p">(</span><span class="nv">you</span> <span class="nv">see</span> <span class="nv">a</span> <span class="o">,</span><span class="nv">obj</span> <span class="nv">on</span> <span class="nv">the</span> <span class="nv">floor.</span><span class="p">)</span> <span class="p">))</span>
-   <span class="p">(</span><span class="nv">apply</span> <span class="nf">#&#39;</span><span class="nv">append</span> <span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">describe-obj</span> <span class="p">(</span><span class="nv">objects-at</span> <span class="nv">loc</span> <span class="nv">objs</span> <span class="nv">obj-loc</span><span class="p">)))))</span>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defun</span> <span class="nv">describe-objects</span> <span class="p">(</span><span class="nv">loc</span> <span class="nv">objs</span> <span class="nv">obj-loc</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">labels</span> <span class="p">((</span><span class="nv">describe-obj</span> <span class="p">(</span><span class="nv">obj</span><span class="p">)</span>
+              <span class="o">`</span><span class="p">(</span><span class="nv">you</span> <span class="nv">see</span> <span class="nv">a</span> <span class="o">,</span><span class="nv">obj</span> <span class="nv">on</span> <span class="k">the</span> <span class="nv">floor.</span><span class="p">)</span> <span class="p">))</span>
+   <span class="p">(</span><span class="nf">apply</span> <span class="nf">#&#39;append</span> <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">describe-obj</span> <span class="p">(</span><span class="nv">objects-at</span> <span class="nv">loc</span> <span class="nv">objs</span> <span class="nv">obj-loc</span><span class="p">)))))</span>
 
 <span class="c1">; 使用例:</span>
 <span class="p">(</span><span class="nv">describe-objects</span> <span class="ss">&#39;living-room</span> <span class="vg">*objects*</span> <span class="vg">*objects-locations*</span><span class="p">)</span>
@@ -400,47 +376,43 @@
 <span class="c1">; =&gt; (apply #&#39;append (mapcar #&#39;describe-obj &#39;(WHISKEY BUCKET)))</span>
 <span class="c1">; =&gt; (apply #&#39;append &#39;((YOU SEE A WHISKEY ON THE FLOOR.) &#39;(YOU SEE A BUCKET ON THE FLOOR.)))</span>
 <span class="c1">; =&gt; (append &#39;(YOU SEE A WHISKEY ON THE FLOOR.) &#39;(YOU SEE A BUCKET ON THE FLOOR.))</span>
-<span class="c1">; =&gt; (YOU SEE A WHISKEY ON THE FLOOR. YOU SEE A BUCKET ON THE FLOOR.)</span></code></pre></div>
-<h2 id="find-関数"><code>find</code>関数</h2>
-
+<span class="c1">; =&gt; (YOU SEE A WHISKEY ON THE FLOOR. YOU SEE A BUCKET ON THE FLOOR.)</span>
+</code></pre></div><h2 id="find関数"><code>find</code>関数</h2>
 <p>リストから引数の要素を探す。</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">find</span> <span class="ss">&#39;keyword</span> <span class="ss">&#39;object</span> <span class="ss">:key</span> <span class="nf">#&#39;</span><span class="nv">func</span><span class="p">)</span>
-<span class="c1">; &#39;objectの各要素に対してfuncを適用した値がkeywordと等しいとき、その要素を返す。</span></code></pre></div>
-<p>例:</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">find</span> <span class="ss">&#39;y</span> <span class="o">&#39;</span><span class="p">((</span><span class="mi">5</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="mi">3</span> <span class="nv">y</span><span class="p">)</span> <span class="p">(</span><span class="mi">7</span> <span class="nv">z</span><span class="p">))</span> <span class="ss">:key</span> <span class="nf">#&#39;</span><span class="nv">cadr</span><span class="p">)</span>
-<span class="c1">; =&gt; (3 Y)</span></code></pre></div>
-<h2 id="push-関数"><code>push</code>関数</h2>
-
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nf">find</span> <span class="ss">&#39;keyword</span> <span class="ss">&#39;object</span> <span class="ss">:key</span> <span class="nf">#&#39;</span><span class="nv">func</span><span class="p">)</span>
+<span class="c1">; &#39;objectの各要素に対してfuncを適用した値がkeywordと等しいとき、その要素を返す。</span>
+</code></pre></div><p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nf">find</span> <span class="ss">&#39;y</span> <span class="o">&#39;</span><span class="p">((</span><span class="mi">5</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="mi">3</span> <span class="nv">y</span><span class="p">)</span> <span class="p">(</span><span class="mi">7</span> <span class="nv">z</span><span class="p">))</span> <span class="ss">:key</span> <span class="nf">#&#39;cadr</span><span class="p">)</span>
+<span class="c1">; =&gt; (3 Y)</span>
+</code></pre></div><h2 id="push関数"><code>push</code>関数</h2>
 <p>引数をリストの先頭に追加する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">push</span> <span class="nv">val</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">list</span><span class="p">))</span>
-<span class="c1">; =&gt; (val list)</span></code></pre></div>
-<p>下記の2つの処理は同等。</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">push</span> <span class="mi">7</span> <span class="vg">*foo*</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">push</span> <span class="nv">val</span> <span class="o">&#39;</span><span class="p">(</span><span class="nc">list</span><span class="p">))</span>
+<span class="c1">; =&gt; (val list)</span>
+</code></pre></div><p>下記の2つの処理は同等。</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">push</span> <span class="mi">7</span> <span class="vg">*foo*</span><span class="p">)</span>
 
-<span class="p">(</span><span class="nv">setf</span> <span class="vg">*foo*</span> <span class="p">(</span><span class="nv">cons</span> <span class="mi">7</span> <span class="vg">*foo*</span><span class="p">))</span></code></pre></div>
-<p>例:</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*foo*</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">push</span> <span class="mi">7</span> <span class="vg">*foo*</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">setf</span> <span class="vg">*foo*</span> <span class="p">(</span><span class="nc">cons</span> <span class="mi">7</span> <span class="vg">*foo*</span><span class="p">))</span>
+</code></pre></div><p>例:</p>
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*foo*</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">push</span> <span class="mi">7</span> <span class="vg">*foo*</span><span class="p">)</span>
 <span class="c1">; =&gt; (7 1 2 3)</span>
 <span class="vg">*foo*</span>
-<span class="c1">; =&gt; (7 1 2 3)</span></code></pre></div>
-<h2 id="assoc-関数と-push-関数を使った-alist-association-list-の値変更"><code>assoc</code>関数と<code>push</code>関数を使った、alist(association list)の値変更</h2>
-
+<span class="c1">; =&gt; (7 1 2 3)</span>
+</code></pre></div><h2 id="assoc関数とpush関数を使ったalistassociation-listの値変更"><code>assoc</code>関数と<code>push</code>関数を使った、alist(association list)の値変更</h2>
 <p><code>assoc</code>関数は、先頭から探索して、最初に見つかった要素を返したら残りは無視する。
 従って、<code>assoc</code>と<code>push</code>を使用すると、alistの値を、さも変更したかのように見せられる。</p>
-
 <p>例:</p>
-<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*foo*</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">whiskey</span> <span class="nv">living-room</span><span class="p">)</span> 
+<div class="highlight"><pre class="chroma"><code class="language-cl" data-lang="cl"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*foo*</span> <span class="o">&#39;</span><span class="p">((</span><span class="nv">whiskey</span> <span class="nv">living-room</span><span class="p">)</span> 
                       <span class="p">(</span><span class="nv">bucket</span> <span class="nv">living-room</span><span class="p">)</span> 
                       <span class="p">(</span><span class="nv">chain</span> <span class="nv">garden</span><span class="p">)</span> 
                       <span class="p">(</span><span class="nv">frog</span> <span class="nv">garden</span><span class="p">)))</span>
 
-<span class="p">(</span><span class="nv">assoc</span> <span class="ss">&#39;whiskey</span> <span class="vg">*foo*</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">assoc</span> <span class="ss">&#39;whiskey</span> <span class="vg">*foo*</span><span class="p">)</span>
 <span class="c1">; =&gt; (WHISKEY LIVING-ROOM)</span>
 
-<span class="p">(</span><span class="nv">push</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">whiskey</span> <span class="nv">void</span><span class="p">)</span> <span class="vg">*foo*</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">push</span> <span class="o">&#39;</span><span class="p">(</span><span class="nv">whiskey</span> <span class="nv">void</span><span class="p">)</span> <span class="vg">*foo*</span><span class="p">)</span>
 
-<span class="p">(</span><span class="nv">assoc</span> <span class="ss">&#39;whiskey</span> <span class="vg">*foo*</span><span class="p">)</span>
+<span class="p">(</span><span class="nf">assoc</span> <span class="ss">&#39;whiskey</span> <span class="vg">*foo*</span><span class="p">)</span>
 <span class="c1">; =&gt; (WHISKEY VOID)</span>
 
 <span class="vg">*foo*</span>
@@ -448,7 +420,8 @@
 <span class="c1">;     (WHISKEY LIVING-ROOM) </span>
 <span class="c1">;     (BUCKET LIVING-ROOM) </span>
 <span class="c1">;     (CHAIN GARDEN) </span>
-<span class="c1">;     (FROG GARDEN))</span></code></pre></div>
+<span class="c1">;     (FROG GARDEN))</span>
+</code></pre></div>
   </article>
 
   
@@ -521,7 +494,9 @@
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

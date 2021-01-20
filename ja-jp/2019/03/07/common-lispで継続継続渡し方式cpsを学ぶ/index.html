@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>Common Lispで継続・継続渡し方式(cps)を学ぶ · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,16 +22,13 @@
 <meta property="og:description" content="主旨 本稿は、Schemeなどの言語で明示的にサポートされている 継続(continuation) という概念と、それにまつわる諸概念の学習記録で" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp%E3%81%A7%E7%B6%99%E7%B6%9A%E7%B6%99%E7%B6%9A%E6%B8%A1%E3%81%97%E6%96%B9%E5%BC%8Fcps%E3%82%92%E5%AD%A6%E3%81%B6/" />
-<meta property="article:published_time" content="2019-03-07T02:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-03-07T02:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-03-07T02:00:00+09:00" />
+<meta property="article:modified_time" content="2019-03-07T02:00:00+09:00" />
 <meta itemprop="name" content="Common Lispで継続・継続渡し方式(cps)を学ぶ">
 <meta itemprop="description" content="主旨 本稿は、Schemeなどの言語で明示的にサポートされている 継続(continuation) という概念と、それにまつわる諸概念の学習記録で">
-
-
-<meta itemprop="datePublished" content="2019-03-07T02:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-03-07T02:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="10342">
+<meta itemprop="datePublished" content="2019-03-07T02:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-03-07T02:00:00+09:00" />
+<meta itemprop="wordCount" content="10343">
 
 
 
@@ -148,142 +145,92 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#主旨">主旨</a></li>
-<li><a href="#本稿のゴール">本稿のゴール</a></li>
-<li><a href="#勉強の参考サイト">勉強の参考サイト</a></li>
-<li><a href="#一言-二言で説明">一言・二言で説明</a>
-<ul>
-<li><a href="#継続とは">継続とは</a></li>
-<li><a href="#クロージャとは">クロージャとは</a></li>
-<li><a href="#末尾再帰とは">末尾再帰とは</a></li>
-</ul></li>
-<li><a href="#継続-継続呼び出し-末尾呼び出し最適化の詳細とそれらの関係性">継続・継続呼び出し・末尾呼び出し最適化の詳細とそれらの関係性</a>
-<ul>
-<li><a href="#継続-継続渡しとは">継続・継続渡しとは</a></li>
-<li><a href="#継続渡しと末尾呼び出し最適化">継続渡しと末尾呼び出し最適化</a></li>
-</ul></li>
-<li><a href="#継続渡しによる末尾呼び出し最適化を実践する">継続渡しによる末尾呼び出し最適化を実践する</a>
-<ul>
-<li><a href="#例1-単純な再帰を継続渡し方式-cps-にリファクタリングする">例1: 単純な再帰を継続渡し方式(cps)にリファクタリングする</a>
-<ul>
-<li><a href="#最終型">最終型</a></li>
-<li><a href="#最初は素直に再帰関数を実装する">最初は素直に再帰関数を実装する</a></li>
-<li><a href="#末尾呼び出し最適化の方針を決める">末尾呼び出し最適化の方針を決める</a></li>
-<li><a href="#戻り値を返す箇所を継続の呼び出しに変更する">戻り値を返す箇所を継続の呼び出しに変更する</a>
-<ul>
-<li><a href="#1-関数の処理完了後に評価されるべき継続-以下-継続-という-を束縛するための仮引数を用意する">1. 「関数の処理完了後に評価されるべき継続」(以下「継続」という)を束縛するための仮引数を用意する</a></li>
-<li><a href="#2-継続-を-呼び出し先の関数に引数として渡す">2. 「継続」を、呼び出し先の関数に引数として渡す</a>
-<ul>
-<li><a href="#2-1-修正前の関数において-再帰呼出し後に実行する処理を-継続-として抽出する">2-1. 修正前の関数において、再帰呼出し後に実行する処理を「継続」として抽出する</a></li>
-<li><a href="#2-2-抽出した-継続-を-再帰呼出しする際に-引数-cont-に渡す">2-2. 抽出した「継続」を、再帰呼出しする際に、引数 <code>cont</code> に渡す</a></li>
-</ul></li>
-<li><a href="#3-最終的に戻り値を返すのではなく-継続を呼び出すように変更する">3. 最終的に戻り値を返すのではなく、継続を呼び出すように変更する</a></li>
-</ul></li>
-</ul></li>
-<li><a href="#例2-関数内で再帰呼び出しを2回行う関数を継続渡し方式-cps-にリファクタリングする">例2: 関数内で再帰呼び出しを2回行う関数を継続渡し方式(cps)にリファクタリングする</a>
-<ul>
-<li><a href="#最終型-1">最終型</a></li>
-<li><a href="#最初は素直に再帰関数を実装する-1">最初は素直に再帰関数を実装する</a></li>
-<li><a href="#末尾呼び出し最適化の方針を決める-1">末尾呼び出し最適化の方針を決める</a></li>
-<li><a href="#戻り値を返す箇所を継続の呼び出しに変更する-1">戻り値を返す箇所を継続の呼び出しに変更する</a>
-<ul>
-<li><a href="#1-関数の処理完了後に評価されるべき継続-以下-継続-という-を束縛するための仮引数を用意する-1">1. 「関数の処理完了後に評価されるべき継続」(以下「継続」という)を束縛するための仮引数を用意する</a></li>
-<li><a href="#2-継続-を-呼び出し先の関数に引数として渡す-1">2. 「継続」を、呼び出し先の関数に引数として渡す</a>
-<ul>
-<li><a href="#2-1-修正前の関数において-再帰呼出し後に実行する処理を-継続-として抽出する-1">2-1. 修正前の関数において、再帰呼出し後に実行する処理を「継続」として抽出する</a>
-<ul>
-<li><a href="#2-1-1-再帰呼び出しと継続を抽出する">2-1-1. 再帰呼び出しと継続を抽出する</a></li>
-<li><a href="#2-1-2-再帰呼び出しの-継続-仮引数部分に継続を渡す">2-1-2. 再帰呼び出しの「継続」仮引数部分に継続を渡す</a></li>
-<li><a href="#2-1-3-再帰呼び出し後の処理の最後に継続の呼び出しを追加する">2-1-3. 再帰呼び出し後の処理の最後に継続の呼び出しを追加する</a></li>
-<li><a href="#2-1-4-最後の処理をクロージャに閉包する">2-1-4. 最後の処理をクロージャに閉包する</a></li>
-<li><a href="#2-1-5-継続を遡っていき-順々にクロージャに閉包していく">2-1-5. 継続を遡っていき、順々にクロージャに閉包していく</a></li>
-<li><a href="#2-1-6-閉包したクロージャを最後の処理から遡りつつ入れ子にしていく">2-1-6. 閉包したクロージャを最後の処理から遡りつつ入れ子にしていく</a></li>
-</ul></li>
-<li><a href="#2-2-抽出した-継続-を-再帰呼出しする際に-引数-cont-に渡す-1">2-2. 抽出した「継続」を、再帰呼出しする際に、引数 <code>cont</code> に渡す</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ul></li>
-<li><a href="#非末尾再帰を継続渡し形式によって末尾再帰に変換する手順">非末尾再帰を継続渡し形式によって末尾再帰に変換する手順</a>
-<ul>
-<li><a href="#1-関数の仮引数に継続用の変数を追加する">1. 関数の仮引数に継続用の変数を追加する</a></li>
-<li><a href="#2-関数の戻り値を返す部分を継続の呼び出し処理に修正する">2. 関数の戻り値を返す部分を継続の呼び出し処理に修正する</a></li>
-<li><a href="#3-再帰呼出し処理とその後の処理の部分を抽出する">3. 再帰呼出し処理とその後の処理の部分を抽出する</a></li>
-<li><a href="#4-再帰呼び出しの継続部分に継続を渡す">4. 再帰呼び出しの継続部分に継続を渡す</a></li>
-<li><a href="#5-再帰呼び出し後の処理に継続の呼び出しを追加する">5. 再帰呼び出し後の処理に継続の呼び出しを追加する</a></li>
-<li><a href="#6-継続の最後の処理をクロージャに閉包する">6. 継続の最後の処理をクロージャに閉包する</a></li>
-<li><a href="#7-他の処理も6-と同様にクロージャに閉包する">7. 他の処理も6.と同様にクロージャに閉包する</a></li>
-<li><a href="#8-クロージャを一つにまとめる">8. クロージャを一つにまとめる</a></li>
-<li><a href="#9-最初の再帰呼び出しに継続を代入する">9. 最初の再帰呼び出しに継続を代入する</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#継続とは">継続とは</a></li>
+    <li><a href="#クロージャとは">クロージャとは</a></li>
+    <li><a href="#末尾再帰とは">末尾再帰とは</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#継続継続渡しとは">継続・継続渡しとは</a></li>
+    <li><a href="#継続渡しと末尾呼び出し最適化">継続渡しと末尾呼び出し最適化</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#例1-単純な再帰を継続渡し方式cpsにリファクタリングする">例1: 単純な再帰を継続渡し方式(cps)にリファクタリングする</a>
+      <ul>
+        <li><a href="#最終型">最終型</a></li>
+        <li><a href="#最初は素直に再帰関数を実装する">最初は素直に再帰関数を実装する</a></li>
+        <li><a href="#末尾呼び出し最適化の方針を決める">末尾呼び出し最適化の方針を決める</a></li>
+        <li><a href="#戻り値を返す箇所を継続の呼び出しに変更する">戻り値を返す箇所を継続の呼び出しに変更する</a></li>
+      </ul>
+    </li>
+    <li><a href="#例2-関数内で再帰呼び出しを2回行う関数を継続渡し方式cpsにリファクタリングする">例2: 関数内で再帰呼び出しを2回行う関数を継続渡し方式(cps)にリファクタリングする</a>
+      <ul>
+        <li><a href="#最終型-1">最終型</a></li>
+        <li><a href="#最初は素直に再帰関数を実装する-1">最初は素直に再帰関数を実装する</a></li>
+        <li><a href="#末尾呼び出し最適化の方針を決める-1">末尾呼び出し最適化の方針を決める</a></li>
+        <li><a href="#戻り値を返す箇所を継続の呼び出しに変更する-1">戻り値を返す箇所を継続の呼び出しに変更する</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#1-関数の仮引数に継続用の変数を追加する">1. 関数の仮引数に継続用の変数を追加する</a></li>
+    <li><a href="#2-関数の戻り値を返す部分を継続の呼び出し処理に修正する">2. 関数の戻り値を返す部分を継続の呼び出し処理に修正する</a></li>
+    <li><a href="#3-再帰呼出し処理とその後の処理の部分を抽出する">3. 再帰呼出し処理とその後の処理の部分を抽出する</a></li>
+    <li><a href="#4-再帰呼び出しの継続部分に継続を渡す">4. 再帰呼び出しの継続部分に継続を渡す</a></li>
+    <li><a href="#5-再帰呼び出し後の処理に継続の呼び出しを追加する">5. 再帰呼び出し後の処理に継続の呼び出しを追加する</a></li>
+    <li><a href="#6-継続の最後の処理をクロージャに閉包する">6. 継続の最後の処理をクロージャに閉包する</a></li>
+    <li><a href="#7-他の処理も6と同様にクロージャに閉包する">7. 他の処理も6.と同様にクロージャに閉包する</a></li>
+    <li><a href="#8-クロージャを一つにまとめる">8. クロージャを一つにまとめる</a></li>
+    <li><a href="#9-最初の再帰呼び出しに継続を代入する">9. 最初の再帰呼び出しに継続を代入する</a></li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h1 id="主旨">主旨</h1>
-
+  <h1 id="主旨">主旨</h1>
 <p>本稿は、Schemeなどの言語で明示的にサポートされている <strong>継続(continuation)</strong> という概念と、それにまつわる諸概念の学習記録である。</p>
-
 <h1 id="本稿のゴール">本稿のゴール</h1>
-
 <ul>
 <li>プログラミング言語の種類によらず、再帰関数の作成時に、継続渡し方式(cps: continuation passing style)を応用できるようになる。
-
 <ul>
 <li>なんらかの再帰関数を、継続渡しを用いた形にリファクタリングできるようになる。</li>
 <li>非末尾再帰形の再帰関数を、末尾再帰形の再帰関数にリファクタリングできるようになる。</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <h1 id="勉強の参考サイト">勉強の参考サイト</h1>
-
 <p>継続については下記サイトを主軸に勉強した。とても分かりやすい。</p>
-
 <ul>
 <li><a href="http://practical-scheme.net/docs/cont-j.html">Practical Scheme - なんでも継続</a></li>
 <li><a href="https://practical-scheme.net/wiliki/wiliki.cgi?Scheme%3A%E4%BD%BF%E3%81%84%E3%81%9F%E3%81%84%E4%BA%BA%E3%81%AE%E3%81%9F%E3%82%81%E3%81%AE%E7%B6%99%E7%B6%9A%E5%85%A5%E9%96%80">Practical Scheme - Scheme:使いたい人のための継続入門</a></li>
 </ul>
-
-<hr />
-
-<h1 id="一言-二言で説明">一言・二言で説明</h1>
-
+<hr>
+<h1 id="一言二言で説明">一言・二言で説明</h1>
 <h2 id="継続とは">継続とは</h2>
-
 <blockquote>
-<p>継続とは，動作中に凍結したプログラムだ.<br />
-すなわち計算処理の状態を含んだ一つの関数的オブジェクトだ.<br />
+<p>継続とは，動作中に凍結したプログラムだ.<br>
+すなわち計算処理の状態を含んだ一つの関数的オブジェクトだ.<br>
 保存された計算処理は，それが中断された時点から再開する.</p>
 </blockquote>
-
 <p><a href="http://www.paulgraham.com/onlisp.html">Paul Graham - On Lisp</a></p>
-
-<p>継続とは、これから評価すべき環境(処理およびデータ)を、「後で評価可能な環境」として保持したもの。<br />
+<p>継続とは、これから評価すべき環境(処理およびデータ)を、「後で評価可能な環境」として保持したもの。<br>
 後で評価可能な環境とは、「自由変数と束縛変数と処理」のことであり、これはすなわちクロージャのこと。</p>
-
 <h2 id="クロージャとは">クロージャとは</h2>
-
 <blockquote>
 <p>（無名）関数とクロージャの違いは、lambda式内に自由変数があるか否か</p>
 </blockquote>
-
 <p><a href="http://d.hatena.ne.jp/harg/20070613/1181757060">[・ _ゝ・]日記を書くはやみずさん- クロージャと記号論理学と高校数学</a></p>
-
 <blockquote>
 <p>プログラミングにおいては、自由変数とは関数の中で参照される局所変数や引数以外の変数を意味する。</p>
 </blockquote>
-
 <p><a href="https://ja.wikipedia.org/wiki/%E8%87%AA%E7%94%B1%E5%A4%89%E6%95%B0%E3%81%A8%E6%9D%9F%E7%B8%9B%E5%A4%89%E6%95%B0">Wikipedia - 自由変数と束縛変数</a></p>
-
-<p>クロージャとは、関数が保持する情報の他に、自由変数(グローバル変数や、関数の外にある変数の値)も保持できるもののこと。<br />
-したがって、クロージャを使えば、クロージャを定義した時点での環境を包み込んで、それを継続として扱える。<br />
+<p>クロージャとは、関数が保持する情報の他に、自由変数(グローバル変数や、関数の外にある変数の値)も保持できるもののこと。<br>
+したがって、クロージャを使えば、クロージャを定義した時点での環境を包み込んで、それを継続として扱える。<br>
 下記コードだと、 <code>addn</code> がクロージャである(自由変数nを束縛するため)。</p>
-
 <ul>
 <li>クロージャの例</li>
 </ul>
@@ -295,15 +242,12 @@
 
 <span class="n">f</span> <span class="o">=</span> <span class="n">add1</span><span class="p">()</span>
 <span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>  <span class="c1"># 6</span>
-<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="c1"># 11</span></code></pre></div>
-<p>ちなみに、クロージャの名前の由来は、 <strong>開いた関数</strong> を <strong>閉じた関数</strong> にすることから。<br />
-<em>cf.</em> ある論理式Aが自由変数を含むとき、 <strong>論理式Aは開いている</strong> といい、自由変数を1つも含まないとき、 <strong>論理式Aは閉じている</strong> という。<br />
+<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span> <span class="c1"># 11</span>
+</code></pre></div><p>ちなみに、クロージャの名前の由来は、 <strong>開いた関数</strong> を <strong>閉じた関数</strong> にすることから。<br>
+<em>cf.</em> ある論理式Aが自由変数を含むとき、 <strong>論理式Aは開いている</strong> といい、自由変数を1つも含まないとき、 <strong>論理式Aは閉じている</strong> という。<br>
 → (関数 | 論理式)が(関数の中で参照される局所変数や引数以外の変数 | 自由変数)を1つも含まないとき、(関数 | 論理式)は閉じている。</p>
-
 <h2 id="末尾再帰とは">末尾再帰とは</h2>
-
 <p>ある関数内で再帰的に同じ関数を呼び出したとき、呼び出し先から呼び出し元に戻ってきた後に行われる処理が何もなければ末尾再帰である。</p>
-
 <ul>
 <li>末尾再帰の例</li>
 </ul>
@@ -316,8 +260,8 @@
     <span class="k">else</span>
         <span class="nb">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">acc</span><span class="p">)</span>
 
-<span class="nb">sum</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># 55</span></code></pre></div>
-<ul>
+<span class="nb">sum</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># 55</span>
+</code></pre></div><ul>
 <li>非末尾再帰の例</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
@@ -329,15 +273,12 @@
     <span class="k">else</span>
         <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 
-<span class="nb">sum</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># 55</span></code></pre></div>
-<hr />
-
-<h1 id="継続-継続呼び出し-末尾呼び出し最適化の詳細とそれらの関係性">継続・継続呼び出し・末尾呼び出し最適化の詳細とそれらの関係性</h1>
-
-<h2 id="継続-継続渡しとは">継続・継続渡しとは</h2>
-
-<p>ある関数 <code>function</code> があるとする。この <code>function</code> の任意の処理の間で分断する。<br />
-このとき、分断からの処理を実行するには、分断までの環境(変数の値等)が必要となる。<br />
+<span class="nb">sum</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># 55</span>
+</code></pre></div><hr>
+<h1 id="継続継続呼び出し末尾呼び出し最適化の詳細とそれらの関係性">継続・継続呼び出し・末尾呼び出し最適化の詳細とそれらの関係性</h1>
+<h2 id="継続継続渡しとは">継続・継続渡しとは</h2>
+<p>ある関数 <code>function</code> があるとする。この <code>function</code> の任意の処理の間で分断する。<br>
+このとき、分断からの処理を実行するには、分断までの環境(変数の値等)が必要となる。<br>
 この情報のことを <strong>継続</strong> という。</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">global_a</span> <span class="o">=</span> <span class="mi">10</span>
 
@@ -349,9 +290,9 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">c</span>
     <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">global_a</span>
 
-<span class="n">function</span><span class="p">()</span> <span class="c1"># 16 (= 1 + 2 + 3 + 10)</span></code></pre></div>
-<p>次に、関数呼び出しがある場合の継続について考える。<br />
-この場合も同様で、 <code>function2</code> の処理が終わった後に <code>function1</code> の残りを処理するため、<code>function2</code> 呼び出しまでの環境を覚えておく必要がある。<br />
+<span class="n">function</span><span class="p">()</span> <span class="c1"># 16 (= 1 + 2 + 3 + 10)</span>
+</code></pre></div><p>次に、関数呼び出しがある場合の継続について考える。<br>
+この場合も同様で、 <code>function2</code> の処理が終わった後に <code>function1</code> の残りを処理するため、<code>function2</code> 呼び出しまでの環境を覚えておく必要がある。<br>
 このとき、 <code>function2</code> から <code>function1</code> へ戻るための情報(function1の続きへのアドレス、戻り値、変数の値等)が <strong>継続</strong> である。</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">function1</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span>
@@ -362,18 +303,15 @@
 <span class="k">def</span> <span class="nf">function2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
     <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span>
 
-<span class="n">function1</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 31 (= 10 + 1 + (2 * 10))</span></code></pre></div>
-<p>一般的な手続き型言語における継続は、下図のように表せる。<br />
-図の通り、関数呼び出しがある度、呼び出し元の続きを処理するために <strong>暗黙的に</strong> 継続が作られる。<br />
+<span class="n">function1</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 31 (= 10 + 1 + (2 * 10))</span>
+</code></pre></div><p>一般的な手続き型言語における継続は、下図のように表せる。<br>
+図の通り、関数呼び出しがある度、呼び出し元の続きを処理するために <strong>暗黙的に</strong> 継続が作られる。<br>
 ここで、 <code>func1</code> の継続には、 <code>func0</code> の継続が含まれていることに注意する。</p>
-
-<p><em>cf.</em> C系の言語においては、コールスタックとして継続を保持している。<br />
+<p><em>cf.</em> C系の言語においては、コールスタックとして継続を保持している。<br>
 コールスタックは言語のユーザに意識させないようになっているため、継続は <strong>暗黙的に</strong> 作られるといえる。</p>
-
 <ul>
 <li>暗黙的な継続の利用の図</li>
 </ul>
-
 <pre><code>+------------+
 | func0      |
 | call func1 |
@@ -424,16 +362,12 @@ nextA
 +----------------+
 |                |
 +----------------+
-</code></pre>
-
-<p>ここで、関数を呼び出した際、引数だけでなく、 <strong>明示的に</strong> 継続(評価可能な環境)を呼び出し先の関数に渡すことを考えると、下図のようになる。<br />
-なお、継続を渡して最後に評価するという考えにおいては、<code>return</code> (呼び出し元へ戻る)という概念は存在しないことに注意する。<br />
+</code></pre><p>ここで、関数を呼び出した際、引数だけでなく、 <strong>明示的に</strong> 継続(評価可能な環境)を呼び出し先の関数に渡すことを考えると、下図のようになる。<br>
+なお、継続を渡して最後に評価するという考えにおいては、<code>return</code> (呼び出し元へ戻る)という概念は存在しないことに注意する。<br>
 このように、関数呼び出しの際に、継続も一緒に渡すことを <strong>継続渡し(continuation passing)</strong> という。</p>
-
 <ul>
 <li>継続渡しの図</li>
 </ul>
-
 <pre><code>+----------------------------+
 | func0                      |
 | call func1                 |
@@ -469,21 +403,15 @@ next         v
 +----------------------------+
 | continuation of func0      |
 +----------------------------+
-</code></pre>
-
-<h2 id="継続渡しと末尾呼び出し最適化">継続渡しと末尾呼び出し最適化</h2>
-
+</code></pre><h2 id="継続渡しと末尾呼び出し最適化">継続渡しと末尾呼び出し最適化</h2>
 <p>末尾再帰とは、再帰呼出しのうち、再帰呼出し以降に処理がないタイプのことをいった。</p>
-
-<p>ここで、上図の <code>func1</code> の継続を考える。<br />
-<code>func2</code> から <code>func1</code> のnextへ処理が帰ってきたとき、 <code>func1</code> のnextの処理が、 <code>func0</code> へ帰ることのみならば、わざわざ <code>func1</code> のnextに帰らず、 <code>func0</code> のnextへ直接帰れば良い。<br />
-言い換えれば、 <code>func1</code> の継続を使用しない場合、 <code>func2</code> には <code>func0</code> の継続のみを渡せば良い。<br />
+<p>ここで、上図の <code>func1</code> の継続を考える。<br>
+<code>func2</code> から <code>func1</code> のnextへ処理が帰ってきたとき、 <code>func1</code> のnextの処理が、 <code>func0</code> へ帰ることのみならば、わざわざ <code>func1</code> のnextに帰らず、 <code>func0</code> のnextへ直接帰れば良い。<br>
+言い換えれば、 <code>func1</code> の継続を使用しない場合、 <code>func2</code> には <code>func0</code> の継続のみを渡せば良い。<br>
 同様に、N段階の再帰においても、各々の継続が呼び出し元へ帰ることのみであれば、その継続は不要であるため、最初の関数の継続を渡すのみで良い。</p>
-
-<p>ここで、最初の継続のみ渡せば良い場合、各再帰呼び出しによってスタックを使用する必要がない。<br />
+<p>ここで、最初の継続のみ渡せば良い場合、各再帰呼び出しによってスタックを使用する必要がない。<br>
 <strong>末尾呼び出し最適化</strong> とは、コンパイラが末尾呼び出しを見つけたら、スタックを使用しないように内部の処理を最適化し、再帰呼び出しによってスタックオーバーフローを起こさないようにすることをいう。</p>
-
-<p>pythonによる末尾呼び出し最適化可能なコードを以下に示す。<br />
+<p>pythonによる末尾呼び出し最適化可能なコードを以下に示す。<br>
 <strong>caution:</strong> ただし、pythonにおいてこのコードは末尾呼び出し最適化されない。pythonは末尾呼び出し最適化をサポートしていないため、関数呼び出しのたびに継続を作ってしまう。</p>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">continuation</span><span class="p">):</span>
     <span class="s2">&#34;&#34;&#34;1からxまでの総和を求める&#34;&#34;&#34;</span>
@@ -495,22 +423,21 @@ next         v
     <span class="k">else</span><span class="p">:</span>
         <span class="n">continuation</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     
-<span class="nb">sum</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="k">print</span><span class="p">)</span> <span class="c1"># 55</span></code></pre></div>
-<p>上記のコードを見ると、クロージャ <code>temp</code> は、自由変数 <code>x</code> を内包し、 <code>y</code> が入力されたら出力が定まる。<br />
-さらに、上記のコードの処理を関数呼び出し毎に確認していくと、継続がどのように作られていくのかがよく分かる。<br />
+<span class="nb">sum</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="k">print</span><span class="p">)</span> <span class="c1"># 55</span>
+</code></pre></div><p>上記のコードを見ると、クロージャ <code>temp</code> は、自由変数 <code>x</code> を内包し、 <code>y</code> が入力されたら出力が定まる。<br>
+さらに、上記のコードの処理を関数呼び出し毎に確認していくと、継続がどのように作られていくのかがよく分かる。<br>
 ここでは、 <code>sum(3, print)</code> を呼び出した場合を確認してみることにする。</p>
-
-<ol>
-<li><code>sum(3, print)</code><br />
-最初に <code>sum</code> を呼び出す際、呼び出し元では、その <code>sum</code> を評価した後に実行したい処理を引数に継続として渡す。<br />
-ここでは、「sumの評価結果を表示する」ために <code>print</code> を <code>sum</code> に渡している。<br />
+<ol start="0">
+<li><code>sum(3, print)</code><br>
+最初に <code>sum</code> を呼び出す際、呼び出し元では、その <code>sum</code> を評価した後に実行したい処理を引数に継続として渡す。<br>
+ここでは、「sumの評価結果を表示する」ために <code>print</code> を <code>sum</code> に渡している。<br>
 また、もちろん <code>sum</code> の入力である <code>x</code> にも <code>3</code> を渡している。</li>
 </ol>
-<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="nb">sum</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="k">print</span><span class="p">)</span></code></pre></div>
-<ol>
-<li><code>def sum(3, print): ...</code><br />
-0.で、 <code>x</code> は <code>3</code> に束縛され、また、 <code>continuation</code> は <code>print</code> に束縛されている。<br />
-これにより、 <code>temp</code> は、「入力に3を足して表示する」関数として定義される。<br />
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="nb">sum</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="k">print</span><span class="p">)</span>
+</code></pre></div><ol>
+<li><code>def sum(3, print): ...</code><br>
+0.で、 <code>x</code> は <code>3</code> に束縛され、また、 <code>continuation</code> は <code>print</code> に束縛されている。<br>
+これにより、 <code>temp</code> は、「入力に3を足して表示する」関数として定義される。<br>
 さらに、 <code>if</code> のtrue節に入るため、次の <code>sum(3 - 1, temp)</code> &lt;=&gt; <code>sum(2, temp)</code> を呼び出す。</li>
 </ol>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">continuation</span><span class="p">):</span>
@@ -527,10 +454,10 @@ next         v
         <span class="c1"># sum(3 - 1, temp1) # 評価される</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">continuation</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="c1"># print(3)  # 評価されない</span></code></pre></div>
-<ol>
-<li><code>def sum(2, temp1): ...</code><br />
-基本的に1.と同様。 <code>temp</code> の定義では、内部で最後に <code>continuation</code> を評価するようにしてある。<br />
+        <span class="c1"># print(3)  # 評価されない</span>
+</code></pre></div><ol start="2">
+<li><code>def sum(2, temp1): ...</code><br>
+基本的に1.と同様。 <code>temp</code> の定義では、内部で最後に <code>continuation</code> を評価するようにしてある。<br>
 これで、関数実行後に継続を評価することになる。</li>
 </ol>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">continuation</span><span class="p">):</span>
@@ -549,9 +476,9 @@ next         v
     <span class="k">else</span><span class="p">:</span>
         <span class="n">continuation</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="c1"># continuation(2) =&gt; temp1(2)</span>
-        <span class="c1">#                 =&gt; print(2 + 3)  # 評価されない</span></code></pre></div>
-<ol>
-<li><code>def sum(1,temp2): ...</code><br />
+        <span class="c1">#                 =&gt; print(2 + 3)  # 評価されない</span>
+</code></pre></div><ol start="3">
+<li><code>def sum(1,temp2): ...</code><br>
 最後の再帰呼出し。上記までに作成した継続を評価する。これにより、再帰呼び出し内の処理が終わった後に、残っていた処理を全て処理してしまう。</li>
 </ol>
 <div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">continuation</span><span class="p">):</span>
@@ -572,14 +499,13 @@ next         v
         <span class="n">continuation</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="c1"># continuation(1) =&gt; temp2(1)</span>
         <span class="c1">#                 =&gt; temp1(1 + 2)</span>
-        <span class="c1">#                 =&gt; print((1 + 2) + 3) # 評価される</span></code></pre></div>
-<ol>
-<li><code>continuation(x)</code><br />
+        <span class="c1">#                 =&gt; print((1 + 2) + 3) # 評価される</span>
+</code></pre></div><ol start="4">
+<li><code>continuation(x)</code><br>
 継続を処理する。この例を見て分かるように、継続渡しによる末尾再帰は、結局は再帰関数内でのクロージャの作成とその実行によって実現される。</li>
 </ol>
-<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">print</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># 6</span></code></pre></div>
-<p>継続渡しによる末尾最適化済みのプログラムは下図のように表せる。</p>
-
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">print</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># 6</span>
+</code></pre></div><p>継続渡しによる末尾最適化済みのプログラムは下図のように表せる。</p>
 <pre><code>+----------------------------+
 | func0                      |
 | call func1                 |
@@ -607,205 +533,170 @@ next          v
 +----------------------------+
 | continuation of func0      |
 +----------------------------+
-</code></pre>
-
-<p>ちなみに、上図を見て分かる通り、末尾呼び出し最適化済みの処理は、再帰構造になっておらず、継続を渡していくことによる、ただの処理の連鎖になる。<br />
+</code></pre><p>ちなみに、上図を見て分かる通り、末尾呼び出し最適化済みの処理は、再帰構造になっておらず、継続を渡していくことによる、ただの処理の連鎖になる。<br>
 したがって、末尾再帰最適化よりも、末尾呼び出し最適化の方が本質をついた呼び方だと言える。</p>
-
-<hr />
-
+<hr>
 <h1 id="継続渡しによる末尾呼び出し最適化を実践する">継続渡しによる末尾呼び出し最適化を実践する</h1>
-
 <p>末尾呼び出し最適化がされていない関数を、末尾呼び出し最適化された関数にリファクタリングする手順を以下に示す。</p>
-
-<h2 id="例1-単純な再帰を継続渡し方式-cps-にリファクタリングする">例1: 単純な再帰を継続渡し方式(cps)にリファクタリングする</h2>
-
+<h2 id="例1-単純な再帰を継続渡し方式cpsにリファクタリングする">例1: 単純な再帰を継続渡し方式(cps)にリファクタリングする</h2>
 <p>例として、リスト内の全要素を足し合わせる <code>add-elements</code> 関数をcpsにリファクタリングする。</p>
-
 <ul>
 <li><code>add-elements</code> 関数仕様
-
 <ul>
 <li>入力: 加算可能な数値が入ったリスト 例: <code>(1 2 3 4)</code></li>
 <li>出力: リスト内の全要素の総和 例: <code>10</code></li>
 <li>その他: デバッグのため <code>break</code> を設定する。</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <h3 id="最終型">最終型</h3>
-
 <p>先に、上記仕様の関数をコードに落とし込んだ結果を示す。</p>
-
 <ul>
 <li>関連データ・関数</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">;; デバッグ処理を有効化</span>
-<span class="p">(</span><span class="nv">declaim</span> <span class="p">(</span><span class="nv">optimize</span> <span class="p">(</span><span class="nv">debug</span> <span class="mi">3</span><span class="p">)))</span>
+<span class="p">(</span><span class="nb">declaim</span> <span class="p">(</span><span class="k">optimize</span> <span class="p">(</span><span class="nv">debug</span> <span class="mi">3</span><span class="p">)))</span>
 
 <span class="c1">;; ヘルパー関数</span>
-<span class="p">(</span><span class="nv">defun</span> <span class="nv">two-or-more-p</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defun</span> <span class="nv">two-or-more-p</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
   <span class="s">&#34;リスト内に2個以上要素が入っているか?&#34;</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">lst</span><span class="p">)</span>
       <span class="no">t</span>
       <span class="no">nil</span><span class="p">))</span>
 
 <span class="c1">;; 少ないリスト数</span>
-<span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*small-list*</span> <span class="p">(</span><span class="nv">make-list</span> <span class="mi">5</span> <span class="ss">:initial-element</span> <span class="mi">1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*small-list*</span> <span class="p">(</span><span class="nf">make-list</span> <span class="mi">5</span> <span class="ss">:initial-element</span> <span class="mi">1</span><span class="p">))</span>
        <span class="no">nil</span><span class="p">)</span>
 
 <span class="c1">;; 多いリスト数(継続渡し方式でないとスタックオーバーフローするくらい大きなサイズとする)</span>
-<span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*large-list*</span> <span class="p">(</span><span class="nv">make-list</span> <span class="mi">5000000</span> <span class="ss">:initial-element</span> <span class="mi">1</span><span class="p">))</span>
-       <span class="no">nil</span><span class="p">)</span></code></pre></div>
-<ul>
+<span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*large-list*</span> <span class="p">(</span><span class="nf">make-list</span> <span class="mi">5000000</span> <span class="ss">:initial-element</span> <span class="mi">1</span><span class="p">))</span>
+       <span class="no">nil</span><span class="p">)</span>
+</code></pre></div><ul>
 <li>末尾呼び出し最適化されていない関数</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">add-elements</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">add-elements</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
   <span class="s">&#34;非末尾呼び出し形式&amp;非継続渡し形式&#34;</span>
-  <span class="p">(</span><span class="nv">break</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span>
-         <span class="p">(</span><span class="nv">add-elements</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nf">break</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">)</span>
+         <span class="p">(</span><span class="nv">add-elements</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">lst</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">)))</span>
 
-<span class="p">(</span><span class="nv">prin1</span> <span class="p">(</span><span class="nv">add-elements</span> <span class="vg">*small-list*</span><span class="p">))</span> <span class="c1">; 呼び出し数が少なければcpsでなくてもスタックオーバーフローしない</span>
-<span class="p">(</span><span class="nv">prin1</span> <span class="p">(</span><span class="nv">add-elements</span> <span class="vg">*large-list*</span><span class="p">))</span> <span class="c1">; 呼び出し数が多いとスタックオーバーフローする</span></code></pre></div>
-<ul>
+<span class="p">(</span><span class="nf">prin1</span> <span class="p">(</span><span class="nv">add-elements</span> <span class="vg">*small-list*</span><span class="p">))</span> <span class="c1">; 呼び出し数が少なければcpsでなくてもスタックオーバーフローしない</span>
+<span class="p">(</span><span class="nf">prin1</span> <span class="p">(</span><span class="nv">add-elements</span> <span class="vg">*large-list*</span><span class="p">))</span> <span class="c1">; 呼び出し数が多いとスタックオーバーフローする</span>
+</code></pre></div><ul>
 <li>継続渡し形式(末尾呼び出し形式)にした関数</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">add-elements/cps</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">cont</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">add-elements/cps</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">cont</span><span class="p">)</span>
   <span class="s">&#34;末尾呼び出し形式&amp;継続渡し形式&#34;</span>
-  <span class="p">(</span><span class="nv">break</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">add-elements/cps</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)</span>
-                        <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
-                            <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span> <span class="nv">m</span><span class="p">))))</span>
-      <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">))))</span>
+  <span class="p">(</span><span class="nf">break</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">add-elements/cps</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">lst</span><span class="p">)</span>
+                        <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
+                            <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">)</span> <span class="nv">m</span><span class="p">))))</span>
+      <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">))))</span>
 
-<span class="p">(</span><span class="nv">prin1</span> <span class="p">(</span><span class="nv">add-elements/cps</span> <span class="vg">*small-list*</span> <span class="nf">#&#39;</span><span class="nv">values</span><span class="p">))</span>
-<span class="p">(</span><span class="nv">prin1</span> <span class="p">(</span><span class="nv">add-elements/cps</span> <span class="vg">*large-list*</span> <span class="nf">#&#39;</span><span class="nv">values</span><span class="p">))</span>  <span class="c1">; 呼び出し数が多くてもcpsであるからオーバーフローしない</span></code></pre></div>
-<h3 id="最初は素直に再帰関数を実装する">最初は素直に再帰関数を実装する</h3>
-
+<span class="p">(</span><span class="nf">prin1</span> <span class="p">(</span><span class="nv">add-elements/cps</span> <span class="vg">*small-list*</span> <span class="nf">#&#39;values</span><span class="p">))</span>
+<span class="p">(</span><span class="nf">prin1</span> <span class="p">(</span><span class="nv">add-elements/cps</span> <span class="vg">*large-list*</span> <span class="nf">#&#39;values</span><span class="p">))</span>  <span class="c1">; 呼び出し数が多くてもcpsであるからオーバーフローしない</span>
+</code></pre></div><h3 id="最初は素直に再帰関数を実装する">最初は素直に再帰関数を実装する</h3>
 <p><code>add-elements</code> の仕様は、下記のとおりに解釈できる。</p>
-
 <ul>
 <li>全要素の総和とは、「ある要素」を、「以降の要素の総和」と足し合わせたものである</li>
 <li>要素1つのみの総和とは、その要素自身である</li>
 </ul>
-
 <p>見て分かるとおり、この解釈は、数学的帰納法としての解釈にほぼ等しい。</p>
-
 <ul>
 <li><code>sum(list) := car(list) + sum(cdr(list))</code></li>
 <li><code>sum(element) := element</code></li>
 </ul>
-
 <p>これを素直にコードに落とし込むと、下記の通りになる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">add-elements</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">add-elements</span> <span class="p">(</span><span class="nv">lst</span><span class="p">)</span>
   <span class="s">&#34;非末尾呼び出し形式&amp;非継続渡し形式&#34;</span>
-  <span class="p">(</span><span class="nv">break</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span>
-         <span class="p">(</span><span class="nv">add-elements</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)))</span></code></pre></div>
-<p>このコードは、再帰呼び出しした後、その結果を <code>(car lst)</code> と足し合わせる処理がある。<br />
+  <span class="p">(</span><span class="nf">break</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">)</span>
+         <span class="p">(</span><span class="nv">add-elements</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">lst</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">)))</span>
+</code></pre></div><p>このコードは、再帰呼び出しした後、その結果を <code>(car lst)</code> と足し合わせる処理がある。<br>
 したがって、再帰呼び出しした際、その呼び出し元の継続が暗黙的に作成されてしまう。</p>
-
 <h3 id="末尾呼び出し最適化の方針を決める">末尾呼び出し最適化の方針を決める</h3>
-
 <p>ここで、継続が暗黙的に作成されないように修正する方法は下記の2種類ある。</p>
-
 <ul>
 <li>再帰呼び出しの後に何も処理がないように、関数のアルゴリズム自体を書き換える。</li>
 <li>再帰呼び出しの後にすべき処理をクロージャに包み込んで、再帰呼び出し先に一緒に渡してしまい、暗黙的な継続の作成を阻止する。</li>
 </ul>
-
-<p>上の例のように簡単な関数のアルゴリズムであれば、関数のアルゴリズムを書き換えたほうが簡単である。<br />
-実際に、アルゴリズムを書き換えたものは下記のようにも修正できる。<br />
+<p>上の例のように簡単な関数のアルゴリズムであれば、関数のアルゴリズムを書き換えたほうが簡単である。<br>
+実際に、アルゴリズムを書き換えたものは下記のようにも修正できる。<br>
 このとき、引数に渡した値は <code>accumulator</code> といい、計算の途中結果を意味する。</p>
-
 <ul>
 <li><code>accumulator</code> を用いた末尾呼び出し</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">add-elements</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">&amp;optional</span> <span class="p">(</span><span class="nv">acc</span> <span class="mi">0</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">add-elements</span> <span class="p">(</span><span class="nv">lst</span> <span class="k">&amp;optional</span> <span class="p">(</span><span class="nv">acc</span> <span class="mi">0</span><span class="p">))</span>
   <span class="s">&#34;非末尾呼び出し形式&amp;非継続渡し形式&#34;</span>
-  <span class="p">(</span><span class="nv">break</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">add-elements</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)</span> <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span> <span class="nv">acc</span><span class="p">))</span>
-      <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span> <span class="nv">acc</span><span class="p">)))</span></code></pre></div>
-<p>簡単なアルゴリズムの場合、上記のように書き換えるのは簡単である。<br />
-しかし、複雑なアルゴリズムの場合 継続渡し方式ならば、ほぼ機械的に末尾呼び出しに変形できる。<br />
+  <span class="p">(</span><span class="nf">break</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">add-elements</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">lst</span><span class="p">)</span> <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">)</span> <span class="nv">acc</span><span class="p">))</span>
+      <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">)</span> <span class="nv">acc</span><span class="p">)))</span>
+</code></pre></div><p>簡単なアルゴリズムの場合、上記のように書き換えるのは簡単である。<br>
+しかし、複雑なアルゴリズムの場合 継続渡し方式ならば、ほぼ機械的に末尾呼び出しに変形できる。<br>
 したがって、継続渡し方式の方がより汎用性があるといえる。</p>
-
 <p><strong>以下では、継続渡し方式による末尾呼び出し最適化を行うことにする</strong></p>
-
 <h3 id="戻り値を返す箇所を継続の呼び出しに変更する">戻り値を返す箇所を継続の呼び出しに変更する</h3>
-
 <p>上記の関数を継続渡し方式に修正する手順を以下に示す。</p>
-
-<h4 id="1-関数の処理完了後に評価されるべき継続-以下-継続-という-を束縛するための仮引数を用意する">1. 「関数の処理完了後に評価されるべき継続」(以下「継続」という)を束縛するための仮引数を用意する</h4>
-
-<p>仮引数に、継続渡しのための仮引数を追加する。<br />
+<h4 id="1-関数の処理完了後に評価されるべき継続以下継続というを束縛するための仮引数を用意する">1. 「関数の処理完了後に評価されるべき継続」(以下「継続」という)を束縛するための仮引数を用意する</h4>
+<p>仮引数に、継続渡しのための仮引数を追加する。<br>
 継続を意味する変数を <code>cont</code> (continuationの略)とする。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">add-elements</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">cont</span><span class="p">)</span> <span class="c1">; 1.</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">add-elements</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">cont</span><span class="p">)</span> <span class="c1">; 1.</span>
   <span class="s">&#34;非末尾呼び出し形式&amp;非継続渡し形式&#34;</span>
-  <span class="p">(</span><span class="nv">break</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span>
-         <span class="p">(</span><span class="nv">add-elements</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)))</span></code></pre></div>
-<h4 id="2-継続-を-呼び出し先の関数に引数として渡す">2. 「継続」を、呼び出し先の関数に引数として渡す</h4>
-
-<h5 id="2-1-修正前の関数において-再帰呼出し後に実行する処理を-継続-として抽出する">2-1. 修正前の関数において、再帰呼出し後に実行する処理を「継続」として抽出する</h5>
-
-<p>この関数における「継続」は <code>(+ (car lst) (add-elements (cdr lst)))</code> である。つまり、「add-elementsの評価結果を(car lst)と足す」である。<br />
-これをクロージャに包み込むと、 <code>#'(lambda (&lt;add-elementsの戻り値&gt;) (+ (car lst) &lt;add-elementsの戻り値&gt;))</code> となる。<br />
+  <span class="p">(</span><span class="nf">break</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">)</span>
+         <span class="p">(</span><span class="nv">add-elements</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">lst</span><span class="p">)))</span>
+      <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">)))</span>
+</code></pre></div><h4 id="2-継続を呼び出し先の関数に引数として渡す">2. 「継続」を、呼び出し先の関数に引数として渡す</h4>
+<h5 id="2-1-修正前の関数において再帰呼出し後に実行する処理を継続として抽出する">2-1. 修正前の関数において、再帰呼出し後に実行する処理を「継続」として抽出する</h5>
+<p>この関数における「継続」は <code>(+ (car lst) (add-elements (cdr lst)))</code> である。つまり、「add-elementsの評価結果を(car lst)と足す」である。<br>
+これをクロージャに包み込むと、 <code>#'(lambda (&lt;add-elementsの戻り値&gt;) (+ (car lst) &lt;add-elementsの戻り値&gt;))</code> となる。<br>
 実際のコードとしては、例えば <code>add-elementsの戻り値</code> を <code>m</code> とおいて <code>#'(lambda (m) (+ (car lst) m))</code> とすれば良い。</p>
-
-<p><strong>:NOTE:</strong> ここで、 <code>lst</code> は自由変数であるため、 <code>lst</code> は、ひいては <code>(car lst)</code> は、クロージャの定義時に評価された値に束縛されることに注意する。<br />
+<p><strong>:NOTE:</strong> ここで、 <code>lst</code> は自由変数であるため、 <code>lst</code> は、ひいては <code>(car lst)</code> は、クロージャの定義時に評価された値に束縛されることに注意する。<br>
 つまり、<code>lst</code> は、クロージャを定義した時点のリスト自体を表すことになる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">add-elements</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">cont</span><span class="p">)</span> <span class="c1">; 1.</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">add-elements</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">cont</span><span class="p">)</span> <span class="c1">; 1.</span>
   <span class="s">&#34;非末尾呼び出し形式&amp;非継続渡し形式&#34;</span>
-  <span class="p">(</span><span class="nv">break</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span>                  <span class="c1">;; 2-1. (add-elements)呼び出し後の本関数の処理(=継続)は、「add-elementsの評価結果を(car lst)と足す」である</span>
-         <span class="p">(</span><span class="nv">add-elements</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)))</span>  <span class="c1">;;      =&gt; 継続をクロージャとすると #&#39;(lambda (add-elementsの戻り値) (+ (car lst) add-elementsの戻り値))</span>
-      <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)))</span></code></pre></div>
-<h5 id="2-2-抽出した-継続-を-再帰呼出しする際に-引数-cont-に渡す">2-2. 抽出した「継続」を、再帰呼出しする際に、引数 <code>cont</code> に渡す</h5>
-
-<p>2-1. で抽出した継続を、<code>(add-elements)</code> の引数に渡す。<br />
+  <span class="p">(</span><span class="nf">break</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">)</span>                  <span class="c1">;; 2-1. (add-elements)呼び出し後の本関数の処理(=継続)は、「add-elementsの評価結果を(car lst)と足す」である</span>
+         <span class="p">(</span><span class="nv">add-elements</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">lst</span><span class="p">)))</span>  <span class="c1">;;      =&gt; 継続をクロージャとすると #&#39;(lambda (add-elementsの戻り値) (+ (car lst) add-elementsの戻り値))</span>
+      <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">)))</span>
+</code></pre></div><h5 id="2-2-抽出した継続を再帰呼出しする際に引数-cont-に渡す">2-2. 抽出した「継続」を、再帰呼出しする際に、引数 <code>cont</code> に渡す</h5>
+<p>2-1. で抽出した継続を、<code>(add-elements)</code> の引数に渡す。<br>
 こうすることで、 <code>(add-elements)</code> の評価の末尾で、渡した継続が評価されることになる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">add-elements</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">cont</span><span class="p">)</span> <span class="c1">; 1.</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">add-elements</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">cont</span><span class="p">)</span> <span class="c1">; 1.</span>
   <span class="s">&#34;非末尾呼び出し形式&amp;非継続渡し形式&#34;</span>
-  <span class="p">(</span><span class="nv">break</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">add-elements</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span> <span class="nv">m</span><span class="p">))))</span> <span class="c1">; 2-2.</span>
-      <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)))</span></code></pre></div>
-<h4 id="3-最終的に戻り値を返すのではなく-継続を呼び出すように変更する">3. 最終的に戻り値を返すのではなく、継続を呼び出すように変更する</h4>
-
-<p>再帰呼び出しの最後で、もともと戻り値を返していた箇所を、その戻り値を入力にして継続を評価するように変更する。<br />
+  <span class="p">(</span><span class="nf">break</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">add-elements</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">lst</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">)</span> <span class="nv">m</span><span class="p">))))</span> <span class="c1">; 2-2.</span>
+      <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">)))</span>
+</code></pre></div><h4 id="3-最終的に戻り値を返すのではなく継続を呼び出すように変更する">3. 最終的に戻り値を返すのではなく、継続を呼び出すように変更する</h4>
+<p>再帰呼び出しの最後で、もともと戻り値を返していた箇所を、その戻り値を入力にして継続を評価するように変更する。<br>
 これによって、今までクロージャに内包し続けてきた継続を全て評価しきることになる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">add-elements</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">cont</span><span class="p">)</span> <span class="c1">; 1.</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">add-elements</span> <span class="p">(</span><span class="nv">lst</span> <span class="nv">cont</span><span class="p">)</span> <span class="c1">; 1.</span>
   <span class="s">&#34;末尾呼び出し形式&amp;継続渡し形式&#34;</span>
-  <span class="p">(</span><span class="nv">break</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">add-elements</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">lst</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">)</span> <span class="nv">m</span><span class="p">))))</span> <span class="c1">; 2-2.</span>
-      <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">lst</span><span class="p">))))</span> <span class="c1">; 3.</span></code></pre></div>
-<p>これで、非再帰呼び出しの形式から、継続渡し方式による末尾呼び出し形式にリファクタリングできた。</p>
-
-<h2 id="例2-関数内で再帰呼び出しを2回行う関数を継続渡し方式-cps-にリファクタリングする">例2: 関数内で再帰呼び出しを2回行う関数を継続渡し方式(cps)にリファクタリングする</h2>
-
+  <span class="p">(</span><span class="nf">break</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">two-or-more-p</span> <span class="nv">lst</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">add-elements</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">lst</span><span class="p">)</span> <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">)</span> <span class="nv">m</span><span class="p">))))</span> <span class="c1">; 2-2.</span>
+      <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">lst</span><span class="p">))))</span> <span class="c1">; 3.</span>
+</code></pre></div><p>これで、非再帰呼び出しの形式から、継続渡し方式による末尾呼び出し形式にリファクタリングできた。</p>
+<h2 id="例2-関数内で再帰呼び出しを2回行う関数を継続渡し方式cpsにリファクタリングする">例2: 関数内で再帰呼び出しを2回行う関数を継続渡し方式(cps)にリファクタリングする</h2>
 <p>例として、木の全ての葉の個数を足し合わせる <code>count-leaf</code> 関数をcpsにリファクタリングする。</p>
-
 <ul>
 <li><code>count-leaf</code> 関数仕様
-
 <ul>
 <li>入力: コンスセルをノードとして構成された木 例: <code>((a . b) . ((c . d) . e))</code></li>
 <li>出力: 木の全ての葉の個数の総数 例: <code>5</code></li>
 <li>その他: デバッグのため <code>break</code> を設定する。</li>
-</ul></li>
 </ul>
-
+</li>
+</ul>
 <pre><code>                           +-------+
                            |   |   |
                            +-------+
@@ -825,224 +716,192 @@ next          v
                                    +---+   +---+
                                    |           |
                                   'c          'd
-</code></pre>
-
-<h3 id="最終型-1">最終型</h3>
-
+</code></pre><h3 id="最終型-1">最終型</h3>
 <p>先に、上記仕様の関数をコードに落とし込んだ結果を示す。</p>
-
 <ul>
 <li>関連データ・関数</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">;; デバッグ処理を有効化</span>
-<span class="p">(</span><span class="nv">declaim</span> <span class="p">(</span><span class="nv">optimize</span> <span class="p">(</span><span class="nv">debug</span> <span class="mi">3</span><span class="p">)))</span>
+<span class="p">(</span><span class="nb">declaim</span> <span class="p">(</span><span class="k">optimize</span> <span class="p">(</span><span class="nv">debug</span> <span class="mi">3</span><span class="p">)))</span>
 
 <span class="c1">;; ブランチが少ないツリー</span>
-<span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*small-tree*</span> <span class="p">(</span><span class="nv">make-list</span> <span class="mi">5</span> <span class="ss">:initial-element</span> <span class="mi">1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*small-tree*</span> <span class="p">(</span><span class="nf">make-list</span> <span class="mi">5</span> <span class="ss">:initial-element</span> <span class="mi">1</span><span class="p">))</span>
        <span class="no">nil</span><span class="p">)</span>
 
 <span class="c1">;; ブランチが多いツリー(継続渡し方式でないとスタックオーバーフローするくらい大きなサイズとする)</span>
-<span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*large-tree*</span> <span class="p">(</span><span class="nv">make-list</span> <span class="mi">5000000</span> <span class="ss">:initial-element</span> <span class="mi">1</span><span class="p">))</span>
-       <span class="no">nil</span><span class="p">)</span></code></pre></div>
-<ul>
+<span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*large-tree*</span> <span class="p">(</span><span class="nf">make-list</span> <span class="mi">5000000</span> <span class="ss">:initial-element</span> <span class="mi">1</span><span class="p">))</span>
+       <span class="no">nil</span><span class="p">)</span>
+</code></pre></div><ul>
 <li>末尾呼び出し最適化されていない関数</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">count-leaf</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">count-leaf</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
   <span class="s">&#34;非末尾呼び出し形式&amp;非継続渡し形式&#34;</span>
-  <span class="p">(</span><span class="nv">break</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">consp</span> <span class="nv">tree</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">count-leaf</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">count-leaf</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tree</span><span class="p">)))</span>
+  <span class="p">(</span><span class="nf">break</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">consp</span> <span class="nv">tree</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nv">count-leaf</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">tree</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">count-leaf</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">tree</span><span class="p">)))</span>
       <span class="mi">1</span><span class="p">))</span>
 
-<span class="p">(</span><span class="nv">prin1</span> <span class="p">(</span><span class="nv">count-leaf</span> <span class="vg">*small-tree*</span><span class="p">))</span> <span class="c1">; 呼び出し数が少なければcpsでなくてもスタックオーバーフローしない</span>
-<span class="p">(</span><span class="nv">prin1</span> <span class="p">(</span><span class="nv">count-leaf</span> <span class="vg">*large-tree*</span><span class="p">))</span> <span class="c1">; 呼び出し数が多いとスタックオーバーフローする</span></code></pre></div>
-<ul>
+<span class="p">(</span><span class="nf">prin1</span> <span class="p">(</span><span class="nv">count-leaf</span> <span class="vg">*small-tree*</span><span class="p">))</span> <span class="c1">; 呼び出し数が少なければcpsでなくてもスタックオーバーフローしない</span>
+<span class="p">(</span><span class="nf">prin1</span> <span class="p">(</span><span class="nv">count-leaf</span> <span class="vg">*large-tree*</span><span class="p">))</span> <span class="c1">; 呼び出し数が多いとスタックオーバーフローする</span>
+</code></pre></div><ul>
 <li>継続渡し形式(末尾呼び出し形式)にした関数</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">define</span> <span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">cont</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">consp</span> <span class="nv">tree</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">)</span>
-        <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
-            <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tree</span><span class="p">)</span>
-              <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
-                  <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">n</span> <span class="nv">m</span><span class="p">))))))</span>
-      <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="mi">1</span><span class="p">)))</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">consp</span> <span class="nv">tree</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">tree</span><span class="p">)</span>
+        <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">tree</span><span class="p">)</span>
+              <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span>
+                  <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">n</span> <span class="nv">m</span><span class="p">))))))</span>
+      <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="mi">1</span><span class="p">)))</span>
 
-<span class="p">(</span><span class="nv">prin1</span> <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="vg">*small-tree*</span> <span class="nf">#&#39;</span><span class="nv">values</span><span class="p">))</span> <span class="c1">; 呼び出し数が少なければスタックオーバーフローしない</span>
-<span class="p">(</span><span class="nv">prin1</span> <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="vg">*large-tree*</span> <span class="nf">#&#39;</span><span class="nv">values</span><span class="p">))</span> <span class="c1">; 呼び出し数が多くてもスタックオーバーフローしない</span></code></pre></div>
-<h3 id="最初は素直に再帰関数を実装する-1">最初は素直に再帰関数を実装する</h3>
-
+<span class="p">(</span><span class="nf">prin1</span> <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="vg">*small-tree*</span> <span class="nf">#&#39;values</span><span class="p">))</span> <span class="c1">; 呼び出し数が少なければスタックオーバーフローしない</span>
+<span class="p">(</span><span class="nf">prin1</span> <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="vg">*large-tree*</span> <span class="nf">#&#39;values</span><span class="p">))</span> <span class="c1">; 呼び出し数が多くてもスタックオーバーフローしない</span>
+</code></pre></div><h3 id="最初は素直に再帰関数を実装する-1">最初は素直に再帰関数を実装する</h3>
 <p><code>count-leaf</code> の仕様は、下記のとおりに解釈できる。</p>
-
 <ul>
 <li>あるノードにおける葉の数は、ノードのcar側の枝の下にある葉の数と、ノードのcdr側の枝の下にある葉の数の和である</li>
 <li>ある葉における葉の数は、1である</li>
 </ul>
-
 <p>この問題を解く計算式を考えると、下記のとおりになる。</p>
-
 <ul>
 <li><code>count-leaf(node) := count-leaf(car(node)) + count-leaf(cdr(node))</code></li>
 <li><code>dount-leaf(leaf) := 1</code></li>
 </ul>
-
 <p>これを素直にコードに落とし込むと、下記の通りになる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">count-leaf</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">count-leaf</span> <span class="p">(</span><span class="nv">tree</span><span class="p">)</span>
   <span class="s">&#34;非末尾呼び出し形式&amp;非継続渡し形式&#34;</span>
-  <span class="p">(</span><span class="nv">break</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">consp</span> <span class="nv">tree</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">leaf-count</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">leaf-count</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tree</span><span class="p">)))</span>
-      <span class="mi">1</span><span class="p">))</span></code></pre></div>
-<p>このコードも、再帰呼び出しを2回実行した後、その結果を足し合わせている。<br />
+  <span class="p">(</span><span class="nf">break</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">consp</span> <span class="nv">tree</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nv">leaf-count</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">tree</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">leaf-count</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">tree</span><span class="p">)))</span>
+      <span class="mi">1</span><span class="p">))</span>
+</code></pre></div><p>このコードも、再帰呼び出しを2回実行した後、その結果を足し合わせている。<br>
 したがって、再帰呼び出しした際、その呼び出し元の継続が暗黙的に作成されてしまう。</p>
-
 <h3 id="末尾呼び出し最適化の方針を決める-1">末尾呼び出し最適化の方針を決める</h3>
-
-<p>ここでも <code>accumulator</code> によって末尾呼び出しに修正できるが、やや面倒である。<br />
+<p>ここでも <code>accumulator</code> によって末尾呼び出しに修正できるが、やや面倒である。<br>
 例えば、以下のようにすれば、末尾呼び出しにできる。</p>
-
 <ul>
 <li><code>accumulator</code> を途中で見つけた葉の数を覚えておくために使用する。</li>
 <li>親ノードに戻れるようにするため、ツリー全体の情報と、現在位置(インスタンスへの参照)を引数に覚える。</li>
 <li>ツリーのルートから深さ優先探索を行い、途中で葉を見つけたら <code>accumulator</code> をインクリメントする。</li>
 </ul>
-
-<p>ただし、この方法は探索の各時点における情報を管理する必要があり、再帰呼出しの利点を活かせていない。<br />
+<p>ただし、この方法は探索の各時点における情報を管理する必要があり、再帰呼出しの利点を活かせていない。<br>
 やはりこの場合、継続渡しを用いた末尾呼び出しへの修正を考えたほうが良い。</p>
-
 <p><strong>以下では、継続渡し方式による末尾呼び出し最適化を行うことにする</strong></p>
-
 <h3 id="戻り値を返す箇所を継続の呼び出しに変更する-1">戻り値を返す箇所を継続の呼び出しに変更する</h3>
-
 <p>上記の関数を継続渡し方式に修正する手順を以下に示す。</p>
-
-<h4 id="1-関数の処理完了後に評価されるべき継続-以下-継続-という-を束縛するための仮引数を用意する-1">1. 「関数の処理完了後に評価されるべき継続」(以下「継続」という)を束縛するための仮引数を用意する</h4>
-
-<p>仮引数に、継続渡しのための仮引数を追加する。<br />
+<h4 id="1-関数の処理完了後に評価されるべき継続以下継続というを束縛するための仮引数を用意する-1">1. 「関数の処理完了後に評価されるべき継続」(以下「継続」という)を束縛するための仮引数を用意する</h4>
+<p>仮引数に、継続渡しのための仮引数を追加する。<br>
 継続を意味する変数を <code>cont</code> (continuationの略)とする。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">count-leaf</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">cont</span><span class="p">)</span> <span class="c1">; 1.</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">count-leaf</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">cont</span><span class="p">)</span> <span class="c1">; 1.</span>
   <span class="s">&#34;非末尾呼び出し形式&amp;非継続渡し形式&#34;</span>
-  <span class="p">(</span><span class="nv">break</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">consp</span> <span class="nv">tree</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">leaf-count</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">))</span>
-         <span class="p">(</span><span class="nv">leaf-count</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tree</span><span class="p">)))</span>
-      <span class="mi">1</span><span class="p">))</span></code></pre></div>
-<h4 id="2-継続-を-呼び出し先の関数に引数として渡す-1">2. 「継続」を、呼び出し先の関数に引数として渡す</h4>
-
-<h5 id="2-1-修正前の関数において-再帰呼出し後に実行する処理を-継続-として抽出する-1">2-1. 修正前の関数において、再帰呼出し後に実行する処理を「継続」として抽出する</h5>
-
+  <span class="p">(</span><span class="nf">break</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">consp</span> <span class="nv">tree</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nv">leaf-count</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">tree</span><span class="p">))</span>
+         <span class="p">(</span><span class="nv">leaf-count</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">tree</span><span class="p">)))</span>
+      <span class="mi">1</span><span class="p">))</span>
+</code></pre></div><h4 id="2-継続を呼び出し先の関数に引数として渡す-1">2. 「継続」を、呼び出し先の関数に引数として渡す</h4>
+<h5 id="2-1-修正前の関数において再帰呼出し後に実行する処理を継続として抽出する-1">2-1. 修正前の関数において、再帰呼出し後に実行する処理を「継続」として抽出する</h5>
 <p>この関数における「継続」は、やや複雑になる。というのも、再帰呼出しが2回あるため、再帰呼び出し後の継続の中に、さらに再帰呼び出しが内包される形になる。</p>
-
 <h6 id="2-1-1-再帰呼び出しと継続を抽出する">2-1-1. 再帰呼び出しと継続を抽出する</h6>
-
 <p>再帰関数が作成する継続は2段階に分けられる。</p>
-
-<ol>
+<ol start="0">
 <li><code>(count-leaf (car tree))</code> 再帰呼び出し自体</li>
 <li><code>(count-leaf (cdr tree))</code> 継続1</li>
 <li><code>(+ 0: 1:)</code> 継続2</li>
 </ol>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 再帰呼び出し処理があるパスの、</span>
 <span class="c1">; 再帰呼び出し自体&amp;それ以降の処理</span>
-<span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">count-leaf</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">))</span>
-   <span class="p">(</span><span class="nv">count-leaf</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tree</span><span class="p">)))</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 再帰呼び出しと、それ以降の処理をステップ毎に列挙する</span>
+<span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nv">count-leaf</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">tree</span><span class="p">))</span>
+   <span class="p">(</span><span class="nv">count-leaf</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">tree</span><span class="p">)))</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 再帰呼び出しと、それ以降の処理をステップ毎に列挙する</span>
 <span class="c1">; 0: は再帰呼出し自体</span>
 
 <span class="c1">; 0:</span>
-<span class="p">(</span><span class="nv">count-leaf</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">count-leaf</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">tree</span><span class="p">))</span>
 <span class="c1">; 1:</span>
-<span class="p">(</span><span class="nv">count-leaf</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tree</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">count-leaf</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">tree</span><span class="p">))</span>
 <span class="c1">; 2:</span>
-<span class="p">(</span><span class="nv">+</span> <span class="nv">0:の戻り値</span> <span class="nv">1:の戻り値</span><span class="p">)</span></code></pre></div>
-<h6 id="2-1-2-再帰呼び出しの-継続-仮引数部分に継続を渡す">2-1-2. 再帰呼び出しの「継続」仮引数部分に継続を渡す</h6>
-
-<p>再帰呼び出しのcont部分に継続を渡す。<br />
-<code>(make-cont x:)</code> は、処理 <code>x:</code> 以降の処理を内包するクロージャを作成する仮想的な関数である。<br />
+<span class="p">(</span><span class="nf">+</span> <span class="nv">0:の戻り値</span> <span class="nv">1:の戻り値</span><span class="p">)</span>
+</code></pre></div><h6 id="2-1-2-再帰呼び出しの継続仮引数部分に継続を渡す">2-1-2. 再帰呼び出しの「継続」仮引数部分に継続を渡す</h6>
+<p>再帰呼び出しのcont部分に継続を渡す。<br>
+<code>(make-cont x:)</code> は、処理 <code>x:</code> 以降の処理を内包するクロージャを作成する仮想的な関数である。<br>
 この仮想的な関数を導入することで、継続渡し方式への変換が後々楽になる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 0:</span>
-<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">1:</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">1:</span><span class="p">))</span>
 <span class="c1">; 1:</span>
-<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">2:</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">2:</span><span class="p">))</span>
 <span class="c1">; 2:</span>
-<span class="p">(</span><span class="nv">+</span> <span class="nv">0:の戻り値</span> <span class="nv">1:の戻り値</span><span class="p">)</span></code></pre></div>
-<h6 id="2-1-3-再帰呼び出し後の処理の最後に継続の呼び出しを追加する">2-1-3. 再帰呼び出し後の処理の最後に継続の呼び出しを追加する</h6>
-
-<p>再帰呼び出し後の処理の最後に、継続の呼び出しを追加する。<br />
+<span class="p">(</span><span class="nf">+</span> <span class="nv">0:の戻り値</span> <span class="nv">1:の戻り値</span><span class="p">)</span>
+</code></pre></div><h6 id="2-1-3-再帰呼び出し後の処理の最後に継続の呼び出しを追加する">2-1-3. 再帰呼び出し後の処理の最後に継続の呼び出しを追加する</h6>
+<p>再帰呼び出し後の処理の最後に、継続の呼び出しを追加する。<br>
 こうすることで、再帰呼出し後に、蓄積した継続を全て処理するようになる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 0:</span>
-<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">1:</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">1:</span><span class="p">))</span>
 <span class="c1">; 1:</span>
-<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">2:</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">2:</span><span class="p">))</span>
 <span class="c1">; 2:</span>
-<span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">0:の戻り値</span> <span class="nv">1:の戻り値</span><span class="p">))</span></code></pre></div>
-<h6 id="2-1-4-最後の処理をクロージャに閉包する">2-1-4. 最後の処理をクロージャに閉包する</h6>
-
-<p>抽出した複数の継続のうち、最後の継続、つまり2:をクロージャに閉包する。<br />
-ここで作成したクロージャの引数は、1:の戻り値を受け取る。<br />
+<span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">0:の戻り値</span> <span class="nv">1:の戻り値</span><span class="p">))</span>
+</code></pre></div><h6 id="2-1-4-最後の処理をクロージャに閉包する">2-1-4. 最後の処理をクロージャに閉包する</h6>
+<p>抽出した複数の継続のうち、最後の継続、つまり2:をクロージャに閉包する。<br>
+ここで作成したクロージャの引数は、1:の戻り値を受け取る。<br>
 ここでは、1:の戻り値を <code>m</code> とする。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 0:</span>
-<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">1:</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">1:</span><span class="p">))</span>
 <span class="c1">; 1:</span>
-<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">2:</span><span class="p">))</span> <span class="c1">; (count-leaf/cps (cdr tree))の戻り値をmとする</span>
+<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">2:</span><span class="p">))</span> <span class="c1">; (count-leaf/cps (cdr tree))の戻り値をmとする</span>
 <span class="c1">; 2:をcontとして閉包する</span>
-<span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="c1">; m = 1:の戻り値</span>
-    <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">0:の戻り値</span> <span class="nv">m</span><span class="p">)))</span></code></pre></div>
-<h6 id="2-1-5-継続を遡っていき-順々にクロージャに閉包していく">2-1-5. 継続を遡っていき、順々にクロージャに閉包していく</h6>
-
-<p>再帰呼び出し後の最後の処理から前の処理に遡りつつクロージャに閉包していく。<br />
-ここで作成したクロージャの引数は、0:の戻り値を受け取る。<br />
+<span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="c1">; m = 1:の戻り値</span>
+    <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">0:の戻り値</span> <span class="nv">m</span><span class="p">)))</span>
+</code></pre></div><h6 id="2-1-5-継続を遡っていき順々にクロージャに閉包していく">2-1-5. 継続を遡っていき、順々にクロージャに閉包していく</h6>
+<p>再帰呼び出し後の最後の処理から前の処理に遡りつつクロージャに閉包していく。<br>
+ここで作成したクロージャの引数は、0:の戻り値を受け取る。<br>
 ここでは、0:の戻り値を <code>n</code> とする。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 0:</span>
-<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">1:</span><span class="p">))</span> <span class="c1">; (count-leaf/cps (car tree))の戻り値をnとする</span>
+<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">1:</span><span class="p">))</span> <span class="c1">; (count-leaf/cps (car tree))の戻り値をnとする</span>
 <span class="c1">; 1:</span>
 <span class="c1">; contとして閉包する</span>
-<span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span> <span class="c1">; n = 0:の戻り値</span>
-    <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tree</span><span class="p">)</span> <span class="nv">n</span><span class="p">))</span>
+<span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span> <span class="c1">; n = 0:の戻り値</span>
+    <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">tree</span><span class="p">)</span> <span class="nv">n</span><span class="p">))</span>
 <span class="c1">; 2:</span>
-<span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="c1">; m = 1:の戻り値</span>
-    <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">n</span> <span class="nv">m</span><span class="p">)))</span></code></pre></div>
-<h6 id="2-1-6-閉包したクロージャを最後の処理から遡りつつ入れ子にしていく">2-1-6. 閉包したクロージャを最後の処理から遡りつつ入れ子にしていく</h6>
-
-<p>上記で別々に作成したクロージャをまとめていく。<br />
+<span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="c1">; m = 1:の戻り値</span>
+    <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">n</span> <span class="nv">m</span><span class="p">)))</span>
+</code></pre></div><h6 id="2-1-6-閉包したクロージャを最後の処理から遡りつつ入れ子にしていく">2-1-6. 閉包したクロージャを最後の処理から遡りつつ入れ子にしていく</h6>
+<p>上記で別々に作成したクロージャをまとめていく。<br>
 まず、1:の中に2:を入れる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 0:</span>
-<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">1:</span><span class="p">))</span>
+<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">tree</span><span class="p">)</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">1:</span><span class="p">))</span>
 <span class="c1">; 1:</span>
-<span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span> <span class="c1">; n = 0:の戻り値</span>
-    <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tree</span><span class="p">)</span>
-      <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="c1">; m = 1:の戻り値</span>
-          <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">n</span> <span class="nv">m</span><span class="p">)))))</span></code></pre></div>
-<p>次に、0:の中に1:を入れる。<br />
-これで全てのクロージャを一つにまとめられた。<br />
+<span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span> <span class="c1">; n = 0:の戻り値</span>
+    <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">tree</span><span class="p">)</span>
+      <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="c1">; m = 1:の戻り値</span>
+          <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">n</span> <span class="nv">m</span><span class="p">)))))</span>
+</code></pre></div><p>次に、0:の中に1:を入れる。<br>
+これで全てのクロージャを一つにまとめられた。<br>
 これがcpsの再帰呼び出しになる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 0: = count-leaf/cpsの継続</span>
-<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">)</span>
-  <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span> <span class="c1">; n = 0:の戻り値</span>
-      <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tree</span><span class="p">)</span>
-        <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="c1">; m = 1:の戻り値</span>
-            <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">n</span> <span class="nv">m</span><span class="p">))))))</span></code></pre></div>
-<h5 id="2-2-抽出した-継続-を-再帰呼出しする際に-引数-cont-に渡す-1">2-2. 抽出した「継続」を、再帰呼出しする際に、引数 <code>cont</code> に渡す</h5>
-
+<span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">tree</span><span class="p">)</span>
+  <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span> <span class="c1">; n = 0:の戻り値</span>
+      <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">tree</span><span class="p">)</span>
+        <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="c1">; m = 1:の戻り値</span>
+            <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">n</span> <span class="nv">m</span><span class="p">))))))</span>
+</code></pre></div><h5 id="2-2-抽出した継続を再帰呼出しする際に引数-cont-に渡す-1">2-2. 抽出した「継続」を、再帰呼出しする際に、引数 <code>cont</code> に渡す</h5>
 <p>関数呼び出し処理にcpsの再帰呼び出しを入れる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">define</span> <span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">cont</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">consp</span> <span class="nv">tree</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">tree</span><span class="p">)</span>
-        <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span> <span class="c1">; n = 0:の戻り値</span>
-            <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">tree</span><span class="p">)</span>
-              <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="c1">; m = 1:の戻り値</span>
-                  <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">n</span> <span class="nv">m</span><span class="p">))))))</span>
-      <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="mi">1</span><span class="p">)))</span></code></pre></div>
-<p>これで、再帰呼出し処理を機械的にcpsに変換できた。</p>
-
-<hr />
-
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">consp</span> <span class="nv">tree</span><span class="p">)</span>
+      <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">tree</span><span class="p">)</span>
+        <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span> <span class="c1">; n = 0:の戻り値</span>
+            <span class="p">(</span><span class="nv">count-leaf/cps</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">tree</span><span class="p">)</span>
+              <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">m</span><span class="p">)</span> <span class="c1">; m = 1:の戻り値</span>
+                  <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">n</span> <span class="nv">m</span><span class="p">))))))</span>
+      <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="mi">1</span><span class="p">)))</span>
+</code></pre></div><p>これで、再帰呼出し処理を機械的にcpsに変換できた。</p>
+<hr>
 <h1 id="非末尾再帰を継続渡し形式によって末尾再帰に変換する手順">非末尾再帰を継続渡し形式によって末尾再帰に変換する手順</h1>
-
-<p>上記で実施した手順をまとめると、非末尾再帰を継続渡し形式によって末尾再帰に変換するルールが分かる。<br />
+<p>上記で実施した手順をまとめると、非末尾再帰を継続渡し形式によって末尾再帰に変換するルールが分かる。<br>
 このルールを以下に示す。</p>
-
 <ol>
 <li>関数の仮引数に継続用の変数を追加する</li>
 <li>関数の戻り値を返す部分を継続の呼び出し処理に修正する</li>
@@ -1054,119 +913,107 @@ next          v
 <li>クロージャを一つにまとめる</li>
 <li>最初の再帰呼び出しに継続を代入する</li>
 </ol>
-
 <ul>
 <li>コード例</li>
 </ul>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">predicate</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">n</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">predicate</span><span class="p">)</span>
       <span class="p">(</span><span class="nv">bar</span> <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span><span class="p">)</span> <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span><span class="p">))</span>
-      <span class="p">(</span><span class="nv">result</span><span class="p">)))</span></code></pre></div>
-<h2 id="1-関数の仮引数に継続用の変数を追加する">1. 関数の仮引数に継続用の変数を追加する</h2>
-
+      <span class="p">(</span><span class="nv">result</span><span class="p">)))</span>
+</code></pre></div><h2 id="1-関数の仮引数に継続用の変数を追加する">1. 関数の仮引数に継続用の変数を追加する</h2>
 <p>継続用の変数は <code>continuation</code> の略である <code>cont</code> をよく用いる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">n</span> <span class="nv">cont</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">predicate</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">n</span> <span class="nv">cont</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">predicate</span><span class="p">)</span>
       <span class="p">(</span><span class="nv">bar</span> <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span><span class="p">)</span> <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span><span class="p">))</span>
-      <span class="p">(</span><span class="nv">result</span><span class="p">)))</span></code></pre></div>
-<h2 id="2-関数の戻り値を返す部分を継続の呼び出し処理に修正する">2. 関数の戻り値を返す部分を継続の呼び出し処理に修正する</h2>
-
+      <span class="p">(</span><span class="nv">result</span><span class="p">)))</span>
+</code></pre></div><h2 id="2-関数の戻り値を返す部分を継続の呼び出し処理に修正する">2. 関数の戻り値を返す部分を継続の呼び出し処理に修正する</h2>
 <p>関数の戻り値を返す部分を、戻り値を入力とした <code>cont</code> の呼び出し処理に置き換える。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">n</span> <span class="nv">cont</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">predicate</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">n</span> <span class="nv">cont</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">predicate</span><span class="p">)</span>
       <span class="p">(</span><span class="nv">bar</span> <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span><span class="p">)</span> <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span><span class="p">))</span>
-      <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="nv">result</span><span class="p">)))</span></code></pre></div>
-<h2 id="3-再帰呼出し処理とその後の処理の部分を抽出する">3. 再帰呼出し処理とその後の処理の部分を抽出する</h2>
-
+      <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="nv">result</span><span class="p">)))</span>
+</code></pre></div><h2 id="3-再帰呼出し処理とその後の処理の部分を抽出する">3. 再帰呼出し処理とその後の処理の部分を抽出する</h2>
 <p>再帰呼出し処理と、その後の処理の部分を抽出する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">bar</span> <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span><span class="p">)</span> <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span><span class="p">))</span></code></pre></div>
-<p>後で分かりやすくするために、各処理を分解しておく。<br />
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">bar</span> <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span><span class="p">)</span> <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span><span class="p">))</span>
+</code></pre></div><p>後で分かりやすくするために、各処理を分解しておく。<br>
 ここで、ある処理について、それ以前の処理の戻り値を使用している場合は、その戻り値を使用している箇所を明示しておく。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 0:</span>
 <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span><span class="p">)</span>
 <span class="c1">; 1:</span>
 <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span><span class="p">)</span>
 <span class="c1">; 2:</span>
-<span class="p">(</span><span class="nv">bar</span> <span class="nv">0:の戻り値</span> <span class="nv">1:の戻り値</span><span class="p">)</span></code></pre></div>
-<h2 id="4-再帰呼び出しの継続部分に継続を渡す">4. 再帰呼び出しの継続部分に継続を渡す</h2>
-
-<p>再帰関数の呼び出し箇所において、継続渡し用の仮引数に、その処理の次の処理を継続として渡すように明示する。<br />
+<span class="p">(</span><span class="nv">bar</span> <span class="nv">0:の戻り値</span> <span class="nv">1:の戻り値</span><span class="p">)</span>
+</code></pre></div><h2 id="4-再帰呼び出しの継続部分に継続を渡す">4. 再帰呼び出しの継続部分に継続を渡す</h2>
+<p>再帰関数の呼び出し箇所において、継続渡し用の仮引数に、その処理の次の処理を継続として渡すように明示する。<br>
 <code>(make-cont x:)</code> は、処理 <code>x:</code> 以降の処理を内包するクロージャを作成する仮想的な関数。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 0:</span>
 <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">1:</span><span class="p">))</span>
 <span class="c1">; 1:</span>
 <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">2:</span><span class="p">))</span>
 <span class="c1">; 2:</span>
-<span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">bar</span> <span class="nv">0:の戻り値</span> <span class="nv">1:の戻り値</span><span class="p">))</span></code></pre></div>
-<h2 id="5-再帰呼び出し後の処理に継続の呼び出しを追加する">5. 再帰呼び出し後の処理に継続の呼び出しを追加する</h2>
-
+<span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">bar</span> <span class="nv">0:の戻り値</span> <span class="nv">1:の戻り値</span><span class="p">))</span>
+</code></pre></div><h2 id="5-再帰呼び出し後の処理に継続の呼び出しを追加する">5. 再帰呼び出し後の処理に継続の呼び出しを追加する</h2>
 <p>再帰呼び出しの後の継続を全て評価するため、再帰呼び出し後の処理に継続の呼び出しを追加する。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 0:</span>
 <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">1:</span><span class="p">))</span>
 <span class="c1">; 1:</span>
 <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">2:</span><span class="p">))</span>
 <span class="c1">; 2:</span>
-<span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">bar</span> <span class="nv">0:の戻り値</span> <span class="nv">1:の戻り値</span><span class="p">))</span></code></pre></div>
-<h2 id="6-継続の最後の処理をクロージャに閉包する">6. 継続の最後の処理をクロージャに閉包する</h2>
-
-<p>継続の最後の処理をクロージャに閉包する。<br />
-このクロージャの引数には、クロージャに閉包する処理の前の処理の戻り値が渡されることになる。<br />
+<span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">bar</span> <span class="nv">0:の戻り値</span> <span class="nv">1:の戻り値</span><span class="p">))</span>
+</code></pre></div><h2 id="6-継続の最後の処理をクロージャに閉包する">6. 継続の最後の処理をクロージャに閉包する</h2>
+<p>継続の最後の処理をクロージャに閉包する。<br>
+このクロージャの引数には、クロージャに閉包する処理の前の処理の戻り値が渡されることになる。<br>
 こうすることで、クロージャが評価された時、その最後に、引数で渡された戻り値を使って継続が評価されることになる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 0:</span>
 <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">1:</span><span class="p">))</span>
 <span class="c1">; 1:</span>
 <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">2:</span><span class="p">))</span> <span class="c1">; 1: (foo n) の戻り値をxとする</span>
 <span class="c1">; 2:</span>
-<span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="c1">; x = 1:の戻り値</span>
-    <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">bar</span> <span class="nv">0:の戻り値</span> <span class="nv">x</span><span class="p">)))</span></code></pre></div>
-<h2 id="7-他の処理も6-と同様にクロージャに閉包する">7. 他の処理も6.と同様にクロージャに閉包する</h2>
-
+<span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="c1">; x = 1:の戻り値</span>
+    <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">bar</span> <span class="nv">0:の戻り値</span> <span class="nv">x</span><span class="p">)))</span>
+</code></pre></div><h2 id="7-他の処理も6と同様にクロージャに閉包する">7. 他の処理も6.と同様にクロージャに閉包する</h2>
 <p>上記6.のクロージャへの閉包と同様に、各処理を最後から前に遡りながら、クロージャに閉包していく。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 0:</span>
 <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">1:</span><span class="p">))</span> <span class="c1">; 0: (foo n) の戻り値をyとする</span>
 <span class="c1">; 1:</span>
-<span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">y</span><span class="p">)</span> <span class="c1">; y = 0:の戻り値</span>
+<span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">y</span><span class="p">)</span> <span class="c1">; y = 0:の戻り値</span>
     <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">2:</span><span class="p">)))</span>
 <span class="c1">; 2:</span>
-<span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="c1">; x = 1:の戻り値</span>
-    <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">bar</span> <span class="nv">y</span> <span class="nv">x</span><span class="p">)))</span></code></pre></div>
-<h2 id="8-クロージャを一つにまとめる">8. クロージャを一つにまとめる</h2>
-
-<p>上記で作成したクロージャを一つにまとめる。<br />
+<span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="c1">; x = 1:の戻り値</span>
+    <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">bar</span> <span class="nv">y</span> <span class="nv">x</span><span class="p">)))</span>
+</code></pre></div><h2 id="8-クロージャを一つにまとめる">8. クロージャを一つにまとめる</h2>
+<p>上記で作成したクロージャを一つにまとめる。<br>
 <code>(make-cont ?:)</code> の部分に <code>?:</code> を代入する。</p>
-
 <ul>
 <li><code>2:</code> を <code>1:</code> の <code>(make-cont 2:)</code> に代入する。</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 0:</span>
 <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span> <span class="p">(</span><span class="nv">make-cont</span> <span class="nv">1:</span><span class="p">))</span>
 <span class="c1">; 1:</span>
-<span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">y</span><span class="p">)</span> <span class="c1">; y = 0:の戻り値</span>
-    <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span> <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="c1">; x = 1:の戻り値</span>
-    <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">bar</span> <span class="nv">y</span> <span class="nv">x</span><span class="p">)))))</span></code></pre></div>
-<ul>
+<span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">y</span><span class="p">)</span> <span class="c1">; y = 0:の戻り値</span>
+    <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span> <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="c1">; x = 1:の戻り値</span>
+    <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">bar</span> <span class="nv">y</span> <span class="nv">x</span><span class="p">)))))</span>
+</code></pre></div><ul>
 <li><code>1:</code> を <code>0:</code> の <code>(make-cont 1:)</code> に代入する。</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; 0:</span>
 <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span>
-  <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">y</span><span class="p">)</span> <span class="c1">; y = 0:の戻り値</span>
+  <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">y</span><span class="p">)</span> <span class="c1">; y = 0:の戻り値</span>
       <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span>
-        <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="c1">; x = 1:の戻り値</span>
-            <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">bar</span> <span class="nv">y</span> <span class="nv">x</span><span class="p">))))))</span></code></pre></div>
-<p>これで、再帰呼び出し後の継続を作成できた。</p>
-
+        <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="c1">; x = 1:の戻り値</span>
+            <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">bar</span> <span class="nv">y</span> <span class="nv">x</span><span class="p">))))))</span>
+</code></pre></div><p>これで、再帰呼び出し後の継続を作成できた。</p>
 <h2 id="9-最初の再帰呼び出しに継続を代入する">9. 最初の再帰呼び出しに継続を代入する</h2>
-
 <p>最初の再帰呼び出しの継続用の仮引数部分に、上記で作成した継続を代入する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">n</span> <span class="nv">cont</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">predicate</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">foo</span> <span class="p">(</span><span class="nv">n</span> <span class="nv">cont</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nv">predicate</span><span class="p">)</span>
       <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span>
-        <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">y</span><span class="p">)</span> <span class="c1">; y = 0:の戻り値</span>
+        <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">y</span><span class="p">)</span> <span class="c1">; y = 0:の戻り値</span>
             <span class="p">(</span><span class="nv">foo</span> <span class="nv">n</span>
-              <span class="nf">#&#39;</span><span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="c1">; x = 1:の戻り値</span>
-                  <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">bar</span> <span class="nv">y</span> <span class="nv">x</span><span class="p">))))))</span>
-      <span class="p">(</span><span class="nv">funcall</span> <span class="nv">cont</span> <span class="nv">result</span><span class="p">)))</span></code></pre></div>
-<p>これで、非末尾再帰を継続渡し形式によって末尾再帰に変換できた。</p>
+              <span class="nf">#&#39;</span><span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span><span class="p">)</span> <span class="c1">; x = 1:の戻り値</span>
+                  <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="p">(</span><span class="nv">bar</span> <span class="nv">y</span> <span class="nv">x</span><span class="p">))))))</span>
+      <span class="p">(</span><span class="nf">funcall</span> <span class="nv">cont</span> <span class="nv">result</span><span class="p">)))</span>
+</code></pre></div><p>これで、非末尾再帰を継続渡し形式によって末尾再帰に変換できた。</p>
 
   </article>
 
@@ -1240,7 +1087,9 @@ next          v
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

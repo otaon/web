@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Lazy Lambda</title>
@@ -6,62 +6,49 @@
     <description>Recent content in Tags on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sun, 05 May 2019 05:00:00 +0900</lastBuildDate>
-    
-	<atom:link href="https://otaon.github.io/web/ja-jp/tags/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 28 Jul 2019 21:00:00 +0900</lastBuildDate><atom:link href="https://otaon.github.io/web/ja-jp/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>DIP</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/dip/</link>
-      <pubDate>Sun, 05 May 2019 05:00:00 +0900</pubDate>
+      <title>lisp</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/lisp/</link>
+      <pubDate>Sun, 28 Jul 2019 21:00:00 +0900</pubDate>
       
-      <guid>https://otaon.github.io/web/ja-jp/tag/dip/</guid>
+      <guid>https://otaon.github.io/web/ja-jp/tag/lisp/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Emacs</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/emacs/</link>
-      <pubDate>Sat, 18 May 2019 00:00:00 +0900</pubDate>
+      <title>roswell</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/roswell/</link>
+      <pubDate>Sun, 28 Jul 2019 21:00:00 +0900</pubDate>
       
-      <guid>https://otaon.github.io/web/ja-jp/tag/emacs/</guid>
+      <guid>https://otaon.github.io/web/ja-jp/tag/roswell/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Git</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/git/</link>
-      <pubDate>Wed, 13 Mar 2019 01:00:00 +0900</pubDate>
+      <title>slimv</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/slimv/</link>
+      <pubDate>Sun, 28 Jul 2019 21:00:00 +0900</pubDate>
       
-      <guid>https://otaon.github.io/web/ja-jp/tag/git/</guid>
+      <guid>https://otaon.github.io/web/ja-jp/tag/slimv/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>GitHub Pages</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/github-pages/</link>
-      <pubDate>Sun, 03 Mar 2019 16:23:58 +0900</pubDate>
+      <title>vim</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/vim/</link>
+      <pubDate>Sun, 28 Jul 2019 21:00:00 +0900</pubDate>
       
-      <guid>https://otaon.github.io/web/ja-jp/tag/github-pages/</guid>
+      <guid>https://otaon.github.io/web/ja-jp/tag/vim/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Go</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/go/</link>
-      <pubDate>Wed, 01 May 2019 00:00:00 +0900</pubDate>
+      <title>p5.js</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/p5.js/</link>
+      <pubDate>Sat, 20 Jul 2019 23:00:00 +0900</pubDate>
       
-      <guid>https://otaon.github.io/web/ja-jp/tag/go/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Golang</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/golang/</link>
-      <pubDate>Wed, 01 May 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/tag/golang/</guid>
+      <guid>https://otaon.github.io/web/ja-jp/tag/p5.js/</guid>
       <description></description>
     </item>
     
@@ -75,11 +62,65 @@
     </item>
     
     <item>
-      <title>ISP</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/isp/</link>
-      <pubDate>Sun, 05 May 2019 00:00:00 +0900</pubDate>
+      <title>実践-Common-Lisp</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/%E5%AE%9F%E8%B7%B5-common-lisp/</link>
+      <pubDate>Sun, 02 Jun 2019 00:00:00 +0900</pubDate>
       
-      <guid>https://otaon.github.io/web/ja-jp/tag/isp/</guid>
+      <guid>https://otaon.github.io/web/ja-jp/tag/%E5%AE%9F%E8%B7%B5-common-lisp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Emacs</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/emacs/</link>
+      <pubDate>Sat, 18 May 2019 00:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/emacs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>DIP</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/dip/</link>
+      <pubDate>Sun, 05 May 2019 05:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/dip/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>OOP</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/oop/</link>
+      <pubDate>Sun, 05 May 2019 05:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/oop/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>programming</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/programming/</link>
+      <pubDate>Sun, 05 May 2019 05:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/programming/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>SOLID</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/solid/</link>
+      <pubDate>Sun, 05 May 2019 05:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/solid/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>オブジェクト指向</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91/</link>
+      <pubDate>Sun, 05 May 2019 05:00:00 +0900</pubDate>
+      
+      <guid>https://otaon.github.io/web/ja-jp/tag/%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E6%8C%87%E5%90%91/</guid>
       <description></description>
     </item>
     
@@ -102,20 +143,11 @@
     </item>
     
     <item>
-      <title>OOP</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/oop/</link>
-      <pubDate>Sun, 05 May 2019 05:00:00 +0900</pubDate>
+      <title>ISP</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/isp/</link>
+      <pubDate>Sun, 05 May 2019 00:00:00 +0900</pubDate>
       
-      <guid>https://otaon.github.io/web/ja-jp/tag/oop/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>SOLID</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/solid/</link>
-      <pubDate>Sun, 05 May 2019 05:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/tag/solid/</guid>
+      <guid>https://otaon.github.io/web/ja-jp/tag/isp/</guid>
       <description></description>
     </item>
     
@@ -129,65 +161,29 @@
     </item>
     
     <item>
-      <title>TOC</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/toc/</link>
-      <pubDate>Wed, 01 May 2019 22:00:00 +0900</pubDate>
+      <title>ディスパッチ</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/%E3%83%87%E3%82%A3%E3%82%B9%E3%83%91%E3%83%83%E3%83%81/</link>
+      <pubDate>Thu, 02 May 2019 00:00:00 +0900</pubDate>
       
-      <guid>https://otaon.github.io/web/ja-jp/tag/toc/</guid>
+      <guid>https://otaon.github.io/web/ja-jp/tag/%E3%83%87%E3%82%A3%E3%82%B9%E3%83%91%E3%83%83%E3%83%81/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>TravisCI</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/travisci/</link>
-      <pubDate>Sun, 03 Mar 2019 16:23:58 +0900</pubDate>
+      <title>仮想関数テーブル</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/%E4%BB%AE%E6%83%B3%E9%96%A2%E6%95%B0%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB/</link>
+      <pubDate>Thu, 02 May 2019 00:00:00 +0900</pubDate>
       
-      <guid>https://otaon.github.io/web/ja-jp/tag/travisci/</guid>
+      <guid>https://otaon.github.io/web/ja-jp/tag/%E4%BB%AE%E6%83%B3%E9%96%A2%E6%95%B0%E3%83%86%E3%83%BC%E3%83%96%E3%83%AB/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>basic</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/basic/</link>
-      <pubDate>Thu, 07 Mar 2019 00:00:00 +0900</pubDate>
+      <title>多重ディスパッチ</title>
+      <link>https://otaon.github.io/web/ja-jp/tag/%E5%A4%9A%E9%87%8D%E3%83%87%E3%82%A3%E3%82%B9%E3%83%91%E3%83%83%E3%83%81/</link>
+      <pubDate>Thu, 02 May 2019 00:00:00 +0900</pubDate>
       
-      <guid>https://otaon.github.io/web/ja-jp/tag/basic/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>build</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/build/</link>
-      <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/tag/build/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>continuation</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/continuation/</link>
-      <pubDate>Thu, 07 Mar 2019 02:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/tag/continuation/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>file-system</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/file-system/</link>
-      <pubDate>Sun, 24 Mar 2019 00:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/tag/file-system/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>lisp</title>
-      <link>https://otaon.github.io/web/ja-jp/tag/lisp/</link>
-      <pubDate>Sun, 28 Jul 2019 21:00:00 +0900</pubDate>
-      
-      <guid>https://otaon.github.io/web/ja-jp/tag/lisp/</guid>
+      <guid>https://otaon.github.io/web/ja-jp/tag/%E5%A4%9A%E9%87%8D%E3%83%87%E3%82%A3%E3%82%B9%E3%83%91%E3%83%83%E3%83%81/</guid>
       <description></description>
     </item>
     

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>slimvショートカット一覧 · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,15 +22,12 @@
 <meta property="og:description" content="一部誤謬がある可能性がある abc^de はカーソルがcの上にあることを意味する 編集 edit 一般操作 コマンド 操作 操作例 操作結果 ,) S式を閉じる (foo ,) (foo) タブ シンボルを" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/slimv%E3%82%B7%E3%83%A7%E3%83%BC%E3%83%88%E3%82%AB%E3%83%83%E3%83%88%E4%B8%80%E8%A6%A7/" />
-<meta property="article:published_time" content="2019-03-07T02:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-03-07T02:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-03-07T02:00:00+09:00" />
+<meta property="article:modified_time" content="2019-03-07T02:00:00+09:00" />
 <meta itemprop="name" content="slimvショートカット一覧">
 <meta itemprop="description" content="一部誤謬がある可能性がある abc^de はカーソルがcの上にあることを意味する 編集 edit 一般操作 コマンド 操作 操作例 操作結果 ,) S式を閉じる (foo ,) (foo) タブ シンボルを">
-
-
-<meta itemprop="datePublished" content="2019-03-07T02:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-03-07T02:00:00&#43;09:00" />
+<meta itemprop="datePublished" content="2019-03-07T02:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-03-07T02:00:00+09:00" />
 <meta itemprop="wordCount" content="2285">
 
 
@@ -146,50 +143,44 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#編集-edit">編集 edit</a>
-<ul>
-<li><a href="#一般操作">一般操作</a></li>
-<li><a href="#pareditモード操作">pareditモード操作</a></li>
-</ul></li>
-<li><a href="#評価-evaluation">評価 evaluation</a></li>
-<li><a href="#デバッグ-debugging">デバッグ debugging</a>
-<ul>
-<li><a href="#デバッグ用コード編集">デバッグ用コード編集</a></li>
-<li><a href="#デバッガ操作">デバッガ操作</a></li>
-<li><a href="#スレッド操作">スレッド操作</a></li>
-</ul></li>
-<li><a href="#コンパイル-compilation">コンパイル compilation</a></li>
-<li><a href="#xref">Xref</a></li>
-<li><a href="#プロファイリング-profiling">プロファイリング Profiling</a>
-<ul>
-<li><a href="#プロファイリング設定">プロファイリング設定</a></li>
-<li><a href="#プロファイリング確認">プロファイリング確認</a></li>
-</ul></li>
-<li><a href="#ドキュメント-documentation">ドキュメント documentation</a></li>
-<li><a href="#repl">REPL</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#編集-edit">編集 edit</a>
+      <ul>
+        <li><a href="#一般操作">一般操作</a></li>
+        <li><a href="#pareditモード操作">pareditモード操作</a></li>
+      </ul>
+    </li>
+    <li><a href="#評価-evaluation">評価 evaluation</a></li>
+    <li><a href="#デバッグ-debugging">デバッグ debugging</a>
+      <ul>
+        <li><a href="#デバッグ用コード編集">デバッグ用コード編集</a></li>
+        <li><a href="#デバッガ操作">デバッガ操作</a></li>
+        <li><a href="#スレッド操作">スレッド操作</a></li>
+      </ul>
+    </li>
+    <li><a href="#コンパイル-compilation">コンパイル compilation</a></li>
+    <li><a href="#xref">Xref</a></li>
+    <li><a href="#プロファイリング-profiling">プロファイリング Profiling</a>
+      <ul>
+        <li><a href="#プロファイリング設定">プロファイリング設定</a></li>
+        <li><a href="#プロファイリング確認">プロファイリング確認</a></li>
+      </ul>
+    </li>
+    <li><a href="#ドキュメント-documentation">ドキュメント documentation</a></li>
+    <li><a href="#repl">REPL</a></li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<ul>
+  <ul>
 <li>一部誤謬がある可能性がある</li>
 <li><code>abc^de</code> はカーソルがcの上にあることを意味する</li>
 </ul>
-
-<hr />
-
+<hr>
 <h2 id="編集-edit">編集 edit</h2>
-
 <h3 id="一般操作">一般操作</h3>
-
 <table>
 <thead>
 <tr>
@@ -199,7 +190,6 @@
 <th>操作結果</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>,)</code></td>
@@ -207,21 +197,18 @@
 <td><code>(foo</code> ,)</td>
 <td><code>(foo)</code></td>
 </tr>
-
 <tr>
 <td><code>タブ</code></td>
 <td>シンボルを補完する</td>
 <td><code>(conca)</code>上でタブ</td>
 <td><code>(concatenate)</code></td>
 </tr>
-
 <tr>
 <td><code>,j</code></td>
 <td>定義を探す</td>
-<td><code>(^foo)</code>,j<br/>→対象名を入力してEnter</td>
+<td><code>(^foo)</code>,j<!-- raw HTML omitted -->→対象名を入力してEnter</td>
 <td>タグファイルがあれば<code>foo</code>の定義にタグジャンプ</td>
 </tr>
-
 <tr>
 <td><code>,(</code></td>
 <td>pareditモードを切り替える</td>
@@ -230,9 +217,7 @@
 </tr>
 </tbody>
 </table>
-
 <h3 id="pareditモード操作">pareditモード操作</h3>
-
 <table>
 <thead>
 <tr>
@@ -242,63 +227,53 @@
 <th>操作結果</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
-<td><code>,W</code><br/><code>,w(</code></td>
+<td><code>,W</code><!-- raw HTML omitted --><code>,w(</code></td>
 <td>S式を括弧で包む</td>
-<td><code>foo^</code> ,W<br/><code>foo^</code> ,w(</td>
-<td><code>(foo)</code><br/><code>(foo)</code></td>
+<td><code>foo^</code> ,W<!-- raw HTML omitted --><code>foo^</code> ,w(</td>
+<td><code>(foo)</code><!-- raw HTML omitted --><code>(foo)</code></td>
 </tr>
-
 <tr>
 <td><code>,S</code></td>
 <td>S式をスプライスする(上の式と一緒にする)</td>
 <td><code>(foo (^bar))</code>  ,S</td>
 <td><code>(foo bar)</code></td>
 </tr>
-
 <tr>
 <td><code>,O</code></td>
 <td>S式をカーソルの左右で分離させる</td>
 <td><code>(foo^ bar)</code>  ,O</td>
 <td><code>(foo) (bar)</code></td>
 </tr>
-
 <tr>
 <td><code>,J</code></td>
 <td>S式をくっつける</td>
 <td><code>(foo) ^ (bar)</code>  ,J</td>
 <td><code>(foo bar)</code></td>
 </tr>
-
 <tr>
 <td><code>,I</code></td>
-<td>S式を1つ上の式に移動させ、<br/>元あった上のS式を削除する</td>
+<td>S式を1つ上の式に移動させ、<!-- raw HTML omitted -->元あった上のS式を削除する</td>
 <td><code>(foo (bar))</code> ,I</td>
 <td><code>(bar)</code></td>
 </tr>
-
 <tr>
 <td><code>,&lt;</code></td>
 <td>括弧を左に動かす</td>
-<td><code>(foo)^ (bar baz qux)</code> ,&lt;<br/><code>(foo) (^bar baz qux)</code> ,&lt;</td>
-<td><code>() foo (bar baz qux)</code><br/><code>((foo) bar baz qux)</code></td>
+<td><code>(foo)^ (bar baz qux)</code> ,&laquo;br/&gt;<code>(foo) (^bar baz qux)</code> ,&lt;</td>
+<td><code>() foo (bar baz qux)</code><!-- raw HTML omitted --><code>((foo) bar baz qux)</code></td>
 </tr>
-
 <tr>
 <td><code>,&gt;</code></td>
 <td>括弧を右に動かす</td>
-<td><code>(foo)^ (bar baz qux)</code> ,&gt;<br/><code>^(foo) (bar baz qux)</code> ,&gt;</td>
-<td><code>(foo (bar baz qux))</code><br/><code>foo () (bar baz qux)</code></td>
+<td><code>(foo)^ (bar baz qux)</code> ,&gt;<!-- raw HTML omitted --><code>^(foo) (bar baz qux)</code> ,&gt;</td>
+<td><code>(foo (bar baz qux))</code><!-- raw HTML omitted --><code>foo () (bar baz qux)</code></td>
 </tr>
 </tbody>
 </table>
-
-<hr />
-
+<hr>
 <h2 id="評価-evaluation">評価 evaluation</h2>
-
 <table>
 <thead>
 <tr>
@@ -308,7 +283,6 @@
 <th>操作結果</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>,d</code></td>
@@ -316,35 +290,30 @@
 <td><code>(^defun foo () ...)</code> ,d</td>
 <td><code>(defun foo () ...)</code> を評価する</td>
 </tr>
-
 <tr>
 <td><code>,e</code></td>
 <td>現在の式を評価する</td>
 <td><code>(defun foo () aaa^ bbb)</code> ,e</td>
 <td><code>aaa</code> を評価する</td>
 </tr>
-
 <tr>
 <td><code>,r</code></td>
 <td>選択範囲を評価する</td>
 <td><code>(defun foo () ^aaa bbb^)</code> ,r</td>
 <td><code>aaa bbb</code> を評価する</td>
 </tr>
-
 <tr>
 <td><code>,b</code></td>
 <td>現在のバッファを評価する</td>
 <td>現在のバッファ<code>foo.lisp</code> ,b</td>
 <td><code>foo.lisp</code> を評価する</td>
 </tr>
-
 <tr>
 <td><code>,v</code></td>
 <td>対話的に評価する</td>
 <td>,v</td>
 <td>対話的に評価する</td>
 </tr>
-
 <tr>
 <td><code>,u</code></td>
 <td>関数の定義を解消する</td>
@@ -353,13 +322,9 @@
 </tr>
 </tbody>
 </table>
-
-<hr />
-
+<hr>
 <h2 id="デバッグ-debugging">デバッグ debugging</h2>
-
 <h3 id="デバッグ用コード編集">デバッグ用コード編集</h3>
-
 <table>
 <thead>
 <tr>
@@ -369,7 +334,6 @@
 <th>操作結果</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>,1</code></td>
@@ -377,49 +341,42 @@
 <td><code>(^macro ...)</code> ,1</td>
 <td><code>(macro ...)</code> を1段階展開した結果をREPLに表示する</td>
 </tr>
-
 <tr>
 <td><code>,m</code></td>
 <td>マクロを全段階展開する</td>
 <td><code>(^macro ...)</code> ,m</td>
 <td><code>(macro ...)</code> を全段階展開した結果をREPLに表示する</td>
 </tr>
-
 <tr>
-<td><code>,t</code><br/><code>(trace functinname)</code></td>
-<td>関数のトレースを切り替える<br/>トレース時は、実行時に再帰的にトレース情報表示する</td>
+<td><code>,t</code><!-- raw HTML omitted --><code>(trace functinname)</code></td>
+<td>関数のトレースを切り替える<!-- raw HTML omitted -->トレース時は、実行時に再帰的にトレース情報表示する</td>
 <td><code>foo^</code> ,t</td>
 <td>関数トレースを切り替える</td>
 </tr>
-
 <tr>
 <td><code>,T</code></td>
 <td>全ての関数に対するトレースを解消する</td>
 <td>トレース設定されている関数がない ,T</td>
 <td>トレース設定されている関数がない</td>
 </tr>
-
 <tr>
 <td><code>,B</code></td>
-<td>ブレークポイントを設定する<br/># 実行するとエラー</td>
+<td>ブレークポイントを設定する<!-- raw HTML omitted --># 実行するとエラー</td>
 <td><code>^(foo ...)</code> ,B</td>
 <td><code>(break) (foo ...)</code></td>
 </tr>
-
 <tr>
 <td><code>,E</code></td>
-<td>例外発生時にブレークする<br/># ritz-swankのみで有効</td>
+<td>例外発生時にブレークする<!-- raw HTML omitted --># ritz-swankのみで有効</td>
 <td>?</td>
 <td>?</td>
 </tr>
-
 <tr>
-<td><code>,l</code><br/><code>(disassemble 'foo)</code></td>
+<td><code>,l</code><!-- raw HTML omitted --><code>(disassemble 'foo)</code></td>
 <td>シンボルをディスアセンブルする</td>
 <td><code>(^foo ...)</code> ,l</td>
 <td><code>(foo ...)</code> をディスアセンブルした結果をREPLに表示する</td>
 </tr>
-
 <tr>
 <td><code>,i</code></td>
 <td>インスペクトを表示する</td>
@@ -428,9 +385,7 @@
 </tr>
 </tbody>
 </table>
-
 <h3 id="デバッガ操作">デバッガ操作</h3>
-
 <table>
 <thead>
 <tr>
@@ -440,7 +395,6 @@
 <th>操作結果</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>,a</code></td>
@@ -448,21 +402,18 @@
 <td>デバッガ起動中 ,a</td>
 <td>デバッガが終了する</td>
 </tr>
-
 <tr>
 <td><code>,q</code></td>
 <td>デバッガを終了してトップレベルに戻る</td>
 <td>デバッガ起動中 ,q</td>
 <td>デバッガが終了してREPLがトップレベルに戻る</td>
 </tr>
-
 <tr>
 <td><code>,n</code></td>
 <td>コンテニューする</td>
 <td><code>(^defun foo () ...)</code> ,n</td>
 <td><code>(defun foo () ...)</code> を評価する</td>
 </tr>
-
 <tr>
 <td><code>,N</code></td>
 <td>指定フレームから再開する</td>
@@ -471,9 +422,7 @@
 </tr>
 </tbody>
 </table>
-
 <h3 id="スレッド操作">スレッド操作</h3>
-
 <table>
 <thead>
 <tr>
@@ -483,7 +432,6 @@
 <th>操作結果</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>,H</code></td>
@@ -491,14 +439,12 @@
 <td>ファイル編集時 ,H</td>
 <td>スレッド一覧をREPL側にする</td>
 </tr>
-
 <tr>
 <td><code>,K</code></td>
 <td>スレッドをkillする</td>
 <td>,K → スレッド番号指定</td>
 <td>指定したスレッドをkillする</td>
 </tr>
-
 <tr>
 <td><code>,G</code></td>
 <td>スレッドをデバッグする</td>
@@ -507,11 +453,8 @@
 </tr>
 </tbody>
 </table>
-
-<hr />
-
+<hr>
 <h2 id="コンパイル-compilation">コンパイル compilation</h2>
-
 <table>
 <thead>
 <tr>
@@ -521,7 +464,6 @@
 <th>操作結果</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>,D</code></td>
@@ -529,21 +471,18 @@
 <td><code>(defun foo^ () ...)</code> ,D</td>
 <td><code>(defun foo () ...)</code> をコンパイルする</td>
 </tr>
-
 <tr>
 <td><code>,L</code></td>
 <td>ファイルをロードしてコンパイルする</td>
 <td>,L</td>
 <td>編集中のファイルをロードしてコンパイルする</td>
 </tr>
-
 <tr>
 <td><code>,F</code></td>
 <td>ファイルをコンパイルする</td>
 <td>,F</td>
 <td>編集中のファイルをコンパイルする</td>
 </tr>
-
 <tr>
 <td><code>,R</code></td>
 <td>選択範囲をコンパイルする</td>
@@ -552,11 +491,8 @@
 </tr>
 </tbody>
 </table>
-
-<hr />
-
+<hr>
 <h2 id="xref">Xref</h2>
-
 <table>
 <thead>
 <tr>
@@ -566,7 +502,6 @@
 <th>操作結果</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>,xc</code></td>
@@ -574,49 +509,42 @@
 <td><code>foo^</code> ,xc</td>
 <td><code>foo</code> 対象を呼び出すコードの位置を表示する</td>
 </tr>
-
 <tr>
 <td><code>,xr</code></td>
 <td>参照する側を表示する</td>
 <td><code>foo^</code> ,xr</td>
 <td><code>foo</code> 対象を参照するコードの位置を表示する</td>
 </tr>
-
 <tr>
 <td><code>,xs</code></td>
 <td>セットする側を表示する</td>
 <td><code>foo^</code> ,xs</td>
 <td><code>foo</code> 対象をセットするコードの位置を表示する</td>
 </tr>
-
 <tr>
 <td><code>,xb</code></td>
 <td>バインドする側を表示する</td>
 <td><code>foo^</code> ,xb</td>
 <td><code>foo</code> 対象をバインドするコードの位置を表示する</td>
 </tr>
-
 <tr>
 <td><code>,xm</code></td>
 <td>マクロを展開する側を表示する</td>
 <td><code>foo^</code> ,xm</td>
 <td><code>foo</code> 対象マクロを展開するコードの位置を表示する</td>
 </tr>
-
 <tr>
 <td><code>,xp</code></td>
 <td>特化(継承)する側を表示する</td>
 <td><code>foo^</code> ,xp</td>
 <td><code>foo</code> 対象を特化したコードの位置を表示する</td>
 </tr>
-
 <tr>
 <td><code>,xl</code></td>
 <td>呼び出す側をリスト表示する</td>
 <td><code>foo^</code> ,xl</td>
 <td><code>foo</code> 対象を呼び出すコードをリスト表示する</td>
 </tr>
-
 <tr>
 <td><code>,xe</code></td>
 <td>呼び出される側をリスト表示する</td>
@@ -625,13 +553,9 @@
 </tr>
 </tbody>
 </table>
-
-<hr />
-
+<hr>
 <h2 id="プロファイリング-profiling">プロファイリング Profiling</h2>
-
 <h3 id="プロファイリング設定">プロファイリング設定</h3>
-
 <table>
 <thead>
 <tr>
@@ -641,7 +565,6 @@
 <th>操作結果</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>,p</code></td>
@@ -649,21 +572,18 @@
 <td><code>foo^</code> ,p → シンボル名を入力してEnter</td>
 <td>指定したシンボルへのプロファイリングを開始/終了する</td>
 </tr>
-
 <tr>
 <td><code>,P</code></td>
 <td>部分文字列によってプロファイリングを切り替える</td>
 <td><code>foo^</code> ,P → シンボル名を入力してEnter</td>
 <td>指定したシンボルへのプロファイリングを開始/終了する</td>
 </tr>
-
 <tr>
 <td><code>,U</code></td>
 <td>全てのプロファイルを削除する</td>
 <td>,U</td>
 <td>全てのプロファイリング中を解除する</td>
 </tr>
-
 <tr>
 <td><code>,?</code></td>
 <td>プロファイルされたものを表示する</td>
@@ -672,9 +592,7 @@
 </tr>
 </tbody>
 </table>
-
 <h3 id="プロファイリング確認">プロファイリング確認</h3>
-
 <table>
 <thead>
 <tr>
@@ -684,7 +602,6 @@
 <th>操作結果</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>,o</code></td>
@@ -692,7 +609,6 @@
 <td>,o</td>
 <td>REPLにプロファイルレポートを表示する</td>
 </tr>
-
 <tr>
 <td><code>,X</code></td>
 <td>プロファイル設定をリセットする</td>
@@ -701,11 +617,8 @@
 </tr>
 </tbody>
 </table>
-
-<hr />
-
+<hr>
 <h2 id="ドキュメント-documentation">ドキュメント documentation</h2>
-
 <table>
 <thead>
 <tr>
@@ -715,7 +628,6 @@
 <th>操作結果</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>,s</code> or <code>(describe &quot;symbol&quot;)</code></td>
@@ -723,21 +635,18 @@
 <td><code>^symbol</code> ,s</td>
 <td><code>symbol</code>の情報をステータスラインに表示する</td>
 </tr>
-
 <tr>
 <td><code>,A</code> or <code>(appropos &quot;keyword&quot;)</code></td>
 <td>キーワードに一致する定義情報を一覧表示する</td>
 <td><code>^keyword</code> ,A</td>
 <td><code>keyword</code>が含まれる定義情報をREPLに表示する</td>
 </tr>
-
 <tr>
 <td><code>,h</code></td>
 <td>選択シンボルをhyperspecで開く</td>
 <td><code>^symbol</code> ,h</td>
 <td><code>symbol</code>をhyperspecで表示する</td>
 </tr>
-
 <tr>
 <td><code>,]</code></td>
 <td>タグを生成する</td>
@@ -746,11 +655,8 @@
 </tr>
 </tbody>
 </table>
-
-<hr />
-
+<hr>
 <h2 id="repl">REPL</h2>
-
 <table>
 <thead>
 <tr>
@@ -760,7 +666,6 @@
 <th>操作結果</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>,c</code></td>
@@ -768,21 +673,18 @@
 <td>,c</td>
 <td>swankサーバに接続する</td>
 </tr>
-
 <tr>
 <td><code>,y</code></td>
 <td>lispのプロセスにインタラプトする</td>
 <td>,y</td>
 <td>実行中のlispのプロセスに割り込んでデバッガを起動する</td>
 </tr>
-
 <tr>
 <td><code>,-</code></td>
 <td>REPLの表示をクリアする</td>
 <td>c-</td>
 <td>REPLの表示をクリアする</td>
 </tr>
-
 <tr>
 <td><code>,Q</code></td>
 <td>REPLを終了する</td>
@@ -864,7 +766,9 @@
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>Common Lisp ディレクトリパスを取得/設定する · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,15 +22,12 @@
 <meta property="og:description" content="本記事の目的 Lisp処理系起動時のディレクトリパス/カレントディレクトリパスを取得/設定する 参考サイト 処理系を起動したディレクトリのパスネー" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/common-lisp-%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E3%83%91%E3%82%B9%E3%82%92%E5%8F%96%E5%BE%97/%E8%A8%AD%E5%AE%9A%E3%81%99%E3%82%8B/" />
-<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-03-07T00:00:00+09:00" />
+<meta property="article:modified_time" content="2019-03-07T00:00:00+09:00" />
 <meta itemprop="name" content="Common Lisp ディレクトリパスを取得/設定する">
 <meta itemprop="description" content="本記事の目的 Lisp処理系起動時のディレクトリパス/カレントディレクトリパスを取得/設定する 参考サイト 処理系を起動したディレクトリのパスネー">
-
-
-<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
+<meta itemprop="datePublished" content="2019-03-07T00:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00+09:00" />
 <meta itemprop="wordCount" content="565">
 
 
@@ -144,70 +141,58 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#本記事の目的">本記事の目的</a></li>
-<li><a href="#参考サイト">参考サイト</a>
-<ul>
-<li><a href="#処理系を起動したディレクトリのパスネームを返す">処理系を起動したディレクトリのパスネームを返す</a>
-<ul>
-<li><a href="#対応環境-sbcl-clisp-cmucl">対応環境: <code>SBCL</code>, <code>CLISP</code>, <code>CMUCL</code></a></li>
-<li><a href="#実行例">実行例</a></li>
-</ul></li>
-<li><a href="#各処理系でのカレントディレクトリの取得と設定">各処理系でのカレントディレクトリの取得と設定</a>
-<ul>
-<li><a href="#対応環境-sbcl">対応環境: <code>SBCL</code></a></li>
-<li><a href="#対応環境-clisp">対応環境: <code>CLISP</code></a></li>
-<li><a href="#対応環境-cmucl">対応環境: <code>CMUCL</code></a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#処理系を起動したディレクトリのパスネームを返す">処理系を起動したディレクトリのパスネームを返す</a>
+      <ul>
+        <li><a href="#対応環境-sbcl-clisp-cmucl">対応環境: <code>SBCL</code>, <code>CLISP</code>, <code>CMUCL</code></a></li>
+        <li><a href="#実行例">実行例</a></li>
+      </ul>
+    </li>
+    <li><a href="#各処理系でのカレントディレクトリの取得と設定">各処理系でのカレントディレクトリの取得と設定</a>
+      <ul>
+        <li><a href="#対応環境-sbcl">対応環境: <code>SBCL</code></a></li>
+        <li><a href="#対応環境-clisp">対応環境: <code>CLISP</code></a></li>
+        <li><a href="#対応環境-cmucl">対応環境: <code>CMUCL</code></a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h1 id="本記事の目的">本記事の目的</h1>
-
+  <h1 id="本記事の目的">本記事の目的</h1>
 <p>Lisp処理系起動時のディレクトリパス/カレントディレクトリパスを取得/設定する</p>
-
 <h1 id="参考サイト">参考サイト</h1>
-
 <p><a href="https://lisphub.jp/common-lisp/cookbook/index.cgi?%E5%87%A6%E7%90%86%E7%B3%BB%E3%82%92%E8%B5%B7%E5%8B%95%E3%81%97%E3%81%9F%E3%83%87%E3%82%A3%E3%83%AC%E3%82%AF%E3%83%88%E3%83%AA%E3%81%AE%E3%83%91%E3%82%B9%E3%83%8D%E3%83%BC%E3%83%A0%E3%82%92%E8%BF%94%E3%81%99">処理系を起動したディレクトリのパスネームを返す</a></p>
-
 <h2 id="処理系を起動したディレクトリのパスネームを返す">処理系を起動したディレクトリのパスネームを返す</h2>
-
 <p>truenameを使う。</p>
-
 <h3 id="対応環境-sbcl-clisp-cmucl">対応環境: <code>SBCL</code>, <code>CLISP</code>, <code>CMUCL</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">truename</span> <span class="s">&#34;./&#34;</span><span class="p">)</span>  <span class="c1">;=&gt; #P&#34;処理系を起動したディレクトリ&#34;</span></code></pre></div>
-<h3 id="実行例">実行例</h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">truename</span> <span class="s">&#34;./&#34;</span><span class="p">)</span> <span class="c1">;=&gt; #P&#34;/users/username/&#34;</span></code></pre></div>
-<h2 id="各処理系でのカレントディレクトリの取得と設定">各処理系でのカレントディレクトリの取得と設定</h2>
-
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nf">truename</span> <span class="s">&#34;./&#34;</span><span class="p">)</span>  <span class="c1">;=&gt; #P&#34;処理系を起動したディレクトリ&#34;</span>
+</code></pre></div><h3 id="実行例">実行例</h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nf">truename</span> <span class="s">&#34;./&#34;</span><span class="p">)</span> <span class="c1">;=&gt; #P&#34;/users/username/&#34;</span>
+</code></pre></div><h2 id="各処理系でのカレントディレクトリの取得と設定">各処理系でのカレントディレクトリの取得と設定</h2>
 <h3 id="対応環境-sbcl">対応環境: <code>SBCL</code></h3>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; ディレクトリパスを取得する</span>
 <span class="p">(</span><span class="nv">sb-posix:getcwd</span><span class="p">)</span> <span class="c1">;=&gt;#P&#34;カレントディレクトリ&#34;</span>
 
 <span class="c1">; ディレクトリパスを設定する</span>
-<span class="p">(</span><span class="nv">sb-posix:chdir</span> <span class="l">#P&#34;設定したいディレクトリ&#34;</span><span class="p">)</span></code></pre></div>
-<h3 id="対応環境-clisp">対応環境: <code>CLISP</code></h3>
+<span class="p">(</span><span class="nv">sb-posix:chdir</span> <span class="l">#P&#34;設定したいディレクトリ&#34;</span><span class="p">)</span>
+</code></pre></div><h3 id="対応環境-clisp">対応環境: <code>CLISP</code></h3>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; ディレクトリパスを取得する</span>
 <span class="p">(</span><span class="nv">ext:default-directory</span><span class="p">)</span> <span class="c1">;=&gt;#P&#34;カレントディレクトリ&#34;</span>
 
 <span class="c1">; ディレクトリパスを設定する</span>
-<span class="p">(</span><span class="nv">ext:cd</span> <span class="l">#P&#34;設定したいディレクトリ&#34;</span><span class="p">)</span></code></pre></div>
-<h3 id="対応環境-cmucl">対応環境: <code>CMUCL</code></h3>
+<span class="p">(</span><span class="nv">ext:cd</span> <span class="l">#P&#34;設定したいディレクトリ&#34;</span><span class="p">)</span>
+</code></pre></div><h3 id="対応環境-cmucl">対応環境: <code>CMUCL</code></h3>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">; ディレクトリパスを取得する</span>
 <span class="p">(</span><span class="nv">extensions:default-directory</span><span class="p">)</span> <span class="c1">;=&gt;#P&#34;カレントディレクトリ&#34;</span>
 
 <span class="c1">; ディレクトリパスを設定する</span>
-<span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">extensions:default-directory</span><span class="p">)</span> <span class="l">#P&#34;設定したいディレクトリ&#34;</span><span class="p">)</span></code></pre></div>
-<p>カレントディレクトリの設定後に <code>(truename &quot;./&quot;)</code> が返す値が変化しているかは処理系により異なる。
+<span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nv">extensions:default-directory</span><span class="p">)</span> <span class="l">#P&#34;設定したいディレクトリ&#34;</span><span class="p">)</span>
+</code></pre></div><p>カレントディレクトリの設定後に <code>(truename &quot;./&quot;)</code> が返す値が変化しているかは処理系により異なる。
 また、処理系によっては <code>*default-pathname-defaults*</code> に起動時のディレクトリが入っている。
 CLISPだと <code>*default-pathname-defaults* ;=&gt; #P&quot;&quot;</code> のとおり空白だった。</p>
-
 <p>SBCLだと、 <code>*default-pathname-defaults*</code> を書き換えないと<code>load</code>関数で参照する先が変わらない。</p>
 
   </article>
@@ -282,7 +267,9 @@ CLISPだと <code>*default-pathname-defaults* ;=&gt; #P&quot;&quot;</code> の�
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

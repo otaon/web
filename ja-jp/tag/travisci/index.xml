@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>TravisCI on Lazy Lambda</title>
@@ -6,11 +6,7 @@
     <description>Recent content in TravisCI on Lazy Lambda</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja-jp</language>
-    <lastBuildDate>Sun, 03 Mar 2019 16:23:58 +0900</lastBuildDate>
-    
-	<atom:link href="https://otaon.github.io/web/ja-jp/tag/travisci/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 03 Mar 2019 16:23:58 +0900</lastBuildDate><atom:link href="https://otaon.github.io/web/ja-jp/tag/travisci/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>GitHub &#43; Hugo &#43; Travis CI で静的サイトを GitHub Pages に公開する</title>
       <link>https://otaon.github.io/web/ja-jp/2019/03/03/github-hugo-travis-ci-%E3%81%A7%E9%9D%99%E7%9A%84%E3%82%B5%E3%82%A4%E3%83%88%E3%82%92-github-pages-%E3%81%AB%E5%85%AC%E9%96%8B%E3%81%99%E3%82%8B/</link>
@@ -18,10 +14,8 @@
       
       <guid>https://otaon.github.io/web/ja-jp/2019/03/03/github-hugo-travis-ci-%E3%81%A7%E9%9D%99%E7%9A%84%E3%82%B5%E3%82%A4%E3%83%88%E3%82%92-github-pages-%E3%81%AB%E5%85%AC%E9%96%8B%E3%81%99%E3%82%8B/</guid>
       <description>&lt;h1 id=&#34;はじめに&#34;&gt;はじめに&lt;/h1&gt;
-
-&lt;p&gt;自前でサーバを構築することなく、全て外部サービスを使用してブログ的な静的サイトを楽に作りたい場合、この記事が役に立つと思う。&lt;br /&gt;
+&lt;p&gt;自前でサーバを構築することなく、全て外部サービスを使用してブログ的な静的サイトを楽に作りたい場合、この記事が役に立つと思う。&lt;br&gt;
 このWebサイトも、この記事と全く同じ方法で作成している。&lt;/p&gt;
-
 &lt;p&gt;&lt;code&gt;html&lt;/code&gt;, &lt;code&gt;css&lt;/code&gt;諸々を書いて、サーバを立てて、ドメインを取って…という事を全くせずにWebサイトが構築できる。&lt;/p&gt;</description>
     </item>
     

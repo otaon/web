@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>Go言語入門(定数) · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,15 +22,12 @@
 <meta property="og:description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 基本構文 定数 Goではconstを使用して定数を定義できる。 const X = 1 // 定数1(整数" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E5%AE%9A%E6%95%B0/" />
-<meta property="article:published_time" content="2019-04-13T13:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-04-13T13:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-04-13T13:00:00+09:00" />
+<meta property="article:modified_time" content="2019-04-13T13:00:00+09:00" />
 <meta itemprop="name" content="Go言語入門(定数)">
 <meta itemprop="description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 基本構文 定数 Goではconstを使用して定数を定義できる。 const X = 1 // 定数1(整数">
-
-
-<meta itemprop="datePublished" content="2019-04-13T13:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-04-13T13:00:00&#43;09:00" />
+<meta itemprop="datePublished" content="2019-04-13T13:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-04-13T13:00:00+09:00" />
 <meta itemprop="wordCount" content="1435">
 
 
@@ -145,89 +142,68 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#目的">目的</a></li>
-<li><a href="#参考文献">参考文献</a></li>
-<li><a href="#基本構文">基本構文</a>
-<ul>
-<li><a href="#定数">定数</a>
-<ul>
-<li><a href="#定数の型">定数の型</a></li>
-<li><a href="#各定数の注意">各定数の注意</a>
-<ul>
-<li><a href="#論理値の定数">論理値の定数</a></li>
-<li><a href="#整数値の定数">整数値の定数</a></li>
-<li><a href="#浮動小数点数の定数">浮動小数点数の定数</a></li>
-<li><a href="#複素数の定数">複素数の定数</a></li>
-<li><a href="#ルーン-文字列の定数">ルーン、文字列の定数</a></li>
-</ul></li>
-<li><a href="#iota-によるenumのような定数定義"><code>iota</code>によるenumのような定数定義</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#定数">定数</a>
+      <ul>
+        <li><a href="#定数の型">定数の型</a></li>
+        <li><a href="#各定数の注意">各定数の注意</a></li>
+        <li><a href="#iotaによるenumのような定数定義"><code>iota</code>によるenumのような定数定義</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h1 id="目的">目的</h1>
-
+  <h1 id="目的">目的</h1>
 <p>Go言語の基本構文を残す。</p>
-
 <h1 id="参考文献">参考文献</h1>
-
 <ul>
 <li><a href="https://www.shoeisha.co.jp/book/detail/9784798142418">スターティング Go言語</a></li>
 </ul>
-
 <h1 id="基本構文">基本構文</h1>
-
 <h2 id="定数">定数</h2>
-
 <p>Goでは<code>const</code>を使用して定数を定義できる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">const</span> <span class="nx">X</span> <span class="p">=</span> <span class="mi">1</span> <span class="o">//</span> <span class="nx">定数1</span><span class="p">(</span><span class="nx">整数</span><span class="p">)</span></code></pre></div>
-<p>複数の定数をまとめて定義することもできる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">const</span> <span class="nx">X</span> <span class="p">=</span> <span class="mi">1</span>	<span class="c1">// 定数1(整数)
+</span></code></pre></div><p>複数の定数をまとめて定義することもできる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">const</span> <span class="p">(</span>
-    <span class="nx">X</span> <span class="p">=</span> <span class="mi">1</span>
-    <span class="nx">Y</span> <span class="p">=</span> <span class="mi">2</span>
-    <span class="nx">Z</span> <span class="p">=</span> <span class="mi">3</span>
-<span class="p">)</span></code></pre></div>
+	<span class="nx">X</span> <span class="p">=</span> <span class="mi">1</span>
+	<span class="nx">Y</span> <span class="p">=</span> <span class="mi">2</span>
+	<span class="nx">Z</span> <span class="p">=</span> <span class="mi">3</span>
+<span class="p">)</span>
+</code></pre></div><ul>
+<li><strong>NOTE</strong>
 <ul>
-<li><strong>NOTE</strong><br />
-
-<ul>
-<li>途中から定数に定義する値を省略した場合、前回定義したのと同じ値を定数定義する。<br />
+<li>途中から定数に定義する値を省略した場合、前回定義したのと同じ値を定数定義する。<br>
 ただし、全ての定数定義の値を省略することはできない。</li>
 <li>定数の値の定義には任意の式を使用でき、さらに、その中に他の定数を使用できる。</li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">const</span> <span class="p">(</span>
-    <span class="nx">X</span> <span class="p">=</span> <span class="mi">1</span>
-    <span class="nx">Y</span> <span class="p">=</span> <span class="mi">2</span>
-    <span class="nx">Z</span>   <span class="c1">// 2
+	<span class="nx">X</span> <span class="p">=</span> <span class="mi">1</span>
+	<span class="nx">Y</span> <span class="p">=</span> <span class="mi">2</span>
+	<span class="nx">Z</span>	<span class="c1">// 2
 </span><span class="c1"></span><span class="p">)</span>
 
 <span class="c1">// コンパイルエラー
 </span><span class="c1"></span><span class="kd">const</span> <span class="p">(</span>
-    <span class="nx">X</span>
-    <span class="nx">Y</span>
-    <span class="nx">Z</span>
+	<span class="nx">X</span>
+	<span class="nx">Y</span>
+	<span class="nx">Z</span>
 <span class="p">)</span>
 
 <span class="kd">const</span> <span class="p">(</span>
-    <span class="nx">A</span> <span class="p">=</span> <span class="mi">1</span>   <span class="c1">// 1
-</span><span class="c1"></span>    <span class="nx">B</span> <span class="p">=</span> <span class="nx">A</span> <span class="o">+</span> <span class="mi">1</span>   <span class="c1">// 2
-</span><span class="c1"></span>    <span class="nx">C</span> <span class="p">=</span> <span class="nx">B</span> <span class="o">+</span> <span class="mi">1</span>   <span class="c1">// 3
-</span><span class="c1"></span>    <span class="nx">Z</span> <span class="p">=</span> <span class="nx">X</span> <span class="o">+</span> <span class="nx">Y</span>   <span class="c1">// 9 この行の後に定義されている定数も使用可能
-</span><span class="c1"></span>    <span class="nx">X</span> <span class="p">=</span> <span class="mi">2</span>
-    <span class="nx">Y</span> <span class="p">=</span> <span class="mi">7</span>
-<span class="p">)</span></code></pre></div>
-<h3 id="定数の型">定数の型</h3>
-
+	<span class="nx">A</span> <span class="p">=</span> <span class="mi">1</span>	<span class="c1">// 1
+</span><span class="c1"></span>	<span class="nx">B</span> <span class="p">=</span> <span class="nx">A</span> <span class="o">+</span> <span class="mi">1</span>	<span class="c1">// 2
+</span><span class="c1"></span>	<span class="nx">C</span> <span class="p">=</span> <span class="nx">B</span> <span class="o">+</span> <span class="mi">1</span>	<span class="c1">// 3
+</span><span class="c1"></span>	<span class="nx">Z</span> <span class="p">=</span> <span class="nx">X</span> <span class="o">+</span> <span class="nx">Y</span>	<span class="c1">// 9 この行の後に定義されている定数も使用可能
+</span><span class="c1"></span>	<span class="nx">X</span> <span class="p">=</span> <span class="mi">2</span>
+	<span class="nx">Y</span> <span class="p">=</span> <span class="mi">7</span>
+<span class="p">)</span>
+</code></pre></div><h3 id="定数の型">定数の型</h3>
 <p>Goの定数定義では、下記のいずれかの値を定義できる。</p>
-
 <ul>
 <li>論理型</li>
 <li>整数(<strong>「整数」であり、int等の型ではない</strong>)</li>
@@ -236,101 +212,88 @@
 <li>ルーン</li>
 <li>文字列</li>
 </ul>
-
-<p>型を指定子ない定数定義では、整数はあくまでも整数であり、intやuintなどの区別はない。<br />
+<p>型を指定子ない定数定義では、整数はあくまでも整数であり、intやuintなどの区別はない。<br>
 型ありの定数を定義したい場合は、下記のように型を指定して定数定義する。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">const</span> <span class="p">(</span>
-    <span class="nx">I64</span> <span class="kt">int64</span> <span class="p">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1">// 定数I64はint64型
-</span><span class="c1"></span>    <span class="nx">I32</span> <span class="p">=</span> <span class="nb">int32</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="c1">// 定数32はint32型
-</span><span class="c1"></span>    <span class="nx">F64</span> <span class="kt">float64</span> <span class="p">=</span> <span class="mf">1.2</span>   <span class="c1">// 定数F64はfloat64型
-</span><span class="c1"></span>    <span class="nx">F32</span> <span class="p">=</span> <span class="nb">float32</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>  <span class="c1">// 定数F32はfloat32型
-</span><span class="c1"></span><span class="p">)</span></code></pre></div>
-<h3 id="各定数の注意">各定数の注意</h3>
-
+	<span class="nx">I64</span> <span class="kt">int64</span> <span class="p">=</span> <span class="o">-</span><span class="mi">1</span>	<span class="c1">// 定数I64はint64型
+</span><span class="c1"></span>	<span class="nx">I32</span> <span class="p">=</span> <span class="nb">int32</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>	<span class="c1">// 定数32はint32型
+</span><span class="c1"></span>	<span class="nx">F64</span> <span class="kt">float64</span> <span class="p">=</span> <span class="mf">1.2</span>	<span class="c1">// 定数F64はfloat64型
+</span><span class="c1"></span>	<span class="nx">F32</span> <span class="p">=</span> <span class="nb">float32</span><span class="p">(</span><span class="mf">1.2</span><span class="p">)</span>	<span class="c1">// 定数F32はfloat32型
+</span><span class="c1"></span><span class="p">)</span>
+</code></pre></div><h3 id="各定数の注意">各定数の注意</h3>
 <h4 id="論理値の定数">論理値の定数</h4>
-
 <p>論理値はbool型と全く同じであるため、使用上の注意は特に無し。</p>
-
 <h4 id="整数値の定数">整数値の定数</h4>
-
 <p>整数値の定数には最大値/最小値がないため、定数定義するぶんにはいくらでも大きな/小さな数値を定義できる。
-しかし、変数への代入の際にコンパイルエラーとなる。<br />
+しかし、変数への代入の際にコンパイルエラーとなる。<br>
 このように、分かりやすさを優先するため、できる限り定数には型を指定したほうが良い。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">const</span> <span class="p">(</span>
-    <span class="nx">N</span> <span class="p">=</span> <span class="mi">9999999999999999999999999999999999999999999999999999999</span>
+	<span class="nx">N</span> <span class="p">=</span> <span class="mi">9999999999999999999999999999999999999999999999999999999</span>
 <span class="p">)</span>
-<span class="nx">i</span> <span class="o">:=</span> <span class="nx">N</span>  <span class="o">//</span> <span class="nx">コンパイルエラー</span></code></pre></div>
-<p><strong>NOTE</strong><br />
-数値定数同士の演算はコンパイル時に処理されるという性質がある。<br />
+<span class="nx">i</span> <span class="o">:=</span> <span class="nx">N</span>	<span class="c1">// コンパイルエラー
+</span></code></pre></div><p><strong>NOTE</strong><br>
+数値定数同士の演算はコンパイル時に処理されるという性質がある。<br>
 そのため、下記のコードは問題なく動作する。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">const</span> <span class="p">(</span>
-    <span class="c1">// uint64型の最大値より1大きな整数値
-</span><span class="c1"></span>    <span class="nx">N</span> <span class="p">=</span> <span class="mi">18446744073709551615</span> <span class="o">+</span> <span class="mi">1</span>
+	<span class="c1">// uint64型の最大値より1大きな整数値
+</span><span class="c1"></span>	<span class="nx">N</span> <span class="p">=</span> <span class="mi">18446744073709551615</span> <span class="o">+</span> <span class="mi">1</span>
 <span class="p">)</span>
 
 <span class="nx">n</span> <span class="o">:=</span> <span class="nb">uint64</span><span class="p">(</span><span class="nx">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 
 <span class="c1">// コンパイル時に下記の形に変換されて評価されるため、エラーとならない
-</span><span class="c1"></span><span class="nx">n</span> <span class="o">:=</span> <span class="nb">uint64</span><span class="p">(</span><span class="mi">18446744073709551615</span><span class="p">)</span></code></pre></div>
-<h4 id="浮動小数点数の定数">浮動小数点数の定数</h4>
-
-<p>浮動小数点数の型(float64, float32)よりも高い精度の少数を定数定義することは可能。<br />
+</span><span class="c1"></span><span class="nx">n</span> <span class="o">:=</span> <span class="nb">uint64</span><span class="p">(</span><span class="mi">18446744073709551615</span><span class="p">)</span>
+</code></pre></div><h4 id="浮動小数点数の定数">浮動小数点数の定数</h4>
+<p>浮動小数点数の型(float64, float32)よりも高い精度の少数を定数定義することは可能。<br>
 ただし、float64またはfloat32のどちらかに変換した型が許容するまで精度が落ちる。</p>
-
-<p><strong>NOTE</strong><br />
+<p><strong>NOTE</strong><br>
 変数を介さず、定数のみで演算することで、コンパイル時に精度を落とさず演算できる。</p>
-
 <h4 id="複素数の定数">複素数の定数</h4>
-
-<p>複素数リテラルを使用して定数定義できる。<br />
+<p>複素数リテラルを使用して定数定義できる。<br>
 複素数の実部・虚部ともに浮動小数点数と同様の精度を備えている。</p>
-
-<h4 id="ルーン-文字列の定数">ルーン、文字列の定数</h4>
-
-<p>ルーンリテラル、文字列リテラルを使用して、rune型および文字列型の定数を定義できる。<br />
+<h4 id="ルーン文字列の定数">ルーン、文字列の定数</h4>
+<p>ルーンリテラル、文字列リテラルを使用して、rune型および文字列型の定数を定義できる。<br>
 文字列型定数の定義ではRAW文字列リテラルも使用できる。</p>
-
-<h3 id="iota-によるenumのような定数定義"><code>iota</code>によるenumのような定数定義</h3>
-
-<p>定数定義ブロック内で<code>iota</code>キーワードを使用することで、連番の定数を簡単に定義できる。<br />
+<h3 id="iotaによるenumのような定数定義"><code>iota</code>によるenumのような定数定義</h3>
+<p>定数定義ブロック内で<code>iota</code>キーワードを使用することで、連番の定数を簡単に定義できる。<br>
 ただし、無駄に複雑な定数定義は混乱を招くので、関連の有る単位で定数ブロックを分けること。</p>
-
 <ul>
 <li><strong>NOTE</strong>
-
 <ul>
 <li><code>iota</code>は0始まり。次の行の定数では+1される。</li>
 <li><code>iota</code>は省略可能。</li>
 <li>異なる値を定義した場合はその値になるが、<code>iota</code>自体は行ごとに必ずインクリメントされている。</li>
 <li>コードブロックごとに<code>iota</code>は0にリセットされる。</li>
-</ul></li>
+</ul>
+</li>
 </ul>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">const</span> <span class="p">(</span>
-    <span class="nx">A</span> <span class="p">=</span> <span class="kc">iota</span>    <span class="c1">// 0
-</span><span class="c1"></span>    <span class="nx">B</span>           <span class="c1">// 1
-</span><span class="c1"></span>    <span class="nx">C</span>           <span class="c1">// 2
+	<span class="nx">A</span> <span class="p">=</span> <span class="kc">iota</span>	<span class="c1">// 0
+</span><span class="c1"></span>	<span class="nx">B</span>			<span class="c1">// 1
+</span><span class="c1"></span>	<span class="nx">C</span>			<span class="c1">// 2
 </span><span class="c1"></span><span class="p">)</span>
 
 <span class="kd">const</span> <span class="p">(</span>
-    <span class="nx">D</span> <span class="p">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="kc">iota</span>    <span class="c1">// 1
-</span><span class="c1"></span>    <span class="nx">E</span> <span class="p">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="kc">iota</span>    <span class="c1">// 2
-</span><span class="c1"></span>    <span class="nx">F</span> <span class="p">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="kc">iota</span>    <span class="c1">// 3
-</span><span class="c1"></span>    <span class="nx">FF</span> <span class="p">=</span> <span class="kc">iota</span>       <span class="c1">// 3
+	<span class="nx">D</span> <span class="p">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="kc">iota</span>	<span class="c1">// 1
+</span><span class="c1"></span>	<span class="nx">E</span> <span class="p">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="kc">iota</span>	<span class="c1">// 2
+</span><span class="c1"></span>	<span class="nx">F</span> <span class="p">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="kc">iota</span>	<span class="c1">// 3
+</span><span class="c1"></span>	<span class="nx">FF</span> <span class="p">=</span> <span class="kc">iota</span>		<span class="c1">// 3
 </span><span class="c1"></span><span class="p">)</span>
 
 <span class="kd">const</span> <span class="p">(</span>
-    <span class="nx">G</span> <span class="p">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="kc">iota</span>    <span class="c1">// 1
-</span><span class="c1"></span>    <span class="nx">H</span>               <span class="c1">// 1 + iota == 2
-</span><span class="c1"></span>    <span class="nx">I</span>               <span class="c1">// 1 + iota == 3
+	<span class="nx">G</span> <span class="p">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="kc">iota</span>	<span class="c1">// 1
+</span><span class="c1"></span>	<span class="nx">H</span>				<span class="c1">// 1 + iota == 2
+</span><span class="c1"></span>	<span class="nx">I</span>				<span class="c1">// 1 + iota == 3
 </span><span class="c1"></span><span class="p">)</span>
 
 <span class="kd">const</span> <span class="p">(</span>
-    <span class="nx">J</span> <span class="p">=</span> <span class="kc">iota</span>    <span class="c1">// 0
-</span><span class="c1"></span>    <span class="nx">K</span> <span class="p">=</span> <span class="mi">100</span>     <span class="c1">// 100
-</span><span class="c1"></span>    <span class="nx">L</span>           <span class="c1">// 100
-</span><span class="c1"></span>    <span class="nx">M</span> <span class="p">=</span> <span class="kc">iota</span>    <span class="c1">// 4
-</span><span class="c1"></span>    <span class="nx">N</span>           <span class="c1">// 5
-</span><span class="c1"></span><span class="p">)</span></code></pre></div>
+	<span class="nx">J</span> <span class="p">=</span> <span class="kc">iota</span>	<span class="c1">// 0
+</span><span class="c1"></span>	<span class="nx">K</span> <span class="p">=</span> <span class="mi">100</span>		<span class="c1">// 100
+</span><span class="c1"></span>	<span class="nx">L</span>			<span class="c1">// 100
+</span><span class="c1"></span>	<span class="nx">M</span> <span class="p">=</span> <span class="kc">iota</span>	<span class="c1">// 4
+</span><span class="c1"></span>	<span class="nx">N</span>			<span class="c1">// 5
+</span><span class="c1"></span><span class="p">)</span>
+</code></pre></div>
   </article>
 
   
@@ -403,7 +366,9 @@
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

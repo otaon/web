@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>書籍 Land of Lisp 19章 ダイスオブドゥームにグラフィカルなWebインターフェースをつける · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,16 +22,13 @@
 <meta property="og:description" content="18章で作ったダイスオブドゥームVer2では、Ver1よりも大きなゲーム盤でプレイ可能となった。 この規模だと、コンソールでの可視化には視認性" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-19%E7%AB%A0-%E3%83%80%E3%82%A4%E3%82%B9%E3%82%AA%E3%83%96%E3%83%89%E3%82%A5%E3%83%BC%E3%83%A0%E3%81%AB%E3%82%B0%E3%83%A9%E3%83%95%E3%82%A3%E3%82%AB%E3%83%AB%E3%81%AAweb%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9%E3%82%92%E3%81%A4%E3%81%91%E3%82%8B/" />
-<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-03-07T00:00:00+09:00" />
+<meta property="article:modified_time" content="2019-03-07T00:00:00+09:00" />
 <meta itemprop="name" content="書籍 Land of Lisp 19章 ダイスオブドゥームにグラフィカルなWebインターフェースをつける">
 <meta itemprop="description" content="18章で作ったダイスオブドゥームVer2では、Ver1よりも大きなゲーム盤でプレイ可能となった。 この規模だと、コンソールでの可視化には視認性">
-
-
-<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="4751">
+<meta itemprop="datePublished" content="2019-03-07T00:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00+09:00" />
+<meta itemprop="wordCount" content="4750">
 
 
 
@@ -144,81 +141,72 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#19-1-ゲーム盤をsvgフォーマットで描画する">19.1 ゲーム盤をSVGフォーマットで描画する</a>
-<ul>
-<li><a href="#サイコロを描く">サイコロを描く</a></li>
-<li><a href="#マスを描く">マスを描く</a></li>
-<li><a href="#ゲーム盤を描く">ゲーム盤を描く</a></li>
-</ul></li>
-<li><a href="#19-2-webサーバインターフェースを作る">19.2 Webサーバインターフェースを作る</a>
-<ul>
-<li><a href="#リクエストハンドラの作成">リクエストハンドラの作成</a></li>
-<li><a href="#このゲームwebサーバの制限">このゲームwebサーバの制限</a></li>
-<li><a href="#ゲームを初期化する">ゲームを初期化する</a></li>
-<li><a href="#勝者を表示する">勝者を表示する</a></li>
-<li><a href="#人間のプレイヤーの処理">人間のプレイヤーの処理</a></li>
-<li><a href="#コンピュータプレイヤの処理">コンピュータプレイヤの処理</a></li>
-<li><a href="#htmlの中にsvgゲーム盤を描く">HTMLの中にSVGゲーム盤を描く</a></li>
-</ul></li>
-<li><a href="#19-3-ダイスオブドゥームver3をプレイする">19.3 ダイスオブドゥームVer3をプレイする</a></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#191-ゲーム盤をsvgフォーマットで描画する">19.1 ゲーム盤をSVGフォーマットで描画する</a>
+      <ul>
+        <li><a href="#サイコロを描く">サイコロを描く</a></li>
+        <li><a href="#マスを描く">マスを描く</a></li>
+        <li><a href="#ゲーム盤を描く">ゲーム盤を描く</a></li>
+      </ul>
+    </li>
+    <li><a href="#192-webサーバインターフェースを作る">19.2 Webサーバインターフェースを作る</a>
+      <ul>
+        <li><a href="#リクエストハンドラの作成">リクエストハンドラの作成</a></li>
+        <li><a href="#このゲームwebサーバの制限">このゲームwebサーバの制限</a></li>
+        <li><a href="#ゲームを初期化する">ゲームを初期化する</a></li>
+        <li><a href="#勝者を表示する">勝者を表示する</a></li>
+        <li><a href="#人間のプレイヤーの処理">人間のプレイヤーの処理</a></li>
+        <li><a href="#コンピュータプレイヤの処理">コンピュータプレイヤの処理</a></li>
+        <li><a href="#htmlの中にsvgゲーム盤を描く">HTMLの中にSVGゲーム盤を描く</a></li>
+      </ul>
+    </li>
+    <li><a href="#193-ダイスオブドゥームver3をプレイする">19.3 ダイスオブドゥームVer3をプレイする</a></li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<p>18章で作ったダイスオブドゥームVer2では、Ver1よりも大きなゲーム盤でプレイ可能となった。
-この規模だと、コンソールでの可視化には視認性に限界がある。<br />
+  <p>18章で作ったダイスオブドゥームVer2では、Ver1よりも大きなゲーム盤でプレイ可能となった。
+この規模だと、コンソールでの可視化には視認性に限界がある。<br>
 そこで、この章では、ダイスオブドゥームにグラフィックをつけ、クリックして手が指せるように改造する。</p>
-
-<h2 id="19-1-ゲーム盤をsvgフォーマットで描画する">19.1 ゲーム盤をSVGフォーマットで描画する</h2>
-
+<h2 id="191-ゲーム盤をsvgフォーマットで描画する">19.1 ゲーム盤をSVGフォーマットで描画する</h2>
 <p>13章でWebサーバを作成し、17章ではDSLを使ってSVGを描画した。
 これらを組み合わせれば、ブラウザ上でグラフィック表示を簡単に実現できる。</p>
-
 <p>HTML5の規格では、SVG画像をHTMLドキュメント内に埋め込むことができるから、これを利用する方針とする。</p>
-
 <p><strong>NOTE</strong> ここからは、18章で作成した<code>dice of doom version.2</code>と、13章で作成した<code>webserver</code>と、16,17章で作成した<code>SVG</code>レンダリングライブラリを使用する。</p>
-
-<p>まず、ゲーム盤の各部の大きさを決める定数を定義する。<br />
-ボードの幅と高さは900x500とする。<br />
-<code>*board-scale*</code>は1つの升の幅の半分の長さをピクセル数で表したものである。<br />
-<code>*top-offset*</code>は、盤の上に3マス分の空白を開けることを表す。<br />
-<code>*dice-scale*</code>は、1つのサイコロの大きさ(幅、高さ)を指定する。<br />
+<p>まず、ゲーム盤の各部の大きさを決める定数を定義する。<br>
+ボードの幅と高さは900x500とする。<br>
+<code>*board-scale*</code>は1つの升の幅の半分の長さをピクセル数で表したものである。<br>
+<code>*top-offset*</code>は、盤の上に3マス分の空白を開けることを表す。<br>
+<code>*dice-scale*</code>は、1つのサイコロの大きさ(幅、高さ)を指定する。<br>
 <code>*dot-size*</code>はサイコロの目の点の大きさで、ここではサイコロ自体の大きさの0.05倍としている。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*board-width*</span> <span class="mi">900</span><span class="p">)</span>   <span class="c1">; ゲーム盤の横幅(pixel)</span>
-<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*board-height*</span> <span class="mi">500</span><span class="p">)</span>  <span class="c1">; ゲーム盤の高さ(pixel)</span>
-<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*board-scale*</span> <span class="mi">64</span><span class="p">)</span>    <span class="c1">; 1つのマスの幅の半分の長さ(pixel)</span>
-<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*top-offset*</span> <span class="mi">3</span><span class="p">)</span>      <span class="c1">; ゲーム盤の上にあける空白の大きさ(何マス分か)</span>
-<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*dice-scale*</span> <span class="mi">40</span><span class="p">)</span>     <span class="c1">; 1つのサイコロの大きさ(pixel)</span>
-<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*dot-size*</span> <span class="mf">0.05</span><span class="p">)</span>     <span class="c1">; サイコロの目の大きさ(サイコロ自体の何倍か)</span></code></pre></div>
-<h3 id="サイコロを描く">サイコロを描く</h3>
-
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-width*</span> <span class="mi">900</span><span class="p">)</span>   <span class="c1">; ゲーム盤の横幅(pixel)</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-height*</span> <span class="mi">500</span><span class="p">)</span>  <span class="c1">; ゲーム盤の高さ(pixel)</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*board-scale*</span> <span class="mi">64</span><span class="p">)</span>    <span class="c1">; 1つのマスの幅の半分の長さ(pixel)</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*top-offset*</span> <span class="mi">3</span><span class="p">)</span>      <span class="c1">; ゲーム盤の上にあける空白の大きさ(何マス分か)</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*dice-scale*</span> <span class="mi">40</span><span class="p">)</span>     <span class="c1">; 1つのサイコロの大きさ(pixel)</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*dot-size*</span> <span class="mf">0.05</span><span class="p">)</span>     <span class="c1">; サイコロの目の大きさ(サイコロ自体の何倍か)</span>
+</code></pre></div><h3 id="サイコロを描く">サイコロを描く</h3>
 <p>サイコロを描くコードを示す。ここでは、サイコロを、SVGを使って全てコードとして記載する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">draw-die-svg</span> <span class="p">(</span><span class="nv">x</span> <span class="nv">y</span> <span class="nv">col</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">draw-die-svg</span> <span class="p">(</span><span class="nv">x</span> <span class="nv">y</span> <span class="nv">col</span><span class="p">)</span>
   <span class="s">&#34;指定した座標にサイコロを1つ描画する
 </span><span class="s">   x: サイコロを描画するx座標(pixel)
 </span><span class="s">   y: サイコロを描画するy座標(pixel)
 </span><span class="s">   col: サイコロの色(RGB値)
 </span><span class="s">   ret: -&#34;</span>
-  <span class="p">(</span><span class="nv">labels</span> <span class="p">((</span><span class="nv">calc-pt</span> <span class="p">(</span><span class="nv">pt</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">labels</span> <span class="p">((</span><span class="nv">calc-pt</span> <span class="p">(</span><span class="nv">pt</span><span class="p">)</span>
              <span class="c1">;; 描画対象の座標を補正する</span>
              <span class="c1">;; pt:  補正する前の座標コンスセル</span>
              <span class="c1">;; ret: 補正した後の座標コンスセル</span>
-             <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">x</span> <span class="p">(</span><span class="nv">*</span> <span class="vg">*dice-scale*</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">pt</span><span class="p">)))</span>
-                   <span class="p">(</span><span class="nv">+</span> <span class="nv">y</span> <span class="p">(</span><span class="nv">*</span> <span class="vg">*dice-scale*</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">pt</span><span class="p">)))))</span>
+             <span class="p">(</span><span class="nc">cons</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">x</span> <span class="p">(</span><span class="nf">*</span> <span class="vg">*dice-scale*</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">pt</span><span class="p">)))</span>
+                   <span class="p">(</span><span class="nf">+</span> <span class="nv">y</span> <span class="p">(</span><span class="nf">*</span> <span class="vg">*dice-scale*</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">pt</span><span class="p">)))))</span>
            <span class="p">(</span><span class="nv">f</span> <span class="p">(</span><span class="nv">pol</span> <span class="nv">col</span><span class="p">)</span>
              <span class="c1">;; 指定した頂点座標と色情報をもとにポリゴンを描画する</span>
              <span class="c1">;; pol: ポリゴンの頂点座標</span>
              <span class="c1">;; col: ポリゴンの色情報(RGB値)</span>
              <span class="c1">;; ret: ポリゴンのsvg記述</span>
-             <span class="p">(</span><span class="nv">polygon</span> <span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">calc-pt</span> <span class="nv">pol</span><span class="p">)</span> <span class="nv">col</span><span class="p">)))</span>
+             <span class="p">(</span><span class="nv">polygon</span> <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">calc-pt</span> <span class="nv">pol</span><span class="p">)</span> <span class="nv">col</span><span class="p">)))</span>
 
     <span class="c1">;; サイコロの上面を描画する</span>
     <span class="p">(</span><span class="nv">f</span> <span class="o">&#39;</span><span class="p">((</span><span class="mi">0</span> <span class="o">.</span> <span class="mi">-1</span><span class="p">)</span> <span class="p">(</span><span class="mf">-0.6</span> <span class="o">.</span> <span class="mf">-0.75</span><span class="p">)</span> <span class="p">(</span><span class="mi">0</span> <span class="o">.</span> <span class="mf">-0.5</span><span class="p">)</span> <span class="p">(</span><span class="mf">0.6</span> <span class="o">.</span> <span class="mf">-0.75</span><span class="p">))</span>
@@ -230,12 +218,12 @@
     <span class="p">(</span><span class="nv">f</span> <span class="o">&#39;</span><span class="p">((</span><span class="mi">0</span> <span class="o">.</span> <span class="mf">-0.5</span><span class="p">)</span> <span class="p">(</span><span class="mf">0.6</span> <span class="o">.</span> <span class="mf">-0.75</span><span class="p">)</span> <span class="p">(</span><span class="mf">0.6</span> <span class="o">.</span> <span class="mi">0</span><span class="p">)</span> <span class="p">(</span><span class="mi">0</span> <span class="o">.</span> <span class="mf">0.25</span><span class="p">))</span>
        <span class="p">(</span><span class="nv">brightness</span> <span class="nv">col</span> <span class="mi">-40</span><span class="p">))</span>
     <span class="c1">;; サイコロの目を描画する(サイコロ1つの3面分を一気に)</span>
-    <span class="p">(</span><span class="nv">mapc</span> <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
-            <span class="p">(</span><span class="nv">polygon</span> <span class="p">(</span><span class="nv">mapcar</span>
-                       <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">xx</span> <span class="nv">yy</span><span class="p">)</span>
+    <span class="p">(</span><span class="nf">mapc</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">x</span> <span class="nv">y</span><span class="p">)</span>
+            <span class="p">(</span><span class="nv">polygon</span> <span class="p">(</span><span class="nf">mapcar</span>
+                       <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">xx</span> <span class="nv">yy</span><span class="p">)</span>
                          <span class="c1">;; サイコロの目を描画する</span>
-                         <span class="p">(</span><span class="nv">calc-pt</span> <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">x</span> <span class="p">(</span><span class="nv">*</span> <span class="nv">xx</span> <span class="vg">*dot-size*</span><span class="p">))</span>
-                                        <span class="p">(</span><span class="nv">+</span> <span class="nv">y</span> <span class="p">(</span><span class="nv">*</span> <span class="nv">yy</span> <span class="vg">*dot-size*</span><span class="p">)))))</span>
+                         <span class="p">(</span><span class="nv">calc-pt</span> <span class="p">(</span><span class="nc">cons</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">x</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">xx</span> <span class="vg">*dot-size*</span><span class="p">))</span>
+                                        <span class="p">(</span><span class="nf">+</span> <span class="nv">y</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">yy</span> <span class="vg">*dot-size*</span><span class="p">)))))</span>
                        <span class="c1">;; サイコロの目のx座標とy座標</span>
                        <span class="o">&#39;</span><span class="p">(</span><span class="mi">-1</span> <span class="mi">-1</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">)</span>
                        <span class="o">&#39;</span><span class="p">(</span><span class="mi">-1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">-1</span><span class="p">))</span>
@@ -243,14 +231,13 @@
                      <span class="o">&#39;</span><span class="p">(</span><span class="mi">255</span> <span class="mi">255</span> <span class="mi">255</span><span class="p">)))</span>
           <span class="c1">;; サイコロの目のx座標とy座標</span>
           <span class="o">&#39;</span><span class="p">(</span><span class="mf">-0.05</span> <span class="mf">0.125</span> <span class="mf">0.3</span> <span class="mf">-0.3</span> <span class="mf">-0.125</span> <span class="mf">0.05</span> <span class="mf">0.2</span> <span class="mf">0.2</span> <span class="mf">0.45</span> <span class="mf">0.45</span> <span class="mf">-0.45</span> <span class="mf">-0.2</span><span class="p">)</span>
-          <span class="o">&#39;</span><span class="p">(</span><span class="mf">-0.875</span> <span class="mf">-0.80</span> <span class="mf">-0.725</span> <span class="mf">-0.775</span> <span class="mf">-0.70</span> <span class="mf">-0.625</span> <span class="mf">-0.35</span> <span class="mf">-0.05</span> <span class="mf">-0.45</span> <span class="mf">-0.15</span> <span class="mf">-0.45</span> <span class="mf">-0.05</span><span class="p">))))</span></code></pre></div>
-<p>では、<code>x=50, y=50</code>の位置に、RGB値<code>(255 0 0)</code>(赤)のサイコロを描く。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">svg</span> <span class="mi">100</span> <span class="mi">100</span> <span class="p">(</span><span class="nv">draw-die-svg</span> <span class="mi">50</span> <span class="mi">50</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">255</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)))</span>
-<span class="c1">; サイコロ1つ分のSVGコードが表示される</span></code></pre></div>
-<h3 id="マスを描く">マスを描く</h3>
-
+          <span class="o">&#39;</span><span class="p">(</span><span class="mf">-0.875</span> <span class="mf">-0.80</span> <span class="mf">-0.725</span> <span class="mf">-0.775</span> <span class="mf">-0.70</span> <span class="mf">-0.625</span> <span class="mf">-0.35</span> <span class="mf">-0.05</span> <span class="mf">-0.45</span> <span class="mf">-0.15</span> <span class="mf">-0.45</span> <span class="mf">-0.05</span><span class="p">))))</span>
+</code></pre></div><p>では、<code>x=50, y=50</code>の位置に、RGB値<code>(255 0 0)</code>(赤)のサイコロを描く。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nv">svg</span> <span class="mi">100</span> <span class="mi">100</span> <span class="p">(</span><span class="nv">draw-die-svg</span> <span class="mi">50</span> <span class="mi">50</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">255</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)))</span>
+<span class="c1">; サイコロ1つ分のSVGコードが表示される</span>
+</code></pre></div><h3 id="マスを描く">マスを描く</h3>
 <p>次に、6角マスとその上に積み上がったサイコロを描く関数を書こう。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">draw-tile-svg</span> <span class="p">(</span><span class="nv">x</span> <span class="nv">y</span> <span class="nv">pos</span> <span class="nv">hex</span> <span class="nv">xx</span> <span class="nv">yy</span> <span class="nv">col</span> <span class="nv">chosen-tile</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">draw-tile-svg</span> <span class="p">(</span><span class="nv">x</span> <span class="nv">y</span> <span class="nv">pos</span> <span class="nv">hex</span> <span class="nv">xx</span> <span class="nv">yy</span> <span class="nv">col</span> <span class="nv">chosen-tile</span><span class="p">)</span>
   <span class="s">&#34;六角形のマスとその上に積み上がったサイコロを描く
 </span><span class="s">   x: マスのx座標(マス目)
 </span><span class="s">   y: マスのy座標(マス目)
@@ -262,241 +249,227 @@
 </span><span class="s">   chosen-tile: 選択中のマスの番号
 </span><span class="s">   ret: -&#34;</span>
   <span class="c1">;; マスを描く(厚みを持たせるため、縦をずらして2重に描く)</span>
-  <span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">z</span> <span class="nv">below</span> <span class="mi">2</span>
-        <span class="nv">do</span> <span class="p">(</span><span class="nv">polygon</span> <span class="p">(</span><span class="nv">mapcar</span> <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">pt</span><span class="p">)</span>
-                              <span class="p">(</span><span class="nv">cons</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">xx</span> <span class="p">(</span><span class="nv">*</span> <span class="vg">*board-scale*</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">pt</span><span class="p">)))</span>
-                                    <span class="p">(</span><span class="nv">+</span> <span class="nv">yy</span> <span class="p">(</span><span class="nv">*</span> <span class="vg">*board-scale*</span> <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">pt</span><span class="p">)</span> <span class="p">(</span><span class="nv">*</span> <span class="p">(</span><span class="nv">-</span> <span class="mi">1</span> <span class="nv">z</span><span class="p">)</span> <span class="mf">0.1</span><span class="p">))))))</span>
+  <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">z</span> <span class="nv">below</span> <span class="mi">2</span>
+        <span class="nb">do</span> <span class="p">(</span><span class="nv">polygon</span> <span class="p">(</span><span class="nf">mapcar</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">pt</span><span class="p">)</span>
+                              <span class="p">(</span><span class="nc">cons</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">xx</span> <span class="p">(</span><span class="nf">*</span> <span class="vg">*board-scale*</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">pt</span><span class="p">)))</span>
+                                    <span class="p">(</span><span class="nf">+</span> <span class="nv">yy</span> <span class="p">(</span><span class="nf">*</span> <span class="vg">*board-scale*</span> <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">pt</span><span class="p">)</span> <span class="p">(</span><span class="nf">*</span> <span class="p">(</span><span class="nf">-</span> <span class="mi">1</span> <span class="nv">z</span><span class="p">)</span> <span class="mf">0.1</span><span class="p">))))))</span>
                             <span class="c1">;; 六角形のマスの座標(上から時計回り)</span>
                             <span class="o">&#39;</span><span class="p">((</span><span class="mi">-1</span> <span class="o">.</span> <span class="mf">-0.2</span><span class="p">)</span> <span class="p">(</span><span class="mi">0</span> <span class="o">.</span> <span class="mf">-0.5</span><span class="p">)</span> <span class="p">(</span><span class="mi">1</span> <span class="o">.</span> <span class="mf">-0.2</span><span class="p">)</span> <span class="p">(</span><span class="mi">1</span> <span class="o">.</span> <span class="mf">0.2</span><span class="p">)</span> <span class="p">(</span><span class="mi">0</span> <span class="o">.</span> <span class="mf">0.5</span><span class="p">)</span> <span class="p">(</span><span class="mi">-1</span> <span class="o">.</span> <span class="mf">0.2</span><span class="p">)))</span>
                     <span class="c1">;; 選択中のマスを明るくする</span>
-                    <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">eql</span> <span class="nv">pos</span> <span class="nv">chosen-tile</span><span class="p">)</span>
+                    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">eql</span> <span class="nv">pos</span> <span class="nv">chosen-tile</span><span class="p">)</span>
                         <span class="p">(</span><span class="nv">brightness</span> <span class="nv">col</span> <span class="mi">100</span><span class="p">)</span>
                         <span class="nv">col</span><span class="p">)))</span>
   <span class="c1">;; サイコロを描く</span>
-  <span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">z</span> <span class="nv">below</span> <span class="p">(</span><span class="nv">second</span> <span class="nv">hex</span><span class="p">)</span>
-        <span class="nv">do</span> <span class="p">(</span><span class="nv">draw-die-svg</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">xx</span>
-                            <span class="p">(</span><span class="nv">*</span> <span class="vg">*dice-scale*</span>
+  <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">z</span> <span class="nv">below</span> <span class="p">(</span><span class="nf">second</span> <span class="nv">hex</span><span class="p">)</span>
+        <span class="nb">do</span> <span class="p">(</span><span class="nv">draw-die-svg</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">xx</span>
+                            <span class="p">(</span><span class="nf">*</span> <span class="vg">*dice-scale*</span>
                                <span class="mf">0.3</span>
                                <span class="c1">;; サイコロを左右にブレさせる</span>
-                               <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">oddp</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span><span class="p">))</span>
+                               <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">oddp</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">z</span><span class="p">))</span>
                                    <span class="mf">-0.3</span>
                                    <span class="mf">0.3</span><span class="p">)))</span>
-                         <span class="p">(</span><span class="nv">-</span> <span class="nv">yy</span> <span class="p">(</span><span class="nv">*</span> <span class="vg">*dice-scale*</span> <span class="nv">z</span> <span class="mf">0.8</span><span class="p">))</span>
-                         <span class="nv">col</span><span class="p">)))</span></code></pre></div>
-<p>では、1マス分のタイルを描く。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">svg</span> <span class="mi">300</span> <span class="mi">300</span> <span class="p">(</span><span class="nv">draw-tile-svg</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">100</span> <span class="mi">150</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">255</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span> <span class="no">nil</span><span class="p">))</span>
-<span class="c1">; サイコロ3つが載ったタイル1つ分のSVGコードが表示される</span></code></pre></div>
-<h3 id="ゲーム盤を描く">ゲーム盤を描く</h3>
-
+                         <span class="p">(</span><span class="nf">-</span> <span class="nv">yy</span> <span class="p">(</span><span class="nf">*</span> <span class="vg">*dice-scale*</span> <span class="nv">z</span> <span class="mf">0.8</span><span class="p">))</span>
+                         <span class="nv">col</span><span class="p">)))</span>
+</code></pre></div><p>では、1マス分のタイルを描く。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nv">svg</span> <span class="mi">300</span> <span class="mi">300</span> <span class="p">(</span><span class="nv">draw-tile-svg</span> <span class="mi">0</span> <span class="mi">0</span> <span class="mi">0</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">3</span><span class="p">)</span> <span class="mi">100</span> <span class="mi">150</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">255</span> <span class="mi">0</span> <span class="mi">0</span><span class="p">)</span> <span class="no">nil</span><span class="p">))</span>
+<span class="c1">; サイコロ3つが載ったタイル1つ分のSVGコードが表示される</span>
+</code></pre></div><h3 id="ゲーム盤を描く">ゲーム盤を描く</h3>
 <p>ゲーム盤全体をSVG画像として描く。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">;; サイコロの色(赤と青)</span>
-<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*die-colors*</span> <span class="o">&#39;</span><span class="p">((</span><span class="mi">255</span> <span class="mi">63</span> <span class="mi">63</span><span class="p">)</span> <span class="p">(</span><span class="mi">63</span> <span class="mi">63</span> <span class="mi">255</span><span class="p">)))</span></code></pre></div>
-<p>SVGには、webリンクを埋め込むことができる。<br />
-これは、通常のHTMLにおける<code>&lt;a href=&quot;...&quot;&gt;</code>によるハイパーリンクと同様に動作する。<br />
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*die-colors*</span> <span class="o">&#39;</span><span class="p">((</span><span class="mi">255</span> <span class="mi">63</span> <span class="mi">63</span><span class="p">)</span> <span class="p">(</span><span class="mi">63</span> <span class="mi">63</span> <span class="mi">255</span><span class="p">)))</span>
+</code></pre></div><p>SVGには、webリンクを埋め込むことができる。<br>
+これは、通常のHTMLにおける<code>&lt;a href=&quot;...&quot;&gt;</code>によるハイパーリンクと同様に動作する。<br>
 プレイヤーが次に選択できるマスについて、そのマスのSVGをリンクで囲んでやることにより、マスがクリック可能になる。</p>
-
-<p>ゲーム盤は、斜めから見下ろした形で描画するため、真上からみた形の座標を変換している。<br />
+<p>ゲーム盤は、斜めから見下ろした形で描画するため、真上からみた形の座標を変換している。<br>
 また、奥に行くにつれてマスを暗くすることにより、奥行きを出している。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">draw-board-svg</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">chosen-tile</span> <span class="nv">legal-tiles</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">draw-board-svg</span> <span class="p">(</span><span class="nv">board</span> <span class="nv">chosen-tile</span> <span class="nv">legal-tiles</span><span class="p">)</span>
   <span class="s">&#34;ゲーム盤をsvg記述する
 </span><span class="s">   board: ゲーム盤情報
 </span><span class="s">   chosen-tile: 選択中のマス
 </span><span class="s">   legal-tiles: プレイヤーが次に選択可能なマスのリスト
 </span><span class="s">   ret: -&#34;</span>
   <span class="c1">;; ゲーム盤の全マスを走査する</span>
-  <span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">y</span> <span class="nv">below</span> <span class="vg">*board-size*</span>
-        <span class="nv">do</span> <span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">x</span> <span class="nv">below</span> <span class="vg">*board-size*</span>
+  <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">y</span> <span class="nv">below</span> <span class="vg">*board-size*</span>
+        <span class="nb">do</span> <span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">x</span> <span class="nv">below</span> <span class="vg">*board-size*</span>
                  <span class="c1">;; 現在のマスの番号</span>
-                 <span class="nv">for</span> <span class="nv">pos</span> <span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="nv">x</span> <span class="p">(</span><span class="nv">*</span> <span class="vg">*board-size*</span> <span class="nv">y</span><span class="p">))</span>
+                 <span class="nv">for</span> <span class="nv">pos</span> <span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="nv">x</span> <span class="p">(</span><span class="nf">*</span> <span class="vg">*board-size*</span> <span class="nv">y</span><span class="p">))</span>
                  <span class="c1">;; 現在のマスの情報(プレイヤーIDとサイコロ数)</span>
-                 <span class="nv">for</span> <span class="nv">hex</span> <span class="nv">=</span> <span class="p">(</span><span class="nv">aref</span> <span class="nv">board</span> <span class="nv">pos</span><span class="p">)</span>
+                 <span class="nv">for</span> <span class="nv">hex</span> <span class="nf">=</span> <span class="p">(</span><span class="nf">aref</span> <span class="nv">board</span> <span class="nv">pos</span><span class="p">)</span>
                  <span class="c1">;; 現在のマスの表示座標(x座標)</span>
-                 <span class="nv">for</span> <span class="nv">xx</span> <span class="nv">=</span> <span class="p">(</span><span class="nv">*</span> <span class="vg">*board-scale*</span> <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">*</span> <span class="mi">2</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nv">-</span> <span class="vg">*board-size*</span> <span class="nv">y</span><span class="p">)))</span>
+                 <span class="nv">for</span> <span class="nv">xx</span> <span class="nf">=</span> <span class="p">(</span><span class="nf">*</span> <span class="vg">*board-scale*</span> <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nf">*</span> <span class="mi">2</span> <span class="nv">x</span><span class="p">)</span> <span class="p">(</span><span class="nf">-</span> <span class="vg">*board-size*</span> <span class="nv">y</span><span class="p">)))</span>
                  <span class="c1">;; 現在のマスの表示座標(y座標)</span>
-                 <span class="nv">for</span> <span class="nv">yy</span> <span class="nv">=</span> <span class="p">(</span><span class="nv">*</span> <span class="vg">*board-scale*</span> <span class="p">(</span><span class="nv">+</span> <span class="p">(</span><span class="nv">*</span> <span class="nv">y</span> <span class="mf">0.7</span><span class="p">)</span> <span class="vg">*top-offset*</span><span class="p">))</span>
+                 <span class="nv">for</span> <span class="nv">yy</span> <span class="nf">=</span> <span class="p">(</span><span class="nf">*</span> <span class="vg">*board-scale*</span> <span class="p">(</span><span class="nf">+</span> <span class="p">(</span><span class="nf">*</span> <span class="nv">y</span> <span class="mf">0.7</span><span class="p">)</span> <span class="vg">*top-offset*</span><span class="p">))</span>
                  <span class="c1">;; マスとサイコロの色(上の行ほど暗く補正する)</span>
-                 <span class="nv">for</span> <span class="nv">col</span> <span class="nv">=</span> <span class="p">(</span><span class="nv">brightness</span> <span class="p">(</span><span class="nv">nth</span> <span class="p">(</span><span class="nv">first</span> <span class="nv">hex</span><span class="p">)</span> <span class="vg">*die-colors*</span><span class="p">)</span>
-                                       <span class="p">(</span><span class="nv">*</span> <span class="mi">-15</span> <span class="p">(</span><span class="nv">-</span> <span class="vg">*board-size*</span> <span class="nv">y</span><span class="p">)))</span>
+                 <span class="nv">for</span> <span class="nv">col</span> <span class="nf">=</span> <span class="p">(</span><span class="nv">brightness</span> <span class="p">(</span><span class="nf">nth</span> <span class="p">(</span><span class="nf">first</span> <span class="nv">hex</span><span class="p">)</span> <span class="vg">*die-colors*</span><span class="p">)</span>
+                                       <span class="p">(</span><span class="nf">*</span> <span class="mi">-15</span> <span class="p">(</span><span class="nf">-</span> <span class="vg">*board-size*</span> <span class="nv">y</span><span class="p">)))</span>
                  <span class="c1">;; 現在のマスが、プレイヤーが次に選択可能なマス、または、選択中のマスの場合、</span>
                  <span class="c1">;; リンクで囲ってクリック可能にする</span>
                  <span class="c1">;; 現在のマスが、それ以外の場合、そのまま選択される</span>
-                 <span class="nv">do</span> <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">or</span> <span class="p">(</span><span class="nv">member</span> <span class="nv">pos</span> <span class="nv">legal-tiles</span><span class="p">)</span> <span class="p">(</span><span class="nv">eql</span> <span class="nv">pos</span> <span class="nv">chosen-tile</span><span class="p">))</span>
+                 <span class="nb">do</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nf">member</span> <span class="nv">pos</span> <span class="nv">legal-tiles</span><span class="p">)</span> <span class="p">(</span><span class="nf">eql</span> <span class="nv">pos</span> <span class="nv">chosen-tile</span><span class="p">))</span>
                         <span class="c1">;; リンクの場合は1マス分を&lt;g&gt;タグで囲んでグルーピングする</span>
                         <span class="p">(</span><span class="nv">tag</span> <span class="nv">g</span> <span class="p">()</span>
                              <span class="p">(</span><span class="nv">tag</span> <span class="nv">a</span> <span class="p">(</span><span class="s">&#34;xlink:href&#34;</span> <span class="p">(</span><span class="nv">make-game-link</span> <span class="nv">pos</span><span class="p">))</span>
                                   <span class="p">(</span><span class="nv">draw-tile-svg</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">pos</span> <span class="nv">hex</span> <span class="nv">xx</span> <span class="nv">yy</span> <span class="nv">col</span> <span class="nv">chosen-tile</span><span class="p">)))</span>
-                        <span class="p">(</span><span class="nv">draw-tile-svg</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">pos</span> <span class="nv">hex</span> <span class="nv">xx</span> <span class="nv">yy</span> <span class="nv">col</span> <span class="nv">chosen-tile</span><span class="p">)))))</span></code></pre></div>
-<p><code>make-game-link</code>は、適切なURLを作って返す関数である。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">make-game-link</span> <span class="p">(</span><span class="nv">pos</span><span class="p">)</span>
+                        <span class="p">(</span><span class="nv">draw-tile-svg</span> <span class="nv">x</span> <span class="nv">y</span> <span class="nv">pos</span> <span class="nv">hex</span> <span class="nv">xx</span> <span class="nv">yy</span> <span class="nv">col</span> <span class="nv">chosen-tile</span><span class="p">)))))</span>
+</code></pre></div><p><code>make-game-link</code>は、適切なURLを作って返す関数である。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">make-game-link</span> <span class="p">(</span><span class="nv">pos</span><span class="p">)</span>
   <span class="s">&#34;リンクするURLを生成する
 </span><span class="s">   pos: リンク対象のマスの番号
 </span><span class="s">   ret: -&#34;</span>
-  <span class="p">(</span><span class="nv">format</span> <span class="no">nil</span> <span class="s">&#34;/game.html?chosen=~a&#34;</span> <span class="nv">pos</span><span class="p">))</span></code></pre></div>
-<p>下記を実行した結果をファイルに保存してwebブラウザで表示すると、ゲーム盤が表示される。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">svg</span> <span class="vg">*board-width*</span> <span class="vg">*board-height*</span> <span class="p">(</span><span class="nv">draw-board-svg</span> <span class="p">(</span><span class="nv">gen-board</span><span class="p">)</span> <span class="no">nil</span> <span class="no">nil</span><span class="p">))</span>
-<span class="c1">; ゲーム盤のSVGコードが表示される</span></code></pre></div>
-<h2 id="19-2-webサーバインターフェースを作る">19.2 Webサーバインターフェースを作る</h2>
-
+  <span class="p">(</span><span class="nf">format</span> <span class="no">nil</span> <span class="s">&#34;/game.html?chosen=~a&#34;</span> <span class="nv">pos</span><span class="p">))</span>
+</code></pre></div><p>下記を実行した結果をファイルに保存してwebブラウザで表示すると、ゲーム盤が表示される。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nv">svg</span> <span class="vg">*board-width*</span> <span class="vg">*board-height*</span> <span class="p">(</span><span class="nv">draw-board-svg</span> <span class="p">(</span><span class="nv">gen-board</span><span class="p">)</span> <span class="no">nil</span> <span class="no">nil</span><span class="p">))</span>
+<span class="c1">; ゲーム盤のSVGコードが表示される</span>
+</code></pre></div><h2 id="192-webサーバインターフェースを作る">19.2 Webサーバインターフェースを作る</h2>
 <h3 id="リクエストハンドラの作成">リクエストハンドラの作成</h3>
-
 <p>webサーバの中心となる関数は、<code>dod-request-handler</code>である。
 この関数は、先に作ったwebブラウザからくる全てのリクエストを処理する役割を持つ。
 次に示すのが、<code>dod-request-handler</code>のコードである。</p>
 <div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="c1">;; 現在のゲーム木</span>
-<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*cur-game-tree*</span> <span class="no">nil</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">defparameter</span> <span class="vg">*from-tile*</span> <span class="no">nil</span><span class="p">)</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">dod-request-handler</span> <span class="p">(</span><span class="nv">path</span> <span class="nv">header</span> <span class="nv">params</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*cur-game-tree*</span> <span class="no">nil</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">defparameter</span> <span class="vg">*from-tile*</span> <span class="no">nil</span><span class="p">)</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">dod-request-handler</span> <span class="p">(</span><span class="nv">path</span> <span class="nv">header</span> <span class="nv">params</span><span class="p">)</span>
   <span class="s">&#34;Webブラウザから来る全てのリクエストを処理する
 </span><span class="s">   path: URL
 </span><span class="s">   header: *未使用*
 </span><span class="s">   params: URLのパラメータ
 </span><span class="s">   ret: -&#34;</span>
   <span class="c1">;; アクセスされたURLがgame.htmlならゲーム処理する</span>
-  <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">equal</span> <span class="nv">path</span> <span class="s">&#34;game.html&#34;</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">equal</span> <span class="nv">path</span> <span class="s">&#34;game.html&#34;</span><span class="p">)</span>
       <span class="c1">;; doctypeを指定して、html5だと認識させる</span>
-      <span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;&lt;!doctype html&gt;&#34;</span><span class="p">)</span>
+      <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;&lt;!doctype html&gt;&#34;</span><span class="p">)</span>
              <span class="p">(</span><span class="nv">tag</span> <span class="nv">center</span> <span class="p">()</span>
-                  <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;Welcome to DICE OF DOOM!&#34;</span><span class="p">)</span>
+                  <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;Welcome to DICE OF DOOM!&#34;</span><span class="p">)</span>
                   <span class="p">(</span><span class="nv">tag</span> <span class="nv">br</span> <span class="p">())</span>
-                  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">chosen</span> <span class="p">(</span><span class="nv">assoc</span> <span class="ss">&#39;chosen</span> <span class="nv">params</span><span class="p">)))</span>
+                  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">chosen</span> <span class="p">(</span><span class="nf">assoc</span> <span class="ss">&#39;chosen</span> <span class="nv">params</span><span class="p">)))</span>
                     <span class="c1">;; どのマスも選択されていないか、ゲーム木が空なら、</span>
                     <span class="c1">;; ゲームを初期化する</span>
-                    <span class="p">(</span><span class="nv">when</span> <span class="p">(</span><span class="nv">or</span> <span class="p">(</span><span class="nv">not</span> <span class="vg">*cur-game-tree*</span><span class="p">)</span> <span class="p">(</span><span class="nv">not</span> <span class="nv">chosen</span><span class="p">))</span>
-                      <span class="p">(</span><span class="nv">setf</span> <span class="nv">chosen</span> <span class="no">nil</span><span class="p">)</span>
+                    <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nb">or</span> <span class="p">(</span><span class="nf">not</span> <span class="vg">*cur-game-tree*</span><span class="p">)</span> <span class="p">(</span><span class="nf">not</span> <span class="nv">chosen</span><span class="p">))</span>
+                      <span class="p">(</span><span class="nb">setf</span> <span class="nv">chosen</span> <span class="no">nil</span><span class="p">)</span>
                       <span class="p">(</span><span class="nv">web-initialize</span><span class="p">))</span>
                     <span class="c1">;; ゲーム木における可能な手が空なら、ゲームを終了させる</span>
                     <span class="c1">;; 人間のプレイヤーの手番なら、パラメータから指し手を取得し、htmlを組み立てる</span>
                     <span class="c1">;; ゲームAIの手番なら、ゲームAIに指し手を選ばせ、htmlを組み立てる</span>
-                    <span class="p">(</span><span class="nv">cond</span> <span class="p">((</span><span class="nv">lazy-null</span> <span class="p">(</span><span class="nv">caddr</span> <span class="vg">*cur-game-tree*</span><span class="p">))</span>
-                           <span class="p">(</span><span class="nv">web-announce-winner</span> <span class="p">(</span><span class="nv">cadr</span> <span class="vg">*cur-game-tree*</span><span class="p">)))</span>
-                          <span class="p">((</span><span class="nv">zerop</span> <span class="p">(</span><span class="nv">car</span> <span class="vg">*cur-game-tree*</span><span class="p">))</span>
+                    <span class="p">(</span><span class="nb">cond</span> <span class="p">((</span><span class="nv">lazy-null</span> <span class="p">(</span><span class="nf">caddr</span> <span class="vg">*cur-game-tree*</span><span class="p">))</span>
+                           <span class="p">(</span><span class="nv">web-announce-winner</span> <span class="p">(</span><span class="nf">cadr</span> <span class="vg">*cur-game-tree*</span><span class="p">)))</span>
+                          <span class="p">((</span><span class="nf">zerop</span> <span class="p">(</span><span class="nf">car</span> <span class="vg">*cur-game-tree*</span><span class="p">))</span>
                            <span class="p">(</span><span class="nv">web-handle-human</span>
-                             <span class="p">(</span><span class="nv">when</span> <span class="nv">chosen</span>
-                               <span class="p">(</span><span class="nv">read-from-string</span> <span class="p">(</span><span class="nv">cdr</span> <span class="nv">chosen</span><span class="p">)))))</span>
+                             <span class="p">(</span><span class="nb">when</span> <span class="nv">chosen</span>
+                               <span class="p">(</span><span class="nf">read-from-string</span> <span class="p">(</span><span class="nf">cdr</span> <span class="nv">chosen</span><span class="p">)))))</span>
                           <span class="p">(</span><span class="no">t</span> <span class="p">(</span><span class="nv">web-handle-computer</span><span class="p">))))</span>
                   <span class="p">(</span><span class="nv">tag</span> <span class="nv">br</span> <span class="p">())</span>
                   <span class="c1">;; ゲーム盤を描く</span>
                   <span class="p">(</span><span class="nv">draw-dod-page</span> <span class="vg">*cur-game-tree*</span> <span class="vg">*from-tile*</span><span class="p">)))</span>
-      <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;Sorry... I don&#39;t know that page.&#34;</span><span class="p">)))</span></code></pre></div>
-<p><code>dod-request-handler</code>では、まず、リクエストされたページが<code>game.html</code>であるかどうかをチェックする。<br />
+      <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;Sorry... I don&#39;t know that page.&#34;</span><span class="p">)))</span>
+</code></pre></div><p><code>dod-request-handler</code>では、まず、リクエストされたページが<code>game.html</code>であるかどうかをチェックする。<br>
 このページが、webサーバ上でゲームを置いておくことにするページである。</p>
-
-<p>ページの先頭では、まず*doctype*を指定する。
-これにより、webブラウザは返されたページがHTML5であると認識する。<br />
+<p>ページの先頭では、まず<em>doctype</em>を指定する。
+これにより、webブラウザは返されたページがHTML5であると認識する。<br>
 その後、オープニングメッセージを画面中央に表示するHTMLを出力する。</p>
-
 <h3 id="このゲームwebサーバの制限">このゲームwebサーバの制限</h3>
-
-<p>このwebサーバには、制限が存在する。<br />
-まず、処理を簡単にするため、<code>dod-request-handler</code>は誰からのwebリクエストが来たのかを一切チェックしていない。<br />
-したがって、複数のプレイヤーが別々のゲームを同時にプレイしようとしたら、<code>dod-request-handler</code>は正常に動作しない。<br />
+<p>このwebサーバには、制限が存在する。<br>
+まず、処理を簡単にするため、<code>dod-request-handler</code>は誰からのwebリクエストが来たのかを一切チェックしていない。<br>
+したがって、複数のプレイヤーが別々のゲームを同時にプレイしようとしたら、<code>dod-request-handler</code>は正常に動作しない。<br>
 マルチユーザ対応したいのであれば、セッション情報をキーとするハッシュテーブルに、グローバル変数の情報を格納してしまうことにより、ユーザごとのゲーム木を保持させることができる。</p>
-
-<p><code>dod-request-handler</code>のもう一つの制限は、URLからの情報を読むために<code>read-from-string</code>関数を使っていることである。<br />
-この関数は、悪意のあるLispプログラマであれば、簡単に任意コードを実行されてしまう。<br />
+<p><code>dod-request-handler</code>のもう一つの制限は、URLからの情報を読むために<code>read-from-string</code>関数を使っていることである。<br>
+この関数は、悪意のあるLispプログラマであれば、簡単に任意コードを実行されてしまう。<br>
 したがって、このサーバをインターネット上に公開するのは強く非推奨である。</p>
-
 <h3 id="ゲームを初期化する">ゲームを初期化する</h3>
-
 <p>新規にダイスオブドゥームを始めるために、ゲームエンジンを初期化する<code>web-initialize</code>のコードを次に示す。
 <code>dod-request-handler</code>では、<code>param</code>を見て、ゲーム木が空、あるいは、どのマスも選択されていない場合、<code>web-initialize</code>関数を呼んでゲームを新規で開始する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">web-initialize</span> <span class="p">()</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">web-initialize</span> <span class="p">()</span>
   <span class="s">&#34;ゲームエンジンを初期化する
 </span><span class="s">   ret: -&#34;</span>
   <span class="c1">;; ランダムなゲーム盤を作成して保持する</span>
-  <span class="p">(</span><span class="nv">setf</span> <span class="vg">*from-tile*</span> <span class="no">nil</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">setf</span> <span class="vg">*cur-game-tree*</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">gen-board</span><span class="p">)</span> <span class="mi">0</span> <span class="mi">0</span> <span class="no">t</span><span class="p">)))</span></code></pre></div>
-<h3 id="勝者を表示する">勝者を表示する</h3>
-
+  <span class="p">(</span><span class="nb">setf</span> <span class="vg">*from-tile*</span> <span class="no">nil</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">setf</span> <span class="vg">*cur-game-tree*</span> <span class="p">(</span><span class="nv">game-tree</span> <span class="p">(</span><span class="nv">gen-board</span><span class="p">)</span> <span class="mi">0</span> <span class="mi">0</span> <span class="no">t</span><span class="p">)))</span>
+</code></pre></div><h3 id="勝者を表示する">勝者を表示する</h3>
 <p>webブラウザに勝者を表示する関数を示す。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">web-announce-winner</span> <span class="p">(</span><span class="nv">board</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">web-announce-winner</span> <span class="p">(</span><span class="nv">board</span><span class="p">)</span>
   <span class="s">&#34;勝者を表示する&#34;</span>
-  <span class="p">(</span><span class="nv">fresh-line</span><span class="p">)</span>
-  <span class="p">(</span><span class="nv">let</span> <span class="p">((</span><span class="nv">w</span> <span class="p">(</span><span class="nv">winners</span> <span class="nv">board</span><span class="p">)))</span>
-    <span class="p">(</span><span class="nv">if</span> <span class="p">(</span><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">length</span> <span class="nv">w</span><span class="p">)</span> <span class="mi">1</span><span class="p">)</span>
-        <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;The game is a tie between ~a&#34;</span> <span class="p">(</span><span class="nv">mapcar</span> <span class="nf">#&#39;</span><span class="nv">player-letter</span> <span class="nv">w</span><span class="p">))</span>
-        <span class="p">(</span><span class="nv">format</span> <span class="no">t</span> <span class="s">&#34;The winner is ~a&#34;</span> <span class="p">(</span><span class="nv">player-letter</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">w</span><span class="p">)))))</span>
+  <span class="p">(</span><span class="nf">fresh-line</span><span class="p">)</span>
+  <span class="p">(</span><span class="k">let</span> <span class="p">((</span><span class="nv">w</span> <span class="p">(</span><span class="nv">winners</span> <span class="nv">board</span><span class="p">)))</span>
+    <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="nf">&gt;</span> <span class="p">(</span><span class="nf">length</span> <span class="nv">w</span><span class="p">)</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34;The game is a tie between ~a&#34;</span> <span class="p">(</span><span class="nf">mapcar</span> <span class="nf">#&#39;</span><span class="nv">player-letter</span> <span class="nv">w</span><span class="p">))</span>
+        <span class="p">(</span><span class="nf">format</span> <span class="no">t</span> <span class="s">&#34;The winner is ~a&#34;</span> <span class="p">(</span><span class="nv">player-letter</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">w</span><span class="p">)))))</span>
   <span class="p">(</span><span class="nv">tag</span> <span class="nv">a</span> <span class="p">(</span><span class="nv">href</span> <span class="s">&#34;game.html&#34;</span><span class="p">)</span>
-       <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34; play again&#34;</span><span class="p">)))</span></code></pre></div>
-<h3 id="人間のプレイヤーの処理">人間のプレイヤーの処理</h3>
-
+       <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34; play again&#34;</span><span class="p">)))</span>
+</code></pre></div><h3 id="人間のプレイヤーの処理">人間のプレイヤーの処理</h3>
 <p><code>web-handle-human</code>は、人間のプレイヤーの手番である場合のHTMLページの作成を行う。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">web-handle-human</span> <span class="p">(</span><span class="nv">pos</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">web-handle-human</span> <span class="p">(</span><span class="nv">pos</span><span class="p">)</span>
   <span class="s">&#34;人間のプレイヤーを処理する
 </span><span class="s">   pos: 選択したマスの番号&#34;</span>
-  <span class="p">(</span><span class="nv">cond</span>
+  <span class="p">(</span><span class="nb">cond</span>
     <span class="c1">;; マスを未選択:</span>
     <span class="c1">;; 攻撃元のマス選択メッセージを表示</span>
-    <span class="p">((</span><span class="nv">not</span> <span class="nv">pos</span><span class="p">)</span> <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;Please choose a hex to move from:&#34;</span><span class="p">))</span>
+    <span class="p">((</span><span class="nf">not</span> <span class="nv">pos</span><span class="p">)</span> <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;Please choose a hex to move from:&#34;</span><span class="p">))</span>
     <span class="c1">;; パスを選択済み:</span>
     <span class="c1">;; プレイヤーの補給が完了したとメッセージを表示</span>
     <span class="c1">;; パラメータにnilを渡すcontinueリンクを表示</span>
-    <span class="p">((</span><span class="nv">eq</span> <span class="nv">pos</span> <span class="ss">&#39;pass</span><span class="p">)</span> <span class="p">(</span><span class="nv">setf</span> <span class="vg">*cur-game-tree*</span>
-                          <span class="p">(</span><span class="nv">cadr</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="p">(</span><span class="nv">caddr</span> <span class="vg">*cur-game-tree*</span><span class="p">))))</span>
-                    <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;Your reinforcements have been placed.&#34;</span><span class="p">)</span>
+    <span class="p">((</span><span class="nf">eq</span> <span class="nv">pos</span> <span class="ss">&#39;pass</span><span class="p">)</span> <span class="p">(</span><span class="nb">setf</span> <span class="vg">*cur-game-tree*</span>
+                          <span class="p">(</span><span class="nf">cadr</span> <span class="p">(</span><span class="nv">lazy-car</span> <span class="p">(</span><span class="nf">caddr</span> <span class="vg">*cur-game-tree*</span><span class="p">))))</span>
+                    <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;Your reinforcements have been placed.&#34;</span><span class="p">)</span>
                     <span class="p">(</span><span class="nv">tag</span> <span class="nv">a</span> <span class="p">(</span><span class="nv">href</span> <span class="p">(</span><span class="nv">make-game-link</span> <span class="no">nil</span><span class="p">))</span>
-                         <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;continue&#34;</span><span class="p">)))</span>
+                         <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;continue&#34;</span><span class="p">)))</span>
     <span class="c1">;; マスを選択済み &amp; 攻撃元のタイルがセットされていない:</span>
     <span class="c1">;; 今選ばれたマスを攻撃元としてセット</span>
-    <span class="p">((</span><span class="nv">not</span> <span class="vg">*from-tile*</span><span class="p">)</span> <span class="p">(</span><span class="nv">setf</span> <span class="vg">*from-tile*</span> <span class="nv">pos</span><span class="p">)</span>
-                       <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;Now choose a destination:&#34;</span><span class="p">))</span>
+    <span class="p">((</span><span class="nf">not</span> <span class="vg">*from-tile*</span><span class="p">)</span> <span class="p">(</span><span class="nb">setf</span> <span class="vg">*from-tile*</span> <span class="nv">pos</span><span class="p">)</span>
+                       <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;Now choose a destination:&#34;</span><span class="p">))</span>
     <span class="c1">;; 今選択したマスが攻撃元のタイルと同じ:</span>
     <span class="c1">;; 攻撃元のタイルをリセット</span>
-    <span class="p">((</span><span class="nv">eq</span> <span class="nv">pos</span> <span class="vg">*from-tile*</span><span class="p">)</span> <span class="p">(</span><span class="nv">setf</span> <span class="vg">*from-tile*</span> <span class="no">nil</span><span class="p">)</span>
-                          <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;Move cancelled.&#34;</span><span class="p">))</span>
+    <span class="p">((</span><span class="nf">eq</span> <span class="nv">pos</span> <span class="vg">*from-tile*</span><span class="p">)</span> <span class="p">(</span><span class="nb">setf</span> <span class="vg">*from-tile*</span> <span class="no">nil</span><span class="p">)</span>
+                          <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;Move cancelled.&#34;</span><span class="p">))</span>
     <span class="c1">;; 上記以外(=攻撃元と攻撃先を選択完了した):</span>
     <span class="c1">;; 攻撃元と攻撃先に対応するゲーム木に遷移する</span>
     <span class="c1">;; 次の手を指すかパスするかを選ばせる</span>
-    <span class="p">(</span><span class="no">t</span> <span class="p">(</span><span class="nv">setf</span> <span class="vg">*cur-game-tree*</span>
-             <span class="p">(</span><span class="nv">cadr</span> <span class="p">(</span><span class="nv">lazy-find-if</span> <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">move</span><span class="p">)</span>
-                                   <span class="p">(</span><span class="nv">equal</span> <span class="p">(</span><span class="nv">car</span> <span class="nv">move</span><span class="p">)</span>
-                                          <span class="p">(</span><span class="nv">list</span> <span class="vg">*from-tile*</span> <span class="nv">pos</span><span class="p">)))</span>
-                                 <span class="p">(</span><span class="nv">caddr</span> <span class="vg">*cur-game-tree*</span><span class="p">))))</span>
-       <span class="p">(</span><span class="nv">setf</span> <span class="vg">*from-tile*</span> <span class="no">nil</span><span class="p">)</span>
-       <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;You may now &#34;</span><span class="p">)</span>
+    <span class="p">(</span><span class="no">t</span> <span class="p">(</span><span class="nb">setf</span> <span class="vg">*cur-game-tree*</span>
+             <span class="p">(</span><span class="nf">cadr</span> <span class="p">(</span><span class="nv">lazy-find-if</span> <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">move</span><span class="p">)</span>
+                                   <span class="p">(</span><span class="nf">equal</span> <span class="p">(</span><span class="nf">car</span> <span class="nv">move</span><span class="p">)</span>
+                                          <span class="p">(</span><span class="nc">list</span> <span class="vg">*from-tile*</span> <span class="nv">pos</span><span class="p">)))</span>
+                                 <span class="p">(</span><span class="nf">caddr</span> <span class="vg">*cur-game-tree*</span><span class="p">))))</span>
+       <span class="p">(</span><span class="nb">setf</span> <span class="vg">*from-tile*</span> <span class="no">nil</span><span class="p">)</span>
+       <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;You may now &#34;</span><span class="p">)</span>
        <span class="p">(</span><span class="nv">tag</span> <span class="nv">a</span> <span class="p">(</span><span class="nv">href</span> <span class="p">(</span><span class="nv">make-game-link</span> <span class="ss">&#39;pass</span><span class="p">))</span>
-            <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;pass&#34;</span><span class="p">))</span>
-       <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34; or make another move:&#34;</span><span class="p">))))</span></code></pre></div>
-<h3 id="コンピュータプレイヤの処理">コンピュータプレイヤの処理</h3>
-
+            <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;pass&#34;</span><span class="p">))</span>
+       <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34; or make another move:&#34;</span><span class="p">))))</span>
+</code></pre></div><h3 id="コンピュータプレイヤの処理">コンピュータプレイヤの処理</h3>
 <p><code>web-handle-computer</code>は、ゲームAIプレイヤーの手番である場合のHTMLページの作成を行う。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">web-handle-computer</span> <span class="p">()</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">web-handle-computer</span> <span class="p">()</span>
   <span class="s">&#34;ゲームAIプレイヤーを処理する&#34;</span>
   <span class="c1">;; ゲームAIにゲーム木を遷移させる</span>
-  <span class="p">(</span><span class="nv">setf</span> <span class="vg">*cur-game-tree*</span> <span class="p">(</span><span class="nv">handle-computer</span> <span class="vg">*cur-game-tree*</span><span class="p">))</span>
-  <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;The computer has moved. &#34;</span><span class="p">)</span>
+  <span class="p">(</span><span class="nb">setf</span> <span class="vg">*cur-game-tree*</span> <span class="p">(</span><span class="nv">handle-computer</span> <span class="vg">*cur-game-tree*</span><span class="p">))</span>
+  <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;The computer has moved. &#34;</span><span class="p">)</span>
   <span class="c1">;; webブラウザを5秒毎にリロードさせる</span>
   <span class="c1">;; これによりリロードしたときにはコンピュータの手番とさせるために、chosen=NILとしている</span>
   <span class="p">(</span><span class="nv">tag</span> <span class="nv">script</span> <span class="p">()</span>
-       <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;window.setTimeout(&#39;window.location=\&#34;game.html?chosen=NIL\&#34;&#39;,5000)&#34;</span><span class="p">)))</span></code></pre></div>
-<h3 id="htmlの中にsvgゲーム盤を描く">HTMLの中にSVGゲーム盤を描く</h3>
-
+       <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;window.setTimeout(&#39;window.location=\&#34;game.html?chosen=NIL\&#34;&#39;,5000)&#34;</span><span class="p">)))</span>
+</code></pre></div><h3 id="htmlの中にsvgゲーム盤を描く">HTMLの中にSVGゲーム盤を描く</h3>
 <p><code>draw-dod-page</code>関数は、ゲームサーバとSVG生成コードとをつなぎ、現在のゲーム盤を描く。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defun</span> <span class="nv">draw-dod-page</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">selected-tile</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defun</span> <span class="nv">draw-dod-page</span> <span class="p">(</span><span class="nv">tree</span> <span class="nv">selected-tile</span><span class="p">)</span>
   <span class="s">&#34;HTMLの中にSVGゲーム盤を描く
 </span><span class="s">   tree: ゲーム木
 </span><span class="s">   selected-tile: タイルを選択中か&#34;</span>
   <span class="p">(</span><span class="nv">svg</span> <span class="vg">*board-width*</span>  <span class="c1">; ゲーム盤の幅</span>
        <span class="vg">*board-height*</span> <span class="c1">; ゲーム盤の高さ</span>
-       <span class="p">(</span><span class="nv">draw-board-svg</span> <span class="p">(</span><span class="nv">cadr</span> <span class="nv">tree</span><span class="p">)</span>
+       <span class="p">(</span><span class="nv">draw-board-svg</span> <span class="p">(</span><span class="nf">cadr</span> <span class="nv">tree</span><span class="p">)</span>
                        <span class="nv">selected-tile</span>
                        <span class="c1">;; プレイヤーが選択可能なマスのリストを計算する</span>
-                       <span class="p">(</span><span class="nv">take-all</span> <span class="p">(</span><span class="nv">if</span> <span class="nv">selected-tile</span>
+                       <span class="p">(</span><span class="nv">take-all</span> <span class="p">(</span><span class="k">if</span> <span class="nv">selected-tile</span>
                                      <span class="c1">;; 攻撃元のタイルを選択中なら、</span>
                                      <span class="c1">;; 有効な攻撃先を全て収集する</span>
                                      <span class="p">(</span><span class="nv">lazy-mapcar</span>
-                                       <span class="p">(</span><span class="nv">lambda</span> <span class="p">(</span><span class="nv">move</span><span class="p">)</span>
-                                         <span class="p">(</span><span class="nv">when</span> <span class="p">(</span><span class="nv">eql</span> <span class="p">(</span><span class="nv">caar</span> <span class="nv">move</span><span class="p">)</span>
+                                       <span class="p">(</span><span class="nb">lambda</span> <span class="p">(</span><span class="nv">move</span><span class="p">)</span>
+                                         <span class="p">(</span><span class="nb">when</span> <span class="p">(</span><span class="nf">eql</span> <span class="p">(</span><span class="nf">caar</span> <span class="nv">move</span><span class="p">)</span>
                                                     <span class="nv">selected-tile</span><span class="p">)</span>
-                                           <span class="p">(</span><span class="nv">cadar</span> <span class="nv">move</span><span class="p">)))</span>
-                                       <span class="p">(</span><span class="nv">caddr</span> <span class="nv">tree</span><span class="p">))</span>
+                                           <span class="p">(</span><span class="nf">cadar</span> <span class="nv">move</span><span class="p">)))</span>
+                                       <span class="p">(</span><span class="nf">caddr</span> <span class="nv">tree</span><span class="p">))</span>
                                      <span class="c1">;; 攻撃元のタイルを選択していなかったら、</span>
                                      <span class="c1">;; 有効な攻撃から、攻撃元を収集する</span>
-                                     <span class="p">(</span><span class="nv">lazy-mapcar</span> <span class="nf">#&#39;</span><span class="nv">caar</span> <span class="p">(</span><span class="nv">caddr</span> <span class="nv">tree</span><span class="p">)))))))</span></code></pre></div>
-<h2 id="19-3-ダイスオブドゥームver3をプレイする">19.3 ダイスオブドゥームVer3をプレイする</h2>
-
+                                     <span class="p">(</span><span class="nv">lazy-mapcar</span> <span class="nf">#&#39;caar</span> <span class="p">(</span><span class="nf">caddr</span> <span class="nv">tree</span><span class="p">)))))))</span>
+</code></pre></div><h2 id="193-ダイスオブドゥームver3をプレイする">19.3 ダイスオブドゥームVer3をプレイする</h2>
 <p>サーバ側で下記のコマンドを叩くことでゲームを起動できる。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nv">&gt;</span> <span class="p">(</span><span class="nv">serve</span> <span class="nf">#&#39;</span><span class="nv">dod-request-handler</span><span class="p">)</span></code></pre></div>
-<p>次に、クライアント側のwebブラウザで<a href="http://localhost:8080/game.html">ゲームページ</a>にアクセスする。</p>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="nf">&gt;</span> <span class="p">(</span><span class="nv">serve</span> <span class="nf">#&#39;</span><span class="nv">dod-request-handler</span><span class="p">)</span>
+</code></pre></div><p>次に、クライアント側のwebブラウザで<a href="http://localhost:8080/game.html">ゲームページ</a>にアクセスする。</p>
 
   </article>
 
@@ -570,7 +543,9 @@
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

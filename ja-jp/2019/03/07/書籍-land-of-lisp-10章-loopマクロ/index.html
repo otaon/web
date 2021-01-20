@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>書籍 Land of Lisp 10章 loopマクロ · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,16 +22,13 @@
 <meta property="og:description" content="Loopマクロ周期表 書籍では、loopマクロで使えるトークンを周期表のようにまとめていた。 それだと少々見辛いため、素直な表形式で下記にまとめ" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/03/07/%E6%9B%B8%E7%B1%8D-land-of-lisp-10%E7%AB%A0-loop%E3%83%9E%E3%82%AF%E3%83%AD/" />
-<meta property="article:published_time" content="2019-03-07T00:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-03-07T00:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-03-07T00:00:00+09:00" />
+<meta property="article:modified_time" content="2019-03-07T00:00:00+09:00" />
 <meta itemprop="name" content="書籍 Land of Lisp 10章 loopマクロ">
 <meta itemprop="description" content="Loopマクロ周期表 書籍では、loopマクロで使えるトークンを周期表のようにまとめていた。 それだと少々見辛いため、素直な表形式で下記にまとめ">
-
-
-<meta itemprop="datePublished" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-03-07T00:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="2371">
+<meta itemprop="datePublished" content="2019-03-07T00:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-03-07T00:00:00+09:00" />
+<meta itemprop="wordCount" content="2375">
 
 
 
@@ -144,94 +141,91 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#loopマクロ周期表">Loopマクロ周期表</a>
-<ul>
-<li><a href="#参考文献">参考文献</a></li>
-<li><a href="#基本的なトークン">基本的なトークン</a>
-<ul>
-<li><a href="#loop"><code>loop</code></a></li>
-<li><a href="#do"><code>do</code></a></li>
-<li><a href="#repeat"><code>repeat</code></a></li>
-<li><a href="#return"><code>return</code></a></li>
-<li><a href="#initially"><code>initially</code></a></li>
-<li><a href="#finally"><code>finally</code></a></li>
-<li><a href="#with"><code>with</code></a></li>
-<li><a href="#into"><code>into</code></a></li>
-</ul></li>
-<li><a href="#ループに対する名前付けとループの脱出">ループに対する名前付けとループの脱出</a>
-<ul>
-<li><a href="#named"><code>named</code></a></li>
-<li><a href="#return-from"><code>return-from</code></a></li>
-<li><a href="#while"><code>while</code></a></li>
-<li><a href="#until"><code>until</code></a></li>
-</ul></li>
-<li><a href="#ハッシュテーブル関連">ハッシュテーブル関連</a>
-<ul>
-<li><a href="#using"><code>using</code></a></li>
-<li><a href="#being"><code>being</code></a></li>
-<li><a href="#the-each"><code>the</code> <code>each</code></a></li>
-<li><a href="#hash-key-hash-keys"><code>hash-key</code> <code>hash-keys</code></a></li>
-<li><a href="#hash-value-hash-values"><code>hash-value</code> <code>hash-values</code></a></li>
-</ul></li>
-<li><a href="#for-ループ関連"><code>for</code>ループ関連</a>
-<ul>
-<li><a href="#for-as"><code>for</code> <code>as</code></a></li>
-<li><a href="#in-on"><code>in</code> <code>on</code></a></li>
-<li><a href="#by"><code>by</code></a></li>
-<li><a href="#then"><code>then</code></a></li>
-<li><a href="#from"><code>from</code></a></li>
-<li><a href="#upfrom"><code>upfrom</code></a></li>
-<li><a href="#downfrom"><code>downfrom</code></a></li>
-<li><a href="#to"><code>to</code></a></li>
-<li><a href="#upto"><code>upto</code></a></li>
-<li><a href="#downto"><code>downto</code></a></li>
-<li><a href="#across"><code>across</code></a></li>
-</ul></li>
-<li><a href="#要素が満たすべき条件を調べる">要素が満たすべき条件を調べる</a>
-<ul>
-<li><a href="#always"><code>always</code></a></li>
-<li><a href="#never"><code>never</code></a></li>
-<li><a href="#thereis"><code>thereis</code></a></li>
-</ul></li>
-<li><a href="#条件分岐">条件分岐</a>
-<ul>
-<li><a href="#if"><code>if</code></a></li>
-<li><a href="#when"><code>when</code></a></li>
-<li><a href="#unless"><code>unless</code></a></li>
-<li><a href="#and"><code>and</code></a></li>
-<li><a href="#else"><code>else</code></a></li>
-<li><a href="#end"><code>end</code></a></li>
-</ul></li>
-<li><a href="#結果の集積">結果の集積</a>
-<ul>
-<li><a href="#count-counting"><code>count</code> <code>counting</code></a></li>
-<li><a href="#sum-summing"><code>sum</code> <code>summing</code></a></li>
-<li><a href="#minimize-minimizing"><code>minimize</code> <code>minimizing</code></a></li>
-<li><a href="#maximize-maximizing"><code>maximize</code> <code>maximizing</code></a></li>
-<li><a href="#append-appending"><code>append</code> <code>appending</code></a></li>
-<li><a href="#nconc-nconcing"><code>nconc</code> <code>nconcing</code></a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#参考文献">参考文献</a></li>
+    <li><a href="#基本的なトークン">基本的なトークン</a>
+      <ul>
+        <li><a href="#loop"><code>loop</code></a></li>
+        <li><a href="#do"><code>do</code></a></li>
+        <li><a href="#repeat"><code>repeat</code></a></li>
+        <li><a href="#return"><code>return</code></a></li>
+        <li><a href="#initially"><code>initially</code></a></li>
+        <li><a href="#finally"><code>finally</code></a></li>
+        <li><a href="#with"><code>with</code></a></li>
+        <li><a href="#into"><code>into</code></a></li>
+      </ul>
+    </li>
+    <li><a href="#ループに対する名前付けとループの脱出">ループに対する名前付けとループの脱出</a>
+      <ul>
+        <li><a href="#named"><code>named</code></a></li>
+        <li><a href="#return-from"><code>return-from</code></a></li>
+        <li><a href="#while"><code>while</code></a></li>
+        <li><a href="#until"><code>until</code></a></li>
+      </ul>
+    </li>
+    <li><a href="#ハッシュテーブル関連">ハッシュテーブル関連</a>
+      <ul>
+        <li><a href="#using"><code>using</code></a></li>
+        <li><a href="#being"><code>being</code></a></li>
+        <li><a href="#the-each"><code>the</code> <code>each</code></a></li>
+        <li><a href="#hash-key-hash-keys"><code>hash-key</code> <code>hash-keys</code></a></li>
+        <li><a href="#hash-value-hash-values"><code>hash-value</code> <code>hash-values</code></a></li>
+      </ul>
+    </li>
+    <li><a href="#forループ関連"><code>for</code>ループ関連</a>
+      <ul>
+        <li><a href="#for-as"><code>for</code> <code>as</code></a></li>
+        <li><a href="#in-on"><code>in</code> <code>on</code></a></li>
+        <li><a href="#by"><code>by</code></a></li>
+        <li><a href="#then"><code>then</code></a></li>
+        <li><a href="#from"><code>from</code></a></li>
+        <li><a href="#upfrom"><code>upfrom</code></a></li>
+        <li><a href="#downfrom"><code>downfrom</code></a></li>
+        <li><a href="#to"><code>to</code></a></li>
+        <li><a href="#upto"><code>upto</code></a></li>
+        <li><a href="#downto"><code>downto</code></a></li>
+        <li><a href="#across"><code>across</code></a></li>
+      </ul>
+    </li>
+    <li><a href="#要素が満たすべき条件を調べる">要素が満たすべき条件を調べる</a>
+      <ul>
+        <li><a href="#always"><code>always</code></a></li>
+        <li><a href="#never"><code>never</code></a></li>
+        <li><a href="#thereis"><code>thereis</code></a></li>
+      </ul>
+    </li>
+    <li><a href="#条件分岐">条件分岐</a>
+      <ul>
+        <li><a href="#if"><code>if</code></a></li>
+        <li><a href="#when"><code>when</code></a></li>
+        <li><a href="#unless"><code>unless</code></a></li>
+        <li><a href="#and"><code>and</code></a></li>
+        <li><a href="#else"><code>else</code></a></li>
+        <li><a href="#end"><code>end</code></a></li>
+      </ul>
+    </li>
+    <li><a href="#結果の集積">結果の集積</a>
+      <ul>
+        <li><a href="#count-counting"><code>count</code> <code>counting</code></a></li>
+        <li><a href="#sum-summing"><code>sum</code> <code>summing</code></a></li>
+        <li><a href="#minimize-minimizing"><code>minimize</code> <code>minimizing</code></a></li>
+        <li><a href="#maximize-maximizing"><code>maximize</code> <code>maximizing</code></a></li>
+        <li><a href="#append-appending"><code>append</code> <code>appending</code></a></li>
+        <li><a href="#nconc-nconcing"><code>nconc</code> <code>nconcing</code></a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h1 id="loopマクロ周期表">Loopマクロ周期表</h1>
-
-<p>書籍では、<code>loop</code>マクロで使えるトークンを周期表のようにまとめていた。<br />
+  <h1 id="loopマクロ周期表">Loopマクロ周期表</h1>
+<p>書籍では、<code>loop</code>マクロで使えるトークンを周期表のようにまとめていた。<br>
 それだと少々見辛いため、素直な表形式で下記にまとめなおす。</p>
-
 <h2 id="参考文献">参考文献</h2>
-
 <p><a href="http://lisp.satoshiweb.net/2018/01/iteration.html">独学 Common Lisp - 第6章「繰り返し」</a></p>
-
 <h2 id="基本的なトークン">基本的なトークン</h2>
-
 <table>
 <thead>
 <tr>
@@ -239,67 +233,57 @@
 <th>説明</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>loop</code></td>
 <td>単純なループ</td>
 </tr>
-
 <tr>
 <td><code>do</code> <code>doing</code></td>
 <td>繰り返しの中で任意の式を実行する</td>
 </tr>
-
 <tr>
 <td><code>repeat</code></td>
 <td>指定した回数ループする</td>
 </tr>
-
 <tr>
 <td><code>return</code></td>
 <td>任意の式の実行結果を返してループを抜ける</td>
 </tr>
-
 <tr>
 <td><code>initially</code></td>
 <td>ループし始める前に任意の式を実行する</td>
 </tr>
-
 <tr>
 <td><code>finally</code></td>
 <td>ループが終わった後に任意の式を実行する</td>
 </tr>
-
 <tr>
 <td></td>
 <td><strong>ループの途中脱出時には実行されない</strong></td>
 </tr>
-
 <tr>
 <td><code>with</code></td>
 <td>ローカル変数を作成する</td>
 </tr>
-
 <tr>
 <td><code>into</code></td>
 <td>結果を格納するローカル変数を作成する</td>
 </tr>
 </tbody>
 </table>
-
 <h3 id="loop"><code>loop</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="p">(</span><span class="nv">princ</span> <span class="s">&#34;type something&#34;</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">force-output</span><span class="p">)</span>
-      <span class="p">(</span><span class="nv">read</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="p">(</span><span class="nf">princ</span> <span class="s">&#34;type something&#34;</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">force-output</span><span class="p">)</span>
+      <span class="p">(</span><span class="nf">read</span><span class="p">))</span>
 
 <span class="c1">; type somethingr</span>
 <span class="c1">; type somethingf</span>
 <span class="c1">; type somethingf</span>
-<span class="c1">; ...</span></code></pre></div>
-<h3 id="do"><code>do</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">5</span> 
-      <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">))</span>
+<span class="c1">; ...</span>
+</code></pre></div><h3 id="do"><code>do</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">5</span> 
+      <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">))</span>
 
 <span class="c1">; 0 </span>
 <span class="c1">; 1 </span>
@@ -307,68 +291,67 @@
 <span class="c1">; 3 </span>
 <span class="c1">; 4 </span>
 <span class="c1">; NIL</span>
-<span class="c1">; CL-USER&gt; </span></code></pre></div>
-<h3 id="repeat"><code>repeat</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">repeat</span> <span class="mi">5</span>
-      <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;Print five times&#34;</span><span class="p">))</span>
+<span class="c1">; CL-USER&gt; </span>
+</code></pre></div><h3 id="repeat"><code>repeat</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">repeat</span> <span class="mi">5</span>
+      <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;Print five times&#34;</span><span class="p">))</span>
 
 <span class="c1">; &#34;Print five times&#34; </span>
 <span class="c1">; &#34;Print five times&#34; </span>
 <span class="c1">; &#34;Print five times&#34; </span>
 <span class="c1">; &#34;Print five times&#34; </span>
 <span class="c1">; &#34;Print five times&#34; </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="return"><code>return</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">10</span>
-      <span class="nv">when</span> <span class="p">(</span><span class="nv">=</span> <span class="nv">i</span> <span class="mi">5</span><span class="p">)</span>
-      <span class="nv">return</span> <span class="ss">&#39;leave-early</span>
-      <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">))</span>
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="return"><code>return</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">10</span>
+      <span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="nv">i</span> <span class="mi">5</span><span class="p">)</span>
+      <span class="nb">return</span> <span class="ss">&#39;leave-early</span>
+      <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">))</span>
 
 <span class="c1">; 0 </span>
 <span class="c1">; 1 </span>
 <span class="c1">; 2 </span>
 <span class="c1">; 3 </span>
 <span class="c1">; 4 </span>
-<span class="c1">; LEAVE-EARLY</span></code></pre></div>
-<h3 id="initially"><code>initially</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">initially</span> <span class="p">(</span><span class="nv">print</span> <span class="ss">&#39;loop-begin</span><span class="p">)</span>
+<span class="c1">; LEAVE-EARLY</span>
+</code></pre></div><h3 id="initially"><code>initially</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">initially</span> <span class="p">(</span><span class="nf">print</span> <span class="ss">&#39;loop-begin</span><span class="p">)</span>
       <span class="nv">for</span> <span class="nv">x</span> <span class="nv">below</span> <span class="mi">3</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">x</span><span class="p">))</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">x</span><span class="p">))</span>
 
 <span class="c1">; LOOP-BEGIN </span>
 <span class="c1">; 0 </span>
 <span class="c1">; 1 </span>
 <span class="c1">; 2 </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="finally"><code>finally</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">x</span> <span class="nv">below</span> <span class="mi">3</span>
-      <span class="nv">do</span> <span class="p">(</span><span class="nv">printx</span><span class="p">)</span>
-      <span class="nv">finally</span> <span class="p">(</span><span class="nv">print</span> <span class="ss">&#39;loop-end</span><span class="p">))</span>
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="finally"><code>finally</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">x</span> <span class="nv">below</span> <span class="mi">3</span>
+      <span class="nb">do</span> <span class="p">(</span><span class="nv">printx</span><span class="p">)</span>
+      <span class="nv">finally</span> <span class="p">(</span><span class="nf">print</span> <span class="ss">&#39;loop-end</span><span class="p">))</span>
 
 <span class="c1">; 0 </span>
 <span class="c1">; 1 </span>
 <span class="c1">; 2 </span>
 <span class="c1">; LOOP-END </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="with"><code>with</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">with</span> <span class="nv">x</span> <span class="nv">=</span> <span class="p">(</span><span class="nv">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span>
-      <span class="nv">repeat</span> <span class="mi">5</span> <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">x</span><span class="p">))</span>
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="with"><code>with</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">with</span> <span class="nv">x</span> <span class="nf">=</span> <span class="p">(</span><span class="nf">+</span> <span class="mi">1</span> <span class="mi">2</span><span class="p">)</span>
+      <span class="nv">repeat</span> <span class="mi">5</span> <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">x</span><span class="p">))</span>
 
 <span class="c1">; 3 </span>
 <span class="c1">; 3 </span>
 <span class="c1">; 3 </span>
 <span class="c1">; 3 </span>
 <span class="c1">; 3 </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="into"><code>into</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span>
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="into"><code>into</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span>
       <span class="nv">minimize</span> <span class="nv">i</span> <span class="nv">into</span> <span class="nv">lowest</span>
 	  <span class="nv">maximize</span> <span class="nv">i</span> <span class="nv">into</span> <span class="nv">biggest</span>
-	  <span class="nv">finally</span> <span class="p">(</span><span class="nv">return</span> <span class="p">(</span><span class="nv">cons</span> <span class="nv">lowest</span> <span class="nv">biggest</span><span class="p">)))</span>
+	  <span class="nv">finally</span> <span class="p">(</span><span class="nb">return</span> <span class="p">(</span><span class="nc">cons</span> <span class="nv">lowest</span> <span class="nv">biggest</span><span class="p">)))</span>
 
-<span class="c1">; (1 . 5)</span></code></pre></div>
-<h2 id="ループに対する名前付けとループの脱出">ループに対する名前付けとループの脱出</h2>
-
+<span class="c1">; (1 . 5)</span>
+</code></pre></div><h2 id="ループに対する名前付けとループの脱出">ループに対する名前付けとループの脱出</h2>
 <table>
 <thead>
 <tr>
@@ -376,39 +359,34 @@
 <th>説明</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>named</code></td>
 <td>ループに任意の名前をつける</td>
 </tr>
-
 <tr>
 <td><code>return-from</code></td>
 <td>ループ名を指定してループを抜ける</td>
 </tr>
-
 <tr>
 <td><code>while</code></td>
 <td>式が真ならループを続け、nilならループを抜ける</td>
 </tr>
-
 <tr>
 <td><code>until</code></td>
 <td>式がnilならループを続け、真ならループを抜ける</td>
 </tr>
 </tbody>
 </table>
-
 <h3 id="named"><code>named</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">named</span> <span class="nv">outer</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">named</span> <span class="nv">outer</span>
       <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">10</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">progn</span> <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;outer&#34;</span><span class="p">)</span>
-	            <span class="p">(</span><span class="nv">loop</span> <span class="nv">named</span> <span class="nv">inner</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="k">progn</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;outer&#34;</span><span class="p">)</span>
+	            <span class="p">(</span><span class="nb">loop</span> <span class="nv">named</span> <span class="nv">inner</span>
 				      <span class="nv">for</span> <span class="nv">x</span> <span class="nv">below</span> <span class="nv">i</span>
-					  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;**inner&#34;</span><span class="p">)</span>
-					  <span class="nv">when</span> <span class="p">(</span><span class="nv">=</span> <span class="nv">x</span> <span class="mi">2</span><span class="p">)</span>
-					  <span class="nv">do</span> <span class="p">(</span><span class="nv">return-from</span> <span class="nv">outer</span> <span class="ss">&#39;kicked-out-all-the-way</span><span class="p">))))</span>
+					  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;**inner&#34;</span><span class="p">)</span>
+					  <span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="nv">x</span> <span class="mi">2</span><span class="p">)</span>
+					  <span class="nb">do</span> <span class="p">(</span><span class="k">return-from</span> <span class="nv">outer</span> <span class="ss">&#39;kicked-out-all-the-way</span><span class="p">))))</span>
 
 <span class="c1">; &#34;outer&#34; </span>
 <span class="c1">; &#34;outer&#34; </span>
@@ -420,24 +398,22 @@
 <span class="c1">; &#34;**inner&#34; </span>
 <span class="c1">; &#34;**inner&#34; </span>
 <span class="c1">; &#34;**inner&#34; </span>
-<span class="c1">; KICKED-OUT-ALL-THE-WAY</span></code></pre></div>
-<h3 id="return-from"><code>return-from</code></h3>
-
-<p>省略。<br />
+<span class="c1">; KICKED-OUT-ALL-THE-WAY</span>
+</code></pre></div><h3 id="return-from"><code>return-from</code></h3>
+<p>省略。<br>
 <code>named</code>の例を参照のこと。</p>
-
 <h3 id="while"><code>while</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">2</span> <span class="mi">4</span> <span class="mi">555</span> <span class="mi">6</span><span class="p">)</span>
-      <span class="nv">while</span> <span class="p">(</span><span class="nv">evenp</span> <span class="nv">i</span><span class="p">)</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">2</span> <span class="mi">4</span> <span class="mi">555</span> <span class="mi">6</span><span class="p">)</span>
+      <span class="nv">while</span> <span class="p">(</span><span class="nf">evenp</span> <span class="nv">i</span><span class="p">)</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">))</span>
 <span class="c1">; 0 </span>
 <span class="c1">; 2 </span>
 <span class="c1">; 4 </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="until"><code>until</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">0</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">)</span>
-	  <span class="nv">until</span> <span class="p">(</span><span class="nv">&gt;</span> <span class="nv">i</span> <span class="mi">3</span><span class="p">))</span>
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="until"><code>until</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">0</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">)</span>
+	  <span class="nv">until</span> <span class="p">(</span><span class="nf">&gt;</span> <span class="nv">i</span> <span class="mi">3</span><span class="p">))</span>
 
 <span class="c1">; 0 </span>
 <span class="c1">; 1 </span>
@@ -446,17 +422,16 @@
 <span class="c1">; 4 </span>
 <span class="c1">; NIL</span>
 
-<span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">0</span>
-	  <span class="nv">until</span> <span class="p">(</span><span class="nv">&gt;</span> <span class="nv">i</span> <span class="mi">3</span><span class="p">)</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">0</span>
+	  <span class="nv">until</span> <span class="p">(</span><span class="nf">&gt;</span> <span class="nv">i</span> <span class="mi">3</span><span class="p">)</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">))</span>
 
 <span class="c1">; 0 </span>
 <span class="c1">; 1 </span>
 <span class="c1">; 2 </span>
 <span class="c1">; 3 </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h2 id="ハッシュテーブル関連">ハッシュテーブル関連</h2>
-
+<span class="c1">; NIL</span>
+</code></pre></div><h2 id="ハッシュテーブル関連">ハッシュテーブル関連</h2>
 <table>
 <thead>
 <tr>
@@ -464,85 +439,78 @@
 <th>説明</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>using</code></td>
 <td><code>hash-key</code>によりキーを、<code>hash-value</code>によりバリューを保持する</td>
 </tr>
-
 <tr>
 <td><code>being</code></td>
 <td>ハッシュテーブルから、<code>being the hash-key of</code>でキーを、<code>being the hash-value of</code>でバリューを取得する</td>
 </tr>
-
 <tr>
 <td><code>the</code> <code>each</code></td>
 <td>ハッシュテーブルに対して<code>being the</code>か<code>being each</code>としてアクセスする</td>
 </tr>
-
 <tr>
 <td><code>hash-keys</code> <code>hash-key</code></td>
 <td>ハッシュキーを取得する際に指定するトークン</td>
 </tr>
-
 <tr>
 <td><code>hash-values</code> <code>hash-value</code></td>
 <td>ハッシュ値を取得する際に指定するトークン</td>
 </tr>
 </tbody>
 </table>
-
 <p>下記の例では全て<code>salary</code>ハッシュテーブルを使用する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">defparameter</span> <span class="nv">salary</span> <span class="p">(</span><span class="nv">make-hash-table</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">gethash</span> <span class="ss">&#39;bob</span> <span class="nv">salary</span><span class="p">)</span> <span class="mi">80</span><span class="p">)</span>
-<span class="p">(</span><span class="nv">setf</span> <span class="p">(</span><span class="nv">gethash</span> <span class="ss">&#39;john</span> <span class="nv">salary</span><span class="p">)</span> <span class="mi">90</span><span class="p">)</span></code></pre></div>
-<h3 id="using"><code>using</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">person</span> <span class="nv">being</span> <span class="nv">each</span> <span class="nv">hash-key</span> <span class="nv">of</span> <span class="nv">salary</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">defparameter</span> <span class="nv">salary</span> <span class="p">(</span><span class="nf">make-hash-table</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nf">gethash</span> <span class="ss">&#39;bob</span> <span class="nv">salary</span><span class="p">)</span> <span class="mi">80</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">setf</span> <span class="p">(</span><span class="nf">gethash</span> <span class="ss">&#39;john</span> <span class="nv">salary</span><span class="p">)</span> <span class="mi">90</span><span class="p">)</span>
+</code></pre></div><h3 id="using"><code>using</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">person</span> <span class="nv">being</span> <span class="nv">each</span> <span class="nv">hash-key</span> <span class="nv">of</span> <span class="nv">salary</span>
       <span class="nv">using</span> <span class="p">(</span><span class="nv">hash-value</span> <span class="nv">amt</span><span class="p">)</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="p">(</span><span class="nv">cons</span> <span class="nv">person</span> <span class="nv">amt</span><span class="p">))))</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="p">(</span><span class="nc">cons</span> <span class="nv">person</span> <span class="nv">amt</span><span class="p">))))</span>
 
 <span class="c1">; (JOHN . 90) </span>
 <span class="c1">; (BOB . 80) </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="being"><code>being</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">person</span> <span class="nv">being</span> <span class="nv">each</span> <span class="nv">hash-key</span> <span class="nv">of</span> <span class="nv">salary</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">person</span><span class="p">))</span>
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="being"><code>being</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">person</span> <span class="nv">being</span> <span class="nv">each</span> <span class="nv">hash-key</span> <span class="nv">of</span> <span class="nv">salary</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">person</span><span class="p">))</span>
 
 <span class="c1">; JOHN </span>
 <span class="c1">; BOB </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="the-each"><code>the</code> <code>each</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">person</span> <span class="nv">being</span> <span class="nv">each</span> <span class="nv">hash-key</span> <span class="nv">of</span> <span class="nv">salary</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">person</span><span class="p">))</span>
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="the-each"><code>the</code> <code>each</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">person</span> <span class="nv">being</span> <span class="nv">each</span> <span class="nv">hash-key</span> <span class="nv">of</span> <span class="nv">salary</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">person</span><span class="p">))</span>
 
 <span class="c1">; JOHN </span>
 <span class="c1">; BOB </span>
-<span class="c1">; NIL</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">person</span> <span class="nv">being</span> <span class="nv">the</span> <span class="nv">hash-keys</span> <span class="nv">of</span> <span class="nv">salary</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">person</span><span class="p">))</span>
+<span class="c1">; NIL</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">person</span> <span class="nv">being</span> <span class="k">the</span> <span class="nv">hash-keys</span> <span class="nv">of</span> <span class="nv">salary</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">person</span><span class="p">))</span>
 
 <span class="c1">; JOHN </span>
 <span class="c1">; BOB </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="hash-key-hash-keys"><code>hash-key</code> <code>hash-keys</code></h3>
-
-<p>省略。<br />
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="hash-key-hash-keys"><code>hash-key</code> <code>hash-keys</code></h3>
+<p>省略。<br>
 <code>the</code> <code>each</code>の例を参照のこと。</p>
-
 <h3 id="hash-value-hash-values"><code>hash-value</code> <code>hash-values</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">amt</span> <span class="nv">being</span> <span class="nv">each</span> <span class="nv">hash-value</span> <span class="nv">of</span> <span class="nv">salary</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">amt</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">amt</span> <span class="nv">being</span> <span class="nv">each</span> <span class="nv">hash-value</span> <span class="nv">of</span> <span class="nv">salary</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">amt</span><span class="p">))</span>
 
 <span class="c1">; 90 </span>
 <span class="c1">; 80 </span>
-<span class="c1">; NIL</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">amt</span> <span class="nv">being</span> <span class="nv">the</span> <span class="nv">hash-values</span> <span class="nv">of</span> <span class="nv">salary</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">amt</span><span class="p">))</span>
+<span class="c1">; NIL</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">amt</span> <span class="nv">being</span> <span class="k">the</span> <span class="nv">hash-values</span> <span class="nv">of</span> <span class="nv">salary</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">amt</span><span class="p">))</span>
 
 <span class="c1">; 90 </span>
 <span class="c1">; 80 </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h2 id="for-ループ関連"><code>for</code>ループ関連</h2>
-
+<span class="c1">; NIL</span>
+</code></pre></div><h2 id="forループ関連"><code>for</code>ループ関連</h2>
 <table>
 <thead>
 <tr>
@@ -550,80 +518,66 @@
 <th>説明</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>for</code> <code>as</code></td>
 <td>ループ変数を初期化する</td>
 </tr>
-
 <tr>
 <td><code>in</code></td>
 <td>リストを<code>car</code>したものをループ変数に与える</td>
 </tr>
-
 <tr>
 <td><code>on</code></td>
 <td>リストをループ変数に与えた後に<code>cdr</code>する</td>
 </tr>
-
 <tr>
 <td><code>by</code></td>
 <td>数:指定した数値だけループ変数を増減させる（デフォルト:<code>1</code>or<code>-1</code>）</td>
 </tr>
-
 <tr>
 <td></td>
 <td>リスト:指定した関数でリストから値を取り出す（デフォルト:<code>#'cdr</code>）</td>
 </tr>
-
 <tr>
 <td><code>then</code></td>
 <td><code>for x = y then z</code>とすると、<code>x</code>に初期値<code>y</code>を設定し、式<code>z</code>を繰り返し実行する</td>
 </tr>
-
 <tr>
 <td><code>from</code></td>
 <td><code>for x from y to z</code>として、ループ変数<code>x</code>を数値<code>y</code>から増減させる</td>
 </tr>
-
 <tr>
 <td><code>upfrom</code></td>
 <td><code>for x upfrom y to z</code>として、ループ変数<code>x</code>を数値<code>y</code>から増加させる</td>
 </tr>
-
 <tr>
 <td><code>downfrom</code></td>
 <td><code>for x downfrom y to z</code>として、ループ変数<code>x</code>を数値<code>y</code>から減少させる</td>
 </tr>
-
 <tr>
 <td><code>to</code></td>
 <td><code>for x from y to z</code>として、ループ変数<code>x</code>を数値<code>z</code>まで増減させる</td>
 </tr>
-
 <tr>
 <td><code>upto</code></td>
 <td><code>for x from y to z</code>として、ループ変数<code>x</code>を数値<code>z</code>まで増加させる</td>
 </tr>
-
 <tr>
 <td><code>downto</code></td>
 <td><code>for x from y to z</code>として、ループ変数<code>x</code>を数値<code>z</code>まで減少させる</td>
 </tr>
-
 <tr>
 <td><code>across</code></td>
 <td><code>for x across y</code>として、シーケンス（文字列を含む）<code>y</code>を先頭から<code>x</code>に与える</td>
 </tr>
 </tbody>
 </table>
-
 <h3 id="for-as"><code>for</code> <code>as</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">0</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">)</span>
-	  <span class="nv">when</span> <span class="p">(</span><span class="nv">=</span> <span class="nv">i</span> <span class="mi">5</span><span class="p">)</span>
-	  <span class="nv">return</span> <span class="ss">&#39;zuchini</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">0</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">)</span>
+	  <span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="nv">i</span> <span class="mi">5</span><span class="p">)</span>
+	  <span class="nb">return</span> <span class="ss">&#39;zuchini</span><span class="p">)</span>
 
 <span class="c1">; 0 </span>
 <span class="c1">; 1 </span>
@@ -631,85 +585,84 @@
 <span class="c1">; 3 </span>
 <span class="c1">; 4 </span>
 <span class="c1">; 5 </span>
-<span class="c1">; ZUCHINI</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">as</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">5</span>
+<span class="c1">; ZUCHINI</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">as</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">5</span>
 	  <span class="nv">to</span> <span class="mi">10</span>
 	  <span class="nv">collect</span> <span class="nv">x</span><span class="p">)</span>
 
-<span class="c1">; (0 1 2 3 4 5 6 7 8 9 10)</span></code></pre></div>
-<h3 id="in-on"><code>in</code> <code>on</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">100</span> <span class="mi">20</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">; (0 1 2 3 4 5 6 7 8 9 10)</span>
+</code></pre></div><h3 id="in-on"><code>in</code> <code>on</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">100</span> <span class="mi">20</span> <span class="mi">3</span><span class="p">)</span>
 	  <span class="nv">sum</span> <span class="nv">i</span><span class="p">)</span>
 
-<span class="c1">; 123</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">x</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">x</span><span class="p">))</span>
+<span class="c1">; 123</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">x</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">x</span><span class="p">))</span>
 
 <span class="c1">; 1 </span>
 <span class="c1">; 3 </span>
 <span class="c1">; 5 </span>
 <span class="c1">; NIL</span>
 
-<span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">x</span> <span class="nv">on</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">x</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">x</span> <span class="nv">on</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">3</span> <span class="mi">5</span><span class="p">)</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">x</span><span class="p">))</span>
 
 <span class="c1">; (1 3 5) </span>
 <span class="c1">; (3 5) </span>
 <span class="c1">; (5) </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="by"><code>by</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">6</span> <span class="nv">to</span> <span class="mi">8</span> <span class="nv">by</span> <span class="mi">2</span>
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="by"><code>by</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">6</span> <span class="nv">to</span> <span class="mi">8</span> <span class="nv">by</span> <span class="mi">2</span>
 	  <span class="nv">sum</span> <span class="nv">i</span><span class="p">)</span>
 
-<span class="c1">; 14</span></code></pre></div>
-<h3 id="then"><code>then</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">repeat</span> <span class="mi">5</span>
-      <span class="nv">for</span> <span class="nv">x</span> <span class="nv">=</span> <span class="mf">10.0</span>
-	  <span class="nv">then</span> <span class="p">(</span><span class="nv">/</span> <span class="nv">x</span> <span class="mi">2</span><span class="p">)</span>
+<span class="c1">; 14</span>
+</code></pre></div><h3 id="then"><code>then</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">repeat</span> <span class="mi">5</span>
+      <span class="nv">for</span> <span class="nv">x</span> <span class="nf">=</span> <span class="mf">10.0</span>
+	  <span class="nv">then</span> <span class="p">(</span><span class="nf">/</span> <span class="nv">x</span> <span class="mi">2</span><span class="p">)</span>
 	  <span class="nv">collect</span> <span class="nv">x</span><span class="p">)</span>
 
-<span class="c1">; (10.0 5.0 2.5 1.25 0.625)</span></code></pre></div>
-<h3 id="from"><code>from</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">6</span> <span class="nv">to</span> <span class="mi">8</span>
+<span class="c1">; (10.0 5.0 2.5 1.25 0.625)</span>
+</code></pre></div><h3 id="from"><code>from</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">6</span> <span class="nv">to</span> <span class="mi">8</span>
 	  <span class="nv">sum</span> <span class="nv">i</span><span class="p">)</span>
-<span class="c1">; 21</span></code></pre></div>
-<h3 id="upfrom"><code>upfrom</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">upfrom</span> <span class="mi">6</span> <span class="nv">to</span> <span class="mi">8</span>
+<span class="c1">; 21</span>
+</code></pre></div><h3 id="upfrom"><code>upfrom</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">upfrom</span> <span class="mi">6</span> <span class="nv">to</span> <span class="mi">8</span>
 	  <span class="nv">sum</span> <span class="nv">i</span><span class="p">)</span>
-<span class="c1">; 21</span></code></pre></div>
-<h3 id="downfrom"><code>downfrom</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">downfrom</span> <span class="mi">10</span> <span class="nv">to</span> <span class="mi">7</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">))</span>
+<span class="c1">; 21</span>
+</code></pre></div><h3 id="downfrom"><code>downfrom</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">downfrom</span> <span class="mi">10</span> <span class="nv">to</span> <span class="mi">7</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">))</span>
 
 <span class="c1">; 10 </span>
 <span class="c1">; 9 </span>
 <span class="c1">; 8 </span>
 <span class="c1">; 7 </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="to"><code>to</code></h3>
-
-<p>省略。<br />
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="to"><code>to</code></h3>
+<p>省略。<br>
 <code>from</code>の例を参照のこと。</p>
-
 <h3 id="upto"><code>upto</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">6</span> <span class="nv">upto</span> <span class="mi">8</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">6</span> <span class="nv">upto</span> <span class="mi">8</span>
 	  <span class="nv">sum</span> <span class="nv">i</span><span class="p">)</span>
 
-<span class="c1">; 21</span></code></pre></div>
-<h3 id="downto"><code>downto</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">10</span> <span class="nv">downto</span> <span class="mi">7</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">))</span>
+<span class="c1">; 21</span>
+</code></pre></div><h3 id="downto"><code>downto</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">from</span> <span class="mi">10</span> <span class="nv">downto</span> <span class="mi">7</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">))</span>
 
 <span class="c1">; 10 </span>
 <span class="c1">; 9 </span>
 <span class="c1">; 8 </span>
 <span class="c1">; 7 </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="across"><code>across</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">across</span> <span class="o">#(</span><span class="mi">100</span> <span class="mi">20</span> <span class="mi">3</span><span class="p">)</span>	<span class="c1">; 配列</span>
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="across"><code>across</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">across</span> <span class="o">#(</span><span class="mi">100</span> <span class="mi">20</span> <span class="mi">3</span><span class="p">)</span>	<span class="c1">; 配列</span>
 	  <span class="nv">sum</span> <span class="nv">i</span><span class="p">)</span>
 
-<span class="c1">; 123</span></code></pre></div>
-<h2 id="要素が満たすべき条件を調べる">要素が満たすべき条件を調べる</h2>
-
+<span class="c1">; 123</span>
+</code></pre></div><h2 id="要素が満たすべき条件を調べる">要素が満たすべき条件を調べる</h2>
 <table>
 <thead>
 <tr>
@@ -717,47 +670,41 @@
 <th>説明</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>always</code></td>
 <td>式が真ならばループを続け、<code>nil</code>ならばループを抜ける</td>
 </tr>
-
 <tr>
 <td><code>never</code></td>
 <td>式が<code>nil</code>ならばループを続け、真ならばループを抜ける</td>
 </tr>
-
 <tr>
 <td><code>thereis</code></td>
 <td>式が真ならばループを抜ける</td>
 </tr>
-
 <tr>
 <td></td>
 <td>返り値は真偽値ではなく、判定に用いた値自体</td>
 </tr>
 </tbody>
 </table>
-
 <h3 id="always"><code>always</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">2</span> <span class="mi">4</span> <span class="mi">6</span><span class="p">)</span>
-	  <span class="nv">always</span> <span class="p">(</span><span class="nv">evenp</span> <span class="nv">i</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">2</span> <span class="mi">4</span> <span class="mi">6</span><span class="p">)</span>
+	  <span class="nv">always</span> <span class="p">(</span><span class="nf">evenp</span> <span class="nv">i</span><span class="p">))</span>
 
-<span class="c1">; T</span></code></pre></div>
-<h3 id="never"><code>never</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">2</span> <span class="mi">4</span> <span class="mi">6</span><span class="p">)</span>
-	  <span class="nv">never</span> <span class="p">(</span><span class="nv">oddp</span> <span class="nv">i</span><span class="p">))</span>
+<span class="c1">; T</span>
+</code></pre></div><h3 id="never"><code>never</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">2</span> <span class="mi">4</span> <span class="mi">6</span><span class="p">)</span>
+	  <span class="nv">never</span> <span class="p">(</span><span class="nf">oddp</span> <span class="nv">i</span><span class="p">))</span>
 
-<span class="c1">; T</span></code></pre></div>
-<h3 id="thereis"><code>thereis</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">2</span> <span class="mi">555</span> <span class="mi">6</span><span class="p">)</span>
-	  <span class="nv">thereis</span> <span class="p">(</span><span class="nv">oddp</span> <span class="nv">i</span><span class="p">))</span>
+<span class="c1">; T</span>
+</code></pre></div><h3 id="thereis"><code>thereis</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span> <span class="mi">2</span> <span class="mi">555</span> <span class="mi">6</span><span class="p">)</span>
+	  <span class="nv">thereis</span> <span class="p">(</span><span class="nf">oddp</span> <span class="nv">i</span><span class="p">))</span>
 
-<span class="c1">; T</span></code></pre></div>
-<h2 id="条件分岐">条件分岐</h2>
-
+<span class="c1">; T</span>
+</code></pre></div><h2 id="条件分岐">条件分岐</h2>
 <table>
 <thead>
 <tr>
@@ -765,48 +712,42 @@
 <th>説明</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>if</code> <code>when</code></td>
 <td>式が真ならば、その次の節を実行する</td>
 </tr>
-
 <tr>
 <td><code>unless</code></td>
 <td>式が<code>nil</code>ならば、その次の節を実行する</td>
 </tr>
-
 <tr>
 <td><code>and</code></td>
 <td>条件を満たした時に実行する節を複数記述する場合に、節を連結する</td>
 </tr>
-
 <tr>
 <td><code>else</code></td>
 <td><code>cond</code>マクロのように条件節を連結する</td>
 </tr>
-
 <tr>
 <td><code>end</code></td>
 <td>複数記述した節の終わりを示す</td>
 </tr>
 </tbody>
 </table>
-
 <h3 id="if"><code>if</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">5</span>
-	  <span class="nv">if</span> <span class="p">(</span><span class="nv">oddp</span> <span class="nv">i</span><span class="p">)</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">))</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">5</span>
+	  <span class="k">if</span> <span class="p">(</span><span class="nf">oddp</span> <span class="nv">i</span><span class="p">)</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">))</span>
 
 <span class="c1">; 1 </span>
 <span class="c1">; 3 </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="when"><code>when</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">4</span>
-	  <span class="nv">when</span> <span class="p">(</span><span class="nv">oddp</span> <span class="nv">i</span><span class="p">)</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">)</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;yup&#34;</span><span class="p">))</span>
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="when"><code>when</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">4</span>
+	  <span class="nb">when</span> <span class="p">(</span><span class="nf">oddp</span> <span class="nv">i</span><span class="p">)</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">)</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;yup&#34;</span><span class="p">))</span>
 
 <span class="c1">; &#34;yup&#34; </span>
 <span class="c1">; 1 </span>
@@ -814,21 +755,21 @@
 <span class="c1">; &#34;yup&#34; </span>
 <span class="c1">; 3 </span>
 <span class="c1">; &#34;yup&#34; </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="unless"><code>unless</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">4</span>
-	  <span class="nv">unless</span> <span class="p">(</span><span class="nv">oddp</span> <span class="nv">i</span><span class="p">)</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">))</span>
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="unless"><code>unless</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">4</span>
+	  <span class="nb">unless</span> <span class="p">(</span><span class="nf">oddp</span> <span class="nv">i</span><span class="p">)</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">))</span>
 
 <span class="c1">; 0 </span>
 <span class="c1">; 2 </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="and"><code>and</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">5</span>
-	  <span class="nv">when</span> <span class="p">(</span><span class="nv">=</span> <span class="nv">x</span> <span class="mi">3</span><span class="p">)</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;do this&#34;</span><span class="p">)</span>
-	  <span class="nv">and</span> <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;also do this&#34;</span><span class="p">)</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;always do this&#34;</span><span class="p">))</span>
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="and"><code>and</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">5</span>
+	  <span class="nb">when</span> <span class="p">(</span><span class="nf">=</span> <span class="nv">x</span> <span class="mi">3</span><span class="p">)</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;do this&#34;</span><span class="p">)</span>
+	  <span class="nb">and</span> <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;also do this&#34;</span><span class="p">)</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;always do this&#34;</span><span class="p">))</span>
 
 <span class="c1">; &#34;always do this&#34; </span>
 <span class="c1">; &#34;always do this&#34; </span>
@@ -837,25 +778,25 @@
 <span class="c1">; &#34;also do this&#34; </span>
 <span class="c1">; &#34;always do this&#34; </span>
 <span class="c1">; &#34;always do this&#34; </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="else"><code>else</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">5</span>
-	  <span class="nv">if</span> <span class="p">(</span><span class="nv">oddp</span> <span class="nv">i</span><span class="p">)</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">)</span>
-	  <span class="nv">else</span> <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;w00t&#34;</span><span class="p">))</span>
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="else"><code>else</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">5</span>
+	  <span class="k">if</span> <span class="p">(</span><span class="nf">oddp</span> <span class="nv">i</span><span class="p">)</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">)</span>
+	  <span class="nv">else</span> <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;w00t&#34;</span><span class="p">))</span>
 
 <span class="c1">; &#34;w00t&#34; </span>
 <span class="c1">; 1 </span>
 <span class="c1">; &#34;w00t&#34; </span>
 <span class="c1">; 3 </span>
 <span class="c1">; &#34;w00t&#34; </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h3 id="end"><code>end</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">4</span>
-      <span class="nv">when</span> <span class="p">(</span><span class="nv">oddp</span> <span class="nv">i</span><span class="p">)</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="nv">i</span><span class="p">)</span>
+<span class="c1">; NIL</span>
+</code></pre></div><h3 id="end"><code>end</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">4</span>
+      <span class="nb">when</span> <span class="p">(</span><span class="nf">oddp</span> <span class="nv">i</span><span class="p">)</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="nv">i</span><span class="p">)</span>
 	  <span class="nv">end</span>
-	  <span class="nv">do</span> <span class="p">(</span><span class="nv">print</span> <span class="s">&#34;yup&#34;</span><span class="p">))</span>
+	  <span class="nb">do</span> <span class="p">(</span><span class="nf">print</span> <span class="s">&#34;yup&#34;</span><span class="p">))</span>
 
 <span class="c1">; &#34;yup&#34; </span>
 <span class="c1">; 1 </span>
@@ -863,9 +804,8 @@
 <span class="c1">; &#34;yup&#34; </span>
 <span class="c1">; 3 </span>
 <span class="c1">; &#34;yup&#34; </span>
-<span class="c1">; NIL</span></code></pre></div>
-<h2 id="結果の集積">結果の集積</h2>
-
+<span class="c1">; NIL</span>
+</code></pre></div><h2 id="結果の集積">結果の集積</h2>
 <table>
 <thead>
 <tr>
@@ -873,70 +813,64 @@
 <th>説明</th>
 </tr>
 </thead>
-
 <tbody>
 <tr>
 <td><code>count</code> <code>counting</code></td>
 <td>式がnil以外の場合に累積的に数を数える</td>
 </tr>
-
 <tr>
 <td><code>sum</code> <code>summing</code></td>
 <td>数値を加算していく</td>
 </tr>
-
 <tr>
 <td><code>minimize</code> <code>minimizing</code></td>
 <td>後ろに続く数が前の数値よりも小さい場合、その数を残す</td>
 </tr>
-
 <tr>
 <td><code>maximize</code> <code>maximizing</code></td>
 <td>後ろに続く数が前の数値よりも大きい場合、その数を残す</td>
 </tr>
-
 <tr>
 <td><code>append</code> <code>appending</code></td>
 <td>次に続くリストを結果となるリストに連結する（<strong>非破壊的</strong>）</td>
 </tr>
-
 <tr>
 <td><code>nconc</code> <code>nconcing</code></td>
 <td>次に続くリストを結果となるリストに連結する（<strong>破壊的</strong>）</td>
 </tr>
 </tbody>
 </table>
-
 <h3 id="count-counting"><code>count</code> <code>counting</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">)</span>
-      <span class="nv">count</span> <span class="nv">i</span><span class="p">)</span>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="nf">count</span> <span class="nv">i</span><span class="p">)</span>
 
-<span class="c1">; 4</span></code></pre></div>
-<h3 id="sum-summing"><code>sum</code> <code>summing</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">5</span>
+<span class="c1">; 4</span>
+</code></pre></div><h3 id="sum-summing"><code>sum</code> <code>summing</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">5</span>
       <span class="nv">sum</span> <span class="nv">i</span><span class="p">)</span>
 
-<span class="c1">; 10</span></code></pre></div>
-<h3 id="minimize-minimizing"><code>minimize</code> <code>minimizing</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">; 10</span>
+</code></pre></div><h3 id="minimize-minimizing"><code>minimize</code> <code>minimizing</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
       <span class="nv">minimize</span> <span class="nv">i</span><span class="p">)</span>
 
-<span class="c1">; 1</span></code></pre></div>
-<h3 id="maximize-maximizing"><code>maximize</code> <code>maximizing</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
+<span class="c1">; 1</span>
+</code></pre></div><h3 id="maximize-maximizing"><code>maximize</code> <code>maximizing</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">in</span> <span class="o">&#39;</span><span class="p">(</span><span class="mi">3</span> <span class="mi">2</span> <span class="mi">1</span> <span class="mi">2</span> <span class="mi">3</span><span class="p">)</span>
       <span class="nv">maximize</span> <span class="nv">i</span><span class="p">)</span>
 
-<span class="c1">; 3</span></code></pre></div>
-<h3 id="append-appending"><code>append</code> <code>appending</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">5</span>
-      <span class="nv">append</span> <span class="p">(</span><span class="nv">list</span> <span class="ss">&#39;Z</span> <span class="nv">i</span><span class="p">))</span>
+<span class="c1">; 3</span>
+</code></pre></div><h3 id="append-appending"><code>append</code> <code>appending</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">5</span>
+      <span class="nf">append</span> <span class="p">(</span><span class="nc">list</span> <span class="ss">&#39;Z</span> <span class="nv">i</span><span class="p">))</span>
 
-<span class="c1">; (Z 0 Z 1 Z 2 Z 3 Z 4)</span></code></pre></div>
-<h3 id="nconc-nconcing"><code>nconc</code> <code>nconcing</code></h3>
-<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nv">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">5</span>
-      <span class="nv">nconc</span> <span class="p">(</span><span class="nv">list</span> <span class="ss">&#39;Z</span> <span class="nv">i</span><span class="p">))</span>
+<span class="c1">; (Z 0 Z 1 Z 2 Z 3 Z 4)</span>
+</code></pre></div><h3 id="nconc-nconcing"><code>nconc</code> <code>nconcing</code></h3>
+<div class="highlight"><pre class="chroma"><code class="language-lisp" data-lang="lisp"><span class="p">(</span><span class="nb">loop</span> <span class="nv">for</span> <span class="nv">i</span> <span class="nv">below</span> <span class="mi">5</span>
+      <span class="nf">nconc</span> <span class="p">(</span><span class="nc">list</span> <span class="ss">&#39;Z</span> <span class="nv">i</span><span class="p">))</span>
 
-<span class="c1">; (Z 0 Z 1 Z 2 Z 3 Z 4)</span></code></pre></div>
+<span class="c1">; (Z 0 Z 1 Z 2 Z 3 Z 4)</span>
+</code></pre></div>
   </article>
 
   
@@ -1009,7 +943,9 @@
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>Go言語入門(出力関数) · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,15 +22,12 @@
 <meta property="og:description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 基本構文 出力関数 fmt.Println() 文字列の最後に改行を付加した文字列を標準出力に出力する。 fmt.Println(&#34;Hello, Golang!&#34;) //" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E5%87%BA%E5%8A%9B%E9%96%A2%E6%95%B0/" />
-<meta property="article:published_time" content="2019-04-13T05:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-04-13T05:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-04-13T05:00:00+09:00" />
+<meta property="article:modified_time" content="2019-04-13T05:00:00+09:00" />
 <meta itemprop="name" content="Go言語入門(出力関数)">
 <meta itemprop="description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 基本構文 出力関数 fmt.Println() 文字列の最後に改行を付加した文字列を標準出力に出力する。 fmt.Println(&#34;Hello, Golang!&#34;) //">
-
-
-<meta itemprop="datePublished" content="2019-04-13T05:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-04-13T05:00:00&#43;09:00" />
+<meta itemprop="datePublished" content="2019-04-13T05:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-04-13T05:00:00+09:00" />
 <meta itemprop="wordCount" content="856">
 
 
@@ -145,58 +142,45 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#目的">目的</a></li>
-<li><a href="#参考文献">参考文献</a></li>
-<li><a href="#基本構文">基本構文</a>
-<ul>
-<li><a href="#出力関数">出力関数</a>
-<ul>
-<li><a href="#fmt-println"><code>fmt.Println()</code></a></li>
-<li><a href="#fmt-printf"><code>fmt.Printf()</code></a></li>
-<li><a href="#print-println"><code>print()</code>, <code>println()</code></a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#出力関数">出力関数</a>
+      <ul>
+        <li><a href="#fmtprintln"><code>fmt.Println()</code></a></li>
+        <li><a href="#fmtprintf"><code>fmt.Printf()</code></a></li>
+        <li><a href="#print-println"><code>print()</code>, <code>println()</code></a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h1 id="目的">目的</h1>
-
+  <h1 id="目的">目的</h1>
 <p>Go言語の基本構文を残す。</p>
-
 <h1 id="参考文献">参考文献</h1>
-
 <ul>
 <li><a href="https://www.shoeisha.co.jp/book/detail/9784798142418">スターティング Go言語</a></li>
 </ul>
-
 <h1 id="基本構文">基本構文</h1>
-
 <h2 id="出力関数">出力関数</h2>
-
-<h3 id="fmt-println"><code>fmt.Println()</code></h3>
-
+<h3 id="fmtprintln"><code>fmt.Println()</code></h3>
 <p>文字列の最後に改行を付加した文字列を標準出力に出力する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Hello, Golang!&#34;</span><span class="p">)</span>   <span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;Hello, Golang!&#34;</span></code></pre></div>
-<p>複数の引数を渡した場合、各々の文字列をスペースで区切って1行で表示する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Hello&#34;</span> <span class="s">&#34;Golang&#34;</span> <span class="s">&#34;!&#34;</span><span class="p">)</span>   <span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;Hello Golang !&#34;</span></code></pre></div>
-<h3 id="fmt-printf"><code>fmt.Printf()</code></h3>
-
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Hello, Golang!&#34;</span><span class="p">)</span>	<span class="c1">// =&gt; &#34;Hello, Golang!&#34;
+</span></code></pre></div><p>複数の引数を渡した場合、各々の文字列をスペースで区切って1行で表示する。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="s">&#34;Hello&#34;</span> <span class="s">&#34;Golang&#34;</span> <span class="s">&#34;!&#34;</span><span class="p">)</span>	<span class="c1">// =&gt; &#34;Hello Golang !&#34;
+</span></code></pre></div><h3 id="fmtprintf"><code>fmt.Printf()</code></h3>
 <p>書式指定子を含んだフォーマット文字列と、可変長引数を渡すと、生成した文字列を標準出力に出力する。</p>
-<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;数値=%d\n&#34;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>    <span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;数値=5&#34;</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;10進数=%d 2進数=%b 8進数=%o 16進数=%x\n&#34;</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span>
-<span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;10進数=17 2進数=10001 8進数=21 16進数=11&#34;</span></code></pre></div>
-<p>可変長引数の個数に過不足がある場合、それを下記のように文字列中で知らせる。</p>
+<div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;数値=%d\n&#34;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>	<span class="c1">// =&gt; &#34;数値=5&#34;
+</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;10進数=%d 2進数=%b 8進数=%o 16進数=%x\n&#34;</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span>
+<span class="c1">// =&gt; &#34;10進数=17 2進数=10001 8進数=21 16進数=11&#34;
+</span></code></pre></div><p>可変長引数の個数に過不足がある場合、それを下記のように文字列中で知らせる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%d年%d月%d日\n&#34;</span><span class="p">,</span> <span class="mi">2015</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
 <span class="c1">// =&gt; &#34;2015年12月%!d(MISSING)日&#34;
 </span><span class="c1"></span>
 <span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;%d年%d月%d日\n&#34;</span><span class="p">,</span> <span class="mi">2015</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">17</span><span class="p">)</span>
-<span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;2015年12月25日%!(EXTRA int=17)&#34;</span></code></pre></div>
-<p>Goのデバッグで有用な書式指定子として<code>%v</code>, <code>%#v</code>, <code>%T</code>がある。</p>
+<span class="c1">// =&gt; &#34;2015年12月25日%!(EXTRA int=17)&#34;
+</span></code></pre></div><p>Goのデバッグで有用な書式指定子として<code>%v</code>, <code>%#v</code>, <code>%T</code>がある。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// %v 様々な型のデータを埋め込む
 </span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;数値=%v 文字列=%v 配列=%v\n&#34;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s">&#34;Golang&#34;</span><span class="p">,</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span>
 <span class="c1">// =&gt; &#34;数値=5 文字列=Golang 配列=[1 2 3]&#34;
@@ -207,9 +191,8 @@
 </span><span class="c1"></span>
 <span class="c1">// %T 型情報を埋め込む
 </span><span class="c1"></span><span class="nx">fmt</span><span class="p">.</span><span class="nf">Printf</span><span class="p">(</span><span class="s">&#34;数値=%v 文字列=%v 配列=%v\n&#34;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s">&#34;Golang&#34;</span><span class="p">,</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">})</span>
-<span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;数値=int 文字列=string 配列=[3]int&#34;</span></code></pre></div>
-<h3 id="print-println"><code>print()</code>, <code>println()</code></h3>
-
+<span class="c1">// =&gt; &#34;数値=int 文字列=string 配列=[3]int&#34;
+</span></code></pre></div><h3 id="print-println"><code>print()</code>, <code>println()</code></h3>
 <p>組み込み関数として<code>print()</code>と<code>println()</code>がある。これらは、与えられた文字列を<strong>標準エラー出力</strong>に出力する。</p>
 
   </article>
@@ -284,7 +267,9 @@
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>

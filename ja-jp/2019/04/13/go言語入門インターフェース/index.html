@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja-jp" itemscope itemtype="http://schema.org/WebPage">
 <head>
-  <meta name="generator" content="Hugo 0.54.0" />
+  <meta name="generator" content="Hugo 0.80.0" />
   <meta charset="utf-8">
   <title>Go言語入門(インターフェース) · Lazy Lambda</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,16 +22,13 @@
 <meta property="og:description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 ポインタ・構造体・インターフェース インターフェース ここではinterface{}" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://otaon.github.io/web/ja-jp/2019/04/13/go%E8%A8%80%E8%AA%9E%E5%85%A5%E9%96%80%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%95%E3%82%A7%E3%83%BC%E3%82%B9/" />
-<meta property="article:published_time" content="2019-04-13T19:00:00&#43;09:00"/>
-<meta property="article:modified_time" content="2019-04-13T19:00:00&#43;09:00"/>
-
+<meta property="article:published_time" content="2019-04-13T19:00:00+09:00" />
+<meta property="article:modified_time" content="2019-04-13T19:00:00+09:00" />
 <meta itemprop="name" content="Go言語入門(インターフェース)">
 <meta itemprop="description" content="目的 Go言語の基本構文を残す。 参考文献 スターティング Go言語 ポインタ・構造体・インターフェース インターフェース ここではinterface{}">
-
-
-<meta itemprop="datePublished" content="2019-04-13T19:00:00&#43;09:00" />
-<meta itemprop="dateModified" content="2019-04-13T19:00:00&#43;09:00" />
-<meta itemprop="wordCount" content="2897">
+<meta itemprop="datePublished" content="2019-04-13T19:00:00+09:00" />
+<meta itemprop="dateModified" content="2019-04-13T19:00:00+09:00" />
+<meta itemprop="wordCount" content="2898">
 
 
 
@@ -145,254 +142,229 @@
     <section class="js-toc">
   <div class="toc">
   <nav id="TableOfContents">
-<ul>
-<li><a href="#目的">目的</a></li>
-<li><a href="#参考文献">参考文献</a></li>
-<li><a href="#ポインタ-構造体-インターフェース">ポインタ・構造体・インターフェース</a>
-<ul>
-<li><a href="#インターフェース">インターフェース</a>
-<ul>
-<li><a href="#インターフェースとは">インターフェースとは</a></li>
-<li><a href="#インターフェース-error">インターフェース<code>error</code></a></li>
-<li><a href="#インターフェースのメリット">インターフェースのメリット</a></li>
-<li><a href="#fmt-stringer"><code>fmt.Stringer</code></a></li>
-<li><a href="#インターフェースが定義するメソッドのアクセシビリティ">インターフェースが定義するメソッドのアクセシビリティ</a></li>
-<li><a href="#インターフェースを含むインターフェースを定義する">インターフェースを含むインターフェースを定義する</a></li>
-<li><a href="#interface-の本質とは"><code>interface{}</code>の本質とは</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#インターフェース">インターフェース</a>
+      <ul>
+        <li><a href="#インターフェースとは">インターフェースとは</a></li>
+        <li><a href="#インターフェースerror">インターフェース<code>error</code></a></li>
+        <li><a href="#インターフェースのメリット">インターフェースのメリット</a></li>
+        <li><a href="#fmtstringer"><code>fmt.Stringer</code></a></li>
+        <li><a href="#インターフェースが定義するメソッドのアクセシビリティ">インターフェースが定義するメソッドのアクセシビリティ</a></li>
+        <li><a href="#インターフェースを含むインターフェースを定義する">インターフェースを含むインターフェースを定義する</a></li>
+        <li><a href="#interfaceの本質とは"><code>interface{}</code>の本質とは</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
   </div>
 </section>
 
   
-  
-
-<h1 id="目的">目的</h1>
-
+  <h1 id="目的">目的</h1>
 <p>Go言語の基本構文を残す。</p>
-
 <h1 id="参考文献">参考文献</h1>
-
 <ul>
 <li><a href="https://www.shoeisha.co.jp/book/detail/9784798142418">スターティング Go言語</a></li>
 </ul>
-
-<h1 id="ポインタ-構造体-インターフェース">ポインタ・構造体・インターフェース</h1>
-
+<h1 id="ポインタ構造体インターフェース">ポインタ・構造体・インターフェース</h1>
 <h2 id="インターフェース">インターフェース</h2>
-
 <p>ここでは<code>interface{}</code>型の本質と、その使用方法について述べる。</p>
-
 <h3 id="インターフェースとは">インターフェースとは</h3>
-
 <p>インターフェースは型の一種で、任意の型が「どのようなメソッドを実装するべきか」を規定するための枠組み。
 すなわち、一般的なプログラミング言語におけるインターフェースと同じ目的で使用される。</p>
-
 <p>Goの型システムには階層構造がない。つまり、オブジェクト指向におけるスーパークラスとサブクラスの関係がない。
-また、Goでは型から部分型への型変換ができない。<br />
+また、Goでは型から部分型への型変換ができない。<br>
 しかし、インターフェースを使用することで、これらの問題を解決できる。</p>
-
-<h3 id="インターフェース-error">インターフェース<code>error</code></h3>
-
+<h3 id="インターフェースerror">インターフェース<code>error</code></h3>
 <p>Goの組み込み型<code>error</code>はインターフェースとして定義されている。
-インターフェースは、予約語<code>interface</code>を使って、<code>interface{メソッドのシグネチャの列挙}</code>という形式で定義する。<br />
+インターフェースは、予約語<code>interface</code>を使って、<code>interface{メソッドのシグネチャの列挙}</code>という形式で定義する。<br>
 メソッドのシグネチャの列挙では、、<strong>型が実装すべきメソッドのシグネチャ</strong>を任意の数だけ列挙する。</p>
-
 <p><code>error</code>型では、文字列を返すメソッド<code>Error</code>のみが定義されている。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// errorインターフェースの構造体
 </span><span class="c1"></span><span class="kd">type</span> <span class="kt">error</span> <span class="kd">interface</span> <span class="p">{</span>
-    <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span>
+	<span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span>
 <span class="p">}</span>
 
 <span class="c1">// error型を使用した関数
 </span><span class="c1"></span><span class="kd">func</span> <span class="nf">DoSomething</span><span class="p">()</span> <span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// ....省略....
+	<span class="c1">// ....省略....
 </span><span class="c1"></span><span class="p">}</span>
 
 <span class="c1">// error型に共通する使用方法
 </span><span class="c1"></span><span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nf">DoSomething</span><span class="p">()</span>
 <span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nf">Error</span><span class="p">())</span>
-<span class="p">}</span></code></pre></div>
-<p>Goでは、実体としてパッケージや型に応じて独自のエラー型が定義されているが、これらは<code>error</code>インターフェースによって隠蔽されている。<br />
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nf">Error</span><span class="p">())</span>
+<span class="p">}</span>
+</code></pre></div><p>Goでは、実体としてパッケージや型に応じて独自のエラー型が定義されているが、これらは<code>error</code>インターフェースによって隠蔽されている。<br>
 このように<code>error</code>型の処理の仕方が統一されているおかげで、<code>error</code>型の使用者側は迷わずに使用できる。</p>
-
-<p>次に、<code>error</code>型の実装例を確認する。<br />
+<p>次に、<code>error</code>型の実装例を確認する。<br>
 コードを見て分かるとおり、この書き方では、独自定義型<code>MyError</code>が<code>error</code>の部分型かどうかの情報は、どこにもないことに注意すること。
 つまり、ある型<code>foo</code>において、インターフェースが要求するインターフェースのいくつかが実装されていたとしても、<code>foo</code>がインターフェースを実装しているとは言い切れない。ましてや、<code>foo</code>はあるインターフェースの部分型とは言えない。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// エラーを表す独自定義の型
 </span><span class="c1"></span><span class="kd">type</span> <span class="nx">MyError</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Message</span> <span class="kt">string</span>
-    <span class="nx">ErrCode</span> <span class="kt">int</span>
+	<span class="nx">Message</span> <span class="kt">string</span>
+	<span class="nx">ErrCode</span> <span class="kt">int</span>
 <span class="p">}</span>
 
 <span class="c1">// errorインターフェースが要求するError()メソッドを実装
 </span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">e</span> <span class="o">*</span><span class="nx">MyError</span><span class="p">)</span> <span class="nf">Error</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">e</span><span class="p">.</span><span class="nx">Message</span>
+	<span class="k">return</span> <span class="nx">e</span><span class="p">.</span><span class="nx">Message</span>
 <span class="p">}</span>
 
 <span class="kd">func</span> <span class="nf">RaiseError</span><span class="p">()</span> <span class="kt">error</span> <span class="p">{</span>
-    <span class="c1">// MyError型をerror型として返す
-</span><span class="c1"></span>    <span class="k">return</span> <span class="nx">MyError</span><span class="p">{</span><span class="nx">Message</span><span class="p">:</span> <span class="s">&#34;エラーが発生しました&#34;</span><span class="p">,</span> <span class="nx">ErrorCode</span><span class="p">:</span> <span class="mi">1234</span><span class="p">}</span>
+	<span class="c1">// MyError型をerror型として返す
+</span><span class="c1"></span>	<span class="k">return</span> <span class="nx">MyError</span><span class="p">{</span><span class="nx">Message</span><span class="p">:</span> <span class="s">&#34;エラーが発生しました&#34;</span><span class="p">,</span> <span class="nx">ErrorCode</span><span class="p">:</span> <span class="mi">1234</span><span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">// 戻り値の実体はMyError型だが、error型として返ってきた
 </span><span class="c1"></span><span class="nx">err</span> <span class="o">:=</span> <span class="nf">RaiseError</span><span class="p">()</span>
 <span class="c1">// error型なのでErrorを使用できる
 </span><span class="c1"></span><span class="nx">err</span><span class="p">.</span><span class="nf">Error</span><span class="p">()</span>
-<span class="nx">err</span><span class="p">.</span><span class="nx">ErrCode</span> <span class="o">//</span> <span class="nx">error型なので見れない</span></code></pre></div>
-<p><code>error</code>型の変数に対して、その実体の<code>MyError</code>独自のフィールドを参照することはできない。<br />
+<span class="nx">err</span><span class="p">.</span><span class="nx">ErrCode</span>	<span class="c1">// error型なので見れない
+</span></code></pre></div><p><code>error</code>型の変数に対して、その実体の<code>MyError</code>独自のフィールドを参照することはできない。<br>
 参照したい場合は、<strong>型アサーション</strong>を用いる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 型アサーションで実体の型にキャストする
 </span><span class="c1"></span><span class="nx">e</span><span class="p">,</span> <span class="nx">ok</span> <span class="o">:=</span> <span class="nx">err</span><span class="p">.(</span><span class="nx">MyError</span><span class="p">)</span>
 <span class="k">if</span> <span class="nx">ok</span> <span class="p">{</span>
-    <span class="nx">e</span><span class="p">.</span><span class="nx">ErrCode</span>   <span class="c1">// 1234
-</span><span class="c1"></span><span class="p">}</span></code></pre></div>
-<h3 id="インターフェースのメリット">インターフェースのメリット</h3>
-
+	<span class="nx">e</span><span class="p">.</span><span class="nx">ErrCode</span>	<span class="c1">// 1234
+</span><span class="c1"></span><span class="p">}</span>
+</code></pre></div><h3 id="インターフェースのメリット">インターフェースのメリット</h3>
 <p>最も有効な使用方法としては、<code>error</code>インターフェースのように<strong>異なる型に共通の性質を付与する</strong>使い方がある。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 文字列化することを示すインターフェース
 </span><span class="c1"></span><span class="kd">type</span> <span class="nx">Stringify</span> <span class="kd">interface</span> <span class="p">{</span>
-    <span class="nf">ToString</span><span class="p">()</span> <span class="kt">string</span>
+	<span class="nf">ToString</span><span class="p">()</span> <span class="kt">string</span>
 <span class="p">}</span>
 
 <span class="c1">// 構造体Person型
 </span><span class="c1"></span><span class="kd">type</span> <span class="nx">Person</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Name</span> <span class="kt">string</span>
-    <span class="nx">Age</span> <span class="kt">int</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">Age</span> <span class="kt">int</span>
 <span class="p">}</span>
 
 <span class="kd">func</span> <span class="p">(</span><span class="nx">p</span> <span class="o">*</span><span class="nx">Person</span><span class="p">)</span> <span class="nf">ToString</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%s(%d)&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Age</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;%s(%d)&#34;</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Name</span><span class="p">,</span> <span class="nx">p</span><span class="p">.</span><span class="nx">Age</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="c1">// 構造体Car型
 </span><span class="c1"></span><span class="kd">type</span> <span class="nx">Car</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Number</span> <span class="kt">string</span>
-    <span class="nx">Model</span> <span class="kt">string</span>
+	<span class="nx">Number</span> <span class="kt">string</span>
+	<span class="nx">Model</span> <span class="kt">string</span>
 <span class="p">}</span>
 
 <span class="kd">func</span> <span class="p">(</span><span class="nx">c</span> <span class="o">*</span><span class="nx">Car</span><span class="p">)</span> <span class="nf">ToString</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;[%s] %s&#34;</span><span class="p">,</span> <span class="nx">c</span><span class="p">.</span><span class="nx">Number</span><span class="p">,</span> <span class="nx">c</span><span class="p">.</span><span class="nx">Model</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;[%s] %s&#34;</span><span class="p">,</span> <span class="nx">c</span><span class="p">.</span><span class="nx">Number</span><span class="p">,</span> <span class="nx">c</span><span class="p">.</span><span class="nx">Model</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="c1">// 異なる型を、共通のインターフェースにまとめる
 </span><span class="c1"></span><span class="nx">vs</span> <span class="o">:=</span> <span class="p">[]</span><span class="nx">Stringify</span> <span class="p">{</span>
-    <span class="o">&amp;</span><span class="nx">Person</span> <span class="p">{</span><span class="nx">Nam</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span> <span class="mi">21</span><span class="p">},</span>
-    <span class="o">&amp;</span><span class="nx">Car</span> <span class="p">{</span><span class="nx">Number</span><span class="p">:</span> <span class="s">&#34;XXX-01234&#34;</span><span class="p">,</span> <span class="nx">Model</span><span class="p">:</span> <span class="s">&#34;PX512&#34;</span><span class="p">},</span>
+	<span class="o">&amp;</span><span class="nx">Person</span> <span class="p">{</span><span class="nx">Nam</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span> <span class="mi">21</span><span class="p">},</span>
+	<span class="o">&amp;</span><span class="nx">Car</span> <span class="p">{</span><span class="nx">Number</span><span class="p">:</span> <span class="s">&#34;XXX-01234&#34;</span><span class="p">,</span> <span class="nx">Model</span><span class="p">:</span> <span class="s">&#34;PX512&#34;</span><span class="p">},</span>
 <span class="p">}</span>
 <span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">v</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">vs</span> <span class="p">{</span>
-    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">v</span><span class="p">.</span><span class="nf">ToString</span><span class="p">())</span>
+	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">v</span><span class="p">.</span><span class="nf">ToString</span><span class="p">())</span>
 <span class="p">}</span>
 <span class="c1">// =&gt;
 </span><span class="c1">// Taro(21)
-</span><span class="c1"></span><span class="o">//</span> <span class="p">[</span><span class="nx">XXX</span><span class="o">-</span><span class="mo">0123</span><span class="p">]</span> <span class="nx">PX512</span></code></pre></div>
-<p>上記コードで<code>Person</code>と<code>Car</code>には共通の<code>ToString()</code>メソッドが存在する。<br />
+</span><span class="c1">// [XXX-0123] PX512
+</span></code></pre></div><p>上記コードで<code>Person</code>と<code>Car</code>には共通の<code>ToString()</code>メソッドが存在する。<br>
 これにより、下記部分で<code>Person</code>と<code>Car</code>は<code>Stringify</code>インターフェース型としてまとめられる。
 したがって、<code>Stringify</code>インターフェース型のスライスに両者を代入できる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 異なる型を、共通のインターフェースにまとめる
 </span><span class="c1"></span><span class="nx">vs</span> <span class="o">:=</span> <span class="p">[]</span><span class="nx">Stringify</span> <span class="p">{</span>
-    <span class="o">&amp;</span><span class="nx">Person</span> <span class="p">{</span><span class="nx">Nam</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span> <span class="mi">21</span><span class="p">},</span>
-    <span class="o">&amp;</span><span class="nx">Car</span> <span class="p">{</span><span class="nx">Number</span><span class="p">:</span> <span class="s">&#34;XXX-01234&#34;</span><span class="p">,</span> <span class="nx">Model</span><span class="p">:</span> <span class="s">&#34;PX512&#34;</span><span class="p">},</span>
-<span class="p">}</span></code></pre></div>
-<h3 id="fmt-stringer"><code>fmt.Stringer</code></h3>
-
+	<span class="o">&amp;</span><span class="nx">Person</span> <span class="p">{</span><span class="nx">Nam</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">,</span> <span class="nx">Age</span><span class="p">:</span> <span class="mi">21</span><span class="p">},</span>
+	<span class="o">&amp;</span><span class="nx">Car</span> <span class="p">{</span><span class="nx">Number</span><span class="p">:</span> <span class="s">&#34;XXX-01234&#34;</span><span class="p">,</span> <span class="nx">Model</span><span class="p">:</span> <span class="s">&#34;PX512&#34;</span><span class="p">},</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="fmtstringer"><code>fmt.Stringer</code></h3>
 <p><code>fmt</code>パッケージに定義されている<code>Stringer</code>型は、非常に単純なインターフェースで、文字列を返すメソッド<code>String</code>が定義されている。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">Stringer</span> <span class="kd">interface</span> <span class="p">{</span>
-    <span class="nf">String</span><span class="p">()</span> <span class="kt">string</span>
-<span class="p">}</span></code></pre></div>
-<p>次のコードで定義されている<code>T</code>型のポインタを関数<code>fmt.Println()</code>にわたすと、<code>&amp;{10 Taro}</code>のような文字列が出力される。</p>
+	<span class="nf">String</span><span class="p">()</span> <span class="kt">string</span>
+<span class="p">}</span>
+</code></pre></div><p>次のコードで定義されている<code>T</code>型のポインタを関数<code>fmt.Println()</code>にわたすと、<code>&amp;{10 Taro}</code>のような文字列が出力される。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">T</span> <span class="kd">struct</span> <span class="p">{</span>
-    <span class="nx">Id</span> <span class="kt">int</span>
-    <span class="nx">Name</span> <span class="kt">string</span>
+	<span class="nx">Id</span> <span class="kt">int</span>
+	<span class="nx">Name</span> <span class="kt">string</span>
 <span class="p">}</span>
 
 <span class="nx">t</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">T</span><span class="p">{</span><span class="nx">Id</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">}</span>
-<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>  <span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;&amp;{10 Taro}&#34;</span></code></pre></div>
-<p><code>fmt</code>パッケージの関数は、様々なデータ型を<code>interface{}</code>型として受け取り、それを読みやすい形式に変換する。
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>	<span class="c1">// =&gt; &#34;&amp;{10 Taro}&#34;
+</span></code></pre></div><p><code>fmt</code>パッケージの関数は、様々なデータ型を<code>interface{}</code>型として受け取り、それを読みやすい形式に変換する。
 <code>fmt.Stringer</code>インターフェースを使用すると、任意の型の文字列表現をカスタマイズできる。</p>
-
 <p>下記コードのように、任意の型に対するレシーバとして、<code>String()</code>メソッドを定義すると、<code>fmt.Println()</code>内部において、その定義した<code>String()</code>メソッドが使用される。
 すなわち、<code>fmt</code>パッケージは、<code>fmt.Stringer</code>インターフェースが要求するメソッドを実装した型であれば、メソッド<code>String</code>が返す文字列を出力などに使用する。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nf">String</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;&lt;&lt;%d, %s&#34;</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">Id</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">fmt</span><span class="p">.</span><span class="nf">Sprintf</span><span class="p">(</span><span class="s">&#34;&lt;&lt;%d, %s&#34;</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">Id</span><span class="p">,</span> <span class="nx">t</span><span class="p">.</span><span class="nx">Name</span><span class="p">)</span>
 <span class="p">}</span>
 
 <span class="nx">t</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">T</span><span class="p">{</span><span class="nx">Id</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="nx">Name</span><span class="p">:</span> <span class="s">&#34;Taro&#34;</span><span class="p">}</span>
-<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>  <span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;&lt;&lt;10, Taro&gt;&gt;&#34;</span></code></pre></div>
-<h3 id="インターフェースが定義するメソッドのアクセシビリティ">インターフェースが定義するメソッドのアクセシビリティ</h3>
-
-<p>インターフェースに定義されたメソッドは、構造体型などと同様に、メソッドの名の先頭が大文字だとパッケージ外から参照可能となり、小文字だとパッケージ外から参照不可となる。<br />
+<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>	<span class="c1">// =&gt; &#34;&lt;&lt;10, Taro&gt;&gt;&#34;
+</span></code></pre></div><h3 id="インターフェースが定義するメソッドのアクセシビリティ">インターフェースが定義するメソッドのアクセシビリティ</h3>
+<p>インターフェースに定義されたメソッドは、構造体型などと同様に、メソッドの名の先頭が大文字だとパッケージ外から参照可能となり、小文字だとパッケージ外から参照不可となる。<br>
 インターフェースのメソッドを外部に隠蔽することで得られるメリットは通常無いため、原則的には外部から参照可能なメソッドのみを定義すべき。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">foo</span>
 
 <span class="kd">type</span> <span class="nx">I</span> <span class="kd">interface</span> <span class="p">{</span>
-    <span class="nf">Method1</span><span class="p">()</span> <span class="kt">string</span>
-    <span class="nf">Method2</span><span class="p">()</span>
+	<span class="nf">Method1</span><span class="p">()</span> <span class="kt">string</span>
+	<span class="nf">Method2</span><span class="p">()</span>
 <span class="p">}</span>
 
 <span class="kd">type</span> <span class="nx">T</span> <span class="kd">struct</span> <span class="p">{}</span>
 
 <span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nf">Method1</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="s">&#34;Method1()&#34;</span>
+	<span class="k">return</span> <span class="s">&#34;Method1()&#34;</span>
 <span class="p">}</span>
 
 <span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nf">method2</span><span class="p">()</span> <span class="kt">string</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="s">&#34;method2()&#34;</span>
+	<span class="k">return</span> <span class="s">&#34;method2()&#34;</span>
 <span class="p">}</span>
 
 <span class="kd">func</span> <span class="nf">NewI</span><span class="p">()</span> <span class="nx">I</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="o">&amp;</span><span class="nx">T</span><span class="p">{}</span>
-<span class="p">}</span></code></pre></div><div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">T</span><span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kn">package</span> <span class="nx">main</span>
 
 <span class="nx">t</span> <span class="o">:=</span> <span class="nx">foo</span><span class="p">.</span><span class="nf">NewI</span><span class="p">()</span>
-<span class="nx">t</span><span class="p">.</span><span class="nf">Method1</span><span class="p">()</span> <span class="c1">// OK
-</span><span class="c1"></span><span class="nx">t</span><span class="p">.</span><span class="nf">method2</span><span class="p">()</span> <span class="o">//</span> <span class="nx">コンパイルエラー</span></code></pre></div>
-<h3 id="インターフェースを含むインターフェースを定義する">インターフェースを含むインターフェースを定義する</h3>
-
-<p>下記のように、インターフェースを含むインターフェースを定義できる。<br />
+<span class="nx">t</span><span class="p">.</span><span class="nf">Method1</span><span class="p">()</span>	<span class="c1">// OK
+</span><span class="c1"></span><span class="nx">t</span><span class="p">.</span><span class="nf">method2</span><span class="p">()</span>	<span class="c1">// コンパイルエラー
+</span></code></pre></div><h3 id="インターフェースを含むインターフェースを定義する">インターフェースを含むインターフェースを定義する</h3>
+<p>下記のように、インターフェースを含むインターフェースを定義できる。<br>
 メソッド名を重複させるとエラーとなるため、注意が必要。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="kd">type</span> <span class="nx">I0</span> <span class="kd">interface</span> <span class="p">{</span>
-    <span class="nf">Method0</span><span class="p">()</span> <span class="kt">int</span>
+	<span class="nf">Method0</span><span class="p">()</span> <span class="kt">int</span>
 <span class="p">}</span>
 
 <span class="kd">type</span> <span class="nx">I1</span> <span class="kd">interface</span> <span class="p">{</span>
-    <span class="nx">I0</span>  <span class="c1">// インターフェースI0を含む
-</span><span class="c1"></span>    <span class="nf">Method1</span><span class="p">()</span> <span class="kt">int</span>
+	<span class="nx">I0</span>	<span class="c1">// インターフェースI0を含む
+</span><span class="c1"></span>	<span class="nf">Method1</span><span class="p">()</span> <span class="kt">int</span>
 <span class="p">}</span>
 
 <span class="kd">type</span> <span class="nx">I2</span> <span class="kd">interface</span> <span class="p">{</span>
-    <span class="nx">I1</span>  <span class="c1">// インターフェースI1を含む
-</span><span class="c1"></span>    <span class="nf">Method2</span><span class="p">()</span> <span class="kt">int</span>
-<span class="p">}</span></code></pre></div>
-<h3 id="interface-の本質とは"><code>interface{}</code>の本質とは</h3>
-
-<p>前の章で説明した<code>interface{}</code>は、Goの全ての方と互換性のある特殊な型。<br />
-そして、<code>interface{}</code>とは、<strong>からのインターフェース</strong>を表す型。<br />
+	<span class="nx">I1</span>	<span class="c1">// インターフェースI1を含む
+</span><span class="c1"></span>	<span class="nf">Method2</span><span class="p">()</span> <span class="kt">int</span>
+<span class="p">}</span>
+</code></pre></div><h3 id="interfaceの本質とは"><code>interface{}</code>の本質とは</h3>
+<p>前の章で説明した<code>interface{}</code>は、Goの全ての方と互換性のある特殊な型。<br>
+そして、<code>interface{}</code>とは、<strong>からのインターフェース</strong>を表す型。<br>
 すなわち、実装すべきメソッドを1つも要求していないインターフェースを表す型。</p>
-
 <p>構造体を定義する場合、<code>struct</code>による型定義は、必ずしも<code>type</code>によるエイリアス定義を必要とせず無名のままで使用できる。
 <code>interface</code>も同様に、エイリアス定義を必要とせずに、型定義として使用できる。</p>
-
-<p>次の例では、あらかじめ<code>type</code>を使用したインターフェースの型定義をせずに、関数<code>ShowId</code>の引数の型に直接<code>interface{GetId() int}</code>という型定義を行っている。<br />
+<p>次の例では、あらかじめ<code>type</code>を使用したインターフェースの型定義をせずに、関数<code>ShowId</code>の引数の型に直接<code>interface{GetId() int}</code>という型定義を行っている。<br>
 構造体<code>T</code>型はインターフェース<code>interface {GetId() int}</code>が要求するメソッド<code>GetId() int</code>を実装しているため、関数<code>ShowId()</code>の引数として渡すことができる。</p>
 <div class="highlight"><pre class="chroma"><code class="language-go" data-lang="go"><span class="c1">// 構造体T型
 </span><span class="c1"></span><span class="kd">type</span> <span class="nx">T</span> <span class="kd">struct</span><span class="p">{</span><span class="nx">Id</span> <span class="kt">int</span><span class="p">}</span>
 
 <span class="c1">// 構造体T型は、インターフェースinterface {GetId() int}が要求するメソッドGetId() intを実装する
 </span><span class="c1"></span><span class="kd">func</span> <span class="p">(</span><span class="nx">t</span> <span class="o">*</span><span class="nx">T</span><span class="p">)</span> <span class="nf">GetId</span><span class="p">()</span> <span class="kt">int</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">t</span><span class="p">.</span><span class="nx">Id</span>
+	<span class="k">return</span> <span class="nx">t</span><span class="p">.</span><span class="nx">Id</span>
 <span class="p">}</span>
 
 <span class="kd">func</span> <span class="nf">ShowId</span><span class="p">(</span><span class="nx">id</span> <span class="kd">interface</span> <span class="p">{</span><span class="nf">GetId</span><span class="p">()</span> <span class="kt">int</span><span class="p">})</span> <span class="p">{</span>
-    <span class="c1">// 引数idは、 GetId() int というメソッドを持つ型
-</span><span class="c1"></span>    <span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">id</span><span class="p">.</span><span class="nf">GetId</span><span class="p">())</span>
+	<span class="c1">// 引数idは、 GetId() int というメソッドを持つ型
+</span><span class="c1"></span>	<span class="nx">fmt</span><span class="p">.</span><span class="nf">Println</span><span class="p">(</span><span class="nx">id</span><span class="p">.</span><span class="nf">GetId</span><span class="p">())</span>
 <span class="p">}</span>
 
 <span class="nx">t</span> <span class="o">:=</span> <span class="o">&amp;</span><span class="nx">T</span><span class="p">{</span><span class="nx">Id</span><span class="p">:</span> <span class="mi">19</span><span class="p">}</span>
-<span class="nf">ShowId</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>   <span class="o">//</span> <span class="p">=&gt;</span> <span class="s">&#34;19&#34;</span></code></pre></div>
+<span class="nf">ShowId</span><span class="p">(</span><span class="nx">t</span><span class="p">)</span>	<span class="c1">// =&gt; &#34;19&#34;
+</span></code></pre></div>
   </article>
 
   
@@ -465,7 +437,9 @@
           <small>
             &copy; 
             otaon
-            2019
+            
+              2019 -
+            2021
           </small>
           
         </p>
