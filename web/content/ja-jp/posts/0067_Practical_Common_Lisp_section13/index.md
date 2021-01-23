@@ -20,7 +20,9 @@ authors:
 下図の場合、`(1 2)`, `(3 4)`, `5`という３つの要素を持つリストという見方もできるが、  
 `1`, `2`, `3`, `4`, `5`という5つのリーフを持つ木という見方もできる。
 
-{{<figure src="tree.svg" alt="tree" width="600" align="aligncenter">}}
+{{<figure src="tree.svg" alt="tree" width="600" align="aligncenter"></figure>}}
+
+![tree.svg](tree.svg)
 
 ちなみに、最後のコンスセルの`cdr`が`nil`ではなく、何らかのアトムを参照しているリストも作成できる。  
 これは、最後のコンスセルがドット対になっているため、**ドットリスト**と呼ばれる。  
@@ -40,14 +42,14 @@ authors:
 したがって、複製元のリストが参照している要素がアトミックでなかった場合は、複製元と複製先のリスト同士で意図しない影響を与え合うことになる。  
 なお、参照先がアトミックであればその要素を変更することはできないため、両者の間に関連はない。
 
-{{<figure src="copy-list.svg" alt="copy-list" width="600" align="aligncenter">}}
+{{<figure src="copy-list.svg" alt="copy-list" width="600" align="aligncenter"></figure>}}
 
 ### `copy-tree`関数
 一方で、`copy-tree`関数は、木構造を構成するコンスセルを複製する。
 つまり、複製先の全てのコンスセルを複製する。ただし、アトムか`nil`のみは共通して参照する。(下図)  
 したがって、複製されたコンスセルが複製元のアトミックでない要素を参照することはない。  
 
-{{<figure src="copy-tree.svg" alt="copy-tree" width="600" align="aligncenter">}}
+{{<figure src="copy-tree.svg" alt="copy-tree" width="600" align="aligncenter"></figure>}}
 
 *NOTE:* 上図の青丸はアトムで同じ値のアトムは同一のもの。`nil`は全て同一。
 
