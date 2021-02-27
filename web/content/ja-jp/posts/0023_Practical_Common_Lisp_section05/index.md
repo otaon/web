@@ -202,7 +202,7 @@ authors:
 
 ```lisp
 (defun foo (&rest rest &key a b c)
-  (list a b c))
+  (list rest a b c))
 
 (foo :a 1 :b 2 :c 3)
 ; => ((:A 1 :B 2 :C 3) 1 2 3)
